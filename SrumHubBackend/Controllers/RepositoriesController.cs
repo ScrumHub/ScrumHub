@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SrumHubBackend.CQRS.Repositories;
 using SrumHubBackend.CommunicationModel;
+using SrumHubBackend.CommunicationModel.Common;
 
 namespace SrumHubBackend.Controllers
 {
@@ -28,14 +29,20 @@ namespace SrumHubBackend.Controllers
         /// Gets repositories
         /// </summary>
         /// <param name="authToken">Authorization token of user</param>
+        /// <param name="pageNumber">Page to get, default = 1</param>
+        /// <param name="pageSize">Size of page, default = 10</param>
+        /// <param name="nameFilter">Filter for name, default is empty</param>
         [HttpGet("")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(IEnumerable<Repository>), 200)]
-        public async Task<IActionResult> GetRepositories([FromHeader] string authToken)
+        [ProducesResponseType(typeof(PaginatedList<Repository>), 200)]
+        public async Task<IActionResult> GetRepositories([FromHeader] string authToken, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] string? nameFilter = null)
         {
             var query = new GetRepositoriesQuery
             {
-                AuthToken = authToken
+                AuthToken = authToken,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                NameFilter = nameFilter
             };
 
             var result = await _mediator.Send(query);
