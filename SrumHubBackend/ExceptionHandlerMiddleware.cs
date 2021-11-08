@@ -45,6 +45,7 @@ namespace ScrumHubBackend
                 {
                     BadHttpRequestException => (int)HttpStatusCode.BadRequest,
                     Octokit.AuthorizationException => (int)HttpStatusCode.Forbidden,
+                    Octokit.NotFoundException => (int)HttpStatusCode.NotFound,
                     ConflictException => (int)HttpStatusCode.Conflict,
                     _ => (int)HttpStatusCode.InternalServerError
                 };
