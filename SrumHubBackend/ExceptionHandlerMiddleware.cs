@@ -1,4 +1,4 @@
-﻿using ScrumHubBackend.CommunicationModel;
+﻿using ScrumHubBackend.CommunicationModel.Common;
 using ScrumHubBackend.CustomExceptions;
 using System.Net;
 
@@ -44,7 +44,8 @@ namespace ScrumHubBackend
                 context.Response.StatusCode = ex switch
                 {
                     BadHttpRequestException => (int)HttpStatusCode.BadRequest,
-                    Octokit.AuthorizationException => (int)HttpStatusCode.Forbidden,
+                    Octokit.AuthorizationException => (int)HttpStatusCode.Unauthorized,
+                    ForbiddenException => (int)HttpStatusCode.Forbidden,
                     Octokit.NotFoundException => (int)HttpStatusCode.NotFound,
                     ConflictException => (int)HttpStatusCode.Conflict,
                     _ => (int)HttpStatusCode.InternalServerError

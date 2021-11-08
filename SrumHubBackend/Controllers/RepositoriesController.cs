@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using ScrumHubBackend.CQRS.Repositories;
 using ScrumHubBackend.CommunicationModel.Common;
 using ScrumHubBackend.CommunicationModel;
+using System.Net;
+using ScrumHubBackend.CommunicationModel.Frontend;
 
 namespace ScrumHubBackend.Controllers
 {
@@ -34,7 +36,9 @@ namespace ScrumHubBackend.Controllers
         /// <param name="nameFilter">Filter for name, default is empty</param>
         [HttpGet("")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(PaginatedList<Repository>), 200)]
+        [ProducesResponseType(typeof(PaginatedList<Repository>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.Unauthorized)]
         public async Task<IActionResult> GetRepositories([FromHeader] string authToken, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] string? nameFilter = null)
         {
             var query = new GetRepositoriesQuery
@@ -53,18 +57,24 @@ namespace ScrumHubBackend.Controllers
         /// Adds repository to ScrumHub
         /// </summary>
         /// <param name="authToken">Authorization token of user</param>
-        /// <param name="repositoryId">Id of repository that will be added to ScrumHub</param>
+        /// <param name="repositoryIndex">Id of repository that will be added to ScrumHub</param>
         [HttpPost("")]
-        [ProducesResponseType(typeof(Repository), 201)]
-        public async Task<IActionResult> AddRepositoryToScrumHub([FromHeader] string authToken, [FromBody] long repositoryId)
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Repository), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.Forbidden)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.Conflict)]
+        public async Task<IActionResult> AddRepositoryToScrumHub([FromHeader] string authToken, [FromBody] Id repositoryIndex)
         {
-            var query = new AddRepositoryToScrumHubCommand
+            var command = new AddRepositoryToScrumHubCommand
             {
                 AuthToken = authToken,
-                RepositoryId = repositoryId
+                RepositoryId = repositoryIndex?.Index ?? 0
             };
 
-            var result = await _mediator.Send(query);
+            var result = await _mediator.Send(command);
             return Created($"/{result.Name}", result);
         }
     }

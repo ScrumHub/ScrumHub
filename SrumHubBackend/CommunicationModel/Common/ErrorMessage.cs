@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace ScrumHubBackend.CommunicationModel
+namespace ScrumHubBackend.CommunicationModel.Common
 {
     /// <summary>
     /// Class representing error message

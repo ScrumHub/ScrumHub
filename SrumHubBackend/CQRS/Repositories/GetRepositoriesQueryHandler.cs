@@ -33,7 +33,7 @@ namespace ScrumHubBackend.CQRS.Repositories
         public Task<PaginatedList<Repository>> Handle(GetRepositoriesQuery request, CancellationToken cancellationToken)
         {
             if (request == null || request.AuthToken == null)
-                throw new Exception("Missing token");
+                throw new BadHttpRequestException("Missing token");
 
             var gitHubClient = _gitHubClientFactory.Create(request.AuthToken);
 

@@ -37,7 +37,7 @@ namespace ScrumHubBackend.CQRS.Repositories
             var repository = gitHubClient.Repository.Get(request.RepositoryId).Result;
 
             if (!repository.Permissions.Admin)
-                throw new Octokit.AuthorizationException();
+                throw new ForbiddenException("Not enough permissions to add repository to ScrumHub");
 
             if (_dbContext.Repositories?.Any(internalRepository => internalRepository.GitHubId == request.RepositoryId) ?? false)
                 throw new ConflictException("Repository already exists in ScrumHub");
