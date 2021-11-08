@@ -1,10 +1,10 @@
 ﻿using MediatR;
-using SrumHubBackend.GitHubClient;
-using SrumHubBackend.CommunicationModel;
 using Microsoft.EntityFrameworkCore;
-using SrumHubBackend.CommunicationModel.Common;
+using ScrumHubBackend.GitHubClient;
+using ScrumHubBackend.CommunicationModel.Common;
+using ScrumHubBackend.CommunicationModel;
 
-namespace SrumHubBackend.CQRS.Repositories
+namespace ScrumHubBackend.CQRS.Repositories
 {
     /// <summary>
     /// Handler getting all repositories for an user
@@ -28,7 +28,7 @@ namespace SrumHubBackend.CQRS.Repositories
             _gitHubClientFactory = clientFactory ?? throw new ArgumentException(null, nameof(clientFactory));
             _cacheTimer = configuration.GetSection(GlobalSettings.cacheTimerSettingsSectionKey).GetValue<double>(nameof(Repository));
         }
-            
+
         /// <inheritdoc/>
         public Task<PaginatedList<Repository>> Handle(GetRepositoriesQuery request, CancellationToken cancellationToken)
         {
@@ -42,13 +42,14 @@ namespace SrumHubBackend.CQRS.Repositories
             IReadOnlyList<Octokit.Repository> repositories;
 
             //If we had not cached repositories for the user or we last checked him more than 5 minutes ago - get them again
-            if(!_cachedRepositories.TryGetValue(user.Id, out var cachedRepositories)
+            if (!_cachedRepositories.TryGetValue(user.Id, out var cachedRepositories)
                 || DateTime.UtcNow.Subtract(cachedRepositories.lastUpdate).TotalMinutes >= _cacheTimer)
             {
                 var updatedRepositories = GetRepositoriesForCurrentUser(gitHubClient).Result;
                 _cachedRepositories[user.Id] = (updatedRepositories, DateTime.UtcNow);
                 repositories = updatedRepositories;
-            } else
+            }
+            else
             {
                 repositories = cachedRepositories.repositories;
             }
@@ -63,7 +64,7 @@ namespace SrumHubBackend.CQRS.Repositories
         /// <summary>
         /// Gets repositories of user that is logged in
         /// </summary>
-        protected virtual Task< IReadOnlyList<Octokit.Repository> > GetRepositoriesForCurrentUser(Octokit.GitHubClient client) 
+        protected virtual Task<IReadOnlyList<Octokit.Repository>> GetRepositoriesForCurrentUser(Octokit.GitHubClient client)
             => client.Repository.GetAllForCurrent();
 
         /// <summary>

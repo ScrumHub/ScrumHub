@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31825.309
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SrumHubBackend", "SrumHubBackend.csproj", "{2DA04C26-D83A-414B-997F-0927C6407BEF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScrumHubBackend", "ScrumHubBackend.csproj", "{2DA04C26-D83A-414B-997F-0927C6407BEF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,4 +1,4 @@
-﻿namespace SrumHubBackend
+﻿namespace ScrumHubBackend
 {
     /// <summary>
     /// All hardcoded variables

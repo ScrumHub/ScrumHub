@@ -1,8 +1,8 @@
 ﻿using MediatR;
-using SrumHubBackend.CommunicationModel;
-using SrumHubBackend.CommunicationModel.Common;
+using ScrumHubBackend.CommunicationModel;
+using ScrumHubBackend.CommunicationModel.Common;
 
-namespace SrumHubBackend.CQRS.Repositories
+namespace ScrumHubBackend.CQRS.Repositories
 {
     /// <summary>
     /// Query for getting all repositories of an user

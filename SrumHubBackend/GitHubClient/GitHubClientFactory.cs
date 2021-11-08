@@ -1,4 +1,4 @@
-﻿namespace SrumHubBackend.GitHubClient
+﻿namespace ScrumHubBackend.GitHubClient
 {
     /// <summary>
     /// Factory able to create GitHub clients

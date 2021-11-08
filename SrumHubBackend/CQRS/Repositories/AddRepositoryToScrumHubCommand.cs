@@ -1,7 +1,7 @@
 ﻿using MediatR;
-using SrumHubBackend.CommunicationModel;
+using ScrumHubBackend.CommunicationModel;
 
-namespace SrumHubBackend.CQRS.Repositories
+namespace ScrumHubBackend.CQRS.Repositories
 {
     /// <summary>
     /// Command adding repository to ScrumHub

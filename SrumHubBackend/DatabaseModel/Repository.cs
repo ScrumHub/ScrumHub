@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SrumHubBackend.DatabaseModel
+namespace ScrumHubBackend.DatabaseModel
 {
     /// <summary>
     /// Represents repository already transformed to ScrumHub

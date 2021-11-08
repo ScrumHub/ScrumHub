@@ -1,4 +1,4 @@
-﻿namespace SrumHubBackend.CommunicationModel.Common
+﻿namespace ScrumHubBackend.CommunicationModel.Common
 {
     /// <summary>
     /// List of elements with pagination data

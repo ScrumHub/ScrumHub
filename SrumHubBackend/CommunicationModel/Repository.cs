@@ -1,4 +1,4 @@
-﻿namespace SrumHubBackend.CommunicationModel
+﻿namespace ScrumHubBackend.CommunicationModel
 {
     /// <summary>
     /// Represents repository

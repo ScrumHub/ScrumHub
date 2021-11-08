@@ -1,10 +1,9 @@
 using MediatR;
-using Microsoft.AspNetCore.Diagnostics;
-using SrumHubBackend;
-using SrumHubBackend.GitHubClient;
-using System.Net;
+using ScrumHubBackend;
+using ScrumHubBackend.GitHubClient;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +12,11 @@ builder.Services.AddDbContext<DatabaseContext>(options
     => options
         .UseSqlServer(builder.Configuration.GetConnectionString("Database"))
         );
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -35,6 +38,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
 }
 
+/*
 app.UseExceptionHandler(errorApp =>
 {
     errorApp.Run(async context =>
@@ -55,6 +59,9 @@ app.UseExceptionHandler(errorApp =>
     });
     errorApp.UseHsts();
 });
+*/
+
+app.UseMiddleware<ScrumHubBackend.ExceptionHandlerMiddleware>();
 
 app.UseHttpsRedirection();
 

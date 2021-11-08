@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SrumHubBackend.DatabaseModel;
+using ScrumHubBackend.DatabaseModel;
 
-namespace SrumHubBackend
+namespace ScrumHubBackend
 {
     /// <summary>
     /// Database Context

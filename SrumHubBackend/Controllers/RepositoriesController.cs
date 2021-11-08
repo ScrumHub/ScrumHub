@@ -1,10 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SrumHubBackend.CQRS.Repositories;
-using SrumHubBackend.CommunicationModel;
-using SrumHubBackend.CommunicationModel.Common;
+using ScrumHubBackend.CQRS.Repositories;
+using ScrumHubBackend.CommunicationModel.Common;
+using ScrumHubBackend.CommunicationModel;
 
-namespace SrumHubBackend.Controllers
+namespace ScrumHubBackend.Controllers
 {
     /// <summary>
     /// Controller for repositories

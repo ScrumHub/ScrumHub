@@ -1,8 +1,9 @@
 ﻿using MediatR;
-using SrumHubBackend.CommunicationModel;
-using SrumHubBackend.GitHubClient;
+using ScrumHubBackend.CommunicationModel;
+using ScrumHubBackend.CustomExceptions;
+using ScrumHubBackend.GitHubClient;
 
-namespace SrumHubBackend.CQRS.Repositories
+namespace ScrumHubBackend.CQRS.Repositories
 {
     /// <summary>
     /// Handler for adding the repository to ScrumHub
@@ -27,7 +28,7 @@ namespace SrumHubBackend.CQRS.Repositories
         public Task<Repository> Handle(AddRepositoryToScrumHubCommand request, CancellationToken cancellationToken)
         {
             if (request == null || request.AuthToken == null)
-                throw new Exception("Missing token");
+                throw new BadHttpRequestException("Missing token");
 
             var gitHubClient = _gitHubClientFactory.Create(request.AuthToken);
 
@@ -39,7 +40,7 @@ namespace SrumHubBackend.CQRS.Repositories
                 throw new Octokit.AuthorizationException();
 
             if (_dbContext.Find<DatabaseModel.Repository>(repository.Id) != null)
-                throw new Exception("Repository already exists in ScrumHub");
+                throw new ConflictException("Repository already exists in ScrumHub");
 
             _dbContext.Add(new DatabaseModel.Repository(repository));
             _dbContext.SaveChanges();
