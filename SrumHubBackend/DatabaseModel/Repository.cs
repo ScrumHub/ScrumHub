@@ -6,7 +6,7 @@ namespace ScrumHubBackend.DatabaseModel
     /// <summary>
     /// Represents repository already transformed to ScrumHub
     /// </summary>
-    [Table("Repository")]
+    [Table("repository")]
     public class Repository
     {
         /// <summary>
@@ -27,6 +27,21 @@ namespace ScrumHubBackend.DatabaseModel
         /// </summary>
         [Required]
         public string FullName { get; set; } = String.Empty;
+
+        /// <summary>
+        /// PBIs for the project
+        /// </summary>
+        public ICollection<BacklogItem>? BacklogItems { get; set; } = null;
+
+        /// <summary>
+        /// Sprints in the project
+        /// </summary>
+        public ICollection<Sprint>? Sprints { get; set; } = null;
+
+        /// <summary>
+        /// Tasks in the project
+        /// </summary>
+        public ICollection<Task>? Tasks { get; set; } = null;
 
         /// <summary>
         /// Constructor
