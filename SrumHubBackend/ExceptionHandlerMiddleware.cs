@@ -24,14 +24,20 @@ namespace ScrumHubBackend
         /// <summary>
         /// Invokes request catching potential exceptions
         /// </summary>
-        public async Task InvokeAsync(HttpContext context)
+        public async Task InvokeAsync(HttpContext context, DatabaseContext dbContext)
         {
+            Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction? transaction = dbContext.Database.BeginTransaction();
+
             try
             {
                 await _next(context);
+
+                transaction?.Commit();
             }
             catch(Exception ex)
             {
+                transaction.Rollback();
+
                 _logger.LogError("Exception {} occured: {}", ex.GetType(), ex.Message);
 
                 if(ex is AggregateException aex)
@@ -58,7 +64,10 @@ namespace ScrumHubBackend
                 }.ToString();
 
                 await context.Response.WriteAsync(errorMessage ?? "");
-
+            }
+            finally
+            {
+                transaction.Dispose();
             }
         }
 

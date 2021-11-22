@@ -38,29 +38,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
 }
 
-/*
-app.UseExceptionHandler(errorApp =>
-{
-    errorApp.Run(async context =>
-    {
-        var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
-
-        (HttpStatusCode code, string responseContent) = exceptionHandlerPathFeature?.Error switch
-        {
-            InvalidOperationException e => (HttpStatusCode.BadRequest, $"Invalid operation: {e.Message}"),
-            Exception e => (HttpStatusCode.InternalServerError, $"{e.Message}"),
-            _ => (HttpStatusCode.InternalServerError, "Unknown error"),
-        };
-
-        context.Response.StatusCode = (int)code;
-        context.Response.ContentType = "text/plain";
-
-        await context.Response.WriteAsync(responseContent);
-    });
-    errorApp.UseHsts();
-});
-*/
-
 app.UseMiddleware<ScrumHubBackend.ExceptionHandlerMiddleware>();
 
 app.UseHttpsRedirection();
