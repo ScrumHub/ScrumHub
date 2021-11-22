@@ -20,7 +20,13 @@ namespace ScrumHubBackend.DatabaseModel
         /// GitHub id of repository
         /// </summary>
         [Required]
-        public long GitHubId { get; set; }
+        public long GitHubId { get; set; } = 0;
+
+        /// <summary>
+        /// Full name of GirHub repository
+        /// </summary>
+        [Required]
+        public string FullName { get; set; } = String.Empty;
 
         /// <summary>
         /// Constructor
@@ -33,6 +39,7 @@ namespace ScrumHubBackend.DatabaseModel
         public Repository(Octokit.Repository repository)
         {
             GitHubId = repository.Id;
+            FullName = repository.FullName;
         }
     }
 }
