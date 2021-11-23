@@ -104,7 +104,7 @@ namespace ScrumHubBackend.Controllers
         }
 
         /// <summary>
-        /// Add PBIs for given repository
+        /// Add PBI for given repository
         /// </summary>
         /// <param name="authToken">Authorization token of user</param>
         /// <param name="repositoryOwner">Owner of the repository</param>
@@ -136,6 +136,43 @@ namespace ScrumHubBackend.Controllers
             var result = await _mediator.Send(query);
             return Created($"/{result.Id}", result);
         }
-        
+
+        /// <summary>
+        /// Update PBI for given repository
+        /// </summary>
+        /// <param name="authToken">Authorization token of user</param>
+        /// <param name="repositoryOwner">Owner of the repository</param>
+        /// <param name="repositoryName">Name of the repository</param>
+        /// <param name="pbiId">Id of the PBI</param>
+        /// <param name="backlogItem">Item to add</param>
+        [HttpPut("{repositoryOwner}/{repositoryName}/{pbiId}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(BacklogItem), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> UpdateBacklogItem(
+            [FromHeader] string authToken,
+            [FromRoute] string repositoryOwner,
+            [FromRoute] string repositoryName,
+            [FromRoute] int pbiId,
+            [FromBody] BacklogItemF backlogItem
+            )
+        {
+            var query = new UpdatePBICommand
+            {
+                AuthToken = authToken,
+                RepositoryOwner = repositoryOwner,
+                RepositoryName = repositoryName,
+                PBIId = pbiId,
+                Name = backlogItem.Name,
+                AcceptanceCriteria = backlogItem.AcceptanceCriteria,
+                Priority = backlogItem.Priority,
+            };
+
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        }
+
     }
 }

@@ -40,7 +40,7 @@ namespace ScrumHubBackend.CQRS.PBI
                 throw new NotFoundException("Repository not found in ScrumHub");
 
             if (!repository.Permissions.Admin)
-                throw new ForbiddenException("Not enough permissions to add repository to ScrumHub");
+                throw new ForbiddenException("Not enough permissions to add PBI to repository");
 
             var newPBI = DatabaseModel.BacklogItem.CreateNewBacklogItem(request);
 
