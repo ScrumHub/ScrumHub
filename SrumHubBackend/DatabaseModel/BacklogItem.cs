@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ScrumHubBackend.CQRS.PBI;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ScrumHubBackend.DatabaseModel
@@ -58,5 +59,29 @@ namespace ScrumHubBackend.DatabaseModel
         /// List of tasks for this PBI
         /// </summary>
         public ICollection<Task>? Tasks { get; set; } = null;
+
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public BacklogItem() { }
+
+        /// <summary>
+        /// Creates backlog item from command
+        /// </summary>
+        public static BacklogItem CreateNewBacklogItem(AddPBICommand command)
+        {
+            BacklogItem backlogItem = new();
+            backlogItem.Name = command.Name ?? String.Empty;
+            backlogItem.Priority = command.Priority;
+            backlogItem.AcceptanceCriteria = new List<AcceptanceCriterium>();
+
+            foreach (var criterium in command.AcceptanceCriteria ?? new List<string>())
+            {
+                backlogItem.AcceptanceCriteria.Add(new AcceptanceCriterium(criterium));
+            }
+
+            return backlogItem;
+        }
     }
 }

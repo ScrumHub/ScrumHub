@@ -17,12 +17,12 @@ namespace ScrumHubBackend.CQRS.PBI
         /// <summary>
         /// Owner of the repository
         /// </summary>
-        public string? Owner { get; set; }
+        public string? RepositoryOwner { get; set; }
 
         /// <summary>
         /// Name of the repository
         /// </summary>
-        public string? Name { get; set; }
+        public string? RepositoryName { get; set; }
 
         /// <summary>
         /// Page number

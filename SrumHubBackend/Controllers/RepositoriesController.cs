@@ -66,7 +66,7 @@ namespace ScrumHubBackend.Controllers
         [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.Forbidden)]
         [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.Conflict)]
-        public async Task<IActionResult> AddRepositoryToScrumHub([FromHeader] string authToken, [FromBody] Id repositoryIndex)
+        public async Task<IActionResult> AddRepositoryToScrumHub([FromHeader] string authToken, [FromBody] IdF repositoryIndex)
         {
             var command = new AddRepositoryToScrumHubCommand
             {

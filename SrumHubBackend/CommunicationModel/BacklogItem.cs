@@ -6,6 +6,11 @@
     public class BacklogItem
     {
         /// <summary>
+        /// Id of the PBI
+        /// </summary>
+        public long Id { get; set; } = 0;
+
+        /// <summary>
         /// Name of the PBI
         /// </summary>
         public string Name { get; set; } = String.Empty;
@@ -26,12 +31,12 @@
         public double TimeSpentInHours { get; set; } = 0;
 
         /// <summary>
-        /// Priority of the task
+        /// Priority of the PBI
         /// </summary>
         public long Priority { get; set; } = 0;
 
         /// <summary>
-        /// List of acceptance criterium for the PBI
+        /// List of acceptance criteria for the PBI
         /// </summary>
         public ICollection<string>? AcceptanceCriteria { get; set; } = new List<string>();
 
@@ -51,6 +56,7 @@
         public BacklogItem(long dbId, DatabaseContext dbContext)
         {
             DatabaseModel.BacklogItem? dbPBI = dbContext.BacklogItems?.Find(dbId);
+            Id = dbPBI?.Id ?? 0;
             Name = dbPBI?.Name ?? String.Empty;
             Finished = dbPBI?.Finished ?? false;
             ExpectedTimeInHours = dbPBI?.ExpectedTimeInHours ?? 0;
