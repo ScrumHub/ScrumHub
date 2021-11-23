@@ -11,7 +11,7 @@ namespace ScrumHubBackend.Controllers
     /// <summary>
     /// Controller for repositories
     /// </summary>
-    [Route("api/[controller]/repositories")]
+    [Route("api/[controller]")]
     [ApiController]
     public class RepositoriesController : ControllerBase
     {
