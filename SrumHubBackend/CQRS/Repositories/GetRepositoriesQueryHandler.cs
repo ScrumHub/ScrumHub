@@ -54,8 +54,6 @@ namespace ScrumHubBackend.CQRS.Repositories
                 repositories = cachedRepositories.repositories;
             }
 
-            _logger.LogInformation("Found {} repos for user {}", repositories.Count, user.Login);
-
             var paginatedRepositories = FilterAndPaginateRepositories(repositories, request.PageNumber, request.PageSize, request.NameFilter);
 
             return Task.FromResult(paginatedRepositories);
@@ -76,10 +74,10 @@ namespace ScrumHubBackend.CQRS.Repositories
             var sortedRepositories = filteredRepositories.OrderBy(repository => repository.FullName);
             int startIndex = pageSize * (pageNumber - 1);
             int endIndex = Math.Min(startIndex + pageSize, repositories.Count());
-            var paginatedRepositories = filteredRepositories.Take(new Range(startIndex, endIndex));
+            var paginatedRepositories = sortedRepositories.Take(new Range(startIndex, endIndex));
             var transformedRepositories = paginatedRepositories.Select(repository => new Repository(repository, _dbContext));
 
-            int pagesCount = (int)Math.Ceiling(filteredRepositories.Count() / (double)pageSize);
+            int pagesCount = (int)Math.Ceiling(sortedRepositories.Count() / (double)pageSize);
             return new PaginatedList<Repository>(transformedRepositories, pageNumber, pageSize, pagesCount);
         }
     }
