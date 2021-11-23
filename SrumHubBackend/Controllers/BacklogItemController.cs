@@ -55,7 +55,6 @@ namespace ScrumHubBackend.Controllers
             [FromQuery] bool? esimated = null
             )
         {
-
             var query = new GetPBIsQuery
             {
                 AuthToken = authToken,
@@ -71,7 +70,39 @@ namespace ScrumHubBackend.Controllers
             var result = await _mediator.Send(query);
             return Ok(result);
         }
-        
+
+        /// <summary>
+        /// Gets one PBI from the repository
+        /// </summary>
+        /// <param name="authToken">Authorization token of user</param>
+        /// <param name="repositoryOwner">Owner of the repository</param>
+        /// <param name="repositoryName">Name of the repository</param>
+        /// <param name="pbiId">Id of the PBI</param>
+        [HttpGet("{repositoryOwner}/{repositoryName}/{pbiId}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(BacklogItem), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> GetOneBacklogItem(
+            [FromHeader] string authToken,
+            [FromRoute] string repositoryOwner,
+            [FromRoute] string repositoryName,
+            [FromRoute] int pbiId
+            )
+        {
+            var query = new GetOnePBIQuery
+            {
+                AuthToken = authToken,
+                RepositoryOwner = repositoryOwner,
+                RepositoryName = repositoryName,
+                PBIId = pbiId,
+            };
+
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        }
+
         /// <summary>
         /// Add PBIs for given repository
         /// </summary>
@@ -92,7 +123,6 @@ namespace ScrumHubBackend.Controllers
             [FromBody] BacklogItemF backlogItem
             )
         {
-
             var query = new AddPBICommand
             {
                 AuthToken = authToken,
