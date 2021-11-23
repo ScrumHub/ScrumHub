@@ -34,7 +34,7 @@ namespace ScrumHubBackend.CQRS.PBI
             var gitHubClient = _gitHubClientFactory.Create(request.AuthToken);
 
             // If it does not exists then user does not have permissions to read id
-            var repository = gitHubClient.Repository.Get(request.Owner, request.Name).Result;
+            var repository = gitHubClient.Repository.Get(request.RepositoryOwner, request.RepositoryName).Result;
 
             var dbRepository = _dbContext.Repositories?.FirstOrDefault(repo => repo.FullName == repository.FullName);
 

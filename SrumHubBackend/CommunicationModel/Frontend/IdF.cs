@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents single index
     /// </summary>
-    public class Id
+    public class IdF
     {
         /// <summary>
         /// Index
