@@ -45,8 +45,6 @@ namespace ScrumHubBackend.CQRS.Repositories
             _dbContext.Add(new DatabaseModel.Repository(repository));
             _dbContext.SaveChanges();
 
-            _logger.LogInformation("Added repository {} to SrumHub by user {}", repository.FullName, user.Login);
-
             return Task.FromResult(new Repository(repository, _dbContext));
         }
     }
