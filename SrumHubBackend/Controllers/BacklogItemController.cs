@@ -174,5 +174,37 @@ namespace ScrumHubBackend.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Finish PBI for given repository
+        /// </summary>
+        /// <param name="authToken">Authorization token of user</param>
+        /// <param name="repositoryOwner">Owner of the repository</param>
+        /// <param name="repositoryName">Name of the repository</param>
+        /// <param name="pbiId">Id of the PBI</param>
+        [HttpPatch("{repositoryOwner}/{repositoryName}/{pbiId}/finish")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(BacklogItem), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> FinishBacklogItem(
+            [FromHeader] string authToken,
+            [FromRoute] string repositoryOwner,
+            [FromRoute] string repositoryName,
+            [FromRoute] int pbiId
+            )
+        {
+            var query = new FinishPBICommand
+            {
+                AuthToken = authToken,
+                RepositoryOwner = repositoryOwner,
+                RepositoryName = repositoryName,
+                PBIId = pbiId,
+            };
+
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        }
+
     }
 }
