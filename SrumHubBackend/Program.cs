@@ -21,7 +21,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new() { Title = "API", Version = "v1" });
-    c.IncludeXmlComments(string.Format(@"{0}\SrumHubBackend.xml", AppDomain.CurrentDomain.BaseDirectory));
+    c.IncludeXmlComments(string.Format(@"{0}ScrumHubBackend.xml", AppDomain.CurrentDomain.BaseDirectory));
 });
 builder.Services.AddMediatR(new[] { Assembly.GetExecutingAssembly() });
 builder.Services.AddSingleton<IGitHubClientFactory, ScrumHubGitHubClientFactory>();
