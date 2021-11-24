@@ -32,8 +32,8 @@
         {
             SprintNumber = dbSprint.SprintNumber;
             Goal = dbSprint.Goal;
-            var relatedBacklogItem = dbContext.BacklogItems?.Where(pbi => pbi.SprintId == dbSprint.Id).Select(pbi => new BacklogItem(pbi, dbContext));
-            BacklogItems = relatedBacklogItem?.ToList() ?? new List<BacklogItem>();
+            var relatedDbBacklogItem = dbContext.BacklogItems?.Where(pbi => pbi.SprintId == dbSprint.SprintNumber && pbi.RepositoryId == dbSprint.RepositoryId).ToList();
+            BacklogItems = relatedDbBacklogItem?.Select(pbi => new BacklogItem(pbi, dbContext)).ToList() ?? new List<BacklogItem>();
         }
     }
 }
