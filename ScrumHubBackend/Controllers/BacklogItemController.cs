@@ -147,7 +147,7 @@ namespace ScrumHubBackend.Controllers
         /// <param name="repositoryOwner">Owner of the repository</param>
         /// <param name="repositoryName">Name of the repository</param>
         /// <param name="pbiId">Id of the PBI</param>
-        /// <param name="backlogItem">Item to add</param>
+        /// <param name="backlogItem">All values (updated and not updated) of PBI</param>
         [HttpPut("{repositoryOwner}/{repositoryName}/{pbiId}")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(BacklogItem), (int)HttpStatusCode.OK)]
