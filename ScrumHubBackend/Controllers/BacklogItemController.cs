@@ -206,5 +206,40 @@ namespace ScrumHubBackend.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Estimate PBI for given repository
+        /// </summary>
+        /// <param name="authToken">Authorization token of user</param>
+        /// <param name="repositoryOwner">Owner of the repository</param>
+        /// <param name="repositoryName">Name of the repository</param>
+        /// <param name="pbiId">Id of the PBI</param>
+        /// <param name="estimation">Estimation of the PBI</param>
+        [HttpPatch("{repositoryOwner}/{repositoryName}/{pbiId}/estimate")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(BacklogItem), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> EstimateBacklogItem(
+            [FromHeader] string authToken,
+            [FromRoute] string repositoryOwner,
+            [FromRoute] string repositoryName,
+            [FromRoute] int pbiId,
+            [FromBody] EstimateF estimation
+            )
+        {
+            var query = new EstimatePBICommand
+            {
+                AuthToken = authToken,
+                RepositoryOwner = repositoryOwner,
+                RepositoryName = repositoryName,
+                PBIId = pbiId,
+                EstimationInHours = estimation.Hours
+            };
+
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        }
+
     }
 }
