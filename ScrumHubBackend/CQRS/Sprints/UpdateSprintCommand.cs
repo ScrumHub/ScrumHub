@@ -37,5 +37,10 @@ namespace ScrumHubBackend.CQRS.Sprints
         /// Number of the sprint
         /// </summary>
         public long Number { get; set; } = 1;
+
+        /// <summary>
+        /// New number of the sprint
+        /// </summary>
+        public long NewNumber { get; set; } = 1;
     }
 }
