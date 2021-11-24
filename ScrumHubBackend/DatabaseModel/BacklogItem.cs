@@ -51,11 +51,6 @@ namespace ScrumHubBackend.DatabaseModel
         public long Priority { get; set; } = 0;
 
         /// <summary>
-        /// List of acceptance criterium for the PBI
-        /// </summary>
-        public ICollection<AcceptanceCriterium>? AcceptanceCriteria { get; set; } = null;
-
-        /// <summary>
         /// List of tasks for this PBI
         /// </summary>
         public ICollection<Task>? Tasks { get; set; } = null;
@@ -65,6 +60,11 @@ namespace ScrumHubBackend.DatabaseModel
         /// </summary>
         public long? SprintId { get; set; } = null;
 
+        /// <summary>
+        /// Id of a repository where PBI is
+        /// </summary>
+        public long? RepositoryId { get; set; } = null;
+
 
         /// <summary>
         /// Constructor
@@ -72,21 +72,38 @@ namespace ScrumHubBackend.DatabaseModel
         public BacklogItem() { }
 
         /// <summary>
-        /// Creates backlog item from command
+        /// Constructor, not adding acceptance criteria
         /// </summary>
-        public static BacklogItem CreateNewBacklogItem(AddPBICommand command)
+        public BacklogItem(AddPBICommand command, long repositoryId) 
         {
-            BacklogItem backlogItem = new();
-            backlogItem.Name = command.Name ?? String.Empty;
-            backlogItem.Priority = command.Priority;
-            backlogItem.AcceptanceCriteria = new List<AcceptanceCriterium>();
+            Name = command.Name ?? String.Empty;
+            Priority = command.Priority;
+            RepositoryId = repositoryId;
+        }
 
-            foreach (var criterium in command.AcceptanceCriteria ?? new List<string>())
+        /// <summary>
+        /// Adds or updates acceptance criteria for PBI saving changes in DB
+        /// </summary>
+        public void UpdateAcceptanceCriteria(List<String> newCriteria, DatabaseContext dbContext)
+        {
+            var oldCriteria = GetAcceptanceCriteriaForRepository(dbContext);
+            foreach(var oldCriterium in oldCriteria)
             {
-                backlogItem.AcceptanceCriteria.Add(new AcceptanceCriterium(criterium));
+                dbContext.Remove(oldCriterium);
             }
 
-            return backlogItem;
+            foreach(var newCriterium in newCriteria)
+            {
+                var criterium = new AcceptanceCriterium(newCriterium, Id);
+                dbContext.Add(criterium);
+            }
+
+            dbContext.SaveChanges();
         }
+
+        /// <summary>
+        /// Gets acceptance criteria for PBI
+        /// </summary>
+        public List<AcceptanceCriterium> GetAcceptanceCriteriaForRepository(DatabaseContext dbContext) => dbContext.AcceptanceCriteria?.Where(ac => ac.BacklogItemId == Id).ToList() ?? new List<AcceptanceCriterium>();
     }
 }

@@ -43,28 +43,18 @@ namespace ScrumHubBackend.CQRS.PBI
             if (!repository.Permissions.Admin)
                 throw new ForbiddenException("Not enough permissions to edit a PBI to repository");
 
-            var pbi = dbRepository?.BacklogItems?.FirstOrDefault(pbi => pbi.Id == request.PBIId) ?? null;
+            var pbi = _dbContext.BacklogItems?.FirstOrDefault(pbi => pbi.Id == request.PBIId) ?? null;
 
-            if (pbi == null)
+            if (pbi == null || pbi?.RepositoryId != dbRepository.Id)
                 throw new NotFoundException("Backlog item not found in ScrumHub");
 
             pbi.Name = request.Name ?? String.Empty;
             pbi.Priority = request.Priority;
 
-            foreach(var criterium in pbi.AcceptanceCriteria ?? new List<AcceptanceCriterium>())
-            {
-                _dbContext.Remove(criterium);
-            }
-
-            pbi.AcceptanceCriteria = new List<AcceptanceCriterium>();
-
-            foreach (var criterium in request.AcceptanceCriteria ?? new List<string>())
-            {
-                pbi.AcceptanceCriteria.Add(new AcceptanceCriterium(criterium));
-            }
-
             _dbContext.Update(pbi);
             _dbContext.SaveChanges();
+
+            pbi.UpdateAcceptanceCriteria(request.AcceptanceCriteria ?? new List<string>(), _dbContext);
 
             return System.Threading.Tasks.Task.FromResult(new CommunicationModel.BacklogItem(pbi.Id, _dbContext));
         }

@@ -73,7 +73,7 @@ namespace ScrumHubBackend.CQRS.Repositories
             var filteredRepositories = repositories.Where(repository => repository.FullName.ToLower().Contains(nameFilter?.ToLower() ?? ""));
             var sortedRepositories = filteredRepositories.OrderBy(repository => repository.FullName);
             int startIndex = pageSize * (pageNumber - 1);
-            int endIndex = Math.Min(startIndex + pageSize, repositories.Count());
+            int endIndex = Math.Min(startIndex + pageSize, sortedRepositories.Count());
             var paginatedRepositories = sortedRepositories.Take(new Range(startIndex, endIndex));
             var transformedRepositories = paginatedRepositories.Select(repository => new Repository(repository, _dbContext));
 

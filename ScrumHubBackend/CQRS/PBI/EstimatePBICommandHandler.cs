@@ -42,9 +42,9 @@ namespace ScrumHubBackend.CQRS.PBI
             if (!repository.Permissions.Admin)
                 throw new ForbiddenException("Not enough permissions to finish a PBI to repository");
 
-            var pbi = dbRepository?.BacklogItems?.FirstOrDefault(pbi => pbi.Id == request.PBIId) ?? null;
+            var pbi = _dbContext.BacklogItems?.FirstOrDefault(pbi => pbi.Id == request.PBIId) ?? null;
 
-            if (pbi == null)
+            if (pbi == null || pbi?.RepositoryId != dbRepository.Id)
                 throw new NotFoundException("Backlog item not found in ScrumHub");
 
             pbi.ExpectedTimeInHours = request.EstimationInHours;

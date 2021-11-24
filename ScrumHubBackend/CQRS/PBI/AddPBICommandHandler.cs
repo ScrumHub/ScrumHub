@@ -42,10 +42,12 @@ namespace ScrumHubBackend.CQRS.PBI
             if (!repository.Permissions.Admin)
                 throw new ForbiddenException("Not enough permissions to add PBI to repository");
 
-            var newPBI = DatabaseModel.BacklogItem.CreateNewBacklogItem(request);
+            var newPBI = new DatabaseModel.BacklogItem(request, dbRepository.Id);
 
             _dbContext.Add(newPBI);
             _dbContext.SaveChanges();
+
+            newPBI.UpdateAcceptanceCriteria(request.AcceptanceCriteria ?? new List<string>(), _dbContext);
 
             return Task.FromResult(new BacklogItem(newPBI.Id, _dbContext));
         }

@@ -28,9 +28,9 @@ namespace ScrumHubBackend.DatabaseModel
         public string Goal { get; set; } = String.Empty;
 
         /// <summary>
-        /// PBI that will be done in this sprint
+        /// Id of a repository where Sprint is
         /// </summary>
-        public ICollection<BacklogItem>? BacklogItems { get; set; } = null;
+        public long? RepositoryId { get; set; } = null;
 
         /// <summary>
         /// Constructor
@@ -40,10 +40,11 @@ namespace ScrumHubBackend.DatabaseModel
         /// <summary>
         /// Constructor
         /// </summary>
-        public Sprint(long sprintNumber, string goal)
+        public Sprint(long sprintNumber, string goal, long repositoryId)
         {
             SprintNumber = sprintNumber;
             Goal = goal;
+            RepositoryId = repositoryId;
         }
     }
 }

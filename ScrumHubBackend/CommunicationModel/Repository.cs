@@ -31,6 +31,11 @@
         public List<long> BacklogItems { get; set; } = new List<long>();
 
         /// <summary>
+        /// List of numbers of sprints
+        /// </summary>
+        public List<long> Sprints { get; set; } = new List<long>();
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public Repository() { }
@@ -53,7 +58,8 @@
             }
 
             AlreadyInScrumHub = true;
-            BacklogItems = dbRepository.BacklogItems?.Select(dbPbi => dbPbi.Id).ToList() ?? new List<long>();
+            BacklogItems = dbContext.BacklogItems?.Where(pbi => pbi.Id == dbRepository.Id).Select(dbPbi => dbPbi.Id).ToList() ?? new List<long>();
+            Sprints = dbContext.Sprints?.Where(sprint => sprint.RepositoryId == dbRepository.Id).Select(sprint => sprint.SprintNumber).ToList() ?? new List<long>();
         }
     }
 }

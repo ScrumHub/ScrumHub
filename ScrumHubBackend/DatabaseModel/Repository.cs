@@ -29,21 +29,6 @@ namespace ScrumHubBackend.DatabaseModel
         public string FullName { get; set; } = String.Empty;
 
         /// <summary>
-        /// PBIs for the project
-        /// </summary>
-        public ICollection<BacklogItem>? BacklogItems { get; set; } = null;
-
-        /// <summary>
-        /// Sprints in the project
-        /// </summary>
-        public ICollection<Sprint>? Sprints { get; set; } = null;
-
-        /// <summary>
-        /// Tasks in the project
-        /// </summary>
-        public ICollection<Task>? Tasks { get; set; } = null;
-
-        /// <summary>
         /// Constructor
         /// </summary>
         public Repository() { }
@@ -56,5 +41,15 @@ namespace ScrumHubBackend.DatabaseModel
             GitHubId = repository.Id;
             FullName = repository.FullName;
         }
+
+        /// <summary>
+        /// Gets sprints for repository
+        /// </summary>
+        public List<Sprint> GetSprintsForRepository(DatabaseContext dbContext) => dbContext.Sprints?.Where(sprint => sprint.RepositoryId == Id).ToList() ?? new List<Sprint>();
+
+        /// <summary>
+        /// Gets PBIs for repository
+        /// </summary>
+        public List<BacklogItem> GetPBIsForRepository(DatabaseContext dbContext) => dbContext.BacklogItems?.Where(pbi => pbi.RepositoryId == Id).ToList() ?? new List<BacklogItem>();
     }
 }
