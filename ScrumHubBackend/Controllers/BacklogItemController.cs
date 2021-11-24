@@ -38,6 +38,7 @@ namespace ScrumHubBackend.Controllers
         /// <param name="nameFilter">Filter for name, default is empty</param>
         /// <param name="finished">Filter for finished PBIs, true or false</param>
         /// <param name="esimated">Filter for esimated PBIs, true or false</param>
+        /// <param name="inSprint">Filters for PBIs that are in a sprint, true or false</param>
         [HttpGet("{repositoryOwner}/{repositoryName}")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(PaginatedList<BacklogItem>), (int)HttpStatusCode.OK)]
@@ -52,7 +53,8 @@ namespace ScrumHubBackend.Controllers
             [FromQuery] int pageSize = 10,
             [FromQuery] string? nameFilter = null,
             [FromQuery] bool? finished = null,
-            [FromQuery] bool? esimated = null
+            [FromQuery] bool? esimated = null,
+            [FromQuery] bool? inSprint = null
             )
         {
             var query = new GetPBIsQuery
@@ -64,7 +66,8 @@ namespace ScrumHubBackend.Controllers
                 PageSize = pageSize,
                 NameFilter = nameFilter,
                 FinishedFilter = finished,
-                EstimatedFilter = esimated
+                EstimatedFilter = esimated,
+                InSprintFilter = inSprint,
             };
 
             var result = await _mediator.Send(query);

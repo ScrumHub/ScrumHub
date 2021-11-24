@@ -41,7 +41,7 @@ namespace ScrumHubBackend.CQRS.PBI
             if (dbRepository == null)
                 throw new NotFoundException("Repository not found in ScrumHub");
 
-            var paginatedPBIs = FilterAndPaginatePBIs(dbRepository?.BacklogItems ?? new List<DatabaseModel.BacklogItem>(), request.PageNumber, request.PageSize, request.NameFilter, request.FinishedFilter, request.EstimatedFilter);
+            var paginatedPBIs = FilterAndPaginatePBIs(dbRepository?.BacklogItems ?? new List<DatabaseModel.BacklogItem>(), request.PageNumber, request.PageSize, request.NameFilter, request.FinishedFilter, request.EstimatedFilter, request.InSprintFilter);
 
             return Task.FromResult(paginatedPBIs);
         }
@@ -49,11 +49,12 @@ namespace ScrumHubBackend.CQRS.PBI
         /// <summary>
         /// Filters and paginates PBIs and transforms them to model repositories
         /// </summary>
-        protected virtual PaginatedList<BacklogItem> FilterAndPaginatePBIs(IEnumerable<DatabaseModel.BacklogItem> repositories, int pageNumber, int pageSize, string? nameFilter, bool? finishedFilter, bool? estimatedFilter)
+        protected virtual PaginatedList<BacklogItem> FilterAndPaginatePBIs(IEnumerable<DatabaseModel.BacklogItem> repositories, int pageNumber, int pageSize, string? nameFilter, bool? finishedFilter, bool? estimatedFilter, bool? inSprintFilter)
         {
             var filteredPBIsName = repositories.Where(pbi => pbi.Name.ToLower().Contains(nameFilter?.ToLower() ?? ""));
             var filteredPBIsFinished = filteredPBIsName.Where(pbi => finishedFilter == null || pbi.Finished == finishedFilter);
-            var filteredPBIsEstimated = filteredPBIsFinished.Where(pbi => estimatedFilter == null || (pbi.ExpectedTimeInHours == 0 && !estimatedFilter.Value));
+            var filteredPBIsInSprint = filteredPBIsFinished.Where(pbi => inSprintFilter == null || ((pbi.SprintId != null && pbi.SprintId > 0) == inSprintFilter));
+            var filteredPBIsEstimated = filteredPBIsInSprint.Where(pbi => estimatedFilter == null || (pbi.ExpectedTimeInHours == 0 && !estimatedFilter.Value));
             var sortedPBIs = filteredPBIsEstimated.OrderByDescending(pbi => pbi.Priority).ThenBy(pbi => pbi.Name);
             int startIndex = pageSize * (pageNumber - 1);
             int endIndex = Math.Min(startIndex + pageSize, repositories.Count());
