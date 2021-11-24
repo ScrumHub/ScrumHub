@@ -26,6 +26,11 @@
         public double ExpectedTimeInHours { get; set; } = 0;
 
         /// <summary>
+        /// Is the PBI estimated
+        /// </summary>
+        public bool Estimated { get => ExpectedTimeInHours > 0; }
+
+        /// <summary>
         /// How many hours was spent on PBI
         /// </summary>
         public double TimeSpentInHours { get; set; } = 0;
