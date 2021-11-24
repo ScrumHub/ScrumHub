@@ -1,0 +1,95 @@
+﻿using MediatR;
+using ScrumHubBackend.CommunicationModel;
+using ScrumHubBackend.CustomExceptions;
+using ScrumHubBackend.GitHubClient;
+
+namespace ScrumHubBackend.CQRS.Sprints
+{
+    /// <summary>
+    /// Handler for adding new sprint
+    /// </summary>
+    public class AddSprintCommandHandler : IRequestHandler<AddSprintCommand, Sprint>
+    {
+        private readonly ILogger<AddSprintCommandHandler> _logger;
+        private readonly IGitHubClientFactory _gitHubClientFactory;
+        private readonly DatabaseContext _dbContext;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public AddSprintCommandHandler(ILogger<AddSprintCommandHandler> logger, IGitHubClientFactory clientFactory, DatabaseContext dbContext)
+        {
+            _logger = logger ?? throw new ArgumentException(null, nameof(logger));
+            _dbContext = dbContext ?? throw new ArgumentException(null, nameof(dbContext));
+            _gitHubClientFactory = clientFactory ?? throw new ArgumentException(null, nameof(clientFactory));
+        }
+
+        /// <inheritdoc/>
+        public Task<Sprint> Handle(AddSprintCommand request, CancellationToken cancellationToken)
+        {
+            if (request == null || request.AuthToken == null)
+                throw new BadHttpRequestException("Missing token");
+
+            var gitHubClient = _gitHubClientFactory.Create(request.AuthToken);
+
+            var repository = gitHubClient.Repository.Get(request.RepositoryOwner, request.RepositoryName).Result;
+
+            var dbRepository = _dbContext.Repositories?.FirstOrDefault(repo => repo.FullName == repository.FullName);
+
+            if (dbRepository == null)
+                throw new NotFoundException("Repository not found in ScrumHub");
+
+            if (!repository.Permissions.Admin)
+                throw new ForbiddenException("Not enough permissions to add sprint to repository");
+
+            var sprintsForRepository = dbRepository.GetSprintsForRepository(_dbContext);
+            var pbisForRepository = dbRepository.GetPBIsForRepository(_dbContext);
+
+            if (sprintsForRepository?.Any(sprint => sprint.SprintNumber == request.Number) ?? false)
+            {
+                throw new BadHttpRequestException("Sprint with given number already exists");
+            }
+
+            var repositoryPBIs = dbRepository.GetPBIsForRepository(_dbContext);
+
+            var pbisNullable = request.PBIs?.Select(pbiId => repositoryPBIs.FirstOrDefault(pbi => pbi.Id == pbiId)).ToList() ?? new List<DatabaseModel.BacklogItem?>();
+
+            pbisNullable.RemoveAll(pbi => pbi == null);
+
+            var pbis = pbisNullable.Select(pbi => NullableToNonNullable(pbi));
+
+            if (!pbis.All(pbi => pbisForRepository?.Any(repoPbi => repoPbi.Id == pbi.Id) ?? false))
+            {
+                throw new NotFoundException("PBI requested to be in the sprint does not exists");
+            }
+
+            if (pbis.Any(pbi => pbi?.ExpectedTimeInHours <= 0))
+            {
+                throw new BadHttpRequestException("Cannot create sprint from not estimated PBIs");
+            }
+
+            if (pbis.Any(pbi => pbi?.SprintId > 0))
+            {
+                throw new BadHttpRequestException("Cannot create sprint from already assigned PBI");
+            }
+
+            var dbSprint = new DatabaseModel.Sprint(request.Number, request.Goal ?? String.Empty, dbRepository.Id);
+
+            _dbContext.Update(dbRepository);
+            _dbContext.Add(dbSprint);
+            _dbContext.SaveChanges();
+
+            foreach(var pbi in pbis)
+            {
+                pbi.SprintId = dbSprint.SprintNumber;
+                _dbContext.Update(pbi);
+            }
+
+            _dbContext.SaveChanges();
+
+            return Task.FromResult(new Sprint(dbSprint, _dbContext));
+        }
+
+        private static DatabaseModel.BacklogItem NullableToNonNullable(DatabaseModel.BacklogItem? pbi) => pbi ?? new DatabaseModel.BacklogItem();
+    }
+}
