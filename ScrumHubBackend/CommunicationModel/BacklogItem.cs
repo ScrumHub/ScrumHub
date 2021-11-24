@@ -63,9 +63,15 @@
         /// <summary>
         /// Constructor
         /// </summary>
-        public BacklogItem(long dbId, DatabaseContext dbContext)
+        public BacklogItem(long dbId, DatabaseContext dbContext) : this(dbContext.BacklogItems?.Find(dbId))
         {
-            DatabaseModel.BacklogItem? dbPBI = dbContext.BacklogItems?.Find(dbId);
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public BacklogItem(DatabaseModel.BacklogItem? dbPBI)
+        {
             Id = dbPBI?.Id ?? 0;
             Name = dbPBI?.Name ?? String.Empty;
             Finished = dbPBI?.Finished ?? false;
@@ -73,7 +79,7 @@
             TimeSpentInHours = dbPBI?.TimeSpentInHours ?? 0;
             Priority = dbPBI?.Priority ?? 0;
 
-            AcceptanceCriteria = 
+            AcceptanceCriteria =
                 dbPBI?.AcceptanceCriteria?.Select(crit => crit.Text).ToList() ?? new List<string>();
 
             IsInSprint = (dbPBI?.SprintId.HasValue ?? false) && dbPBI.SprintId.Value > 0;
