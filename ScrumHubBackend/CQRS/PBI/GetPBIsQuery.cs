@@ -48,5 +48,10 @@ namespace ScrumHubBackend.CQRS.PBI
         /// Filter if only estimated PBIs should be taken, null for no filtering
         /// </summary>
         public bool? EstimatedFilter { get; set; } = false;
+
+        /// <summary>
+        /// Filter if only PBIs assigned to a sprint should be taken, null for no filtering
+        /// </summary>
+        public bool? InSprintFilter { get; set; } = false;
     }
 }

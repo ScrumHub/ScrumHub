@@ -60,6 +60,11 @@ namespace ScrumHubBackend.DatabaseModel
         /// </summary>
         public ICollection<Task>? Tasks { get; set; } = null;
 
+        /// <summary>
+        /// Id of a sprint where PBI is
+        /// </summary>
+        public long? SprintId { get; set; } = null;
+
 
         /// <summary>
         /// Constructor
