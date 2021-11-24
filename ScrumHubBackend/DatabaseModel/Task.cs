@@ -49,6 +49,11 @@ namespace ScrumHubBackend.DatabaseModel
         public ICollection<AssignedPerson>? Assignees { get; set; } = null;
 
         /// <summary>
+        /// Id of a repository where Task is
+        /// </summary>
+        public long? RepositoryId { get; set; } = null;
+
+        /// <summary>
         /// Id of the github issue representing the task
         /// </summary>
         [Required]

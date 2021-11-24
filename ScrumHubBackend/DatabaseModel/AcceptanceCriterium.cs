@@ -24,6 +24,11 @@ namespace ScrumHubBackend.DatabaseModel
         public string Text { get; set; } = String.Empty;
 
         /// <summary>
+        /// Id of a PBI where AC is
+        /// </summary>
+        public long? BacklogItemId { get; set; } = null;
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public AcceptanceCriterium() { }
@@ -31,9 +36,10 @@ namespace ScrumHubBackend.DatabaseModel
         /// <summary>
         /// Constructor
         /// </summary>
-        public AcceptanceCriterium(string criterium)
+        public AcceptanceCriterium(string criterium, long pbiId)
         {
             Text = criterium;
+            BacklogItemId = pbiId;
         }
     }
 }

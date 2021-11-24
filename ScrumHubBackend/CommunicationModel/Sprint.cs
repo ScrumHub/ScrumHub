@@ -28,11 +28,12 @@
         /// <summary>
         /// Constructor
         /// </summary>
-        public Sprint(DatabaseModel.Sprint dbSprint)
+        public Sprint(DatabaseModel.Sprint dbSprint, DatabaseContext dbContext)
         {
             SprintNumber = dbSprint.SprintNumber;
             Goal = dbSprint.Goal;
-            BacklogItems = dbSprint?.BacklogItems?.Select(dbPBI => new BacklogItem(dbPBI)).ToList() ?? new List<BacklogItem>();
+            var relatedBacklogItem = dbContext.BacklogItems?.Where(pbi => pbi.SprintId == dbSprint.Id).Select(pbi => new BacklogItem(pbi, dbContext));
+            BacklogItems = relatedBacklogItem?.ToList() ?? new List<BacklogItem>();
         }
     }
 }
