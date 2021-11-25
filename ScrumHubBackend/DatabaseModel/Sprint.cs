@@ -46,5 +46,10 @@ namespace ScrumHubBackend.DatabaseModel
             Goal = goal;
             RepositoryId = repositoryId;
         }
+
+        /// <summary>
+        /// Gets PBIs for sprint
+        /// </summary>
+        public List<BacklogItem> GetPBIsForSprint(List<BacklogItem> pbisForRepository) => pbisForRepository.Where(pbi => pbi.SprintId == SprintNumber).ToList() ?? new List<BacklogItem>();
     }
 }
