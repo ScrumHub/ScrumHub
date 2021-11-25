@@ -26,7 +26,7 @@ namespace ScrumHubBackend
         /// </summary>
         public async Task InvokeAsync(HttpContext context, DatabaseContext dbContext)
         {
-            Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction? transaction = dbContext.Database.BeginTransaction();
+            Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction? transaction = context.Request.Method == "GET" ? null : dbContext.Database.BeginTransaction();
 
             try
             {
@@ -36,7 +36,7 @@ namespace ScrumHubBackend
             }
             catch(Exception ex)
             {
-                transaction.Rollback();
+                transaction?.Rollback();
 
                 _logger.LogError("Exception {} occured: {}", ex.GetType(), ex.Message);
 
@@ -68,7 +68,7 @@ namespace ScrumHubBackend
             }
             finally
             {
-                transaction.Dispose();
+                transaction?.Dispose();
             }
         }
 
