@@ -147,7 +147,7 @@ namespace ScrumHubBackend.Controllers
             [FromRoute] string repositoryOwner,
             [FromRoute] string repositoryName,
             [FromRoute] int sprintNumber,
-            [FromBody] SprintF sprint
+            [FromBody] SprintUpdateF sprint
             )
         {
             var query = new UpdateSprintCommand
@@ -158,7 +158,6 @@ namespace ScrumHubBackend.Controllers
                 Goal = sprint.Goal,
                 PBIs = sprint.PBIs,
                 Number = sprintNumber,
-                NewNumber = sprint.Number
             };
 
             var result = await _mediator.Send(query);

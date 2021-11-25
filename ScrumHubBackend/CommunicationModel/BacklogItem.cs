@@ -31,9 +31,14 @@
         public bool Estimated { get => ExpectedTimeInHours > 0; }
 
         /// <summary>
+        /// Sprint where PBI is
+        /// </summary>
+        public long? SprintNumber { get; set; } = null;
+
+        /// <summary>
         /// Is the PBI in sprint
         /// </summary>
-        public bool IsInSprint { get; set; }
+        public bool IsInSprint { get => SprintNumber != null && SprintNumber > 0; }
 
         /// <summary>
         /// How many hours was spent on PBI
@@ -81,7 +86,7 @@
 
             AcceptanceCriteria = dbPBI?.GetAcceptanceCriteriaForRepository(dbContext).Select(ac => ac.Text).ToList();
 
-            IsInSprint = (dbPBI?.SprintId.HasValue ?? false) && dbPBI.SprintId.Value > 0;
+            SprintNumber = dbPBI?.SprintId ?? null;
         }
     }
 }

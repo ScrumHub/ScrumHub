@@ -30,6 +30,9 @@ namespace ScrumHubBackend.CQRS.Sprints
             if (request == null || request.AuthToken == null)
                 throw new BadHttpRequestException("Missing token");
 
+            if(request.Number <= 0)
+                throw new BadHttpRequestException("Sprint number should be greater than 0");
+
             var gitHubClient = _gitHubClientFactory.Create(request.AuthToken);
 
             var repository = gitHubClient.Repository.Get(request.RepositoryOwner, request.RepositoryName).Result;
@@ -68,7 +71,7 @@ namespace ScrumHubBackend.CQRS.Sprints
                 throw new BadHttpRequestException("Cannot create sprint from not estimated PBIs");
             }
 
-            if (pbis.Any(pbi => pbi?.SprintId > 0))
+            if (pbis.Any(pbi => (pbi?.SprintId ?? 0) > 0))
             {
                 throw new BadHttpRequestException("Cannot create sprint from already assigned PBI");
             }
