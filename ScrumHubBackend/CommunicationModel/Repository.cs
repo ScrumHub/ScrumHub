@@ -1,10 +1,33 @@
-﻿namespace ScrumHubBackend.CommunicationModel
+﻿using System.Collections.ObjectModel;
+
+namespace ScrumHubBackend.CommunicationModel
 {
     /// <summary>
     /// Represents repository
     /// </summary>
     public class Repository
     {
+        private const string noRecentActivity = "No recent activity";
+
+        private static ReadOnlyDictionary<string, string> eventTypeToReadableString = new(new Dictionary<string, string>
+        {
+            ["CommitCommentEvent"] = "Commit comment created",
+            ["CreateEvent"] = "Branch or tag created",
+            ["DeleteEvent"] = "Branch or tag deleted",
+            ["ForkEvent"] = "Repository forked",
+            ["GollumEvent"] = "Wiki page created or updated",
+            ["IssueCommentEvent"] = "Issue or pull request comment action",
+            ["IssuesEvent"] = "Issue action",
+            ["MemberEvent"] = "Collabolators related action",
+            ["PublicEvent"] = "Repository changed from private to public, \"Without a doubt: the best GitHub event.\"",
+            ["PullRequestEvent"] = "Pull request action",
+            ["PullRequestReviewEvent"] = "Pull request review action",
+            ["PullRequestReviewCommentEvent"] = "Pull request review comment action",
+            ["PushEvent"] = "Commits pushed to a branch or tag",
+            ["ReleaseEvent"] = "Release action",
+            ["SponsorshipEvent"] = "Sponsorship action",
+            ["WatchEvent"] = "Starring action",
+        });
         /// <summary>
         /// Name of repository
         /// </summary>
@@ -14,6 +37,16 @@
         /// Description of the repository
         /// </summary>
         public string? Description { get; set; } = String.Empty;
+
+        /// <summary>
+        /// Date of last user activity in format YYYY-MM-DD or "No recent activity"
+        /// </summary>
+        public string? DateOfLastActivity { get; set; } = String.Empty;
+
+        /// <summary>
+        /// Type of last user activity or "No recent activity"
+        /// </summary>
+        public string? TypeOfLastActivity { get; set; } = String.Empty;
 
         /// <summary>
         /// GitHub id of repository
@@ -48,10 +81,13 @@
         /// <summary>
         /// Constructor
         /// </summary>
-        public Repository(Octokit.Repository repository, DatabaseContext dbContext)
+        public Repository(Octokit.Repository repository, IEnumerable<Octokit.Activity> repoActivities, DatabaseContext dbContext)
         {
             Name = repository.FullName;
             Description = repository.Description;
+            var lastActivity = repoActivities.FirstOrDefault();
+            DateOfLastActivity = lastActivity?.CreatedAt.UtcDateTime.ToString("yyyy-MM-dd HH:mm:ss 'UTC'") ?? noRecentActivity;
+            TypeOfLastActivity = lastActivity == null ? noRecentActivity : eventTypeToReadableString.GetValueOrDefault(lastActivity.Type) ?? "Unknown action";
             GitHubId = repository.Id;
             HasAdminRights = repository.Permissions.Admin == true;
             DatabaseModel.Repository? dbRepository = 
