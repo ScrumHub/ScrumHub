@@ -28,7 +28,7 @@ namespace ScrumHubBackend.Controllers
         }
 
         /// <summary>
-        /// Gets sprints for given repository
+        /// Gets sprints for given repository (requires read permissions in repository)
         /// </summary>
         /// <param name="authToken">Authorization token of user</param>
         /// <param name="repositoryOwner">Owner of the repository</param>
@@ -63,7 +63,7 @@ namespace ScrumHubBackend.Controllers
         }
 
         /// <summary>
-        /// Gets one sprint from the repository
+        /// Gets one sprint from the repository (requires read permissions in repository)
         /// </summary>
         /// <param name="authToken">Authorization token of user</param>
         /// <param name="repositoryOwner">Owner of the repository</param>
@@ -95,7 +95,7 @@ namespace ScrumHubBackend.Controllers
         }
 
         /// <summary>
-        /// Add Sprint for given repository
+        /// Add Sprint for given repository (requires admin permissions in repository)
         /// </summary>
         /// <param name="authToken">Authorization token of user</param>
         /// <param name="repositoryOwner">Owner of the repository</param>
@@ -129,7 +129,7 @@ namespace ScrumHubBackend.Controllers
         }
 
         /// <summary>
-        /// Update Sprint for given repository
+        /// Update Sprint for given repository (requires admin permissions in repository)
         /// </summary>
         /// <param name="authToken">Authorization token of user</param>
         /// <param name="repositoryOwner">Owner of the repository</param>

@@ -28,7 +28,7 @@ namespace ScrumHubBackend.Controllers
         }
 
         /// <summary>
-        /// Gets repositories
+        /// Gets repositories (requires read permissions in repository)
         /// </summary>
         /// <param name="authToken">Authorization token of user</param>
         /// <param name="pageNumber">Page to get, default = 1</param>
@@ -54,7 +54,7 @@ namespace ScrumHubBackend.Controllers
         }
 
         /// <summary>
-        /// Adds repository to ScrumHub
+        /// Adds repository to ScrumHub (requires admin permissions in repository)
         /// </summary>
         /// <param name="authToken">Authorization token of user</param>
         /// <param name="repositoryIndex">Id of repository that will be added to ScrumHub</param>
