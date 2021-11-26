@@ -244,5 +244,37 @@ namespace ScrumHubBackend.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Delete PBI for given repository (requires admin permissions in repository)
+        /// </summary>
+        /// <param name="authToken">Authorization token of user</param>
+        /// <param name="repositoryOwner">Owner of the repository</param>
+        /// <param name="repositoryName">Name of the repository</param>
+        /// <param name="pbiId">Id of the PBI</param>
+        [HttpDelete("{repositoryOwner}/{repositoryName}/{pbiId}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(void), (int)HttpStatusCode.NoContent)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> RemoveBacklogItem(
+            [FromHeader] string authToken,
+            [FromRoute] string repositoryOwner,
+            [FromRoute] string repositoryName,
+            [FromRoute] int pbiId
+            )
+        {
+            var query = new RemovePBICommand
+            {
+                AuthToken = authToken,
+                RepositoryOwner = repositoryOwner,
+                RepositoryName = repositoryName,
+                PBIId = pbiId,
+            };
+
+            await _mediator.Send(query);
+            return NoContent();
+        }
+
     }
 }
