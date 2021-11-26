@@ -34,6 +34,8 @@ namespace ScrumHubBackend.CQRS.Repositories
 
             var user = gitHubClient.User.Current().Result;
 
+            var userActivity = gitHubClient.Activity.Events.GetAllUserPerformed(user.Login).Result;
+
             var repository = gitHubClient.Repository.Get(request.RepositoryId).Result;
 
             if (!repository.Permissions.Admin)
@@ -45,7 +47,7 @@ namespace ScrumHubBackend.CQRS.Repositories
             _dbContext.Add(new DatabaseModel.Repository(repository));
             _dbContext.SaveChanges();
 
-            return Task.FromResult(new Repository(repository, _dbContext));
+            return Task.FromResult(new Repository(repository, userActivity, _dbContext));
         }
     }
 }

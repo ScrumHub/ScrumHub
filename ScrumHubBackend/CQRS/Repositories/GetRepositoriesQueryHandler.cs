@@ -39,6 +39,8 @@ namespace ScrumHubBackend.CQRS.Repositories
 
             var user = gitHubClient.User.Current().Result;
 
+            var userActivities = gitHubClient.Activity.Events.GetAllUserPerformed(user.Login).Result;
+
             IReadOnlyList<Octokit.Repository> repositories;
 
             //If we had not cached repositories for the user or we last checked him more than 5 minutes ago - get them again
@@ -54,7 +56,7 @@ namespace ScrumHubBackend.CQRS.Repositories
                 repositories = cachedRepositories.repositories;
             }
 
-            var paginatedRepositories = FilterAndPaginateRepositories(repositories, request.PageNumber, request.PageSize, request.NameFilter);
+            var paginatedRepositories = FilterAndPaginateRepositories(repositories, userActivities, request.PageNumber, request.PageSize, request.NameFilter);
 
             return Task.FromResult(paginatedRepositories);
         }
@@ -68,17 +70,25 @@ namespace ScrumHubBackend.CQRS.Repositories
         /// <summary>
         /// Filters and paginates downloaded repositories and transforms them to model repositories
         /// </summary>
-        protected virtual PaginatedList<Repository> FilterAndPaginateRepositories(IEnumerable<Octokit.Repository> repositories, int pageNumber, int pageSize, string? nameFilter)
+        protected virtual PaginatedList<Repository> FilterAndPaginateRepositories(IEnumerable<Octokit.Repository> repositories, IReadOnlyList<Octokit.Activity> userActivities, int pageNumber, int pageSize, string? nameFilter)
         {
-            var filteredRepositories = repositories.Where(repository => repository.FullName.ToLower().Contains(nameFilter?.ToLower() ?? ""));
-            var sortedRepositories = filteredRepositories.OrderBy(repository => repository.FullName);
-            int startIndex = pageSize * (pageNumber - 1);
-            int endIndex = Math.Min(startIndex + pageSize, sortedRepositories.Count());
-            var paginatedRepositories = sortedRepositories.Take(new Range(startIndex, endIndex));
-            var transformedRepositories = paginatedRepositories.Select(repository => new Repository(repository, _dbContext));
+            var sortedAndFilteredRepositriesWithActivity = repositories
+                .Where(repository => repository.FullName.ToLower().Contains(nameFilter?.ToLower() ?? ""))
+                .Select(repository => (repository, activities: userActivities
+                    .Where(activity => activity.Repo.Id == repository.Id))
+                )
+                .OrderByDescending(repoWithActivity => repoWithActivity.activities.FirstOrDefault()?.CreatedAt ?? DateTimeOffset.MinValue)
+                .ThenBy(repoWithActivity => repoWithActivity.repository.FullName);
 
-            int pagesCount = (int)Math.Ceiling(sortedRepositories.Count() / (double)pageSize);
-            return new PaginatedList<Repository>(transformedRepositories, pageNumber, pageSize, pagesCount);
+            int startIndex = pageSize * (pageNumber - 1);
+            int endIndex = Math.Min(startIndex + pageSize, sortedAndFilteredRepositriesWithActivity.Count());
+
+            var transformedAndPaginatedRepositories = sortedAndFilteredRepositriesWithActivity
+                .Take(new Range(startIndex, endIndex))
+                .Select(repoWithActivity => new Repository(repoWithActivity.repository, repoWithActivity.activities, _dbContext));
+
+            int pagesCount = (int)Math.Ceiling(sortedAndFilteredRepositriesWithActivity.Count() / (double)pageSize);
+            return new PaginatedList<Repository>(transformedAndPaginatedRepositories, pageNumber, pageSize, pagesCount);
         }
     }
 }
