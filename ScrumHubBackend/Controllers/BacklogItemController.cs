@@ -28,7 +28,7 @@ namespace ScrumHubBackend.Controllers
         }
 
         /// <summary>
-        /// Gets PBIs for given repository
+        /// Gets PBIs for given repository (requires read permissions in repository)
         /// </summary>
         /// <param name="authToken">Authorization token of user</param>
         /// <param name="repositoryOwner">Owner of the repository</param>
@@ -75,7 +75,7 @@ namespace ScrumHubBackend.Controllers
         }
 
         /// <summary>
-        /// Gets one PBI from the repository
+        /// Gets one PBI from the repository (requires read permissions in repository)
         /// </summary>
         /// <param name="authToken">Authorization token of user</param>
         /// <param name="repositoryOwner">Owner of the repository</param>
@@ -107,7 +107,7 @@ namespace ScrumHubBackend.Controllers
         }
 
         /// <summary>
-        /// Add PBI for given repository
+        /// Add PBI for given repository (requires admin permissions in repository)
         /// </summary>
         /// <param name="authToken">Authorization token of user</param>
         /// <param name="repositoryOwner">Owner of the repository</param>
@@ -141,7 +141,7 @@ namespace ScrumHubBackend.Controllers
         }
 
         /// <summary>
-        /// Update PBI for given repository
+        /// Update PBI for given repository (requires admin permissions in repository)
         /// </summary>
         /// <param name="authToken">Authorization token of user</param>
         /// <param name="repositoryOwner">Owner of the repository</param>
@@ -178,7 +178,7 @@ namespace ScrumHubBackend.Controllers
         }
 
         /// <summary>
-        /// Finish PBI for given repository
+        /// Finish PBI for given repository (requires admin permissions in repository)
         /// </summary>
         /// <param name="authToken">Authorization token of user</param>
         /// <param name="repositoryOwner">Owner of the repository</param>
@@ -210,7 +210,7 @@ namespace ScrumHubBackend.Controllers
         }
 
         /// <summary>
-        /// Estimate PBI for given repository
+        /// Estimate PBI for given repository (requires admin permissions in repository)
         /// </summary>
         /// <param name="authToken">Authorization token of user</param>
         /// <param name="repositoryOwner">Owner of the repository</param>
