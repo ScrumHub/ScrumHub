@@ -11,6 +11,11 @@
         public string? Name { get; set; } = String.Empty;
 
         /// <summary>
+        /// Description of the repository
+        /// </summary>
+        public string? Description { get; set; } = String.Empty;
+
+        /// <summary>
         /// GitHub id of repository
         /// </summary>
         public long GitHubId { get; set; } = 0;
@@ -46,6 +51,7 @@
         public Repository(Octokit.Repository repository, DatabaseContext dbContext)
         {
             Name = repository.FullName;
+            Description = repository.Description;
             GitHubId = repository.Id;
             HasAdminRights = repository.Permissions.Admin == true;
             DatabaseModel.Repository? dbRepository = 
@@ -58,7 +64,7 @@
             }
 
             AlreadyInScrumHub = true;
-            BacklogItems = dbContext.BacklogItems?.Where(pbi => pbi.Id == dbRepository.Id).Select(dbPbi => dbPbi.Id).ToList() ?? new List<long>();
+            BacklogItems = dbContext.BacklogItems?.Where(pbi => pbi.RepositoryId == dbRepository.Id).Select(dbPbi => dbPbi.Id).ToList() ?? new List<long>();
             Sprints = dbContext.Sprints?.Where(sprint => sprint.RepositoryId == dbRepository.Id).Select(sprint => sprint.SprintNumber).ToList() ?? new List<long>();
         }
     }
