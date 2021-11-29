@@ -23,6 +23,12 @@ namespace ScrumHubBackend.DatabaseModel
         public int GitHubIssueId { get; set; } = 0;
 
         /// <summary>
+        /// Id of the github issue representing the task
+        /// </summary>
+        [Required]
+        public int GitHubIssueNumberInRepo { get; set; } = 0;
+
+        /// <summary>
         /// Id of the repository
         /// </summary>
         [Required]
@@ -69,6 +75,7 @@ namespace ScrumHubBackend.DatabaseModel
                 throw new CustomExceptions.NotFoundException("Pbi does not exist");
 
             GitHubIssueId = issue.Id;
+            GitHubIssueNumberInRepo = issue.Number;
             RepositoryId = repository.Id;
             PBI = pbiAssignedToTheTask;
         }

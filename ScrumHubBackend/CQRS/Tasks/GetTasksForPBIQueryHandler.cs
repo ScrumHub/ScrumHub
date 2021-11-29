@@ -64,7 +64,7 @@ namespace ScrumHubBackend.CQRS.Tasks
             var filteredIssues = filteredTasks.Select(rt => issues.FirstOrDefault(iss => iss.Id == rt.GitHubIssueId) ?? null);
             var notNullIssues = filteredIssues.Where(iss => iss != null).Select(iss => iss!);
 
-            var transformedTasks = notNullIssues.Select(rt => new CommunicationModel.Task(rt, _dbContext));
+            var transformedTasks = notNullIssues.Select(rt => new CommunicationModel.Task(rt, _dbContext, rt.HtmlUrl));
 
             return Task.FromResult(new PaginatedList<CommunicationModel.Task>(transformedTasks ?? new List<CommunicationModel.Task>(), 1, transformedTasks?.Count() ?? 0, 1));
         }
