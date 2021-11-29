@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ScrumHubBackend.DatabaseModel
 {
     /// <summary>
-    /// Represents one task
+    /// Represents one task that has elements in ScrumHub
     /// </summary>
     [Table("task")]
     public class Task
@@ -17,46 +17,64 @@ namespace ScrumHubBackend.DatabaseModel
         public long Id { get; set; }
 
         /// <summary>
-        /// Name of the task
-        /// </summary>
-        [Required]
-        public string Name { get; set; } = String.Empty;
-
-        /// <summary>
-        /// Flag if the task was finished
-        /// </summary>
-        [Required]
-        public bool Finished { get; set; } = false;
-
-        /// <summary>
-        /// How many hours was spent on PBI
-        /// </summary>
-        public double TimeSpentInHours { get; set; } = 0;
-
-        /// <summary>
-        /// When the task was started
-        /// </summary>
-        public DateTime? StartTime { get; set; } = null;
-
-        /// <summary>
-        /// When the task was finished
-        /// </summary>
-        public DateTime? EndTime { get; set;} = null;
-
-        /// <summary>
-        /// List of asigned people
-        /// </summary>
-        public ICollection<AssignedPerson>? Assignees { get; set; } = null;
-
-        /// <summary>
-        /// Id of a repository where Task is
-        /// </summary>
-        public long? RepositoryId { get; set; } = null;
-
-        /// <summary>
         /// Id of the github issue representing the task
         /// </summary>
         [Required]
         public int GitHubIssueId { get; set; } = 0;
+
+        /// <summary>
+        /// Id of the repository
+        /// </summary>
+        [Required]
+        public long RepositoryId { get; set; }
+
+        /// <summary>
+        /// Id of the PBI where the task is assigned
+        /// </summary>
+        [Required]
+        public long? PBI { get; set; }
+        
+        /// <summary>
+        /// Gests ScrumHub task from issue, null if not found
+        /// </summary>
+        public static Task? GetTaskFromIssue(Octokit.Issue issue, DatabaseContext dbContext)
+        {
+            var dbTask = dbContext.Tasks?.FirstOrDefault(task => task.GitHubIssueId == issue.Id);
+            return dbTask;
+        }
+
+        /// <summary>
+        /// Checks if issue is already in ScrumHub
+        /// </summary>
+        public static bool IsIsueInScrumHub(Octokit.Issue issue, DatabaseContext dbContext) => GetTaskFromIssue(issue, dbContext) != null;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public Task() { }
+
+        /// <summary>
+        /// Constructor, throws exceptions
+        /// </summary>
+        /// <exception cref="CustomExceptions.ConflictException">Issue is already in ScrumHub</exception>
+        /// <exception cref="CustomExceptions.NotFoundException">Pbi does not exist in the repository</exception>
+        /// <exception cref="CustomExceptions.NotFoundException">Issue does not belong to the repository</exception>
+        public Task(Octokit.Issue issue, Repository repository, DatabaseContext dbContext, long? pbiAssignedToTheTask = null)
+        {
+            if (IsIsueInScrumHub(issue, dbContext))
+                throw new CustomExceptions.ConflictException("Issue already in ScrumHub");
+
+            if (pbiAssignedToTheTask != null &&
+                pbiAssignedToTheTask > 0 &&
+                !repository.GetPBIsForRepository(dbContext).Any(pbi => pbi.Id == pbiAssignedToTheTask))
+                throw new CustomExceptions.NotFoundException("Pbi does not exist");
+
+            if(issue.Repository.Id != repository.GitHubId)
+                throw new CustomExceptions.NotFoundException("Issue not found in the repository");
+
+            GitHubIssueId = issue.Id;
+            RepositoryId = repository.Id;
+            PBI = pbiAssignedToTheTask;
+        }
     }
 }
