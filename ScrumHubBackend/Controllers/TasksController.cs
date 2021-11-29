@@ -160,5 +160,38 @@ namespace ScrumHubBackend.Controllers
             var result = await _mediator.Send(query);
             return Ok(result);
         }
+
+        /// <summary>
+        /// Adds new task in the repository (requires admin permissions in repository)
+        /// </summary>
+        /// <param name="authToken">Authorization token of user</param>
+        /// <param name="repositoryOwner">Owner of the repository</param>
+        /// <param name="repositoryName">Name of the repository</param>
+        /// <param name="newTask">Information about new task</param>
+        [HttpPost("{repositoryOwner}/{repositoryName}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(SHTask), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> CreateTask(
+            [FromHeader] string authToken,
+            [FromRoute] string repositoryOwner,
+            [FromRoute] string repositoryName,
+            [FromBody] TaskF newTask
+            )
+        {
+            var query = new AddTaskCommand
+            {
+                AuthToken = authToken,
+                RepositoryOwner = repositoryOwner,
+                RepositoryName = repositoryName,
+                Name = newTask.Name,
+                PBIId = newTask.PBIId
+            };
+
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        }
     }
 }
