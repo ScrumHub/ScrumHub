@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using ScrumHubBackend.CommunicationModel;
 using ScrumHubBackend.CommunicationModel.Common;
 
 namespace ScrumHubBackend.CQRS.Tasks
@@ -6,7 +7,7 @@ namespace ScrumHubBackend.CQRS.Tasks
     /// <summary>
     /// Query for getting tasks for one PBI
     /// </summary>
-    public class GetTasksForPBIQuery : IRequest<PaginatedList<CommunicationModel.Task>>
+    public class GetTasksForPBIQuery : IRequest<PaginatedList<SHTask>>
     {
         /// <summary>
         /// Github authorization token

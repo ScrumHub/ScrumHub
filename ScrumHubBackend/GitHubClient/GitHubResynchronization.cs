@@ -26,7 +26,7 @@
             if (dbRepo == null)
                 throw new CustomExceptions.NotFoundException("Repository not found");
 
-            var repoTasks = dbContext.Tasks?.Where(task => task.RepositoryId == dbRepo.Id).ToList() ?? new List<DatabaseModel.Task>();
+            var repoTasks = dbContext.Tasks?.Where(task => task.RepositoryId == dbRepo.Id).ToList() ?? new List<DatabaseModel.SHTask>();
 
             foreach(var repoTask in repoTasks)
             {
@@ -41,7 +41,7 @@
                 if (repoTasks.Any(repoT => repoT.GitHubIssueId == repoIssue.Id))
                     continue;
                 // Add task for issue
-                var newTask = new DatabaseModel.Task(repoIssue, dbRepo, dbContext);
+                var newTask = new DatabaseModel.SHTask(repoIssue, dbRepo, dbContext);
                 dbContext.Add(newTask);
             }
 

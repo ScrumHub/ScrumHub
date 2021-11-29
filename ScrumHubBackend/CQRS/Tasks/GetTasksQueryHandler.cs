@@ -7,11 +7,11 @@ using ScrumHubBackend.GitHubClient;
 namespace ScrumHubBackend.CQRS.Tasks
 {
     /// <summary>
-    /// Handler for getting tasks for the PBI
+    /// Handler for getting tasks
     /// </summary>
-    public class GetTasksForPBIQueryHandler : IRequestHandler<GetTasksForPBIQuery, PaginatedList<SHTask>>
+    public class GetTasksQueryHandler : IRequestHandler<GetTasksQuery, PaginatedList<SHTask>>
     {
-        private readonly ILogger<GetTasksForPBIQueryHandler> _logger;
+        private readonly ILogger<GetTasksQueryHandler> _logger;
         private readonly IGitHubClientFactory _gitHubClientFactory;
         private readonly IGitHubResynchronization _gitHubResynchronization;
         private readonly DatabaseContext _dbContext;
@@ -19,7 +19,7 @@ namespace ScrumHubBackend.CQRS.Tasks
         /// <summary>
         /// Constructor
         /// </summary>
-        public GetTasksForPBIQueryHandler(ILogger<GetTasksForPBIQueryHandler> logger, IGitHubClientFactory clientFactory, IGitHubResynchronization gitHubResynchronization, DatabaseContext dbContext)
+        public GetTasksQueryHandler(ILogger<GetTasksQueryHandler> logger, IGitHubClientFactory clientFactory, IGitHubResynchronization gitHubResynchronization, DatabaseContext dbContext)
         {
             _logger = logger ?? throw new ArgumentException(null, nameof(logger));
             _dbContext = dbContext ?? throw new ArgumentException(null, nameof(dbContext));
@@ -28,7 +28,7 @@ namespace ScrumHubBackend.CQRS.Tasks
         }
 
         /// <inheritdoc/>
-        public Task<PaginatedList<SHTask>> Handle(GetTasksForPBIQuery request, CancellationToken cancellationToken)
+        public Task<PaginatedList<SHTask>> Handle(GetTasksQuery request, CancellationToken cancellationToken)
         {
             if (request == null || request.AuthToken == null)
                 throw new BadHttpRequestException("Missing token");
@@ -43,9 +43,6 @@ namespace ScrumHubBackend.CQRS.Tasks
             if (dbRepository == null)
                 throw new NotFoundException("Repository not found in ScrumHub");
 
-            if (request.PBIId != 0 && !dbRepository.GetPBIsForRepository(_dbContext).Any(pbi => pbi.Id == request.PBIId))
-                throw new NotFoundException("PBI not found");
-
             var repositoryIssueRequest = new Octokit.RepositoryIssueRequest
             {
                 State = Octokit.ItemStateFilter.All
@@ -59,15 +56,22 @@ namespace ScrumHubBackend.CQRS.Tasks
 
             _gitHubResynchronization.ResynchronizeIssues(repository, issues, _dbContext);
 
-            var repoTasks = dbRepository.GetTasksForRepository(_dbContext);
+            return Task.FromResult(PaginateTasks(issues ?? new List<Octokit.Issue>(), request.PageNumber, request.PageSize));
+        }
 
-            var filteredTasks = repoTasks.Where(rt => request.PBIId <= 0 ? (rt.PBI == null || rt.PBI < 0) : (rt.PBI != null && rt.PBI == request.PBIId));
-            var filteredIssues = filteredTasks.Select(rt => issues.FirstOrDefault(iss => iss.Id == rt.GitHubIssueId) ?? null);
-            var notNullIssues = filteredIssues.Where(iss => iss != null).Select(iss => iss!);
+        /// <summary>
+        /// Paginates sprints and transforms them to model repositories
+        /// </summary>
+        protected virtual PaginatedList<SHTask> PaginateTasks(IEnumerable<Octokit.Issue> issues, int pageNumber, int pageSize)
+        {
+            var sortedIssues = issues.OrderByDescending(iss => iss.UpdatedAt);
+            int startIndex = pageSize * (pageNumber - 1);
+            int endIndex = Math.Min(startIndex + pageSize, sortedIssues.Count());
+            var paginatedIssues = sortedIssues.Take(new Range(startIndex, endIndex));
+            var transformedIssues = paginatedIssues.Select(iss => new SHTask(iss, _dbContext));
 
-            var transformedTasks = notNullIssues.Select(rt => new SHTask(rt, _dbContext));
-
-            return Task.FromResult(new PaginatedList<CommunicationModel.SHTask>(transformedTasks ?? new List<CommunicationModel.SHTask>(), 1, transformedTasks?.Count() ?? 0, 1));
+            int pagesCount = (int)Math.Ceiling(sortedIssues.Count() / (double)pageSize);
+            return new PaginatedList<SHTask>(transformedIssues, pageNumber, pageSize, pagesCount);
         }
     }
 }

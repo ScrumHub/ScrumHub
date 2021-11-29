@@ -5,7 +5,7 @@ namespace ScrumHubBackend.CommunicationModel
     /// <summary>
     /// Represents a task
     /// </summary>
-    public class Task
+    public class SHTask
     {
         /// <summary>
         /// Id of the PBI
@@ -40,15 +40,15 @@ namespace ScrumHubBackend.CommunicationModel
         /// <summary>
         /// Constructor
         /// </summary>
-        public Task() { }
+        public SHTask() { }
 
         /// <summary>
         /// Constructor, can throw exception
         /// </summary>
         /// <exception cref="CustomExceptions.NotFoundException">Issue not found in ScrumHub</exception>
-        public Task(Octokit.Issue issue, DatabaseContext dbContext, string repositoryIssueLink)
+        public SHTask(Octokit.Issue issue, DatabaseContext dbContext)
         {
-            var dbTask = DatabaseModel.Task.GetTaskFromIssue(issue, dbContext);
+            var dbTask = DatabaseModel.SHTask.GetTaskFromIssue(issue, dbContext);
 
             if (dbTask == null)
                 throw new CustomExceptions.NotFoundException("Issue not found in ScrumHub");
@@ -57,7 +57,7 @@ namespace ScrumHubBackend.CommunicationModel
             Name = issue.Title;
             Finished = issue.State.Value == Octokit.ItemState.Closed;
             PBIId = dbTask.PBI;
-            Link = repositoryIssueLink;
+            Link = issue.HtmlUrl;
         }
     }
 }

@@ -53,7 +53,7 @@ namespace ScrumHubBackend.DatabaseModel
         /// <summary>
         /// List of tasks for this PBI
         /// </summary>
-        public ICollection<Task>? Tasks { get; set; } = null;
+        public ICollection<SHTask>? Tasks { get; set; } = null;
 
         /// <summary>
         /// Id of a sprint where PBI is

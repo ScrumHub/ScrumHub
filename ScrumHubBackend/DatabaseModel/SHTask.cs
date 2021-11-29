@@ -7,7 +7,7 @@ namespace ScrumHubBackend.DatabaseModel
     /// Represents one task that has elements in ScrumHub
     /// </summary>
     [Table("task")]
-    public class Task
+    public class SHTask
     {
         /// <summary>
         /// Internal id of task
@@ -42,7 +42,7 @@ namespace ScrumHubBackend.DatabaseModel
         /// <summary>
         /// Gests ScrumHub task from issue, null if not found
         /// </summary>
-        public static Task? GetTaskFromIssue(Octokit.Issue issue, DatabaseContext dbContext)
+        public static SHTask? GetTaskFromIssue(Octokit.Issue issue, DatabaseContext dbContext)
         {
             var dbTask = dbContext.Tasks?.FirstOrDefault(task => task.GitHubIssueId == issue.Id);
             return dbTask;
@@ -56,7 +56,7 @@ namespace ScrumHubBackend.DatabaseModel
         /// <summary>
         /// Constructor
         /// </summary>
-        public Task() { }
+        public SHTask() { }
 
         /// <summary>
         /// Constructor, throws exceptions
@@ -64,7 +64,7 @@ namespace ScrumHubBackend.DatabaseModel
         /// <exception cref="CustomExceptions.ConflictException">Issue is already in ScrumHub</exception>
         /// <exception cref="CustomExceptions.NotFoundException">Pbi does not exist in the repository</exception>
         /// <exception cref="CustomExceptions.NotFoundException">Issue does not belong to the repository</exception>
-        public Task(Octokit.Issue issue, Repository repository, DatabaseContext dbContext, long? pbiAssignedToTheTask = null)
+        public SHTask(Octokit.Issue issue, Repository repository, DatabaseContext dbContext, long? pbiAssignedToTheTask = null)
         {
             if (IsIsueInScrumHub(issue, dbContext))
                 throw new CustomExceptions.ConflictException("Issue already in ScrumHub");
