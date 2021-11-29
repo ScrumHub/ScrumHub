@@ -4,9 +4,9 @@ using ScrumHubBackend.CommunicationModel;
 namespace ScrumHubBackend.CQRS.Tasks
 {
     /// <summary>
-    /// Command for asssigning the task to the PBI
+    /// Query for getting one task
     /// </summary>
-    public class AssignTaskToPBICommand : IRequest<SHTask>
+    public class GetOneTaskQuery : IRequest<SHTask>
     {
         /// <summary>
         /// Github authorization token
@@ -27,10 +27,5 @@ namespace ScrumHubBackend.CQRS.Tasks
         /// Id of the task
         /// </summary>
         public long TaskId { get; set; }
-
-        /// <summary>
-        /// Id of the PBI, 0 for unassigned
-        /// </summary>
-        public long PBIId { get; set; }
     }
 }

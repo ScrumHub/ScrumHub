@@ -1,12 +1,13 @@
 ﻿using MediatR;
 using ScrumHubBackend.CommunicationModel;
+using ScrumHubBackend.CommunicationModel.Common;
 
 namespace ScrumHubBackend.CQRS.Tasks
 {
     /// <summary>
-    /// Command for asssigning the task to the PBI
+    /// Get all the tasks from repository
     /// </summary>
-    public class AssignTaskToPBICommand : IRequest<SHTask>
+    public class GetTasksQuery : IRequest<PaginatedList<SHTask>>
     {
         /// <summary>
         /// Github authorization token
@@ -24,13 +25,13 @@ namespace ScrumHubBackend.CQRS.Tasks
         public string? RepositoryName { get; set; }
 
         /// <summary>
-        /// Id of the task
+        /// Page number
         /// </summary>
-        public long TaskId { get; set; }
+        public int PageNumber { get; set; }
 
         /// <summary>
-        /// Id of the PBI, 0 for unassigned
+        /// Page size
         /// </summary>
-        public long PBIId { get; set; }
+        public int PageSize { get; set; }
     }
 }

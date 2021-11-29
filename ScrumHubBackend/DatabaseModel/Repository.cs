@@ -55,6 +55,6 @@ namespace ScrumHubBackend.DatabaseModel
         /// <summary>
         /// Gets tasks for repository
         /// </summary>
-        public List<Task> GetTasksForRepository(DatabaseContext dbContext) => dbContext.Tasks?.Where(task => task.RepositoryId == Id).ToList() ?? new List<Task>();
+        public List<SHTask> GetTasksForRepository(DatabaseContext dbContext) => dbContext.Tasks?.Where(task => task.RepositoryId == Id).ToList() ?? new List<SHTask>();
     }
 }

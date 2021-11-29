@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ScrumHubBackend.DatabaseModel;
-using Task = ScrumHubBackend.DatabaseModel.Task;
+using SHTask = ScrumHubBackend.DatabaseModel.SHTask;
 
 namespace ScrumHubBackend
 {
@@ -27,7 +27,7 @@ namespace ScrumHubBackend
         /// <summary>
         /// All tasks in ScrumHub
         /// </summary>
-        public DbSet<Task>? Tasks { get; set; }
+        public DbSet<SHTask>? Tasks { get; set; }
 
         /// <summary>
         /// All sprints in ScrumHub
