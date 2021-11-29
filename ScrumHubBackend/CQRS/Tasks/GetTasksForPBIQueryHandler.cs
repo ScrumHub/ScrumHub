@@ -11,16 +11,18 @@ namespace ScrumHubBackend.CQRS.Tasks
     {
         private readonly ILogger<GetTasksForPBIQueryHandler> _logger;
         private readonly IGitHubClientFactory _gitHubClientFactory;
+        private readonly IGitHubResynchronization _gitHubResynchronization;
         private readonly DatabaseContext _dbContext;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public GetTasksForPBIQueryHandler(ILogger<GetTasksForPBIQueryHandler> logger, IGitHubClientFactory clientFactory, DatabaseContext dbContext)
+        public GetTasksForPBIQueryHandler(ILogger<GetTasksForPBIQueryHandler> logger, IGitHubClientFactory clientFactory, IGitHubResynchronization gitHubResynchronization, DatabaseContext dbContext)
         {
             _logger = logger ?? throw new ArgumentException(null, nameof(logger));
             _dbContext = dbContext ?? throw new ArgumentException(null, nameof(dbContext));
             _gitHubClientFactory = clientFactory ?? throw new ArgumentException(null, nameof(clientFactory));
+            _gitHubResynchronization = gitHubResynchronization ?? throw new ArgumentException(null, nameof(gitHubResynchronization));
         }
 
         /// <inheritdoc/>
