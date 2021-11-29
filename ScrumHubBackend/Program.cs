@@ -25,6 +25,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 builder.Services.AddMediatR(new[] { Assembly.GetExecutingAssembly() });
 builder.Services.AddSingleton<IGitHubClientFactory, ScrumHubGitHubClientFactory>();
+builder.Services.AddSingleton<IGitHubResynchronization, GitHubResynchronization>();
 builder.Logging.AddFilter("Microsoft", LogLevel.Warning);
 builder.Logging.AddFilter("System", LogLevel.Error);
 
