@@ -1,4 +1,6 @@
-﻿namespace ScrumHubBackend.CommunicationModel
+﻿using ScrumHubBackend.GitHubClient;
+
+namespace ScrumHubBackend.CommunicationModel
 {
     /// <summary>
     /// Represents a task
@@ -31,6 +33,11 @@
         public bool IsAssignedToPBI { get => PBIId != null && PBIId > 0; }
 
         /// <summary>
+        /// Link to the repository
+        /// </summary>
+        public string Link { get; set; } = String.Empty;
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public Task() { }
@@ -39,7 +46,7 @@
         /// Constructor, can throw exception
         /// </summary>
         /// <exception cref="CustomExceptions.NotFoundException">Issue not found in ScrumHub</exception>
-        public Task(Octokit.Issue issue, DatabaseContext dbContext)
+        public Task(Octokit.Issue issue, DatabaseContext dbContext, string repositoryIssueLink)
         {
             var dbTask = DatabaseModel.Task.GetTaskFromIssue(issue, dbContext);
 
@@ -50,6 +57,7 @@
             Name = issue.Title;
             Finished = issue.State.Value == Octokit.ItemState.Closed;
             PBIId = dbTask.PBI;
+            Link = repositoryIssueLink;
         }
     }
 }
