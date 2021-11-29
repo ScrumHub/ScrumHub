@@ -31,7 +31,6 @@ namespace ScrumHubBackend.DatabaseModel
         /// <summary>
         /// Id of the PBI where the task is assigned
         /// </summary>
-        [Required]
         public long? PBI { get; set; }
         
         /// <summary>
@@ -68,9 +67,6 @@ namespace ScrumHubBackend.DatabaseModel
                 pbiAssignedToTheTask > 0 &&
                 !repository.GetPBIsForRepository(dbContext).Any(pbi => pbi.Id == pbiAssignedToTheTask))
                 throw new CustomExceptions.NotFoundException("Pbi does not exist");
-
-            if(issue.Repository.Id != repository.GitHubId)
-                throw new CustomExceptions.NotFoundException("Issue not found in the repository");
 
             GitHubIssueId = issue.Id;
             RepositoryId = repository.Id;

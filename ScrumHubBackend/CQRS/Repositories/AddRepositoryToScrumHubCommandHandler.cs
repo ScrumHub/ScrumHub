@@ -47,7 +47,7 @@ namespace ScrumHubBackend.CQRS.Repositories
             _dbContext.Add(new DatabaseModel.Repository(repository));
             _dbContext.SaveChanges();
 
-            return Task.FromResult(new Repository(repository, userActivity, _dbContext));
+            return System.Threading.Tasks.Task.FromResult(new Repository(repository, userActivity, _dbContext));
         }
     }
 }

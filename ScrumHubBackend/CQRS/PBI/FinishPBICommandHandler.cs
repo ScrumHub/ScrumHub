@@ -52,7 +52,7 @@ namespace ScrumHubBackend.CQRS.PBI
             _dbContext.Update(pbi);
             _dbContext.SaveChanges();
 
-            return Task.FromResult(new BacklogItem(pbi.Id, _dbContext));
+            return System.Threading.Tasks.Task.FromResult(new BacklogItem(pbi.Id, _dbContext));
         }
     }
 }

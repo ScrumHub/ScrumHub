@@ -51,5 +51,10 @@ namespace ScrumHubBackend.DatabaseModel
         /// Gets PBIs for repository
         /// </summary>
         public List<BacklogItem> GetPBIsForRepository(DatabaseContext dbContext) => dbContext.BacklogItems?.Where(pbi => pbi.RepositoryId == Id).ToList() ?? new List<BacklogItem>();
+
+        /// <summary>
+        /// Gets tasks for repository
+        /// </summary>
+        public List<Task> GetTasksForRepository(DatabaseContext dbContext) => dbContext.Tasks?.Where(task => task.RepositoryId == Id).ToList() ?? new List<Task>();
     }
 }
