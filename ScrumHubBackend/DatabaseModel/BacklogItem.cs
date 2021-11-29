@@ -86,7 +86,7 @@ namespace ScrumHubBackend.DatabaseModel
         /// </summary>
         public void UpdateAcceptanceCriteria(List<String> newCriteria, DatabaseContext dbContext)
         {
-            var oldCriteria = GetAcceptanceCriteriaForRepository(dbContext);
+            var oldCriteria = GetAcceptanceCriteriaForPBI(dbContext);
             foreach(var oldCriterium in oldCriteria)
             {
                 dbContext.Remove(oldCriterium);
@@ -104,6 +104,6 @@ namespace ScrumHubBackend.DatabaseModel
         /// <summary>
         /// Gets acceptance criteria for PBI
         /// </summary>
-        public List<AcceptanceCriterium> GetAcceptanceCriteriaForRepository(DatabaseContext dbContext) => dbContext.AcceptanceCriteria?.Where(ac => ac.BacklogItemId == Id).ToList() ?? new List<AcceptanceCriterium>();
+        public List<AcceptanceCriterium> GetAcceptanceCriteriaForPBI(DatabaseContext dbContext) => dbContext.AcceptanceCriteria?.Where(ac => ac.BacklogItemId == Id).ToList() ?? new List<AcceptanceCriterium>();
     }
 }

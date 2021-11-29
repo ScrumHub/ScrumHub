@@ -56,11 +56,6 @@
         public IList<string>? AcceptanceCriteria { get; set; } = new List<string>();
 
         /// <summary>
-        /// List of tasks for this PBI
-        /// </summary>
-        public ICollection<long>? Tasks { get; set; } = null;
-
-        /// <summary>
         /// Constructor
         /// </summary>
         public BacklogItem() { }
@@ -84,9 +79,11 @@
             TimeSpentInHours = dbPBI?.TimeSpentInHours ?? 0;
             Priority = dbPBI?.Priority ?? 0;
 
-            AcceptanceCriteria = dbPBI?.GetAcceptanceCriteriaForRepository(dbContext).Select(ac => ac.Text).ToList();
+            AcceptanceCriteria = dbPBI?.GetAcceptanceCriteriaForPBI(dbContext).Select(ac => ac.Text).ToList();
 
             SprintNumber = dbPBI?.SprintId ?? null;
+
+            var dbTasks = dbPBI?.GetSHTaskForPBI(dbContext) ?? new List<DatabaseModel.SHTask>();
         }
     }
 }
