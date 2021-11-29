@@ -6,7 +6,7 @@ namespace ScrumHubBackend.CQRS.Tasks
     /// <summary>
     /// Query for getting tasks for one PBI
     /// </summary>
-    public class GetTasksForPBIQuery : IRequest<PaginatedList<Unit>>
+    public class GetTasksForPBIQuery : IRequest<PaginatedList<CommunicationModel.Task>>
     {
         /// <summary>
         /// Github authorization token

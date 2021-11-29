@@ -90,7 +90,7 @@ namespace ScrumHubBackend.CQRS.Sprints
 
             _dbContext.SaveChanges();
 
-            return Task.FromResult(new Sprint(dbSprint, _dbContext));
+            return System.Threading.Tasks.Task.FromResult(new Sprint(dbSprint, _dbContext));
         }
 
         private static DatabaseModel.BacklogItem NullableToNonNullable(DatabaseModel.BacklogItem? pbi) => pbi ?? new DatabaseModel.BacklogItem();

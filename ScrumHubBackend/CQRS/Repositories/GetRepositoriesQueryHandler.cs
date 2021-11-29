@@ -58,7 +58,7 @@ namespace ScrumHubBackend.CQRS.Repositories
 
             var paginatedRepositories = FilterAndPaginateRepositories(repositories, userActivities, request.PageNumber, request.PageSize, request.NameFilter);
 
-            return Task.FromResult(paginatedRepositories);
+            return System.Threading.Tasks.Task.FromResult(paginatedRepositories);
         }
 
         /// <summary>

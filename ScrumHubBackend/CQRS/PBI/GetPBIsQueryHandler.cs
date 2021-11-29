@@ -43,7 +43,7 @@ namespace ScrumHubBackend.CQRS.PBI
 
             var paginatedPBIs = FilterAndPaginatePBIs(_dbContext.BacklogItems?.Where(pbi => pbi.RepositoryId == dbRepository.Id).ToList() ?? new List<DatabaseModel.BacklogItem>(), request.PageNumber, request.PageSize, request.NameFilter, request.FinishedFilter, request.EstimatedFilter, request.InSprintFilter);
 
-            return Task.FromResult(paginatedPBIs);
+            return System.Threading.Tasks.Task.FromResult(paginatedPBIs);
         }
 
         /// <summary>
