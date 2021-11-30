@@ -47,6 +47,14 @@ namespace ScrumHubBackend.CQRS.PBI
             if (pbi == null || pbi?.RepositoryId != dbRepository.Id)
                 throw new NotFoundException("Backlog item not found in ScrumHub");
 
+            // Unasign tasks
+            var pbiTasks = dbRepository.GetTasksForRepository(_dbContext).Where(dbTask => dbTask.PBI == pbi.Id);
+            foreach(var task in pbiTasks)
+            {
+                task.PBI = null;
+                _dbContext.Update(task);
+            }
+
             _dbContext.Remove(pbi);
             _dbContext.SaveChanges();
 
