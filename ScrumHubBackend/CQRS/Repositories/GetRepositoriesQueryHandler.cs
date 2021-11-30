@@ -47,7 +47,7 @@ namespace ScrumHubBackend.CQRS.Repositories
             if (!_cachedRepositories.TryGetValue(user.Id, out var cachedRepositories)
                 || DateTime.UtcNow.Subtract(cachedRepositories.lastUpdate).TotalMinutes >= _cacheTimer)
             {
-                var updatedRepositories = GetRepositoriesForCurrentUser(gitHubClient).Result;
+                var updatedRepositories = gitHubClient.Repository.GetAllForCurrent().Result;
                 _cachedRepositories[user.Id] = (updatedRepositories, DateTime.UtcNow);
                 repositories = updatedRepositories;
             }
@@ -58,14 +58,8 @@ namespace ScrumHubBackend.CQRS.Repositories
 
             var paginatedRepositories = FilterAndPaginateRepositories(repositories, userActivities, request.PageNumber, request.PageSize, request.NameFilter);
 
-            return System.Threading.Tasks.Task.FromResult(paginatedRepositories);
+            return Task.FromResult(paginatedRepositories);
         }
-
-        /// <summary>
-        /// Gets repositories of user that is logged in
-        /// </summary>
-        protected virtual Task<IReadOnlyList<Octokit.Repository>> GetRepositoriesForCurrentUser(Octokit.GitHubClient client)
-            => client.Repository.GetAllForCurrent();
 
         /// <summary>
         /// Filters and paginates downloaded repositories and transforms them to model repositories
