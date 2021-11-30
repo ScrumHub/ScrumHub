@@ -49,7 +49,7 @@ namespace ScrumHubBackend.CQRS.Sprints
         /// <summary>
         /// Paginates sprints and transforms them to model repositories
         /// </summary>
-        protected virtual PaginatedList<Sprint> FilterAndPaginateSprints(IEnumerable<DatabaseModel.Sprint> sprints, int pageNumber, int pageSize)
+        public virtual PaginatedList<Sprint> FilterAndPaginateSprints(IEnumerable<DatabaseModel.Sprint> sprints, int pageNumber, int pageSize)
         {
             var sortedSprints = sprints.OrderBy(sprint => sprint.SprintNumber);
             int startIndex = pageSize * (pageNumber - 1);
