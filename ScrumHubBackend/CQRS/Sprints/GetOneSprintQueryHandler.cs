@@ -46,7 +46,7 @@ namespace ScrumHubBackend.CQRS.Sprints
             if(dbSprint == null)
                 throw new NotFoundException("Sprint not fount in the repository");
 
-            return System.Threading.Tasks.Task.FromResult(new Sprint(dbSprint, _dbContext));
+            return Task.FromResult(new Sprint(dbSprint, _dbContext));
         }
     }
 }

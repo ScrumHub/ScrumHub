@@ -82,8 +82,6 @@
             AcceptanceCriteria = dbPBI?.GetAcceptanceCriteriaForPBI(dbContext).Select(ac => ac.Text).ToList();
 
             SprintNumber = dbPBI?.SprintId ?? null;
-
-            var dbTasks = dbPBI?.GetSHTaskForPBI(dbContext) ?? new List<DatabaseModel.SHTask>();
         }
     }
 }

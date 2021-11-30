@@ -43,7 +43,7 @@ namespace ScrumHubBackend.CQRS.Sprints
 
             var sprintsForRepository = dbRepository.GetSprintsForRepository(_dbContext);
 
-            return System.Threading.Tasks.Task.FromResult(FilterAndPaginateSprints(sprintsForRepository ?? new List<DatabaseModel.Sprint>(), request.PageNumber, request.PageSize));
+            return Task.FromResult(FilterAndPaginateSprints(sprintsForRepository ?? new List<DatabaseModel.Sprint>(), request.PageNumber, request.PageSize));
         }
 
         /// <summary>

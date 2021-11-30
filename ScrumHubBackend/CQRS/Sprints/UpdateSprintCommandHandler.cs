@@ -80,7 +80,7 @@ namespace ScrumHubBackend.CQRS.Sprints
             _dbContext.Update(dbSprint);
             _dbContext.SaveChanges();
 
-            return System.Threading.Tasks.Task.FromResult(new Sprint(dbSprint, _dbContext));
+            return Task.FromResult(new Sprint(dbSprint, _dbContext));
         }
     }
 }

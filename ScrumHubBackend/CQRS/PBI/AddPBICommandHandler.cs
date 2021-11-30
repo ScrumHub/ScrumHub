@@ -49,7 +49,7 @@ namespace ScrumHubBackend.CQRS.PBI
 
             newPBI.UpdateAcceptanceCriteria(request.AcceptanceCriteria ?? new List<string>(), _dbContext);
 
-            return System.Threading.Tasks.Task.FromResult(new BacklogItem(newPBI.Id, _dbContext));
+            return Task.FromResult(new BacklogItem(newPBI.Id, _dbContext));
         }
     }
 }

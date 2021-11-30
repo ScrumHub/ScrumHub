@@ -59,7 +59,7 @@ namespace ScrumHubBackend.CQRS.Sprints
 
             pbisNullable.RemoveAll(pbi => pbi == null);
 
-            var pbis = pbisNullable.Select(pbi => NullableToNonNullable(pbi));
+            var pbis = pbisNullable.Select(pbi => pbi!);
 
             if (!pbis.All(pbi => pbisForRepository?.Any(repoPbi => repoPbi.Id == pbi.Id) ?? false))
             {
@@ -90,9 +90,7 @@ namespace ScrumHubBackend.CQRS.Sprints
 
             _dbContext.SaveChanges();
 
-            return System.Threading.Tasks.Task.FromResult(new Sprint(dbSprint, _dbContext));
+            return Task.FromResult(new Sprint(dbSprint, _dbContext));
         }
-
-        private static DatabaseModel.BacklogItem NullableToNonNullable(DatabaseModel.BacklogItem? pbi) => pbi ?? new DatabaseModel.BacklogItem();
     }
 }
