@@ -64,7 +64,7 @@ namespace ScrumHubBackend.CQRS.Repositories
         /// <summary>
         /// Filters and paginates downloaded repositories and transforms them to model repositories
         /// </summary>
-        protected virtual PaginatedList<Repository> FilterAndPaginateRepositories(IEnumerable<Octokit.Repository> repositories, IReadOnlyList<Octokit.Activity> userActivities, int pageNumber, int pageSize, string? nameFilter)
+        public virtual PaginatedList<Repository> FilterAndPaginateRepositories(IEnumerable<Octokit.Repository> repositories, IReadOnlyList<Octokit.Activity> userActivities, int pageNumber, int pageSize, string? nameFilter)
         {
             var sortedAndFilteredRepositriesWithActivity = repositories
                 .Where(repository => repository.FullName.ToLower().Contains(nameFilter?.ToLower() ?? ""))

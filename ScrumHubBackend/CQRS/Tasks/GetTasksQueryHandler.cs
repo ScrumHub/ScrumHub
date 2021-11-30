@@ -62,7 +62,7 @@ namespace ScrumHubBackend.CQRS.Tasks
         /// <summary>
         /// Paginates sprints and transforms them to model repositories
         /// </summary>
-        protected virtual PaginatedList<SHTask> PaginateTasks(IEnumerable<Octokit.Issue> issues, int pageNumber, int pageSize)
+        public virtual PaginatedList<SHTask> PaginateTasks(IEnumerable<Octokit.Issue> issues, int pageNumber, int pageSize)
         {
             var sortedIssues = issues.OrderByDescending(iss => iss.UpdatedAt);
             int startIndex = pageSize * (pageNumber - 1);
