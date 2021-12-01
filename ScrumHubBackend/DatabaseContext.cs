@@ -12,32 +12,32 @@ namespace ScrumHubBackend
         /// <summary>
         /// Repositories in ScrumHub
         /// </summary>
-        public DbSet<Repository>? Repositories { get; set; }
+        public virtual DbSet<Repository>? Repositories { get; set; }
 
         /// <summary>
         /// All PBIs in ScrumHub
         /// </summary>
-        public DbSet<BacklogItem>? BacklogItems { get; set; }
+        public virtual DbSet<BacklogItem>? BacklogItems { get; set; }
 
         /// <summary>
         /// All acceptance criteria in ScrumHub
         /// </summary>
-        public DbSet<AcceptanceCriterium>? AcceptanceCriteria { get; set; }
+        public virtual DbSet<AcceptanceCriterium>? AcceptanceCriteria { get; set; }
 
         /// <summary>
         /// All tasks in ScrumHub
         /// </summary>
-        public DbSet<SHTask>? Tasks { get; set; }
+        public virtual DbSet<SHTask>? Tasks { get; set; }
 
         /// <summary>
         /// All sprints in ScrumHub
         /// </summary>
-        public DbSet<Sprint>? Sprints { get; set; }
+        public virtual DbSet<Sprint>? Sprints { get; set; }
 
         /// <summary>
         /// Relation describing people assigned to tasks
         /// </summary>
-        public DbSet<AssignedPerson>? AssignedPeople { get; set; }
+        public virtual DbSet<AssignedPerson>? AssignedPeople { get; set; }
 
         /// <summary>
         /// Construtor
@@ -46,6 +46,11 @@ namespace ScrumHubBackend
         {
             Database.EnsureCreated();
         }
+
+        /// <summary>
+        /// Constructor for tests
+        /// </summary>
+        public DatabaseContext() : base() { }
 
     }
 }

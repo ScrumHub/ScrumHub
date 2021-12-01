@@ -49,7 +49,7 @@ namespace ScrumHubBackend.CQRS.PBI
         /// <summary>
         /// Filters and paginates PBIs and transforms them to model repositories
         /// </summary>
-        protected virtual PaginatedList<BacklogItem> FilterAndPaginatePBIs(IEnumerable<DatabaseModel.BacklogItem> PBIs, int pageNumber, int pageSize, string? nameFilter, bool? finishedFilter, bool? estimatedFilter, bool? inSprintFilter)
+        public virtual PaginatedList<BacklogItem> FilterAndPaginatePBIs(IEnumerable<DatabaseModel.BacklogItem> PBIs, int pageNumber, int pageSize, string? nameFilter, bool? finishedFilter, bool? estimatedFilter, bool? inSprintFilter)
         {
             var filteredPBIsName = PBIs.Where(pbi => pbi.Name.ToLower().Contains(nameFilter?.ToLower() ?? ""));
             var filteredPBIsFinished = filteredPBIsName.Where(pbi => finishedFilter == null || pbi.Finished == finishedFilter);
