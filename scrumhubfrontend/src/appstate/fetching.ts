@@ -63,15 +63,6 @@ export function fetchRepositories(filters: IFilters, token: string
 }
 export function addRepository(id: number, token: string
 ): Promise<RequestResponse<IRepository, number>> {
-  let formData = new FormData();
-  formData.append(
-    "index",
-    new Blob([JSON.stringify(id)], {
-      type: "application/json",
-    }),
-    ""
-  );
-
   return getResponse(
     axios.post(
       `https://${config.backend.ip}:${config.backend.port}/api/Repositories`,
@@ -81,7 +72,7 @@ export function addRepository(id: number, token: string
           'authToken': token,
           'Accept': "application/json",
           'contentType':"application/json",
-          'Access-Control-Allow-Origin':`https://${config.backend.ip}:${config.backend.port}`,
+          'Access-Control-Allow-Origin':"*",
         },
       }
     )

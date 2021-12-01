@@ -21,40 +21,15 @@ const { Header, Footer, Content } = Layout;
 function Main(props: any) {
   const { state, dispatch } = useContext(AuthContext);
   const { token, isLoggedIn } = state;
-  const refreshRequired = useSelector(
-    (appState: State) => appState.reposRequireRefresh as boolean
-  );
-
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const navigation = useNavigate();
-  //const { state, dispatch } = useContext(AuthContext);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState({ errorMessage: "", isLoading: false });
   const [logout, setLogout] = useState(false);
   const [initialRefresh, setInitialRefresh] = useState(true);
-  //const { avatar_url, name, public_repos, followers, following } = state.user
-
-  useEffect(() => {
-    if (state.isLoggedIn && (refreshRequired || initialRefresh)) {
-      //store.dispatch(clearReposList());
-      try {
-        store.dispatch(
-          Actions.fetchRepositoriesThunk({
-            filters: {
-              pageSize: config.defaultFilters.size,
-              pageNumber: config.defaultFilters.page,
-            },
-            token: token,
-          }) //filters
-        );
-      } catch (err) {
-        console.error("Failed to fetch the repos: ", err);
-      } finally {
-        setInitialRefresh(false);
-      }
-    }
-  }, [initialRefresh, refreshRequired, state.isLoggedIn, token]);
-
+  const refreshRequired = useSelector(
+    (appState: State) => appState.reposRequireRefresh as boolean
+  );
   useEffect(() => {
     if (logout) {
       //deleteCookie("user_session", "/", "github.com")
@@ -74,9 +49,35 @@ function Main(props: any) {
     }
   }, [state, dispatch, data, logout, token]);
 
-  if (!state.isLoggedIn) {
-    //return (<Navigate to="/login" />);
-  }
+  useEffect(() => {
+    if (initialRefresh) {
+      store.dispatch(clearReposList());
+      setInitialRefresh(false);
+    }
+  }, [initialRefresh]);
+
+  useEffect(() => {
+    if (state.isLoggedIn && refreshRequired) {
+      //store.dispatch(clearReposList());
+      try {
+        store.dispatch(
+          Actions.fetchRepositoriesThunk({
+            filters: {
+              pageSize: config.defaultFilters.size,
+              pageNumber: config.defaultFilters.page,
+            },
+            token: token,
+          }) //filters
+        );
+      } catch (err) {
+        console.error("Failed to fetch the repos: ", err);
+      } finally {
+        //setFilters({ ...filters, pageNumber: config.defaultFilters.page + 1 });
+        setInitialRefresh(false);
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refreshRequired, state.isLoggedIn]);
 
   const handleLogout = () => {
     setLogout(true);

@@ -12,20 +12,13 @@ import { useSelector } from 'react-redux';
 import { CalendarOutlined, FolderAddOutlined, InfoCircleOutlined, LoadingOutlined } from '@ant-design/icons';
 import { store } from '../appstate/store';
 import { clearReposList } from '../appstate/actions';
-
 const { Meta } = Card;
-//import { IRepositoryList } from '../AppState/stateInterfaces';
-//import {Layout, Header, Content, Footer} from "antd";
-
 
 
 export default function Home() {
   //const mock_data = initRepositoryList;
   const { state } = useContext(AuthContext);
   const { token } = state;
-  const pages = useSelector(
-    (state: State) => state.pages
-  );
   const [filters, setFilters] = useState<IFilters>({
     pageNumber: config.defaultFilters.page,
     pageSize: config.defaultFilters.size,
@@ -35,13 +28,16 @@ export default function Home() {
   const [repoId, setRepoId] = useState(0);
   const [fetching, setFetching] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [initialRefresh, setInitialRefresh] = useState(false);
+  const refreshRequired = useSelector(
+    (appState: State) => appState.reposRequireRefresh as boolean
+  );
   const repos = useSelector(
     (state: State) => state.repositories as IRepository[]
   );
   if (!state.isLoggedIn) {
     return <Navigate to="/login" />;
   }
+   
 
   const fetchMore = () => {
     if (!fetching) {
@@ -51,7 +47,7 @@ export default function Home() {
           Actions.fetchRepositoriesThunk({
             filters: {
               ...filters,
-              pageNumber: pages,
+              pageNumber: filters.pageNumber < 2 ? 2 : filters.pageNumber,
             },
             token: token,
           }) //filters
@@ -59,10 +55,8 @@ export default function Home() {
       } catch (err) {
         console.error("Failed to fetch the repos: ", err);
       } finally {
-        if (filters.page != null) {
-          setFilters({ ...filters, pageNumber: pages + 1 });
-        }
-        setInitialRefresh(true);
+        setFilters({ ...filters, pageNumber: filters.pageNumber < 2 ? 3 : filters.pageNumber + 1 });
+        //setInitialRefresh(true);
         setFetching(false);
       }
     }
@@ -79,16 +73,16 @@ export default function Home() {
       } catch (err) {
         console.error("Failed to add the repos: ", err);
       } finally {
-        store.dispatch(clearReposList());
+        setFilters({ ...filters, pageNumber: config.defaultFilters.page});
         setFetching(false);
-        //navigate("/", { replace: true });
+        store.dispatch(clearReposList());
       }
     };
   return (
     <section className="container">
       <InfiniteScroll
         dataLength={repos.length}
-        scrollThreshold={0.7}
+        scrollThreshold={0.9}
         next={fetchMore}
         hasMore={!lastPage && !fetching}
         loader={
@@ -114,7 +108,6 @@ export default function Home() {
                 <p>{"There are " + rep.sprints.length + " sprints."}</p>
                 <p>{"There are " + rep.backlogItems.length + " backlog items.\n"}</p>
                 <p>{rep.typeOfLastActivity + " backlog items.\n"}</p>
-                  <a href={rep.gitHubId as unknown as string}></a>
                 
 
               </Card>
@@ -134,8 +127,4 @@ place-items: center;
 margin: 70px;
 background: linear-gradient(to bottom, transparent, gray);
 `;
-
-
-
-
 

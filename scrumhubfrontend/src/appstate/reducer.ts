@@ -61,7 +61,7 @@ export const reducer = createReducer(initState, {
   }
   // if response is shorter than default size - it means end is reached.
   newState.reposLastPage = repos.list.length < pageSize;
-  newState.pages = pageNumber+1;
+  newState.pages = pageNumber + 1;
   newState.reposRequireRefresh = false;
   return newState;
 },
