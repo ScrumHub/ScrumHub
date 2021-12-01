@@ -2,7 +2,7 @@ import type { APIResponse, RequestResponse } from "./response";
 import config from "../configuration/config";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import axios, { AxiosResponse } from "axios";
-import { IFilters, IRepository, IRepositoryList } from "./stateInterfaces";
+import { IFilters, IProductBacklogList, IRepository, IRepositoryList } from "./stateInterfaces";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function getResponse<T, K>(
@@ -61,6 +61,7 @@ export function fetchRepositories(filters: IFilters, token: string
     )
   );
 }
+
 export function addRepository(id: number, token: string
 ): Promise<RequestResponse<IRepository, number>> {
   return getResponse(
@@ -78,4 +79,21 @@ export function addRepository(id: number, token: string
     )
   );
 }
+
+export function fetchPBIs(ownerName: any, token: string
+  ): Promise<RequestResponse<IProductBacklogList, number>> {
+    
+    return getResponse(
+      axios.get(
+        `https://${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}`,
+        {
+          headers: {
+            'authToken': token,
+            'Accept': "application/json",
+            'Access-Control-Allow-Origin':`https://${config.backend.ip}:${config.backend.port}`,
+          },
+        }
+      )
+    );
+  }
 

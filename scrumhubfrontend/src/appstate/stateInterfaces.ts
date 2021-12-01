@@ -27,8 +27,14 @@ export type State = {
   openRepository: IRepository | any;
   reposLastPage: boolean;
   reposRequireRefresh: boolean;
+  productLastPage: boolean;
+  productRequireRefresh: boolean;
+  sprintLastPage: boolean;
+  sprintRequireRefresh: boolean;
+  repoId: number;
+  ownerName: string;
 };
-export interface IBacklogItem {
+export interface IProductBacklogItem {
   id: number;
   name: string;
   finished: boolean;
@@ -42,7 +48,16 @@ export interface IBacklogItem {
   tasks: any
 }
 
-export const initBacklogItem: IBacklogItem = {
+
+export interface IProductBacklogList {
+  pageNumber: number;
+  pageCount: number;
+  pageSize: number;
+  realSize: number;
+  list: IProductBacklogItem[];
+}
+
+export const initProductBacklogItem: IProductBacklogItem = {
   id: 0,
   name: "Item",
   finished: false,
@@ -59,13 +74,13 @@ export const initBacklogItem: IBacklogItem = {
 export interface ISprint {
   sprintNumber: number;
   goal: string;
-  backlogItems: IBacklogItem[] | any
+  backlogItems: IProductBacklogItem[] | any
 }
 
 export const initSprint: ISprint = {
   sprintNumber: 1,
   goal: "Goal 1",
-  backlogItems: [initBacklogItem],
+  backlogItems: [initProductBacklogItem],
 }
 
 export interface IRepository {
@@ -76,7 +91,7 @@ export interface IRepository {
   gitHubId: number;
   hasAdminRights: boolean;
   alreadyInScrumHub: boolean;
-  backlogItems: IBacklogItem[] | any;
+  backlogItems: IProductBacklogItem[] | any;
   sprints: ISprint[] | any;
 }
 
@@ -85,7 +100,7 @@ export const initRepository: IRepository = {
   gitHubId: 0,
   hasAdminRights: true,
   alreadyInScrumHub: true,
-  backlogItems: [initBacklogItem],
+  backlogItems: [initProductBacklogItem],
   sprints: [initSprint],
   description: "",
   dateOfLastActivity: null,
@@ -123,4 +138,10 @@ export const initState: State = {
   openRepository: null,
   reposLastPage: false,
   reposRequireRefresh: false,
+  productLastPage: false,
+  productRequireRefresh: false,
+  sprintLastPage: false,
+  sprintRequireRefresh: false,
+  repoId:-1,
+  ownerName:""
 };

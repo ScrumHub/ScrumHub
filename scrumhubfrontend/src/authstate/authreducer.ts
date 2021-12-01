@@ -2,6 +2,7 @@ export const authReducer = (state: any, action: any ) => {
   switch (action.type) {
     case "LOGIN": {
       localStorage.setItem("isLoggedIn", JSON.stringify(action.payload.isLoggedIn))
+      /*TO DO*/ //add token encryption or move it to backend
       localStorage.setItem("token", JSON.stringify(action.payload.token))
       return {
         ...state,

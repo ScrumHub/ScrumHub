@@ -7,7 +7,7 @@ import {useNavigate} from "react-router";
 
 
 export default function Login(props:any) {
-  const { state, dispatch } = useContext(AuthContext);
+  const { state, dispatch: auth } = useContext(AuthContext);
   const [data, setData] = useState({ errorMessage: "", isLoading: false });
   let navigate = useNavigate();
   const { client_id, redirect_uri, proxy_url} = state;
@@ -35,7 +35,7 @@ export default function Login(props:any) {
             let params = new URLSearchParams(response);
             const access_token = params.get("access_token");
             if (access_token){ 
-            dispatch({
+            auth({
               type: "LOGIN",
               payload: { token: access_token, isLoggedIn: true }
             }); }
@@ -57,7 +57,7 @@ export default function Login(props:any) {
           
         });
     }
-  }, [state, dispatch, data, proxy_url]);
+  }, [state, auth, data, proxy_url]);
   useEffect(() => {
   if (state.isLoggedIn)
   {

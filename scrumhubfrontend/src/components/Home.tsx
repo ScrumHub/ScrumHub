@@ -5,7 +5,7 @@ import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
 import { IFilters, IRepository, State } from '../appstate/stateInterfaces';
 import { AuthContext } from '../App';
-import { Navigate } from 'react-router';
+import { Navigate, useNavigate } from 'react-router';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import config from '../configuration/config';
 import { useSelector } from 'react-redux';
@@ -34,11 +34,13 @@ export default function Home() {
   const repos = useSelector(
     (state: State) => state.repositories as IRepository[]
   );
+  const ownerName = localStorage.getItem("ownerName")?localStorage.getItem("ownerName"):"";
+  console.log(ownerName);
+  const navigate = useNavigate();
   if (!state.isLoggedIn) {
     return <Navigate to="/login" />;
   }
    
-
   const fetchMore = () => {
     if (!fetching) {
       setFetching(true);
@@ -78,11 +80,37 @@ export default function Home() {
         store.dispatch(clearReposList());
       }
     };
+
+    function redirectToProject (props: IRepository) {
+      localStorage.setItem("ownerName",props.name);
+      try {        
+        store.dispatch(
+          Actions.fetchPBIsThunk({
+            ownerName: props.name,
+            token: token,
+          }) //filters
+        );
+      } catch (err) {
+        console.error("Failed to add the repos: ", err);
+        localStorage.setItem("ownerName","");
+      } finally {
+        setFilters({ ...filters, pageNumber: config.defaultFilters.page});
+        setFetching(false);
+        //store.dispatch(clearReposList());
+      }
+    };
+    if(ownerName && ownerName !== "")
+    {
+      console.log(`/${ownerName.split("/")[0]}/${ownerName.split("/")[1]}`);
+      //navigate(`/${ownerName.split("/")[0]}/${ownerName.split("/")[1]}`, { replace: true });
+     return <Navigate to={`/${ownerName.split("/")[0]}/${ownerName.split("/")[1]}`} />;
+    }
+console.log(repos);
   return (
     <section className="container">
       <InfiniteScroll
         dataLength={repos.length}
-        scrollThreshold={0.9}
+        scrollThreshold={0.7}
         next={fetchMore}
         hasMore={!lastPage && !fetching}
         loader={
@@ -92,11 +120,11 @@ export default function Home() {
         <CardWrapper>
           {
             repos.map((rep: IRepository) => {
-              return (<section className="card" style={{ width: "100%", }} key={rep.gitHubId} >
-                <Card style={{ backgroundColor: "white" }} type="inner" actions =
-                {[<Button disabled={rep.alreadyInScrumHub} style={{width:"180px"}} onClick={()=>{addProject(rep.gitHubId)}} ><span><FolderAddOutlined disabled={!rep.alreadyInScrumHub}/>
+              return (<section className="card" style={{ width: "85%", }} key={rep.gitHubId} >
+                <Card style={{ backgroundColor: "white", marginBottom:"3vh" }} type="inner" actions =
+                {[<Button disabled={rep.alreadyInScrumHub || !rep.hasAdminRights} style={{width:"180px"}} onClick={()=>{addProject(rep.gitHubId)}} ><span><FolderAddOutlined disabled={!rep.alreadyInScrumHub}/>
                 {" Add to ScrumHub"}</span></Button>,
-                <Button disabled={!rep.alreadyInScrumHub} style={{width:"180px"}} href={rep.gitHubId as unknown as string}><span><InfoCircleOutlined/>{" Project Details"}</span></Button>,
+                <Button disabled={!rep.alreadyInScrumHub} style={{width:"180px"}} onClick={()=>{redirectToProject(rep)}}><span><InfoCircleOutlined/>{" Project Details"}</span></Button>,
                 <Button style={{width:"180px"}}><span><CalendarOutlined/>
                 {rep.dateOfLastActivity === "No recent activity" ? " Not updated":" Updated "+ new Date(rep.dateOfLastActivity as Date).toLocaleString(['en-US'],{year:'numeric', month:'short', day:'numeric'})}</span></Button>
                 ]}>
@@ -105,11 +133,8 @@ export default function Home() {
                   description={rep.description}
                 ></Meta>
                 <br/>
-                <p>{"There are " + rep.sprints.length + " sprints."}</p>
-                <p>{"There are " + rep.backlogItems.length + " backlog items.\n"}</p>
-                <p>{rep.typeOfLastActivity + " backlog items.\n"}</p>
-                
-
+                <p>{"There are " + rep.sprints.length + " sprints and "+ rep.backlogItems.length + " backlog items.\n"}</p>
+                <p>{"The last activity in the repository was "+rep.typeOfLastActivity}</p>
               </Card>
             </section>);
           })
@@ -124,7 +149,7 @@ export default function Home() {
 const CardWrapper = styled.div`
 display: grid;
 place-items: center;
-margin: 70px;
-background: linear-gradient(to bottom, transparent, gray);
+margin: 80px;
+background: "transparent;
 `;
-
+//linear-gradient(to bottom, transparent, gray)
