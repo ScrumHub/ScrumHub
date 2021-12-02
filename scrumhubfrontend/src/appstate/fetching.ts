@@ -163,3 +163,20 @@ export function addPBI(ownerName: string, token: string, pbi: IAddPBI
   );
 }
 
+export function estimatePBI(ownerName: string, token: string, pbiId:number, hours: number
+  ): Promise<RequestResponse<IProductBacklogItem, number>> {
+    return getResponse(
+      axios.patch(
+        `https://${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}/${pbiId}/estimate`,
+        {"hours":JSON.stringify(hours)},
+        {
+          headers: {
+            'authToken': token,
+            'Accept': "application/json",
+            'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
+          },
+        }
+      )
+    );
+  }
+

@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import { Button, Modal, Form, Input, Radio } from 'antd';
-import { IProductBacklogItem } from '../appstate/stateInterfaces';
+import { Button, Modal, Form, Input, Radio, InputNumber, Space } from 'antd';
+import { IAddPBI, IProductBacklogItem } from '../appstate/stateInterfaces';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { required } from 'joi';
+import FormItemLabel from 'antd/lib/form/FormItemLabel';
 
 interface Values {
   title: string;
@@ -9,13 +12,13 @@ interface Values {
 }
 
 interface CollectionCreateFormProps {
-  data: IProductBacklogItem;
+  data: IAddPBI;
   visible: boolean;
   onCreate: (values: Values) => void;
   onCancel: () => void;
 }
 
-export const CustomPopup: React.FC<CollectionCreateFormProps> = ({
+export const CustomEditPopup: React.FC<CollectionCreateFormProps> = ({
   data,
 visible,
   onCreate,
@@ -25,8 +28,8 @@ visible,
   return (
     <Modal
       visible={visible}
-      title="Create a new collection"
-      okText="Create"
+      title="Edit PBI"
+      okText="Save"
       cancelText="Cancel"
       onCancel={onCancel}
       onOk={() => {
@@ -48,21 +51,45 @@ visible,
         initialValues={{ modifier: 'public' }}
       >
         <Form.Item
-          name="title"
-          label="Title"
-          rules={[{ required: true, message: 'Please input the title of collection!' }]}
+          initialValue={data.name}
+          name="name"
+          label="Name"
+          rules={[{ required: true, message: 'Please input the name of the new backlog item!' }]}
         >
           <Input />
         </Form.Item>
-        <Form.Item name="description" label="Description">
-          <Input type="textarea" />
+        <Form.Item
+        initialValue={data.priority}
+          name="priority"
+          label="Priority"
+          rules={[{ required: true, message: 'Please input the priority of the new backlog item!' }]}
+        >
+          <InputNumber type="number" min={0} />
         </Form.Item>
-        <Form.Item name="modifier" className="collection-create-form_last-form-item">
-          <Radio.Group>
-            <Radio value="public">Public</Radio>
-            <Radio value="private">Private</Radio>
-          </Radio.Group>
-        </Form.Item>
+        <FormItemLabel prefixCls="acceptanceCriteria" label="Acceptance Criteria" required={true}/>
+        <Form.List name="acceptanceCriteria" initialValue={data.acceptanceCriteria}>
+        {(fields, { add, remove }) => (
+          <>
+            {fields.map(({ key, name }) => (
+              <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
+                <Form.Item
+                  name={key}
+                  rules={[{ required: key<1?true:false, message: 'Please input at least one acceptance criteria!' }]}
+                >
+                  <Input placeholder={`Cirteria ${key+1}`} />
+                </Form.Item>
+                <MinusCircleOutlined onClick={() => remove(name)} />
+              </Space>
+            ))}
+            <Form.Item>
+              <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                Add field
+              </Button>
+            </Form.Item>
+          </>
+        )}
+      </Form.List>
+     
       </Form>
     </Modal>
   );

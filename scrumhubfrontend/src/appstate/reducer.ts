@@ -303,4 +303,39 @@ export const reducer = createReducer(initState, {
   };
   return newState;
 },
+[Actions.estimatePBIThunk.pending.toString()]: (
+  state: State,
+  payload: PayloadAction<undefined>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = true;
+  return newState;
+},
+
+[Actions.estimatePBIThunk.fulfilled.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<IProductBacklogItem, number>>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = false;
+  newState.pbiPage = [];
+  newState.productRequireRefresh = true;
+  newState.pages = 1;
+  return newState;
+},
+
+[Actions.estimatePBIThunk.rejected.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<undefined, undefined>>
+) => {
+  let newState = _.cloneDeep(state);
+  let errorResponse = payload.payload;
+  newState.loading = false;
+  newState.error = {
+    hasError: true,
+    errorCode: errorResponse ? errorResponse.code : -1,
+    erorMessage: errorResponse ? (errorResponse.response as IError).message : "",
+  };
+  return newState;
+},
 });

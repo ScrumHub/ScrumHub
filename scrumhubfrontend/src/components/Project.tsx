@@ -10,7 +10,9 @@ import config from '../configuration/config';
 import { useSelector } from 'react-redux';
 import { CheckOutlined, StopOutlined } from '@ant-design/icons';
 import { store } from '../appstate/store';
-import { CustomPopup } from './CustomAddPopup';
+import { CustomAddPopup } from './CustomAddPopup';
+import { CustomEditPopup } from './CustomEditPopup';
+import { CustomEstimatePopup } from './CustomEstimatePopup';
 const { Meta } = Card;
 
 const columns = [
@@ -123,8 +125,16 @@ export default function Project() {
   });
   //const [selectedRowKeys, setSelectedRowKeys] = useState([] as React.Key[]);
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [isEstimateModalVisible, setIsEstimateModalVisible] = useState(false);
   const handleAddButton = () => { 
     setIsAddModalVisible(true);
+  }
+  const handleEditButton = () => { 
+    setIsEditModalVisible(true);
+  }
+  const handleEstimateButton = () => { 
+    setIsEstimateModalVisible(true);
   }
   const handleAddPBI = (pbi:IAddPBI) => { 
     //console.log(values);
@@ -143,6 +153,43 @@ export default function Project() {
       setIsAddModalVisible(false);
     }
   }
+
+  const handleEstimatePBI = (pbi:IProductBacklogItem) => { 
+    console.log(pbi);
+    try {
+      store.dispatch(
+        Actions.estimatePBIThunk({
+          ownerName: ownerName,
+          token: token,
+          pbiId: selectedPBI.id,
+          hours: pbi.expectedTimeInHours
+        }) //filters
+      );
+    } catch (err) {
+      console.error("Failed to estimate the repos: ", err);
+    }
+    finally{
+      setIsEstimateModalVisible(false);
+    }
+  }
+
+  const handleEditPBI = (pbi:IAddPBI) => { 
+    //console.log(values);
+    /*try {
+      store.dispatch(
+        Actions.addPBIThunk({
+          ownerName: ownerName,
+          token: token,
+          pbi: pbi
+        }) //filters
+      );
+    } catch (err) {
+      console.error("Failed to add the repos: ", err);
+    }
+    finally{
+      setIsEditModalVisible(false);
+    }*/
+  }
   const handleFinish = () => {
     //console.log(selectedRowKeys);
     try {
@@ -158,7 +205,6 @@ export default function Project() {
     }
 
   }
-  const handleEstimate = () => { }
   const handleDelete = () => { 
     try {
     store.dispatch(
@@ -171,6 +217,7 @@ export default function Project() {
   } catch (err) {
     console.error("Failed to add the repos: ", err);
   }}
+
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : "";
   //const pages = useSelector((state: State) => state.pages); // eslint-disable-next-line
   const [displayLoader, setDisplayLoader] = useState(false); // eslint-disable-next-line
@@ -419,15 +466,24 @@ const [selectedPBI, setSelectedPBI] = useState({} as IProductBacklogItem);
         <Button disabled={prevselectedRowKeys.length < 1} onClick={handleDelete} type="primary" style={{ marginRight: 16 }}>
           Delete
         </Button>
+        <Button disabled={prevselectedRowKeys.length < 1} onClick={handleEditButton} type="primary" style={{ marginRight: 16 }}>
+          Edit
+        </Button>
         <Button disabled={!selectedPBI || prevselectedRowKeys.length < 1 || (prevselectedRowKeys.length > 0 && selectedPBI.finished)} onClick={handleFinish} type="primary" style={{ marginRight: 16 }}>
           Finish
         </Button>
-        <Button disabled={prevselectedRowKeys.length < 1} onClick={handleEstimate} type="primary" style={{ marginRight: 16 }}>
+        <Button disabled={prevselectedRowKeys.length < 1} onClick={handleEstimateButton} type="primary" style={{ marginRight: 16 }}>
           Estimate
         </Button>
-        {isAddModalVisible && <CustomPopup data={initAddPBI} visible={isAddModalVisible} 
+        {isAddModalVisible && <CustomAddPopup data={initAddPBI} visible={isAddModalVisible} 
         onCreate={function (values: any): void {handleAddPBI(values)}}
           onCancel={()=>{setIsAddModalVisible(false);} }/>}
+          {isEditModalVisible && selectedPBI && <CustomEditPopup data={selectedPBI as IAddPBI} visible={isEditModalVisible} 
+        onCreate={function (values: any): void {handleEditPBI(values)}}
+          onCancel={()=>{setIsEditModalVisible(false);} }/>}
+          {isEstimateModalVisible && selectedPBI && <CustomEstimatePopup data={selectedPBI as IProductBacklogItem} visible={isEstimateModalVisible} 
+        onCreate={function (values: any): void {handleEstimatePBI(values)}}
+          onCancel={()=>{setIsEstimateModalVisible(false);} }/>}
       </span>
 
     </div>

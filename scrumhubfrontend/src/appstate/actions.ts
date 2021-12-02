@@ -131,6 +131,30 @@ export const addPBIThunk = createAsyncThunk<
   return response as RequestResponse<IProductBacklogItem, number>;
 });
 
+export const estimatePBIThunk = createAsyncThunk<
+  RequestResponse<IProductBacklogItem, number>,
+  { ownerName: string; token: string; pbiId:number; hours: number;},
+  { rejectValue: RequestResponse<IProductBacklogItem, number> }
+>("estimatePBI", async (
+  item: {
+    ownerName: string;
+    token: string;
+    pbiId:number;
+    hours: number;
+  },
+  { rejectWithValue }
+) => {
+  const response: RequestResponse<IProductBacklogItem, number> =
+    await Fetching.estimatePBI(item.ownerName, item.token, item.pbiId, item.hours);
+    console.log(response);
+  if (response.code !== 200) {
+    return rejectWithValue(
+      response as RequestResponse<IProductBacklogItem, number>
+    );
+  }
+  return response as RequestResponse<IProductBacklogItem, number>;
+});
+
 export const clearError = createAction("clearError");
 export const clearState = createAction("clearState");
 export const clearReposList = createAction("clearReposList");

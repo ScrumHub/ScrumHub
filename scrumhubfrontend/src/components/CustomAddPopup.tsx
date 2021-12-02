@@ -18,7 +18,7 @@ interface CollectionCreateFormProps {
   onCancel: () => void;
 }
 
-export const CustomPopup: React.FC<CollectionCreateFormProps> = ({
+export const CustomAddPopup: React.FC<CollectionCreateFormProps> = ({
   data,
 visible,
   onCreate,
@@ -28,8 +28,8 @@ visible,
   return (
     <Modal
       visible={visible}
-      title="Create a new collection"
-      okText="Create"
+      title="Add PBI"
+      okText="Save"
       cancelText="Cancel"
       onCancel={onCancel}
       onOk={() => {
