@@ -7,6 +7,7 @@ export type Config = {
     defaultFilters: {
       size: number;
       page: number;
+      pbiSize:number;
     };
     token:string;
   };

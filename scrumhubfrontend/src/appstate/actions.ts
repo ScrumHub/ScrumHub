@@ -42,17 +42,18 @@ export const addRepositoryThunk = createAsyncThunk<
 
 export const fetchPBIsThunk = createAsyncThunk<
   RequestResponse<IProductBacklogList, number>,
-  { ownerName: string; token: string},
+  { ownerName: string; token: string; filters: IFilters;},
   { rejectValue: RequestResponse<IProductBacklogList, number> }
 >("fetchPBIs", async (
   item: {
     ownerName: string;
     token: string;
+    filters: IFilters;
   },
   { rejectWithValue }
 ) => {
   const response: RequestResponse<IProductBacklogList, number> =
-    await Fetching.fetchPBIs(item.ownerName, item.token);
+    await Fetching.fetchPBIs(item.ownerName, item.token, item.filters);
   if (response.code !== 200) {
     return rejectWithValue(
       response as RequestResponse<IProductBacklogList, number>
@@ -63,6 +64,7 @@ export const fetchPBIsThunk = createAsyncThunk<
 
 export const clearError = createAction("clearError");
 export const clearReposList = createAction("clearReposList");
+export const clearPBIsList = createAction("clearPBIsList");
 //export const clearLoginInformation = createAction("clearLoginInformation");
 //export const clearRedirect = createAction("clearRedirect");
 //export const startRefreshing = createAction("startRefreshing");

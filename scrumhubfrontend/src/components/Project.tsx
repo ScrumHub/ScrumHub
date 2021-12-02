@@ -1,10 +1,10 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Button, Card, Checkbox, Divider, Input, Radio, Space, Table, } from 'antd';
 import styled from "styled-components";
 import Highlighter from 'react-highlight-words';
 import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
-import { IFilters, initProductBacklogItem, IProductBacklogItem, IRepository, State } from '../appstate/stateInterfaces';
+import { IFilters, initProductBacklogItem, IProductBacklogItem, IProductBacklogList, IRepository, State } from '../appstate/stateInterfaces';
 import { AuthContext } from '../App';
 import { Navigate } from 'react-router';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -14,7 +14,6 @@ import { CalendarOutlined, CheckOutlined, FolderAddOutlined, InfoCircleOutlined,
 import { store } from '../appstate/store';
 import { clearReposList } from '../appstate/actions';
 import { List } from 'rc-field-form';
-import { EditableTable } from './EditableTable';
 const { Meta } = Card;
 
 const columns = [
@@ -63,7 +62,7 @@ const columns = [
       record.map((value: string) => { return (<p style={{margin:"auto", marginTop:"5%", marginBottom:"5%"}}>{value}</p>) })
     }
     </div>,
-    props:{colspan:2}})
+    props:{colSpan:2}})
   }
   },
     {
@@ -113,32 +112,59 @@ export default function Project() {
   const [filters, setFilters] = useState<IFilters>({
     pageNumber: config.defaultFilters.page,
     pageSize: config.defaultFilters.size,
+    nameFilter:"",
+    finished:"",
+    estimated:"",
+    inSprint:"",
   });
-  const handleAdd = () => { }
-  const handleFinish = () => { }
-  const handleEstimate = () => { }
-  const handleDelete = () => { }
-  const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") : "";
-  const lastPage = useSelector((state: State) => state.reposLastPage); // eslint-disable-next-line
-  const [displayLoader, setDisplayLoader] = useState(false); // eslint-disable-next-line
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const refreshRequired = useSelector(
-    (appState: State) => appState.reposRequireRefresh as boolean
-  );
-  const repo = useSelector(
-    (appState: State) => appState.openRepository as IRepository
-  );
-  if (!state.isLoggedIn) {
-    return <Navigate to="/login" />;
-  }
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [selectionType, setSelectionType] = useState<'pbi' | 'tasks'>('pbi');
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [stateF, setState] = useState({
     searchText: '',
     searchedColumn: '',
   });
+  const [selectRowKeys, setSelectedRowKeys] = useState([] as React.Key[]);
+
+  const handleAdd = () => { }
+  const handleFinish = () => { }
+  const handleEstimate = () => { }
+  const handleDelete = () => { }
+  const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : "";
+  //const pages = useSelector((state: State) => state.pages); // eslint-disable-next-line
+  const [displayLoader, setDisplayLoader] = useState(false); // eslint-disable-next-line
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const refreshRequired = useSelector(
+    (appState: State) => appState.productRequireRefresh as boolean
+  );
+  //const repo = useSelector(
+  //  (appState: State) => appState.openRepository as IRepository
+  //);
+  const pbiPage = useSelector(
+    (appState: State) => appState.pbiPage as IProductBacklogList
+  );
+
+  useEffect(() => {
+    if (state.isLoggedIn && refreshRequired) {
+      //store.dispatch(clearReposList());
+      try {        
+        store.dispatch(
+          Actions.fetchPBIsThunk({
+            ownerName: ownerName,
+            token: token,
+            filters: filters
+          }) //filters
+        );
+      } catch (err) {
+        console.error("Failed to add the repos: ", err);
+        localStorage.setItem("ownerName","");
+      } finally {
+        //store.dispatch(clearReposList());
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refreshRequired, state.isLoggedIn]);
+  if (!state.isLoggedIn) {
+    return <Navigate to="/login" />;
+  }
 
   /* const getColumnSearchProps = (dataIndex : any) => ({
   //   filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -218,8 +244,8 @@ export default function Project() {
     setState({ searchText: '', searchedColumn: '' });
   };
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [selectRowKeys, setSelectedRowKeys] = useState([] as React.Key[]);
+  
+  
 
   /*const selectRow = (record: IProductBacklogItem) => {
     console.log("row");
@@ -246,7 +272,25 @@ export default function Project() {
     selectedKeys: selectRowKeys,
     onChange: onSelectedRowKeysChange,
   };
-  console.log((repo && repo.backlogItems) ? repo.backlogItems : "");
+  const handleTableChange = (pagination: IFilters, filters: IFilters, sorter: any) => {
+    console.log(pagination);
+    try {        
+      store.dispatch(
+        Actions.fetchPBIsThunk({
+          ownerName: ownerName,
+          token: token,
+          filters: {...filters,
+            pageNumber: pagination.current,
+             pageSize:config.defaultFilters.pbiSize}
+        }) //filters
+      );
+    } catch (err) {
+      console.error("Failed to add the pbis: ", err);
+    } finally {
+      setFilters({ ...filters, pageNumber: filters.pageNumber + 1 });
+    }
+  };
+  console.log(pbiPage ? pbiPage : "");
   return (
     <div>
       <Radio.Group
@@ -270,18 +314,17 @@ export default function Project() {
           selectedRowKeys: selectRowKeys,
           hideSelectAll:true,
         }}
+        onChange={handleTableChange}
         /*onRow={(record) => ({
           onClick: () => {
             selectRow(record);
           },
         })}*/
+        pagination={{current:pbiPage.pageNumber, pageSize:config.defaultFilters.pbiSize, total:pbiPage.pageCount, showSizeChanger:false}}
         rowKey={(record: IProductBacklogItem) => record.id}
         columns={columns}
-        dataSource={(repo && repo.backlogItems) ? repo.backlogItems : [initProductBacklogItem]}
+        dataSource={(pbiPage && pbiPage.list) ? pbiPage.list : [initProductBacklogItem]}
       />
-      
-      <Divider />
-      {(repo && repo.backlogItems) ? <EditableTable pbis={repo.backlogItems}/>:""}
       <Divider />
       <span style={{ width: "100%" }}>
         <Button onClick={() => handleAdd} type="primary" style={{ marginRight: 16 }}>

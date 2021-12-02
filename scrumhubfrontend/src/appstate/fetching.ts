@@ -62,7 +62,7 @@ export function fetchRepositories(filters: IFilters, token: string
   );
 }
 
-export function addRepository(id: number, token: string
+export function addRepository(id: number, token: string,
 ): Promise<RequestResponse<IRepository, number>> {
   return getResponse(
     axios.post(
@@ -80,12 +80,23 @@ export function addRepository(id: number, token: string
   );
 }
 
-export function fetchPBIs(ownerName: any, token: string
+export function fetchPBIs(ownerName: any, token: string, filters:IFilters
   ): Promise<RequestResponse<IProductBacklogList, number>> {
-    
+    const filtersString =
+    filters === undefined
+      ? ""
+      : Object.keys(filters)
+        .map((filterName) => {
+          const value = String(filters[filterName]).trim();
+          return value && value !== "null" ? `${filterName}=${value}` : "";
+          //}
+        })
+        .filter((x) => x !== "")
+        .join("&");
+        console.log(filtersString);
     return getResponse(
       axios.get(
-        `https://${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}`,
+        `https://${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}?${filtersString}`,
         {
           headers: {
             'authToken': token,

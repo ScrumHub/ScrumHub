@@ -1,4 +1,5 @@
 import React from "react";
+import { useCookies } from "react-cookie";
 
 const path = require("path");
 require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });

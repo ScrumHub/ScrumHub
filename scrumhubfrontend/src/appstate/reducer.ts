@@ -21,6 +21,13 @@ export const reducer = createReducer(initState, {
   newState.repositories = [];
   newState.reposRequireRefresh = true;
   newState.reposLastPage = false;
+  return newState;
+},
+[Actions.clearPBIsList.type]: (state: State) => {
+  let newState = _.cloneDeep(state);
+  newState.openRepositor.backlogItems = [];
+  newState.productRequireRefresh = true;
+  newState.reposLastPage = false;
   newState.pages = 1;
   return newState;
 },
@@ -63,7 +70,6 @@ export const reducer = createReducer(initState, {
   }
   // if response is shorter than default size - it means end is reached.
   newState.reposLastPage = repos.list.length < pageSize;
-  newState.pages = pageNumber + 1;
   newState.reposRequireRefresh = false;
   return newState;
 },
@@ -143,26 +149,27 @@ export const reducer = createReducer(initState, {
   const pageSize = _.get(
     payload,
     ["meta", "arg", "filters", "pageSize"],
-    10//config.defaultFilters.size
+    config.defaultFilters.pbiSize//config.defaultFilters.size
   );
   newState.ownerName = localStorage.getItem("ownerName");
   newState.openRepository = newState.repositories.find((e : IRepository) => e.name === newState.ownerName) as IRepository;
-  console.log(payload.payload.response);
-  console.log(newState.openRepository);
-  const pbis = payload.payload.response as IProductBacklogList;
-  if (newState.openRepository && newState.openRepository.backlogItems && newState.openRepository.backlogItems.length > 0 && pageNumber > 11) {
-    newState.openRepository.backlogItems = newState.openRepository.backlogItems
-      .concat(pbis.list)
-      .slice(0, (pageNumber + 1) * pageSize);
-  } else {
-    newState.openRepository.backlogItems = pbis.list;//(pbis.list).slice(0, (pageNumber + 1) * pageSize);
-  }
-  newState.openRepository.backlogItems = newState.openRepository.backlogItems.filter((item:any)=>typeof(item)!= "number");
-  console.log(pbis.list);
-  console.log(newState.openRepository.backlogItems);
+  //console.log(payload.payload.response);
+  //console.log(newState.openRepository);
+  newState.pbiPage = payload.payload.response as IProductBacklogList;
+  console.log(newState.pbiPage);
+  //if (newState.openRepository && newState.openRepository.backlogItems )//&& newState.openRepository.backlogItems.length > 0 && pageNumber > 11) {
+    //newState.openRepository.backlogItems = newState.openRepository.backlogItems
+      //.concat(pbis.list)
+      //.slice(0, (pageNumber + 1) * pageSize);
+  //}// else {
+   // newState.openRepository.backlogItems = pbis.list;//(pbis.list).slice(0, (pageNumber + 1) * pageSize);
+  //}
+  //newState.openRepository.backlogItems = newState.openRepository.backlogItems.filter((item:any)=>typeof(item)!= "number");
+  //console.log(pbis.list);
+  //console.log(newState.openRepository.backlogItems);
   // if response is shorter than default size - it means end is reached.
-  newState.productLastPage = pbis.list.length < pageSize;
-  newState.pages = pageNumber + 1;
+  //newState.productLastPage = pbis.list.length < pageSize;
+  //newState.pages = newState.pbiPage.list.length < pageSize?pageNumber:pageNumber + 1;
   newState.productRequireRefresh = false;
   return newState;
 },

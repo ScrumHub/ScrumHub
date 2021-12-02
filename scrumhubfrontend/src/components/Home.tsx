@@ -88,14 +88,14 @@ export default function Home() {
           Actions.fetchPBIsThunk({
             ownerName: props.name,
             token: token,
+            filters: {...filters,
+              pageSize: config.defaultFilters.pbiSize}
           }) //filters
         );
       } catch (err) {
         console.error("Failed to add the repos: ", err);
         localStorage.setItem("ownerName","");
       } finally {
-        setFilters({ ...filters, pageNumber: config.defaultFilters.page});
-        setFetching(false);
         //store.dispatch(clearReposList());
       }
     };

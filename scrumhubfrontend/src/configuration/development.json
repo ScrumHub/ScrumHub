@@ -6,7 +6,8 @@
     },
     "defaultFilters": {
       "size": 5,
-      "page": 1
+      "page": 1,
+      "pbiSize":1
     },
       "token": "token"
   }

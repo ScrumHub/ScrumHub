@@ -23,6 +23,7 @@ export type State = {
   error: Error;
   redirect: string | null;
   pages: number;
+  pbiPage : IProductBacklogList;
   repositories: IRepositoryList | any;
   openRepository: IRepository | any;
   reposLastPage: boolean;
@@ -48,7 +49,6 @@ export interface IProductBacklogItem {
   tasks: any
 }
 
-
 export interface IProductBacklogList {
   pageNumber: number;
   pageCount: number;
@@ -67,9 +67,18 @@ export const initProductBacklogItem: IProductBacklogItem = {
   isInSprint: false,
   timeSpentInHours: 0,
   priority: 0,
-  acceptanceCriteria: ["string", "string2"],
+  acceptanceCriteria: ["criteria", "criteria2"],
   tasks: [],
 };
+
+export const initProductBacklogList: IProductBacklogList = {
+  pageNumber: 1,
+  pageCount: 1,
+  pageSize: 10,
+  realSize: 10,
+  list: [initProductBacklogItem],
+};
+
 
 export interface ISprint {
   sprintNumber: number;
@@ -123,8 +132,6 @@ export const initRepositoryList: IRepositoryList = {
   list: [],
 }
 
-
-
 export const initState: State = {
   loading: false,
   error: {
@@ -132,6 +139,7 @@ export const initState: State = {
     errorCode: 0,
     erorMessage: "",
   },
+  pbiPage:initProductBacklogList,
   redirect: null,
   pages: 1,
   repositories: [],
