@@ -108,7 +108,7 @@ export function fetchPBIs(ownerName: any, token: string, filters:IFilters
     );
   }
 
-  export function finishPBI(ownerName: any, token: string, pbild:number
+  export function finishPBI(ownerName: string, token: string, pbild:number
     ): Promise<RequestResponse<IProductBacklogItem, number>> {
       return getResponse(
         axios.patch(
@@ -124,5 +124,21 @@ export function fetchPBIs(ownerName: any, token: string, filters:IFilters
         )
       );
     }
+
+    export function deletePBI(ownerName: string, token: string, pbild:number
+      ): Promise<RequestResponse<number, number>> {
+        return getResponse(
+          axios.delete(
+            `https://${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}/${pbild}`,
+            {
+              headers: {
+                'authToken': token,
+                'Accept': "*/*",
+                'Access-Control-Allow-Origin':`https://${config.backend.ip}:${config.backend.port}`,
+              },
+            }
+          )
+        );
+      }
 
 

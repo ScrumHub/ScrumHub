@@ -36,7 +36,36 @@ export default function Home() {
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") : "";
   console.log(ownerName);
   const navigate = useNavigate();
+  const [initialRefresh, setInitialRefresh] = useState(true);
+  useEffect(() => {
+    if (initialRefresh) {
+      store.dispatch(clearReposList());
+      setInitialRefresh(false);
+    }
+  }, [initialRefresh]);
 
+  useEffect(() => {
+    if (state.isLoggedIn && refreshRequired) {
+      //store.dispatch(clearReposList());
+      try {
+        store.dispatch(
+          Actions.fetchRepositoriesThunk({
+            filters: {
+              pageSize: config.defaultFilters.size,
+              pageNumber: config.defaultFilters.page,
+            },
+            token: token,
+          }) //filters
+        );
+      } catch (err) {
+        console.error("Failed to fetch the repos: ", err);
+      } finally {
+        //setFilters({ ...filters, pageNumber: config.defaultFilters.page + 1 });
+        setInitialRefresh(false);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refreshRequired, state.isLoggedIn]);
 
   const fetchMore = () => {
     if (!fetching) {
@@ -74,7 +103,8 @@ export default function Home() {
     } finally {
       setFilters({ ...filters, pageNumber: config.defaultFilters.page });
       setFetching(false);
-      store.dispatch(clearReposList());
+      setInitialRefresh(true);
+      //store.dispatch(clearReposList());
     }
   };
 

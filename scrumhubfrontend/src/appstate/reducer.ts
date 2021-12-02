@@ -23,6 +23,11 @@ export const reducer = createReducer(initState, {
   newState.reposLastPage = false;
   return newState;
 },
+[Actions.clearState.type]: (state: State) => {
+  let newState = _.cloneDeep(state);
+  newState = initState;
+  return newState;
+},
 [Actions.clearPBIsList.type]: (state: State) => {
   let newState = _.cloneDeep(state);
   if(newState.openRepository){
@@ -47,6 +52,7 @@ export const reducer = createReducer(initState, {
   payload: PayloadAction<RequestResponse<IRepositoryList, number>>
 ) => {
   let newState = _.cloneDeep(state);
+  console.log(newState);
   newState.loading = false;
   // if page filter not specified - set to default
   const pageNumber = _.get(
@@ -104,9 +110,9 @@ export const reducer = createReducer(initState, {
 ) => {
   let newState = _.cloneDeep(state);
   newState.loading = false;
-  newState.repositories = [];
-  newState.reposRequireRefresh = true;
-  newState.reposLastPage = false;
+  //newState.repositories = [];
+  //newState.reposRequireRefresh = true;
+  //newState.reposLastPage = false;
   newState.pages = 1;
   return newState;
 },
@@ -160,6 +166,43 @@ export const reducer = createReducer(initState, {
   };
   return newState;
 },
+
+[Actions.deletePBIThunk.pending.toString()]: (
+  state: State,
+  payload: PayloadAction<undefined>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = true;
+  return newState;
+},
+
+[Actions.deletePBIThunk.fulfilled.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<number, number>>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = false;
+  newState.pbiPage = [];
+  newState.productRequireRefresh = true;
+  newState.pages = 1;
+  return newState;
+},
+
+[Actions.deletePBIThunk.rejected.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<undefined, undefined>>
+) => {
+  let newState = _.cloneDeep(state);
+  let errorResponse = payload.payload;
+  newState.loading = false;
+  newState.error = {
+    hasError: true,
+    errorCode: errorResponse ? errorResponse.code : -1,
+    erorMessage: errorResponse ? (errorResponse.response as IError).message : "",
+  };
+  return newState;
+},
+
 [Actions.fetchPBIsThunk.pending.toString()]: (
   state: State,
   payload: PayloadAction<undefined>

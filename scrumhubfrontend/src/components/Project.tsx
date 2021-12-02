@@ -139,7 +139,18 @@ export default function Project() {
 
   }
   const handleEstimate = () => { }
-  const handleDelete = () => { }
+  const handleDelete = () => { 
+    try {
+    store.dispatch(
+      Actions.deletePBIThunk({
+        ownerName: ownerName,
+        token: token,
+        pbild: prevselectedRowKeys[0] as number
+      }) //filters
+    );
+  } catch (err) {
+    console.error("Failed to add the repos: ", err);
+  }}
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : "";
   //const pages = useSelector((state: State) => state.pages); // eslint-disable-next-line
   const [displayLoader, setDisplayLoader] = useState(false); // eslint-disable-next-line
@@ -356,15 +367,19 @@ const [selectedPBI, setSelectedPBI] = useState({} as IProductBacklogItem);
           type: "checkbox",
           hideSelectAll: true,
           selectedRowKeys: prevselectedRowKeys,
-          onChange: (keys:React.Key[]) => {
+          onChange: (keys:React.Key[], selectedRows: IProductBacklogItem[]) => {
+            console.log(keys);
+            console.log(selectedRows);
             if (keys.indexOf(prevselectedRowKeys[0]) >= 0) {
               keys.splice(keys.indexOf(prevselectedRowKeys[0]), 1);
             }
-            console.log(keys);setPrevSelectedRowKeys(keys);},///onSelectedRowKeysChange(keys)},
-          onSelect: (record:IProductBacklogItem) => {if(prevselectedRowKeys.length>0){
-            setSelectedPBI(record);
-          }},
-          preserveSelectedRowKeys: true
+            setSelectedPBI(selectedRows[0]);
+            setPrevSelectedRowKeys(keys);
+          },///onSelectedRowKeysChange(keys)},
+          //onSelect: (record:IProductBacklogItem) => {if(prevselectedRowKeys.length>0){
+           // setSelectedPBI(record);
+          //}},
+          //preserveSelectedRowKeys: true
           }}
         onChange={handleTableChange}
         /*onRow={(record) => ({
@@ -384,7 +399,7 @@ const [selectedPBI, setSelectedPBI] = useState({} as IProductBacklogItem);
         <Button disabled={prevselectedRowKeys.length < 1} onClick={handleDelete} type="primary" style={{ marginRight: 16 }}>
           Delete
         </Button>
-        <Button disabled={prevselectedRowKeys.length < 1 || (prevselectedRowKeys && selectedPBI.finished)} onClick={handleFinish} type="primary" style={{ marginRight: 16 }}>
+        <Button disabled={!selectedPBI || prevselectedRowKeys.length < 1 || (prevselectedRowKeys.length > 0 && selectedPBI.finished)} onClick={handleFinish} type="primary" style={{ marginRight: 16 }}>
           Finish
         </Button>
         <Button disabled={prevselectedRowKeys.length < 1} onClick={handleEstimate} type="primary" style={{ marginRight: 16 }}>

@@ -76,6 +76,7 @@ export const finishPBIThunk = createAsyncThunk<
 ) => {
   const response: RequestResponse<IProductBacklogItem, number> =
     await Fetching.finishPBI(item.ownerName, item.token, item.pbild);
+    console.log(response);
   if (response.code !== 200) {
     return rejectWithValue(
       response as RequestResponse<IProductBacklogItem, number>
@@ -84,7 +85,31 @@ export const finishPBIThunk = createAsyncThunk<
   return response as RequestResponse<IProductBacklogItem, number>;
 });
 
+export const deletePBIThunk = createAsyncThunk<
+RequestResponse<number, number>,
+{ ownerName: string; token: string; pbild: number;},
+{ rejectValue: RequestResponse<number, number> }
+>("deletePBI", async (
+item: {
+  ownerName: string;
+  token: string;
+  pbild: number;
+},
+{ rejectWithValue }
+) => {
+const response: RequestResponse<number, number> =
+  await Fetching.deletePBI(item.ownerName, item.token, item.pbild);
+  console.log(response);
+if (response.code !== 204) {
+  return rejectWithValue(
+    response as RequestResponse<number, number>
+  );
+}
+return response as RequestResponse<number, number>;
+});
+
 export const clearError = createAction("clearError");
+export const clearState = createAction("clearState");
 export const clearReposList = createAction("clearReposList");
 export const clearPBIsList = createAction("clearPBIsList");
 //export const clearLoginInformation = createAction("clearLoginInformation");
