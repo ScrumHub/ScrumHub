@@ -1,20 +1,15 @@
-import { useContext, useEffect, useState } from 'react';
-import { Button, Card, Checkbox, Divider, Input, Radio, Space, Table, } from 'antd';
+import React, { useContext, useEffect, useState } from 'react';
+import { Button, Card, Checkbox, Divider, Radio, Table, } from 'antd';
 import styled from "styled-components";
-import Highlighter from 'react-highlight-words';
 import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
-import { IFilters, initProductBacklogItem, IProductBacklogItem, IProductBacklogList, IRepository, State } from '../appstate/stateInterfaces';
+import { IFilters, IProductBacklogItem, IProductBacklogList, State } from '../appstate/stateInterfaces';
 import { AuthContext } from '../App';
 import { Navigate } from 'react-router';
-import InfiniteScroll from 'react-infinite-scroll-component';
 import config from '../configuration/config';
 import { useSelector } from 'react-redux';
-import { CalendarOutlined, CheckOutlined, FolderAddOutlined, InfoCircleOutlined, LoadingOutlined, SearchOutlined, StopOutlined } from '@ant-design/icons';
+import { CheckOutlined, StopOutlined } from '@ant-design/icons';
 import { store } from '../appstate/store';
-import { clearReposList } from '../appstate/actions';
-import { List } from 'rc-field-form';
-import { initial } from 'lodash';
 const { Meta } = Card;
 
 const columns = [
@@ -53,24 +48,26 @@ const columns = [
   },
   {
     key: "5",
-    colSpan:2,
+    colSpan: 2,
     title: 'Acceptance Criteria',
     dataIndex: 'acceptanceCriteria',
     align: 'center' as const,
-    render: (record:string[]) => {
-    return({children:
-    <div style={{verticalAlign:"center", alignItems:"center",textAlign:"center"}}>{
-      record.map((value: string) => { return (<p style={{margin:"auto", marginTop:"5%", marginBottom:"5%"}}>{value}</p>) })
+    render: (record: string[]) => {
+      return ({
+        children:
+          <div style={{ verticalAlign: "center", alignItems: "center", textAlign: "center" }}>{
+            record.map((value: string, index:number) => { return (<p key={index} style={{ margin: "auto", marginTop: "5%", marginBottom: "5%" }}>{value}</p>) })
+          }
+          </div>,
+        props: { colSpan: 2 }
+      })
     }
-    </div>,
-    props:{colSpan:2}})
-  }
   },
-    {
+  {
     key: "6",
     title: 'Finished',
     dataIndex: 'finished',
-    render: (finishValue: boolean) => finishValue? <CheckOutlined/> : <StopOutlined/>,
+    render: (finishValue: boolean) => finishValue ? <CheckOutlined /> : <StopOutlined />,
     align: 'center' as const,
   }
 
@@ -113,29 +110,45 @@ export default function Project() {
   const [filters, setFilters] = useState<IFilters>({
     pageNumber: config.defaultFilters.page,
     pageSize: config.defaultFilters.size,
-    nameFilter:"",
-    finished:"",
-    estimated:"",
-    inSprint:"",
+    nameFilter: "",
+    finished: "",
+    estimated: "",
+    inSprint: "",
   });
   const [selectionType, setSelectionType] = useState<'pbi' | 'tasks'>('pbi');
   const [stateF, setState] = useState({
     searchText: '',
     searchedColumn: '',
   });
-  const [selectRowKeys, setSelectedRowKeys] = useState([] as React.Key[]);
+  //const [selectedRowKeys, setSelectedRowKeys] = useState([] as React.Key[]);
 
   const handleAdd = () => { }
-  const handleFinish = () => { }
+  const handleFinish = () => {
+    //console.log(selectedRowKeys);
+    try {
+      store.dispatch(
+        Actions.finishPBIThunk({
+          ownerName: ownerName,
+          token: token,
+          pbild: prevselectedRowKeys[0] as number
+        }) //filters
+      );
+    } catch (err) {
+      console.error("Failed to add the repos: ", err);
+    }
+
+  }
   const handleEstimate = () => { }
   const handleDelete = () => { }
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : "";
   //const pages = useSelector((state: State) => state.pages); // eslint-disable-next-line
   const [displayLoader, setDisplayLoader] = useState(false); // eslint-disable-next-line
+  const [initialRefresh, setInitialRefresh] = useState(true);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const refreshRequired = useSelector(
     (appState: State) => appState.productRequireRefresh as boolean
   );
+  console.log("refresh" + refreshRequired);
   //const repo = useSelector(
   //  (appState: State) => appState.openRepository as IRepository
   //);
@@ -143,9 +156,37 @@ export default function Project() {
     (appState: State) => appState.pbiPage as IProductBacklogList
   );
 
-  if (!state.isLoggedIn) {
-    return <Navigate to="/login" />;
-  }
+  useEffect(() => {
+    if (initialRefresh) {
+      store.dispatch(Actions.clearPBIsList());
+      setInitialRefresh(false);
+    }
+  }, [initialRefresh]);
+
+  useEffect(() => {
+    console.log(refreshRequired);
+    if (refreshRequired && ownerName && ownerName !== "") {
+      try {
+        store.dispatch(
+          Actions.fetchPBIsThunk({
+            ownerName: ownerName,
+            token: token,
+            filters: {
+              ...filters,
+              pageNumber: config.defaultFilters.page,
+              pageSize: config.defaultFilters.pbiSize
+            }
+          }) //filters
+        );
+      } catch (err) {
+        console.error("Failed to add the repos: ", err);
+        localStorage.setItem("ownerName", "");
+      }
+
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refreshRequired]);
+
 
   /* const getColumnSearchProps = (dataIndex : any) => ({
   //   filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -225,8 +266,8 @@ export default function Project() {
     setState({ searchText: '', searchedColumn: '' });
   };
 
-  
-  
+
+
 
   /*const selectRow = (record: IProductBacklogItem) => {
     console.log("row");
@@ -243,26 +284,43 @@ export default function Project() {
     console.log(keys);
     console.log(newKey);
   }*/
-  const onSelectedRowKeysChange = (keys: React.Key[]) => {
-    if (keys.indexOf(selectRowKeys[0]) >= 0) {
-      keys.splice(keys.indexOf(selectRowKeys[0]), 1);
-    } 
+/*   const onSelectedRowKeysChange = (keys: React.Key[]) => {
+    if (keys.indexOf(selectedRowKeys[0]) >= 0) {
+      keys.splice(keys.indexOf(selectedRowKeys[0]), 1);
+    }
     setSelectedRowKeys(keys);
-  }
-  const rowSelection = {
-    selectedKeys: selectRowKeys,
-    onChange: onSelectedRowKeysChange,
-  };
+    console.log(keys);
+  } */
+ /* const [select, setSelect] = useState({
+    selectedRowKeys: [] as any[],
+    loading: false,
+  });
+
+const { selectedRowKeys, loading } = select;*/
+ /* const rowSelection = {
+    selectedRowKeys,
+    onSelect: (record:IProductBacklogItem) => {
+      console.log(record);
+      setSelect({
+        ...select,
+        selectedRowKeys: [record.id as React.Key]
+      });
+    }
+};*/
+const [prevselectedRowKeys, setPrevSelectedRowKeys] = useState([] as React.Key[]);
+const [selectedPBI, setSelectedPBI] = useState({} as IProductBacklogItem);
   const handleTableChange = (pagination: IFilters, filters: IFilters, sorter: any) => {
     console.log(pagination);
-    try {        
+    try {
       store.dispatch(
         Actions.fetchPBIsThunk({
           ownerName: ownerName,
           token: token,
-          filters: {...filters,
+          filters: {
+            ...filters,
             pageNumber: pagination.current,
-             pageSize:config.defaultFilters.pbiSize}
+            pageSize: config.defaultFilters.pbiSize
+          }
         }) //filters
       );
     } catch (err) {
@@ -271,6 +329,10 @@ export default function Project() {
       setFilters({ ...filters, pageNumber: filters.pageNumber + 1 });
     }
   };
+
+  if (!state.isLoggedIn) {
+    return <Navigate to="/login" />;
+  }
   console.log(pbiPage ? pbiPage : "");
   return (
     <div>
@@ -287,22 +349,30 @@ export default function Project() {
       <Divider />
 
       <Table
-      scroll={{ x: 800 }}
+        scroll={{ x: 800 }}
+        rowKey={(record: IProductBacklogItem) => record.id}
         rowSelection={{
-          renderCell:()=><Checkbox style={{marginLeft:"50%", marginRight:"50%", alignSelf:"center"}}/>,
-          type:"checkbox",
-          ...rowSelection,
-          selectedRowKeys: selectRowKeys,
-          hideSelectAll:true,
-        }}
+          //renderCell: () => <Checkbox key={8} style={{ marginLeft: "50%", marginRight: "50%", alignSelf: "center" }} />,
+          type: "checkbox",
+          hideSelectAll: true,
+          selectedRowKeys: prevselectedRowKeys,
+          onChange: (keys:React.Key[]) => {
+            if (keys.indexOf(prevselectedRowKeys[0]) >= 0) {
+              keys.splice(keys.indexOf(prevselectedRowKeys[0]), 1);
+            }
+            console.log(keys);setPrevSelectedRowKeys(keys);},///onSelectedRowKeysChange(keys)},
+          onSelect: (record:IProductBacklogItem) => {if(prevselectedRowKeys.length>0){
+            setSelectedPBI(record);
+          }},
+          preserveSelectedRowKeys: true
+          }}
         onChange={handleTableChange}
         /*onRow={(record) => ({
           onClick: () => {
             selectRow(record);
           },
         })}*/
-        pagination={{current:pbiPage.pageNumber, pageSize:config.defaultFilters.pbiSize, total:pbiPage.pageCount, showSizeChanger:false}}
-        rowKey={(record: IProductBacklogItem) => record.id}
+        pagination={{ current: pbiPage.pageNumber, pageSize: config.defaultFilters.pbiSize, total: pbiPage.pageCount, showSizeChanger: false }}
         columns={columns}
         dataSource={(pbiPage && pbiPage.list) ? pbiPage.list : []}
       />
@@ -311,13 +381,13 @@ export default function Project() {
         <Button onClick={() => handleAdd} type="primary" style={{ marginRight: 16 }}>
           Add
         </Button>
-        <Button onClick={handleDelete} type="primary" style={{ marginRight: 16 }}>
+        <Button disabled={prevselectedRowKeys.length < 1} onClick={handleDelete} type="primary" style={{ marginRight: 16 }}>
           Delete
         </Button>
-        <Button onClick={handleFinish} type="primary" style={{ marginRight: 16 }}>
+        <Button disabled={prevselectedRowKeys.length < 1 || (prevselectedRowKeys && selectedPBI.finished)} onClick={handleFinish} type="primary" style={{ marginRight: 16 }}>
           Finish
         </Button>
-        <Button onClick={handleEstimate} type="primary" style={{ marginRight: 16 }}>
+        <Button disabled={prevselectedRowKeys.length < 1} onClick={handleEstimate} type="primary" style={{ marginRight: 16 }}>
           Estimate
         </Button>
       </span>

@@ -2,7 +2,7 @@
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit"
 import type { RequestResponse } from "./response";
 import * as Fetching from "./fetching";
-import { IFilters, IFiltersAndToken, IProductBacklogList, IRepository, IRepositoryList } from "./stateInterfaces";
+import { IFilters, IFiltersAndToken, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList } from "./stateInterfaces";
 
 export const fetchRepositoriesThunk = createAsyncThunk<
   RequestResponse<IRepositoryList, number>,
@@ -60,6 +60,28 @@ export const fetchPBIsThunk = createAsyncThunk<
     );
   }
   return response as RequestResponse<IProductBacklogList, number>;
+});
+
+export const finishPBIThunk = createAsyncThunk<
+  RequestResponse<IProductBacklogItem, number>,
+  { ownerName: string; token: string; pbild: number;},
+  { rejectValue: RequestResponse<IProductBacklogItem, number> }
+>("finishPBI", async (
+  item: {
+    ownerName: string;
+    token: string;
+    pbild: number;
+  },
+  { rejectWithValue }
+) => {
+  const response: RequestResponse<IProductBacklogItem, number> =
+    await Fetching.finishPBI(item.ownerName, item.token, item.pbild);
+  if (response.code !== 200) {
+    return rejectWithValue(
+      response as RequestResponse<IProductBacklogItem, number>
+    );
+  }
+  return response as RequestResponse<IProductBacklogItem, number>;
 });
 
 export const clearError = createAction("clearError");

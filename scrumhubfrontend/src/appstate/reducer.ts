@@ -3,7 +3,7 @@ import { createReducer, PayloadAction } from "@reduxjs/toolkit";
 //import _ from "lodash";
 import { RequestResponse } from "./response";
 import config from "../configuration/config";
-import { IError, initState, IProductBacklogList, IRepository, IRepositoryList, State } from "./stateInterfaces";
+import { IError, initState, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, State } from "./stateInterfaces";
 var _ = require('lodash');
 
 export const reducer = createReducer(initState, {
@@ -25,7 +25,8 @@ export const reducer = createReducer(initState, {
 },
 [Actions.clearPBIsList.type]: (state: State) => {
   let newState = _.cloneDeep(state);
-  newState.openRepositor.backlogItems = [];
+  if(newState.openRepository){
+  newState.openRepository.backlogItems = [];}
   newState.productRequireRefresh = true;
   newState.reposLastPage = false;
   newState.pages = 1;
@@ -111,6 +112,41 @@ export const reducer = createReducer(initState, {
 },
 
 [Actions.addRepositoryThunk.rejected.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<undefined, undefined>>
+) => {
+  let newState = _.cloneDeep(state);
+  let errorResponse = payload.payload;
+  newState.loading = false;
+  newState.error = {
+    hasError: true,
+    errorCode: errorResponse ? errorResponse.code : -1,
+    erorMessage: errorResponse ? (errorResponse.response as IError).message : "",
+  };
+  return newState;
+},
+[Actions.finishPBIThunk.pending.toString()]: (
+  state: State,
+  payload: PayloadAction<undefined>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = true;
+  return newState;
+},
+
+[Actions.finishPBIThunk.fulfilled.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<IProductBacklogItem, number>>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = false;
+  newState.pbiPage = [];
+  newState.productRequireRefresh = true;
+  newState.pages = 1;
+  return newState;
+},
+
+[Actions.finishPBIThunk.rejected.toString()]: (
   state: State,
   payload: PayloadAction<RequestResponse<undefined, undefined>>
 ) => {

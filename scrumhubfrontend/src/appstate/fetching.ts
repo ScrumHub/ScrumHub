@@ -2,7 +2,7 @@ import type { APIResponse, RequestResponse } from "./response";
 import config from "../configuration/config";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import axios, { AxiosResponse } from "axios";
-import { IFilters, IProductBacklogList, IRepository, IRepositoryList } from "./stateInterfaces";
+import { IFilters, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList } from "./stateInterfaces";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function getResponse<T, K>(
@@ -107,4 +107,22 @@ export function fetchPBIs(ownerName: any, token: string, filters:IFilters
       )
     );
   }
+
+  export function finishPBI(ownerName: any, token: string, pbild:number
+    ): Promise<RequestResponse<IProductBacklogItem, number>> {
+      return getResponse(
+        axios.patch(
+          `https://${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}/${pbild}/finish`,
+          {},
+          {
+            headers: {
+              'authToken': token,
+              'Accept': "application/json",
+              'Access-Control-Allow-Origin':`https://${config.backend.ip}:${config.backend.port}`,
+            },
+          }
+        )
+      );
+    }
+
 

@@ -25,7 +25,6 @@ export default function Home() {
   });
   const lastPage = useSelector((state: State) => state.reposLastPage); // eslint-disable-next-line
   const [displayLoader, setDisplayLoader] = useState(false); // eslint-disable-next-line
-  const [initialRefresh, setInitialRefresh] = useState(true);
   const [fetching, setFetching] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const refreshRequired = useSelector(
@@ -79,8 +78,7 @@ export default function Home() {
     }
   };
 
-  function redirectToProject(props: IRepository) {
-    setInitialRefresh(false);
+  function redirectToProject(props: IRepository) { 
     localStorage.setItem("ownerName", props.name);
     try {
       console.log("here");
@@ -102,34 +100,6 @@ export default function Home() {
     }
     
   };
-
-  useEffect(() => {
-    console.log(ownerName);
-    if (initialRefresh && ownerName && ownerName !== "") {
-      try {
-        console.log("here");
-        store.dispatch(
-          Actions.fetchPBIsThunk({
-            ownerName: ownerName,
-            token: token,
-            filters: {
-              ...filters,
-              pageSize: config.defaultFilters.pbiSize
-            }
-          }) //filters
-        );
-      } catch (err) {
-        console.error("Failed to add the repos: ", err);
-        localStorage.setItem("ownerName", "");
-      } finally {
-        setInitialRefresh(false);
-        console.log("navigate");
-        navigate(`/${ownerName.split("/")[0]}/${ownerName.split("/")[1]}`, { replace: true });
-      }
-
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialRefresh, ownerName]);
 
   if (!state.isLoggedIn) {
     return <Navigate to="/login" />;
