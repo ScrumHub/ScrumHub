@@ -3,13 +3,14 @@ import { Button, Card, Checkbox, Divider, Radio, Table, } from 'antd';
 import styled from "styled-components";
 import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
-import { IFilters, IProductBacklogItem, IProductBacklogList, State } from '../appstate/stateInterfaces';
+import { IAddPBI, IFilters, initAddPBI, initProductBacklogItem, IProductBacklogItem, IProductBacklogList, State } from '../appstate/stateInterfaces';
 import { AuthContext } from '../App';
 import { Navigate } from 'react-router';
 import config from '../configuration/config';
 import { useSelector } from 'react-redux';
 import { CheckOutlined, StopOutlined } from '@ant-design/icons';
 import { store } from '../appstate/store';
+import { CustomPopup } from './CustomAddPopup';
 const { Meta } = Card;
 
 const columns = [
@@ -121,8 +122,27 @@ export default function Project() {
     searchedColumn: '',
   });
   //const [selectedRowKeys, setSelectedRowKeys] = useState([] as React.Key[]);
-
-  const handleAdd = () => { }
+  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+  const handleAddButton = () => { 
+    setIsAddModalVisible(true);
+  }
+  const handleAddPBI = (pbi:IAddPBI) => { 
+    //console.log(values);
+    try {
+      store.dispatch(
+        Actions.addPBIThunk({
+          ownerName: ownerName,
+          token: token,
+          pbi: pbi
+        }) //filters
+      );
+    } catch (err) {
+      console.error("Failed to add the repos: ", err);
+    }
+    finally{
+      setIsAddModalVisible(false);
+    }
+  }
   const handleFinish = () => {
     //console.log(selectedRowKeys);
     try {
@@ -393,7 +413,7 @@ const [selectedPBI, setSelectedPBI] = useState({} as IProductBacklogItem);
       />
       <Divider />
       <span style={{ width: "100%" }}>
-        <Button onClick={() => handleAdd} type="primary" style={{ marginRight: 16 }}>
+        <Button onClick={handleAddButton} type="primary" style={{ marginRight: 16 }}>
           Add
         </Button>
         <Button disabled={prevselectedRowKeys.length < 1} onClick={handleDelete} type="primary" style={{ marginRight: 16 }}>
@@ -405,6 +425,9 @@ const [selectedPBI, setSelectedPBI] = useState({} as IProductBacklogItem);
         <Button disabled={prevselectedRowKeys.length < 1} onClick={handleEstimate} type="primary" style={{ marginRight: 16 }}>
           Estimate
         </Button>
+        {isAddModalVisible && <CustomPopup data={initAddPBI} visible={isAddModalVisible} 
+        onCreate={function (values: any): void {handleAddPBI(values)}}
+          onCancel={()=>{setIsAddModalVisible(false);} }/>}
       </span>
 
     </div>

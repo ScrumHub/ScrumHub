@@ -2,7 +2,7 @@
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit"
 import type { RequestResponse } from "./response";
 import * as Fetching from "./fetching";
-import { IFilters, IFiltersAndToken, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList } from "./stateInterfaces";
+import { IAddPBI, IFilters, IFiltersAndToken, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList } from "./stateInterfaces";
 
 export const fetchRepositoriesThunk = createAsyncThunk<
   RequestResponse<IRepositoryList, number>,
@@ -100,12 +100,35 @@ item: {
 const response: RequestResponse<number, number> =
   await Fetching.deletePBI(item.ownerName, item.token, item.pbild);
   console.log(response);
-if (response.code !== 204) {
+if (response.code !== 204) { 
   return rejectWithValue(
     response as RequestResponse<number, number>
   );
 }
 return response as RequestResponse<number, number>;
+});
+
+export const addPBIThunk = createAsyncThunk<
+  RequestResponse<IProductBacklogItem, number>,
+  { ownerName: string; token: string; pbi: IAddPBI;},
+  { rejectValue: RequestResponse<IProductBacklogItem, number> }
+>("addPBI", async (
+  item: {
+    ownerName: string;
+    token: string;
+    pbi: IAddPBI;
+  },
+  { rejectWithValue }
+) => {
+  const response: RequestResponse<IProductBacklogItem, number> =
+    await Fetching.addPBI(item.ownerName, item.token, item.pbi);
+    console.log(response);
+  if (response.code !== 201) {
+    return rejectWithValue(
+      response as RequestResponse<IProductBacklogItem, number>
+    );
+  }
+  return response as RequestResponse<IProductBacklogItem, number>;
 });
 
 export const clearError = createAction("clearError");

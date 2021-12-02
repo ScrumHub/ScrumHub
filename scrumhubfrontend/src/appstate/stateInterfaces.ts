@@ -49,6 +49,18 @@ export interface IProductBacklogItem {
   tasks: any
 }
 
+export interface IAddPBI {
+  name: string;
+  priority: number;
+  acceptanceCriteria: string[];
+}
+
+export const initAddPBI: IAddPBI = {
+  name: "Item",
+  priority: 0,
+  acceptanceCriteria: ["criteria", "criteria2"],
+};
+
 export interface IProductBacklogList {
   pageNumber: number;
   pageCount: number;
