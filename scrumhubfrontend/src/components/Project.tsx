@@ -14,6 +14,7 @@ import { CalendarOutlined, CheckOutlined, FolderAddOutlined, InfoCircleOutlined,
 import { store } from '../appstate/store';
 import { clearReposList } from '../appstate/actions';
 import { List } from 'rc-field-form';
+import { initial } from 'lodash';
 const { Meta } = Card;
 
 const columns = [
@@ -142,26 +143,6 @@ export default function Project() {
     (appState: State) => appState.pbiPage as IProductBacklogList
   );
 
-  useEffect(() => {
-    if (state.isLoggedIn && refreshRequired) {
-      //store.dispatch(clearReposList());
-      try {        
-        store.dispatch(
-          Actions.fetchPBIsThunk({
-            ownerName: ownerName,
-            token: token,
-            filters: filters
-          }) //filters
-        );
-      } catch (err) {
-        console.error("Failed to add the repos: ", err);
-        localStorage.setItem("ownerName","");
-      } finally {
-        //store.dispatch(clearReposList());
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refreshRequired, state.isLoggedIn]);
   if (!state.isLoggedIn) {
     return <Navigate to="/login" />;
   }
@@ -323,7 +304,7 @@ export default function Project() {
         pagination={{current:pbiPage.pageNumber, pageSize:config.defaultFilters.pbiSize, total:pbiPage.pageCount, showSizeChanger:false}}
         rowKey={(record: IProductBacklogItem) => record.id}
         columns={columns}
-        dataSource={(pbiPage && pbiPage.list) ? pbiPage.list : [initProductBacklogItem]}
+        dataSource={(pbiPage && pbiPage.list) ? pbiPage.list : []}
       />
       <Divider />
       <span style={{ width: "100%" }}>

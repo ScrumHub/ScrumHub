@@ -1,11 +1,8 @@
-//import {retrieveCookie} from "../src/utilities/cookiesutil";
-// eslint-disable-next-line import/no-anonymous-default-export
 import fetch from "node-fetch";
 import express from"express";
 import  bodyParser from "body-parser";
 
 import FormData from "form-data";
-//const fetch = require("node-fetch");
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 const { client_id, redirect_uri, client_secret, logout_url } = require("./serverconfig");
@@ -34,9 +31,6 @@ app.post("/authenticate", (req, res) => {
   fetch(`https://github.com/login/oauth/access_token`, {
     method: "POST",
     body:data,
-    //header:{
-    //  Accept:"application/json"
-    //}
   }
   )
     .then((response) => response.text())
@@ -51,13 +45,9 @@ app.post("/authenticate", (req, res) => {
 app.get("/", (req, res) => {
 })
 
-app.get("/repos", (req, res) => {
-})
-
 app.get("/logout", (req, res) => {
     //const { token } = req.headers.authorization;
-    res.clearCookie('ai_user', { path: '/login' })
-    //res.cookie("_gh_sess", "", { expires: -1,domain:'.github.com', path: '/' });
+    res.clearCookie('ai_user', { path: '/login' });
     var cookies = document.cookie.split(";");
       for (var i = 0; i < cookies.length; i++) {
         var cookie = cookies[i];

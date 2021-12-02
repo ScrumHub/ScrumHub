@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Button, Card } from 'antd';
 import styled from "styled-components";
 import * as Actions from '../appstate/actions';
@@ -25,7 +25,7 @@ export default function Home() {
   });
   const lastPage = useSelector((state: State) => state.reposLastPage); // eslint-disable-next-line
   const [displayLoader, setDisplayLoader] = useState(false); // eslint-disable-next-line
-  const [repoId, setRepoId] = useState(0);
+  const [initialRefresh, setInitialRefresh] = useState(true);
   const [fetching, setFetching] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const refreshRequired = useSelector(
@@ -34,13 +34,11 @@ export default function Home() {
   const repos = useSelector(
     (state: State) => state.repositories as IRepository[]
   );
-  const ownerName = localStorage.getItem("ownerName")?localStorage.getItem("ownerName"):"";
+  const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") : "";
   console.log(ownerName);
   const navigate = useNavigate();
-  if (!state.isLoggedIn) {
-    return <Navigate to="/login" />;
-  }
-   
+
+
   const fetchMore = () => {
     if (!fetching) {
       setFetching(true);
@@ -64,48 +62,79 @@ export default function Home() {
     }
   };
 
-  function addProject (prop: number) {
-      try {        
-        store.dispatch(
-          Actions.addRepositoryThunk({
-            id: prop,
-            token: token,
-          }) //filters
-        );
-      } catch (err) {
-        console.error("Failed to add the repos: ", err);
-      } finally {
-        setFilters({ ...filters, pageNumber: config.defaultFilters.page});
-        setFetching(false);
-        store.dispatch(clearReposList());
-      }
-    };
+  function addProject(prop: number) {
+    try {
+      store.dispatch(
+        Actions.addRepositoryThunk({
+          id: prop,
+          token: token,
+        }) //filters
+      );
+    } catch (err) {
+      console.error("Failed to add the repos: ", err);
+    } finally {
+      setFilters({ ...filters, pageNumber: config.defaultFilters.page });
+      setFetching(false);
+      store.dispatch(clearReposList());
+    }
+  };
 
-    function redirectToProject (props: IRepository) {
-      localStorage.setItem("ownerName",props.name);
-      try {        
+  function redirectToProject(props: IRepository) {
+    setInitialRefresh(false);
+    localStorage.setItem("ownerName", props.name);
+    try {
+      console.log("here");
+      store.dispatch(
+        Actions.fetchPBIsThunk({
+          ownerName: props.name,
+          token: token,
+          filters: {
+            ...filters,
+            pageSize: config.defaultFilters.pbiSize
+          }
+        }) //filters
+      );
+    } catch (err) {
+      console.error("Failed to add the repos: ", err);
+      localStorage.setItem("ownerName", "");
+    } finally {
+      navigate(`/${props.name.split("/")[0]}/${props.name.split("/")[1]}`, { replace: true });
+    }
+    
+  };
+
+  useEffect(() => {
+    console.log(ownerName);
+    if (initialRefresh && ownerName && ownerName !== "") {
+      try {
+        console.log("here");
         store.dispatch(
           Actions.fetchPBIsThunk({
-            ownerName: props.name,
+            ownerName: ownerName,
             token: token,
-            filters: {...filters,
-              pageSize: config.defaultFilters.pbiSize}
+            filters: {
+              ...filters,
+              pageSize: config.defaultFilters.pbiSize
+            }
           }) //filters
         );
       } catch (err) {
         console.error("Failed to add the repos: ", err);
-        localStorage.setItem("ownerName","");
+        localStorage.setItem("ownerName", "");
       } finally {
-        //store.dispatch(clearReposList());
+        setInitialRefresh(false);
+        console.log("navigate");
+        navigate(`/${ownerName.split("/")[0]}/${ownerName.split("/")[1]}`, { replace: true });
       }
-    };
-    if(ownerName && ownerName !== "")
-    {
-      console.log(`/${ownerName.split("/")[0]}/${ownerName.split("/")[1]}`);
-      //navigate(`/${ownerName.split("/")[0]}/${ownerName.split("/")[1]}`, { replace: true });
-     return <Navigate to={`/${ownerName.split("/")[0]}/${ownerName.split("/")[1]}`} />;
+
     }
-console.log(repos);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialRefresh, ownerName]);
+
+  if (!state.isLoggedIn) {
+    return <Navigate to="/login" />;
+  }
+  console.log(repos);
   return (
     <section className="container">
       <InfiniteScroll
@@ -121,26 +150,26 @@ console.log(repos);
           {
             repos.map((rep: IRepository) => {
               return (<section className="card" style={{ width: "85%", }} key={rep.gitHubId} >
-                <Card style={{ backgroundColor: "white", marginBottom:"3vh" }} type="inner" actions =
-                {[<Button disabled={rep.alreadyInScrumHub || !rep.hasAdminRights} style={{width:"180px"}} onClick={()=>{addProject(rep.gitHubId)}} ><span><FolderAddOutlined disabled={!rep.alreadyInScrumHub}/>
-                {" Add to ScrumHub"}</span></Button>,
-                <Button disabled={!rep.alreadyInScrumHub} style={{width:"180px"}} onClick={()=>{redirectToProject(rep)}}><span><InfoCircleOutlined/>{" Project Details"}</span></Button>,
-                <Button style={{width:"180px"}}><span><CalendarOutlined/>
-                {rep.dateOfLastActivity === "No recent activity" ? " Not updated":" Updated "+ new Date(rep.dateOfLastActivity as Date).toLocaleString(['en-US'],{year:'numeric', month:'short', day:'numeric'})}</span></Button>
-                ]}>
-                <Meta
-                  title={rep.name.split("/")[1]}
-                  description={rep.description}
-                ></Meta>
-                <br/>
-                <p>{"There are " + rep.sprints.length + " sprints and "+ rep.backlogItems.length + " backlog items.\n"}</p>
-                <p>{"The last activity in the repository was "+rep.typeOfLastActivity}</p>
-              </Card>
-            </section>);
-          })
-        }
-      </CardWrapper>
-    </InfiniteScroll>
+                <Card style={{ backgroundColor: "white", marginBottom: "3vh" }} type="inner" actions=
+                  {[<Button disabled={rep.alreadyInScrumHub || !rep.hasAdminRights} style={{ width: "180px" }} onClick={() => { addProject(rep.gitHubId) }} ><span><FolderAddOutlined disabled={!rep.alreadyInScrumHub} />
+                    {" Add to ScrumHub"}</span></Button>,
+                  <Button disabled={!rep.alreadyInScrumHub} style={{ width: "180px" }} onClick={() => { redirectToProject(rep) }}><span><InfoCircleOutlined />{" Project Details"}</span></Button>,
+                  <Button style={{ width: "180px" }}><span><CalendarOutlined />
+                    {rep.dateOfLastActivity === "No recent activity" ? " Not updated" : " Updated " + new Date(rep.dateOfLastActivity as Date).toLocaleString(['en-US'], { year: 'numeric', month: 'short', day: 'numeric' })}</span></Button>
+                  ]}>
+                  <Meta
+                    title={rep.name.split("/")[1]}
+                    description={rep.description}
+                  ></Meta>
+                  <br />
+                  <p>{"There are " + rep.sprints.length + " sprints and " + rep.backlogItems.length + " backlog items.\n"}</p>
+                  <p>{"The last activity in the repository was " + rep.typeOfLastActivity}</p>
+                </Card>
+              </section>);
+            })
+          }
+        </CardWrapper>
+      </InfiniteScroll>
     </section >
   );
 

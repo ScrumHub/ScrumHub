@@ -76,7 +76,7 @@ export const initProductBacklogList: IProductBacklogList = {
   pageCount: 1,
   pageSize: 10,
   realSize: 10,
-  list: [initProductBacklogItem],
+  list: [],
 };
 
 
