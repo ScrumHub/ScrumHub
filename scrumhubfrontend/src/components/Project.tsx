@@ -174,13 +174,13 @@ export default function Project() {
   }
 
   const handleEditPBI = (pbi:IAddPBI) => { 
-    //console.log(values);
-    /*try {
+    try {
       store.dispatch(
-        Actions.addPBIThunk({
+        Actions.editPBIThunk({
           ownerName: ownerName,
           token: token,
-          pbi: pbi
+          pbi: pbi,
+          pbiId: selectedPBI.id,
         }) //filters
       );
     } catch (err) {
@@ -188,7 +188,7 @@ export default function Project() {
     }
     finally{
       setIsEditModalVisible(false);
-    }*/
+    }
   }
   const handleFinish = () => {
     //console.log(selectedRowKeys);

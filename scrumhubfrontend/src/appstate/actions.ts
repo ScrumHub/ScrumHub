@@ -155,6 +155,31 @@ export const estimatePBIThunk = createAsyncThunk<
   return response as RequestResponse<IProductBacklogItem, number>;
 });
 
+export const editPBIThunk = createAsyncThunk<
+  RequestResponse<IProductBacklogItem, number>,
+  { ownerName: string; token: string; pbi: IAddPBI;pbiId:number;},
+  { rejectValue: RequestResponse<IProductBacklogItem, number> }
+>("editPBI", async (
+  item: {
+    ownerName: string;
+    token: string;
+    pbi: IAddPBI;
+    pbiId:number
+  },
+  { rejectWithValue }
+) => {
+  const response: RequestResponse<IProductBacklogItem, number> =
+    await Fetching.editPBI(item.ownerName, item.token, item.pbi, item.pbiId);
+    console.log(response);
+  if (response.code !== 200) {
+    return rejectWithValue(
+      response as RequestResponse<IProductBacklogItem, number>
+    );
+  }
+  return response as RequestResponse<IProductBacklogItem, number>;
+});
+
+
 export const clearError = createAction("clearError");
 export const clearState = createAction("clearState");
 export const clearReposList = createAction("clearReposList");
