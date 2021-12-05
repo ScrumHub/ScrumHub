@@ -87,8 +87,9 @@ export function fetchPBIs(ownerName: any, token: string, filters: IFilters
       ? ""
       : Object.keys(filters)
         .map((filterName) => {
+          console.log(filters[filterName]);
           const value = String(filters[filterName]).trim();
-          return value && value !== "null" ? `${filterName}=${value}` : "";
+          return value && value !== "null" && value !== "undefined" ? `${filterName}=${value}` : "";
           //}
         })
         .filter((x) => x !== "")

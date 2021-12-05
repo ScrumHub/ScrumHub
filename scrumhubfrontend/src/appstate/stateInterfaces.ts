@@ -1,3 +1,5 @@
+import config from "../configuration/config"
+
 export type Error = {
   hasError: boolean;
   errorCode: number;
@@ -54,6 +56,21 @@ export interface IAddPBI {
   priority: number;
   acceptanceCriteria: string[];
 }
+
+export interface IPBIFilter {
+  pageNumber: number;
+  pageSize: number;
+  nameFilter?: string;
+  finished?: boolean;
+  estimated?: boolean;
+  inSprint?: boolean;
+}
+
+export const initPBIFilter: IPBIFilter = {
+  pageNumber: config.defaultFilters.page,
+  pageSize: config.defaultFilters.pbiSize,
+
+};
 
 export const initAddPBI: IAddPBI = {
   name: "Item",

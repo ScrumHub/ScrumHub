@@ -3,7 +3,7 @@ import { Button, Card, Checkbox, Divider, Radio, Table, } from 'antd';
 import styled from "styled-components";
 import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
-import { IAddPBI, IFilters, initAddPBI, initProductBacklogItem, IProductBacklogItem, IProductBacklogList, State } from '../appstate/stateInterfaces';
+import { IAddPBI, IFilters, initAddPBI, initProductBacklogItem, IPBIFilter, IProductBacklogItem, IProductBacklogList, State } from '../appstate/stateInterfaces';
 import { AuthContext } from '../App';
 import { Navigate } from 'react-router';
 import config from '../configuration/config';
@@ -13,6 +13,7 @@ import { store } from '../appstate/store';
 import { CustomAddPopup } from './CustomAddPopup';
 import { CustomEditPopup } from './CustomEditPopup';
 import { CustomEstimatePopup } from './CustomEstimatePopup';
+import { CustomFilterPopup } from './CustomFilterPopup';
 const { Meta } = Card;
 
 const columns = [
@@ -59,7 +60,7 @@ const columns = [
       return ({
         children:
           <div style={{ verticalAlign: "center", alignItems: "center", textAlign: "center" }}>{
-            record.map((value: string, index:number) => { return (<p key={index} style={{ margin: "auto", marginTop: "5%", marginBottom: "5%" }}>{value}</p>) })
+            record.map((value: string, index: number) => { return (<p key={index} style={{ margin: "auto", marginTop: "5%", marginBottom: "5%" }}>{value}</p>) })
           }
           </div>,
         props: { colSpan: 2 }
@@ -76,47 +77,14 @@ const columns = [
 
 ];
 
-/* rowSelection object indicates the need for row selection
-const rowSelection = {
-  onChange: (selectedRowKeys: any[], selectedRows: IProductBacklogItem[]) => {
-    console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-  },
-  getCheckboxProps: (record: IProductBacklogItem) => ({
-    //disabled: record.name === 'Disabled User', // Column configuration not to be checked
-    name: record.name,
-  }),
-};
-const rowSelection = {
-  onSelect: (props:any) => props.onRowSelect(columns[6].dataIndex)
-};*/
-
-
-/*handleAdd = () => {
-  const { count, dataSource } = this.state;
-  const newData: DataType = {
-    key: count,
-    name: `Edward King ${count}`,
-    age: '32',
-    address: `London, Park Lane no. ${count}`,
-  };
-  this.setState({
-    dataSource: [...dataSource, newData],
-    count: count + 1,
-  });
-};*/
-
 
 export default function Project() {
-  //const mock_data = initRepositoryList;
   const { state } = useContext(AuthContext);
   const { token } = state;
-  const [filters, setFilters] = useState<IFilters>({
+  const [filterPBI, setFiltersPBI] = useState<IPBIFilter>({
     pageNumber: config.defaultFilters.page,
     pageSize: config.defaultFilters.size,
     nameFilter: "",
-    finished: "",
-    estimated: "",
-    inSprint: "",
   });
   const [selectionType, setSelectionType] = useState<'pbi' | 'tasks'>('pbi');
   const [stateF, setState] = useState({
@@ -127,34 +95,48 @@ export default function Project() {
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [isEstimateModalVisible, setIsEstimateModalVisible] = useState(false);
-  const handleAddButton = () => { 
+  const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
+  const handleAddButton = () => {
     setIsAddModalVisible(true);
   }
-  const handleEditButton = () => { 
+  const handleEditButton = () => {
     setIsEditModalVisible(true);
   }
-  const handleEstimateButton = () => { 
+  const handleFilterButton = () => {
+    setIsFilterModalVisible(true);
+  }
+  const handleEstimateButton = () => {
     setIsEstimateModalVisible(true);
   }
-  const handleAddPBI = (pbi:IAddPBI) => { 
-    //console.log(values);
+  const handleFilterPBI = (pbi: IPBIFilter) => {
+    console.log(pbi);
     try {
       store.dispatch(
-        Actions.addPBIThunk({
+        Actions.fetchPBIsThunk({
           ownerName: ownerName,
           token: token,
-          pbi: pbi
+          filters: {
+            ...pbi,
+            pageNumber: filterPBI.pageNumber,
+            pageSize: config.defaultFilters.pbiSize
+          }
         }) //filters
       );
     } catch (err) {
       console.error("Failed to add the repos: ", err);
     }
-    finally{
-      setIsAddModalVisible(false);
+    finally {
+      setIsFilterModalVisible(false);
     }
   }
 
-  const handleEstimatePBI = (pbi:IProductBacklogItem) => { 
+  const handleAddPBI = (pbi: IPBIFilter) => {
+    console.log(pbi);
+    setFiltersPBI(pbi);
+    setInitialRefresh(true);
+  }
+
+  const handleEstimatePBI = (pbi: IProductBacklogItem) => {
     console.log(pbi);
     try {
       store.dispatch(
@@ -168,12 +150,12 @@ export default function Project() {
     } catch (err) {
       console.error("Failed to estimate the repos: ", err);
     }
-    finally{
+    finally {
       setIsEstimateModalVisible(false);
     }
   }
 
-  const handleEditPBI = (pbi:IAddPBI) => { 
+  const handleEditPBI = (pbi: IAddPBI) => {
     try {
       store.dispatch(
         Actions.editPBIThunk({
@@ -186,7 +168,7 @@ export default function Project() {
     } catch (err) {
       console.error("Failed to add the repos: ", err);
     }
-    finally{
+    finally {
       setIsEditModalVisible(false);
     }
   }
@@ -205,31 +187,27 @@ export default function Project() {
     }
 
   }
-  const handleDelete = () => { 
+  const handleDelete = () => {
     try {
-    store.dispatch(
-      Actions.deletePBIThunk({
-        ownerName: ownerName,
-        token: token,
-        pbild: prevselectedRowKeys[0] as number
-      }) //filters
-    );
-  } catch (err) {
-    console.error("Failed to add the repos: ", err);
-  }}
+      store.dispatch(
+        Actions.deletePBIThunk({
+          ownerName: ownerName,
+          token: token,
+          pbild: prevselectedRowKeys[0] as number
+        }) //filters
+      );
+    } catch (err) {
+      console.error("Failed to add the repos: ", err);
+    }
+  }
 
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : "";
-  //const pages = useSelector((state: State) => state.pages); // eslint-disable-next-line
   const [displayLoader, setDisplayLoader] = useState(false); // eslint-disable-next-line
   const [initialRefresh, setInitialRefresh] = useState(true);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const refreshRequired = useSelector(
     (appState: State) => appState.productRequireRefresh as boolean
   );
-  console.log("refresh" + refreshRequired);
-  //const repo = useSelector(
-  //  (appState: State) => appState.openRepository as IRepository
-  //);
   const pbiPage = useSelector(
     (appState: State) => appState.pbiPage as IProductBacklogList
   );
@@ -250,7 +228,7 @@ export default function Project() {
             ownerName: ownerName,
             token: token,
             filters: {
-              ...filters,
+              ...filterPBI,
               pageNumber: config.defaultFilters.page,
               pageSize: config.defaultFilters.pbiSize
             }
@@ -344,58 +322,16 @@ export default function Project() {
     setState({ searchText: '', searchedColumn: '' });
   };
 
-
-
-
-  /*const selectRow = (record: IProductBacklogItem) => {
-    console.log("row");
-    const keys = selectRowKeys;
-    const newKey = record.id as React.Key;
-    console.log(keys.indexOf(newKey));
-    if (keys.indexOf(newKey) >= 0) {
-      keys.splice(keys.indexOf(newKey), 1);
-    } else {
-      keys[0] = newKey;
-    }
-    setSelectedRowKeys(keys);
-    rowSelection.onChange(keys);
-    console.log(keys);
-    console.log(newKey);
-  }*/
-/*   const onSelectedRowKeysChange = (keys: React.Key[]) => {
-    if (keys.indexOf(selectedRowKeys[0]) >= 0) {
-      keys.splice(keys.indexOf(selectedRowKeys[0]), 1);
-    }
-    setSelectedRowKeys(keys);
-    console.log(keys);
-  } */
- /* const [select, setSelect] = useState({
-    selectedRowKeys: [] as any[],
-    loading: false,
-  });
-
-const { selectedRowKeys, loading } = select;*/
- /* const rowSelection = {
-    selectedRowKeys,
-    onSelect: (record:IProductBacklogItem) => {
-      console.log(record);
-      setSelect({
-        ...select,
-        selectedRowKeys: [record.id as React.Key]
-      });
-    }
-};*/
-const [prevselectedRowKeys, setPrevSelectedRowKeys] = useState([] as React.Key[]);
-const [selectedPBI, setSelectedPBI] = useState({} as IProductBacklogItem);
+  const [prevselectedRowKeys, setPrevSelectedRowKeys] = useState([] as React.Key[]);
+  const [selectedPBI, setSelectedPBI] = useState({} as IProductBacklogItem);
   const handleTableChange = (pagination: IFilters, filters: IFilters, sorter: any) => {
-    console.log(pagination);
     try {
       store.dispatch(
         Actions.fetchPBIsThunk({
           ownerName: ownerName,
           token: token,
           filters: {
-            ...filters,
+            ...filterPBI,
             pageNumber: pagination.current,
             pageSize: config.defaultFilters.pbiSize
           }
@@ -404,7 +340,7 @@ const [selectedPBI, setSelectedPBI] = useState({} as IProductBacklogItem);
     } catch (err) {
       console.error("Failed to add the pbis: ", err);
     } finally {
-      setFilters({ ...filters, pageNumber: filters.pageNumber + 1 });
+      setFiltersPBI({ ...filterPBI, pageNumber: pagination.current });
     }
   };
 
@@ -434,7 +370,7 @@ const [selectedPBI, setSelectedPBI] = useState({} as IProductBacklogItem);
           type: "checkbox",
           hideSelectAll: true,
           selectedRowKeys: prevselectedRowKeys,
-          onChange: (keys:React.Key[], selectedRows: IProductBacklogItem[]) => {
+          onChange: (keys: React.Key[], selectedRows: IProductBacklogItem[]) => {
             console.log(keys);
             console.log(selectedRows);
             if (keys.indexOf(prevselectedRowKeys[0]) >= 0) {
@@ -444,10 +380,10 @@ const [selectedPBI, setSelectedPBI] = useState({} as IProductBacklogItem);
             setPrevSelectedRowKeys(keys);
           },///onSelectedRowKeysChange(keys)},
           //onSelect: (record:IProductBacklogItem) => {if(prevselectedRowKeys.length>0){
-           // setSelectedPBI(record);
+          // setSelectedPBI(record);
           //}},
           //preserveSelectedRowKeys: true
-          }}
+        }}
         onChange={handleTableChange}
         /*onRow={(record) => ({
           onClick: () => {
@@ -475,32 +411,27 @@ const [selectedPBI, setSelectedPBI] = useState({} as IProductBacklogItem);
         <Button disabled={prevselectedRowKeys.length < 1} onClick={handleEstimateButton} type="primary" style={{ marginRight: 16 }}>
           Estimate
         </Button>
-        {isAddModalVisible && <CustomAddPopup data={initAddPBI} visible={isAddModalVisible} 
-        onCreate={function (values: any): void {handleAddPBI(values)}}
-          onCancel={()=>{setIsAddModalVisible(false);} }/>}
-          {isEditModalVisible && selectedPBI && <CustomEditPopup data={selectedPBI as IAddPBI} visible={isEditModalVisible} 
-        onCreate={function (values: any): void {handleEditPBI(values)}}
-          onCancel={()=>{setIsEditModalVisible(false);} }/>}
-          {isEstimateModalVisible && selectedPBI && <CustomEstimatePopup data={selectedPBI as IProductBacklogItem} visible={isEstimateModalVisible} 
-        onCreate={function (values: any): void {handleEstimatePBI(values)}}
-          onCancel={()=>{setIsEstimateModalVisible(false);} }/>}
+        <Button onClick={handleFilterButton} type="primary" style={{ marginRight: 16 }}>
+          Filter
+        </Button>
+        <Button onClick={()=>{setInitialRefresh(true);}} type="primary" style={{ marginRight: 16 }}>
+          Clear filters
+        </Button>
+        {isAddModalVisible && <CustomAddPopup data={initAddPBI} visible={isAddModalVisible}
+          onCreate={function (values: any): void { handleAddPBI(values) }}
+          onCancel={() => { setIsAddModalVisible(false); }} />}
+        {isEditModalVisible && selectedPBI && <CustomEditPopup data={selectedPBI as IAddPBI} visible={isEditModalVisible}
+          onCreate={function (values: any): void { handleEditPBI(values) }}
+          onCancel={() => { setIsEditModalVisible(false); }} />}
+        {isEstimateModalVisible && selectedPBI && <CustomEstimatePopup data={selectedPBI as IProductBacklogItem} visible={isEstimateModalVisible}
+          onCreate={function (values: any): void { handleEstimatePBI(values) }}
+          onCancel={() => { setIsEstimateModalVisible(false); }} />}
+          {isFilterModalVisible && filterPBI && <CustomFilterPopup data={filterPBI as IPBIFilter} visible={isFilterModalVisible}
+          onCreate={function (values: any): void { handleFilterPBI(values) }}
+          onCancel={() => { setIsFilterModalVisible(false); }} />}
       </span>
 
     </div>
   );
 
 }
-
-const CardWrapper = styled.div`
-display: grid;
-place-items: center;
-margin: 80px;
-background: "transparent;
-`;
-//linear-gradient(to bottom, transparent, gray)
-
-{/*expandable={{
-          //rowExpandable: record => record.name !== 'Not Expandable',
-         // childrenColumnName:"acceptanceCriteria"
-        }}
-      childrenColumnName="acceptanceCriteria"*/}
