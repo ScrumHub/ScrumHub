@@ -76,7 +76,6 @@ export const finishPBIThunk = createAsyncThunk<
 ) => {
   const response: RequestResponse<IProductBacklogItem, number> =
     await Fetching.finishPBI(item.ownerName, item.token, item.pbild);
-    console.log(response);
   if (response.code !== 200) {
     return rejectWithValue(
       response as RequestResponse<IProductBacklogItem, number>
@@ -99,7 +98,6 @@ item: {
 ) => {
 const response: RequestResponse<number, number> =
   await Fetching.deletePBI(item.ownerName, item.token, item.pbild);
-  console.log(response);
 if (response.code !== 204) { 
   return rejectWithValue(
     response as RequestResponse<number, number>
@@ -122,7 +120,6 @@ export const addPBIThunk = createAsyncThunk<
 ) => {
   const response: RequestResponse<IProductBacklogItem, number> =
     await Fetching.addPBI(item.ownerName, item.token, item.pbi);
-    console.log(response);
   if (response.code !== 201) {
     return rejectWithValue(
       response as RequestResponse<IProductBacklogItem, number>
@@ -146,7 +143,6 @@ export const estimatePBIThunk = createAsyncThunk<
 ) => {
   const response: RequestResponse<IProductBacklogItem, number> =
     await Fetching.estimatePBI(item.ownerName, item.token, item.pbiId, item.hours);
-    console.log(response);
   if (response.code !== 200) {
     return rejectWithValue(
       response as RequestResponse<IProductBacklogItem, number>
@@ -170,7 +166,6 @@ export const editPBIThunk = createAsyncThunk<
 ) => {
   const response: RequestResponse<IProductBacklogItem, number> =
     await Fetching.editPBI(item.ownerName, item.token, item.pbi, item.pbiId);
-    console.log(response);
   if (response.code !== 200) {
     return rejectWithValue(
       response as RequestResponse<IProductBacklogItem, number>
@@ -184,10 +179,6 @@ export const clearError = createAction("clearError");
 export const clearState = createAction("clearState");
 export const clearReposList = createAction("clearReposList");
 export const clearPBIsList = createAction("clearPBIsList");
-//export const clearLoginInformation = createAction("clearLoginInformation");
-//export const clearRedirect = createAction("clearRedirect");
-//export const startRefreshing = createAction("startRefreshing");
-//export const finishRefreshing = createAction("finishRefreshing");
 
 
 

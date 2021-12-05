@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
 import { Button, Card } from 'antd';
-import styled from "styled-components";
 import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
 import { IFilters, IRepository, State } from '../appstate/stateInterfaces';
@@ -16,7 +15,6 @@ const { Meta } = Card;
 
 
 export default function Home() {
-  //const mock_data = initRepositoryList;
   const { state } = useContext(AuthContext);
   const { token } = state;
   const [filters, setFilters] = useState<IFilters>({
@@ -33,8 +31,8 @@ export default function Home() {
   const repos = useSelector(
     (state: State) => state.repositories as IRepository[]
   );
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") : "";
-  console.log(ownerName);
   const navigate = useNavigate();
   const [initialRefresh, setInitialRefresh] = useState(true);
   useEffect(() => {
@@ -46,7 +44,6 @@ export default function Home() {
 
   useEffect(() => {
     if (state.isLoggedIn && refreshRequired) {
-      //store.dispatch(clearReposList());
       try {
         store.dispatch(
           Actions.fetchRepositoriesThunk({
@@ -60,7 +57,6 @@ export default function Home() {
       } catch (err) {
         console.error("Failed to fetch the repos: ", err);
       } finally {
-        //setFilters({ ...filters, pageNumber: config.defaultFilters.page + 1 });
         setInitialRefresh(false);
       }
     }
@@ -84,7 +80,6 @@ export default function Home() {
         console.error("Failed to fetch the repos: ", err);
       } finally {
         setFilters({ ...filters, pageNumber: filters.pageNumber < 2 ? 3 : filters.pageNumber + 1 });
-        //setInitialRefresh(true);
         setFetching(false);
       }
     }
@@ -104,14 +99,12 @@ export default function Home() {
       setFilters({ ...filters, pageNumber: config.defaultFilters.page });
       setFetching(false);
       setInitialRefresh(true);
-      //store.dispatch(clearReposList());
     }
   };
 
   function redirectToProject(props: IRepository) { 
     localStorage.setItem("ownerName", props.name);
     try {
-      console.log("here");
       store.dispatch(
         Actions.fetchPBIsThunk({
           ownerName: props.name,
@@ -134,7 +127,6 @@ export default function Home() {
   if (!state.isLoggedIn) {
     return <Navigate to="/login" />;
   }
-  console.log(repos);
   return (
     <section className="container">
       <InfiniteScroll
@@ -144,9 +136,8 @@ export default function Home() {
         hasMore={!lastPage && !fetching}
         loader={
           (displayLoader && <LoadingOutlined />) || (!displayLoader && <></>)
-        }
-      >
-        <CardWrapper>
+        }>
+        <div style={{display: "grid",placeItems:"center", margin:"80px", background:"transparent"}}>
           {
             repos.map((rep: IRepository) => {
               return (<section className="card" style={{ width: "85%", }} key={rep.gitHubId} >
@@ -168,17 +159,9 @@ export default function Home() {
               </section>);
             })
           }
-        </CardWrapper>
+        </div>
       </InfiniteScroll>
     </section >
   );
 
 }
-
-const CardWrapper = styled.div`
-display: grid;
-place-items: center;
-margin: 80px;
-background: "transparent;
-`;
-//linear-gradient(to bottom, transparent, gray)

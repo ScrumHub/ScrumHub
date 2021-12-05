@@ -87,14 +87,11 @@ export function fetchPBIs(ownerName: any, token: string, filters: IFilters
       ? ""
       : Object.keys(filters)
         .map((filterName) => {
-          console.log(filters[filterName]);
           const value = String(filters[filterName]).trim();
           return value && value !== "null" && value !== "undefined" ? `${filterName}=${value}` : "";
-          //}
         })
         .filter((x) => x !== "")
         .join("&");
-  console.log(filtersString);
   return getResponse(
     axios.get(
       `https://${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}?${filtersString}`,

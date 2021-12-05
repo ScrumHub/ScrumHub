@@ -9,6 +9,7 @@ import config from "../configuration/config";
 
 export default function Login(props:any) {
   const { state, dispatch: auth } = useContext(AuthContext);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [cookies, setCookie, removeCookie] = useCookies();
   const [data, setData] = useState({ errorMessage: "", isLoading: false });
   let navigate = useNavigate();
@@ -60,6 +61,7 @@ export default function Login(props:any) {
           
         });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, auth, data, proxy_url]);
   useEffect(() => {
   if (state.isLoggedIn)

@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { Button, Modal, Form, Input, Radio, InputNumber, Space, Switch } from 'antd';
-import { IAddPBI, IPBIFilter, IProductBacklogItem } from '../appstate/stateInterfaces';
+import { Button, Modal, Form, Input, Switch } from 'antd';
+import { IPBIFilter } from '../appstate/stateInterfaces';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { required } from 'joi';
-import FormItemLabel from 'antd/lib/form/FormItemLabel';
 
 interface Values {
   title: string;
@@ -44,7 +42,7 @@ export const CustomFilterPopup: React.FC<CollectionCreateFormProps> = ({
             onCreate(values);
           })
           .catch(info => {
-            console.log('Validate Failed:', info);
+            console.error('Validate Failed:', info);
           });
       }}
     >

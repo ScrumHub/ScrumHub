@@ -10,6 +10,9 @@
  import { Provider } from "react-redux";
  import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
  import Login from "./Login";
+import { AuthContext } from "../App";
+import { testAuthorizationState } from "../authstate/auth";
+import { authReducer } from "../authstate/authreducer";
  
  let container: HTMLDivElement | null = null;
  beforeEach(() => {
@@ -30,12 +33,20 @@
  it("Rendered list of repos", () => {
    act(() => {
      render(
-       <Provider store={store}>
+       
+      <Provider store={store}>
+      <AuthContext.Provider
+        value={{
+          state: testAuthorizationState,
+          dispatch: authReducer
+        }}
+      >
          <Router>
          <Routes>
          <Route path="/login" element={<Login/>} />
            </Routes>
          </Router>
+         </AuthContext.Provider>
        </Provider>,
        container
      );

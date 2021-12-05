@@ -1,9 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Button, Card, Checkbox, Divider, Radio, Table, } from 'antd';
-import styled from "styled-components";
+import { Button, Divider, Radio, Table, } from 'antd';
 import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
-import { IAddPBI, IFilters, initAddPBI, initProductBacklogItem, IPBIFilter, IProductBacklogItem, IProductBacklogList, State } from '../appstate/stateInterfaces';
+import { IAddPBI, IFilters, initAddPBI, IPBIFilter, IProductBacklogItem, IProductBacklogList, State } from '../appstate/stateInterfaces';
 import { AuthContext } from '../App';
 import { Navigate } from 'react-router';
 import config from '../configuration/config';
@@ -14,7 +13,6 @@ import { CustomAddPopup } from './CustomAddPopup';
 import { CustomEditPopup } from './CustomEditPopup';
 import { CustomEstimatePopup } from './CustomEstimatePopup';
 import { CustomFilterPopup } from './CustomFilterPopup';
-const { Meta } = Card;
 
 const columns = [
   {
@@ -22,6 +20,7 @@ const columns = [
     title: 'Name',
     dataIndex: 'name',
     align: 'center' as const,
+    // eslint-disable-next-line jsx-a11y/anchor-is-valid
     render: (text: string) => <a>{text}</a>,
     fixed: 'left' as const,
   },
@@ -30,7 +29,6 @@ const columns = [
     title: 'Expected Time',
     dataIndex: 'expectedTimeInHours',
     align: 'center' as const,
-    //sortDirections: ['descend', 'ascend'],
   },
   {
     key: "2",
@@ -87,11 +85,6 @@ export default function Project() {
     nameFilter: "",
   });
   const [selectionType, setSelectionType] = useState<'pbi' | 'tasks'>('pbi');
-  const [stateF, setState] = useState({
-    searchText: '',
-    searchedColumn: '',
-  });
-  //const [selectedRowKeys, setSelectedRowKeys] = useState([] as React.Key[]);
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [isEstimateModalVisible, setIsEstimateModalVisible] = useState(false);
@@ -109,7 +102,6 @@ export default function Project() {
     setIsEstimateModalVisible(true);
   }
   const handleFilterPBI = (pbi: IPBIFilter) => {
-    console.log(pbi);
     try {
       store.dispatch(
         Actions.fetchPBIsThunk({
@@ -131,13 +123,11 @@ export default function Project() {
   }
 
   const handleAddPBI = (pbi: IPBIFilter) => {
-    console.log(pbi);
     setFiltersPBI(pbi);
     setInitialRefresh(true);
   }
 
   const handleEstimatePBI = (pbi: IProductBacklogItem) => {
-    console.log(pbi);
     try {
       store.dispatch(
         Actions.estimatePBIThunk({
@@ -173,7 +163,6 @@ export default function Project() {
     }
   }
   const handleFinish = () => {
-    //console.log(selectedRowKeys);
     try {
       store.dispatch(
         Actions.finishPBIThunk({
@@ -202,9 +191,7 @@ export default function Project() {
   }
 
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : "";
-  const [displayLoader, setDisplayLoader] = useState(false); // eslint-disable-next-line
   const [initialRefresh, setInitialRefresh] = useState(true);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const refreshRequired = useSelector(
     (appState: State) => appState.productRequireRefresh as boolean
   );
@@ -220,7 +207,6 @@ export default function Project() {
   }, [initialRefresh]);
 
   useEffect(() => {
-    console.log(refreshRequired);
     if (refreshRequired && ownerName && ownerName !== "") {
       try {
         store.dispatch(
@@ -243,88 +229,9 @@ export default function Project() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshRequired]);
 
-
-  /* const getColumnSearchProps = (dataIndex : any) => ({
-  //   filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-  //     <div style={{ padding: 8 }}>
-  //       <Input
-  //         ref={node => {
-  //           searchInput = node;
-  //         }}
-  //         placeholder={`Search ${dataIndex}`}
-  //         value={selectedKeys[0]}
-  //         onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-  //         onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-  //         style={{ marginBottom: 8, display: 'block' }}
-  //       />
-  //       <Space>
-  //         <Button
-  //           type="primary"
-  //           onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-  //           icon={<SearchOutlined />}
-  //           size="small"
-  //           style={{ width: 90 }}
-  //         >
-  //           Search
-  //         </Button>
-  //         <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-  //           Reset
-  //         </Button>
-  //         <Button
-  //           type="link"
-  //           size="small"
-  //           onClick={() => {
-  //             confirm({ closeDropdown: false });
-  //             setState({
-  //               searchText: selectedKeys[0],
-  //               searchedColumn: dataIndex,
-  //             });
-  //           }}
-  //         >
-  //           Filter
-  //         </Button>
-  //       </Space>
-  //     </div>
-  //   ),
-  //   filterIcon: (filtered: any) => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
-  //   onFilter: (value: string, record: { [x: string]: { toString: () => string; }; }) =>
-  //     record[dataIndex]
-  //       ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
-  //       : '',
-  //   onFilterDropdownVisibleChange: (visible: any) => {
-  //     if (visible) {
-  //       setTimeout(() => searchInput.select(), 100);
-  //     }
-  //   },
-  //   render: (text: { toString: () => any; }) =>
-  //     state.searchedColumn === dataIndex ? (
-  //       <Highlighter
-  //         highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-  //         searchWords={[state.searchText]}
-  //         autoEscape
-  //         textToHighlight={text ? text.toString() : ''}
-  //       />
-  //     ) : (
-  //       text
-  //     ),
-  // });*/
-
-  const handleSearch = (selectedKeys: any[], confirm: () => void, dataIndex: any) => {
-    confirm();
-    setState({
-      searchText: selectedKeys[0],
-      searchedColumn: dataIndex,
-    });
-  };
-
-  const handleReset = (clearFilters: () => void) => {
-    clearFilters();
-    setState({ searchText: '', searchedColumn: '' });
-  };
-
   const [prevselectedRowKeys, setPrevSelectedRowKeys] = useState([] as React.Key[]);
   const [selectedPBI, setSelectedPBI] = useState({} as IProductBacklogItem);
-  const handleTableChange = (pagination: IFilters, filters: IFilters, sorter: any) => {
+  const handleTableChange = (pagination: IFilters) => {
     try {
       store.dispatch(
         Actions.fetchPBIsThunk({
@@ -347,7 +254,6 @@ export default function Project() {
   if (!state.isLoggedIn) {
     return <Navigate to="/login" />;
   }
-  console.log(pbiPage ? pbiPage : "");
   return (
     <div>
       <Radio.Group
@@ -366,30 +272,18 @@ export default function Project() {
         scroll={{ x: 800 }}
         rowKey={(record: IProductBacklogItem) => record.id}
         rowSelection={{
-          //renderCell: () => <Checkbox key={8} style={{ marginLeft: "50%", marginRight: "50%", alignSelf: "center" }} />,
           type: "checkbox",
           hideSelectAll: true,
           selectedRowKeys: prevselectedRowKeys,
           onChange: (keys: React.Key[], selectedRows: IProductBacklogItem[]) => {
-            console.log(keys);
-            console.log(selectedRows);
             if (keys.indexOf(prevselectedRowKeys[0]) >= 0) {
               keys.splice(keys.indexOf(prevselectedRowKeys[0]), 1);
             }
             setSelectedPBI(selectedRows[0]);
             setPrevSelectedRowKeys(keys);
-          },///onSelectedRowKeysChange(keys)},
-          //onSelect: (record:IProductBacklogItem) => {if(prevselectedRowKeys.length>0){
-          // setSelectedPBI(record);
-          //}},
-          //preserveSelectedRowKeys: true
+          },
         }}
         onChange={handleTableChange}
-        /*onRow={(record) => ({
-          onClick: () => {
-            selectRow(record);
-          },
-        })}*/
         pagination={{ current: pbiPage.pageNumber, pageSize: config.defaultFilters.pbiSize, total: pbiPage.pageCount, showSizeChanger: false }}
         columns={columns}
         dataSource={(pbiPage && pbiPage.list) ? pbiPage.list : []}
@@ -430,7 +324,6 @@ export default function Project() {
           onCreate={function (values: any): void { handleFilterPBI(values) }}
           onCancel={() => { setIsFilterModalVisible(false); }} />}
       </span>
-
     </div>
   );
 

@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import { Button, Modal, Form, Input, Radio, InputNumber, Space } from 'antd';
-import { IAddPBI, IProductBacklogItem } from '../appstate/stateInterfaces';
+import React from 'react';
+import { Button, Modal, Form, Input, InputNumber, Space } from 'antd';
+import { IAddPBI } from '../appstate/stateInterfaces';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { required } from 'joi';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 
 interface Values {
@@ -40,7 +39,7 @@ visible,
             onCreate(values);
           })
           .catch(info => {
-            console.log('Validate Failed:', info);
+            console.error('Validate Failed:', info);
           });
       }}
     >
