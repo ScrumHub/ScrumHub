@@ -25,18 +25,18 @@ visible,
   return (
     <Modal
       visible={visible}
-      title="Estimate PBI"
+      title="Estimate Backlog Item"
       okText="Save"
       cancelText="Cancel"
       onCancel={onCancel}
       onOk={() => {
         form
           .validateFields()
-          .then(values => {
+          .then((values: Values) => {
             form.resetFields();
             onCreate(values);
           })
-          .catch(info => {
+          .catch((info: any) => {
             console.error('Validate Failed:', info);
           });
       }}
@@ -50,8 +50,8 @@ visible,
         <Form.Item
         initialValue={data.expectedTimeInHours}
           name="expectedTimeInHours"
-          label="Estimated Hours"
-          rules={[{ required: true, message: 'Please input the hour estimation of the new backlog item!' }]}
+          label="Estimated Story Points"
+          rules={[{ required: true, message: 'Please input the story points estimation in hours of the new backlog item!' }]}
         >
           <InputNumber type="number" min={0} />
         </Form.Item>

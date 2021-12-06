@@ -27,18 +27,18 @@ visible,
   return (
     <Modal
       visible={visible}
-      title="Edit PBI"
+      title="Edit Backlog Item"
       okText="Save"
       cancelText="Cancel"
       onCancel={onCancel}
       onOk={() => {
         form
           .validateFields()
-          .then(values => {
+          .then((values: Values) => {
             form.resetFields();
             onCreate(values);
           })
-          .catch(info => {
+          .catch((info: any) => {
             console.error('Validate Failed:', info);
           });
       }}
