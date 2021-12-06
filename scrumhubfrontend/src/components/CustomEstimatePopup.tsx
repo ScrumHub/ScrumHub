@@ -25,7 +25,11 @@ visible,
   return (
     <Modal
       visible={visible}
+<<<<<<< HEAD
       title="Estimate Backlog Item"
+=======
+      title="Estimate PBI"
+>>>>>>> 1fed599254bdb219c15c836716e38e42b8843ad9
       okText="Save"
       cancelText="Cancel"
       onCancel={onCancel}
@@ -50,8 +54,13 @@ visible,
         <Form.Item
         initialValue={data.expectedTimeInHours}
           name="expectedTimeInHours"
+<<<<<<< HEAD
           label="Estimated Story Points"
           rules={[{ required: true, message: 'Please input the story points estimation in hours of the new backlog item!' }]}
+=======
+          label="Estimated Hours"
+          rules={[{ required: true, message: 'Please input the hour estimation of the new backlog item!' }]}
+>>>>>>> 1fed599254bdb219c15c836716e38e42b8843ad9
         >
           <InputNumber type="number" min={0} />
         </Form.Item>

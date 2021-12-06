@@ -92,7 +92,6 @@ export function fetchPBIs(ownerName: any, token: string, filters: IFilters
         })
         .filter((x) => x !== "")
         .join("&");
-        console.log(filtersString);
   return getResponse(
     axios.get(
       `https://${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}?${filtersString}`,

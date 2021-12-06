@@ -27,7 +27,11 @@ visible,
   return (
     <Modal
       visible={visible}
+<<<<<<< HEAD
       title="Edit Backlog Item"
+=======
+      title="Edit PBI"
+>>>>>>> 1fed599254bdb219c15c836716e38e42b8843ad9
       okText="Save"
       cancelText="Cancel"
       onCancel={onCancel}

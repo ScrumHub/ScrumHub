@@ -2,10 +2,18 @@ import fetch from "node-fetch";
 import express from"express";
 import  bodyParser from "body-parser";
 
+<<<<<<< HEAD
 import {FormData} from "formdata-node";
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 const { client_id, redirect_uri, client_secret} = require("./serverconfig");
+=======
+import FormData from "form-data";
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const { client_id, redirect_uri, client_secret, logout_url } = require("./serverconfig");
+const config = require("./serverconfig");
+>>>>>>> 1fed599254bdb219c15c836716e38e42b8843ad9
 
 const app = express();
 app.use(bodyParser.json());
@@ -21,12 +29,20 @@ app.use((req, res, next) => {
 
 app.post("/authenticate", (req, res) => {
   const { code } = req.body;
+<<<<<<< HEAD
   //form data for node
   const data = new FormData();
   data.set("client_id", client_id);
   data.set("client_secret", client_secret);
   data.set("code", code);
   data.set("redirect_uri", redirect_uri);
+=======
+  const data = new FormData();
+  data.append("client_id", client_id);
+  data.append("client_secret", client_secret);
+  data.append("code", code);
+  data.append("redirect_uri", redirect_uri);
+>>>>>>> 1fed599254bdb219c15c836716e38e42b8843ad9
   // Request to exchange code for an access token
   fetch(`https://github.com/login/oauth/access_token`, {
     method: "POST",

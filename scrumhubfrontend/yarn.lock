@@ -5830,6 +5830,7 @@
     "combined-stream" "^1.0.8"
     "mime-types" "^2.1.12"
 
+<<<<<<< HEAD
 "formdata-node@^4.3.1":
   "integrity" "sha512-8xKSa9et4zb+yziWsD/bI+EYjdg1z2p9EpKr+o+Yk12F/wP66bmDdvjj2ZXd2K/MJlR3HBzWnuV7f82jzHRqCA=="
   "resolved" "https://registry.npmjs.org/formdata-node/-/formdata-node-4.3.1.tgz"
@@ -5838,6 +5839,8 @@
     "node-domexception" "1.0.0"
     "web-streams-polyfill" "4.0.0-beta.1"
 
+=======
+>>>>>>> 1fed599254bdb219c15c836716e38e42b8843ad9
 "formdata-polyfill@^4.0.10":
   "integrity" "sha512-buewHzMvYL29jdeQTVILecSaZKnt/RJWjoZCF5OW60Z67/GmSLBkOFM7qh1PI3zFNtJbaZL5eQu1vLfazOwj4g=="
   "resolved" "https://registry.npmjs.org/formdata-polyfill/-/formdata-polyfill-4.0.10.tgz"
@@ -8393,11 +8396,14 @@
     "lower-case" "^2.0.2"
     "tslib" "^2.0.3"
 
+<<<<<<< HEAD
 "node-domexception@1.0.0":
   "integrity" "sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ=="
   "resolved" "https://registry.npmjs.org/node-domexception/-/node-domexception-1.0.0.tgz"
   "version" "1.0.0"
 
+=======
+>>>>>>> 1fed599254bdb219c15c836716e38e42b8843ad9
 "node-fetch@^3.1.0":
   "integrity" "sha512-QU0WbIfMUjd5+MUzQOYhenAazakV7Irh1SGkWCsRzBwvm4fAhzEUaHMJ6QLP7gWT6WO9/oH2zhKMMGMuIrDyKw=="
   "resolved" "https://registry.npmjs.org/node-fetch/-/node-fetch-3.1.0.tgz"
@@ -12788,11 +12794,14 @@
   "resolved" "https://registry.npmjs.org/web-streams-polyfill/-/web-streams-polyfill-3.2.0.tgz"
   "version" "3.2.0"
 
+<<<<<<< HEAD
 "web-streams-polyfill@4.0.0-beta.1":
   "integrity" "sha512-3ux37gEX670UUphBF9AMCq8XM6iQ8Ac6A+DSRRjDoRBm1ufCkaCDdNVbaqq60PsEkdNlLKrGtv/YBP4EJXqNtQ=="
   "resolved" "https://registry.npmjs.org/web-streams-polyfill/-/web-streams-polyfill-4.0.0-beta.1.tgz"
   "version" "4.0.0-beta.1"
 
+=======
+>>>>>>> 1fed599254bdb219c15c836716e38e42b8843ad9
 "web-vitals@^1.0.1":
   "integrity" "sha512-PFMKIY+bRSXlMxVAQ+m2aw9c/ioUYfDgrYot0YUa+/xa0sakubWhSDyxAKwzymvXVdF4CZI71g06W+mqhzu6ig=="
   "resolved" "https://registry.npmjs.org/web-vitals/-/web-vitals-1.1.2.tgz"

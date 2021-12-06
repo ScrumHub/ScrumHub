@@ -8,7 +8,10 @@ export type Config = {
       size: number;
       page: number;
       pbiSize:number;
+<<<<<<< HEAD
       sprintSize:number;
+=======
+>>>>>>> 1fed599254bdb219c15c836716e38e42b8843ad9
     };
     token:string;
   };

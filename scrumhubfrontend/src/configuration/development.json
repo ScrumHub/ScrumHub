@@ -7,8 +7,12 @@
     "defaultFilters": {
       "size": 5,
       "page": 1,
+<<<<<<< HEAD
       "pbiSize":10,
       "sprintSize":6
+=======
+      "pbiSize":10
+>>>>>>> 1fed599254bdb219c15c836716e38e42b8843ad9
     },
       "token": "token"
   }

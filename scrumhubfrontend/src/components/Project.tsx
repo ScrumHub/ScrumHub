@@ -18,11 +18,11 @@ const columns = [
   {
     key: "0",
     title: 'Name',
-    colSpan:2,
     dataIndex: 'name',
     align: 'center' as const,
     render:  (text: string) => {return ({ children: text,props: { colSpan: 2 }})},
     fixed: 'left' as const,
+    colSpan:2
   },
   {
     key: "1",
