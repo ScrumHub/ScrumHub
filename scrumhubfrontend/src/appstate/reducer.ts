@@ -80,6 +80,7 @@ export const reducer = createReducer(initState, {
     config.defaultFilters.size
   );
   const repos = payload.payload.response as IRepositoryList;
+  console.log(repos);
   if (newState.repositories == null || pageNumber === 1) {
     newState.repositories = (repos.list).slice(0, (pageNumber + 1) * pageSize);
   }else{
@@ -123,6 +124,7 @@ export const reducer = createReducer(initState, {
 ) => {
   let newState = _.cloneDeep(state);
   newState.loading = false;
+  newState.reposRequireRefresh = true;
   newState.pages = 1;
   return newState;
 },

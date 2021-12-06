@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Button, Modal, Form, Input, InputNumber, Space, Typography, Checkbox, PageHeader } from 'antd';
-import { IAddPBI, IProductBacklogItem, IUpdateSprint } from '../appstate/stateInterfaces';
+import { IAddPBI, IProductBacklogItem, IProductBacklogList, ISprint, ISprintList, IUpdateSprint, State } from '../appstate/stateInterfaces';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import TextArea from 'antd/lib/input/TextArea';
 import _ from 'lodash';
 import { Header } from 'antd/lib/layout/layout';
 import Title from 'antd/lib/typography/Title';
+import { useSelector } from 'react-redux';
 
 interface Values {
   title: string;
@@ -15,14 +16,14 @@ interface Values {
 }
 
 interface CollectionCreateFormProps {
-  data: IUpdateSprint;
-  pbiData: IProductBacklogItem[];
+  data: ISprint;
+  pbiData:IProductBacklogItem[];
   visible: boolean;
   onCreate: (values: Values) => void;
   onCancel: () => void;
 }
 
-export const CustomUpdateSprintPopup: React.FC<CollectionCreateFormProps> = ({
+export const CustomAddSprintPopup: React.FC<CollectionCreateFormProps> = ({
   data,
   pbiData,
   visible,
@@ -31,6 +32,7 @@ export const CustomUpdateSprintPopup: React.FC<CollectionCreateFormProps> = ({
 }) => {
   //TO DO
   //DELETE after backend is fixed
+
   pbiData = pbiData.filter((item)=>item.estimated !== false);
   const [form] = Form.useForm();
   const [temp, setTemp] = useState(pbiData);
@@ -38,7 +40,7 @@ export const CustomUpdateSprintPopup: React.FC<CollectionCreateFormProps> = ({
   return (
     <Modal
       visible={visible}
-      title="Edit Sprint"
+      title="Add Sprint"
       okText="Save"
       cancelText="Cancel"
       onCancel={onCancel}
@@ -61,6 +63,15 @@ export const CustomUpdateSprintPopup: React.FC<CollectionCreateFormProps> = ({
         initialValues={{ modifier: 'public' }}
       >
 
+<Form.Item
+          initialValue={data.sprintNumber}
+          name="sprintNumber"
+          labelAlign="left"
+          label={<Title style={{marginTop:"10%"}} level={4}>{"Sprint Number"}</Title>}
+          rules={[{ required: true, message: 'Please input the goal of this sprint!' }]}
+        >
+          <InputNumber/>
+        </Form.Item>
         <Form.Item
           initialValue={data.goal}
           name="goal"
@@ -82,7 +93,7 @@ export const CustomUpdateSprintPopup: React.FC<CollectionCreateFormProps> = ({
             <>
               {fields.map(({ key, name }) => (
                 <Space key={key} style={{ display: 'flex', margin:0}} align="baseline">
-                  <Checkbox checked={form.getFieldValue("backlogItems")[key].sprintNumber === id}
+                  <Checkbox checked={form.getFieldValue("backlogItems")[key].sprintNumber != null}
                     onClick={() => {
                       const temp2 = _.cloneDeep(temp);
                       temp2[key].sprintNumber = (temp2[key].sprintNumber === id) ? null : id;

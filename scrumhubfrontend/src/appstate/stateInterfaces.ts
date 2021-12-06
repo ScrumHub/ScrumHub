@@ -97,8 +97,8 @@ export interface ISprint extends IUpdateSprint {
 
 export const initSprint: ISprint = {
   sprintNumber: 1,
-  goal: "Goal 1",
-  backlogItems: [initProductBacklogItem],
+  goal: "",
+  backlogItems: [],
 }
 
 export interface IUpdateSprint {

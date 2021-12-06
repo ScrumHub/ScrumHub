@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Button, Card, Col, Divider, PageHeader, Row } from 'antd';
 import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
-import { IFilters, IRepository, ISprint, ISprintList, State } from '../appstate/stateInterfaces';
+import { IFilters, initSprint, IProductBacklogItem, IProductBacklogList, IRepository, ISprint, ISprintList, State } from '../appstate/stateInterfaces';
 import { AuthContext } from '../App';
 import { Navigate, useNavigate } from 'react-router';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import { CalendarOutlined, FolderAddOutlined, InfoCircleOutlined, LoadingOutlined } from '@ant-design/icons';
 import { store } from '../appstate/store';
 import { clearReposList, clearSprintList } from '../appstate/actions';
+import { CustomAddSprintPopup } from './CustomAddSprintPopup';
 const { Meta } = Card;
 
 
@@ -31,6 +32,10 @@ export default function SprintList() {
   const sprintPage = useSelector(
     (state: State) => state.sprintPage as ISprintList
   );
+  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+  const loading=useSelector(
+    (state: State) => state.loading
+  );
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") : "";
   const sprintID = localStorage.getItem("sprintID") ? localStorage.getItem("sprintID") : "";
@@ -42,6 +47,47 @@ export default function SprintList() {
       store.dispatch(clearSprintList());
     }
   }, [initialRefresh]);
+
+  const tempPBIPage = useSelector((appState: State) => appState.pbiPage as IProductBacklogList);
+  const handleUpdate= () => {
+    try {
+      console.log(tempPBIPage.pageCount);
+      store.dispatch(
+        Actions.fetchPBIsThunk({
+          ownerName: ownerName as string,
+          token: token,
+          filters: {
+            pageNumber: filters.pageNumber,
+            pageSize: config.defaultFilters.pbiSize,
+            estimated: true
+          }
+        }) //filters
+      );
+    } catch (err) {
+      console.error("Failed to fetch the pbis: ", err);
+    }
+  }
+
+  const fetchMoreUpdates=() => {
+    console.log(tempPBIPage.pageCount);
+    if(tempPBIPage.pageCount > 1){
+    try {
+      store.dispatch(
+        Actions.fetchPBIsThunk({
+          ownerName: ownerName as string,
+          token: token,
+          filters: {
+            pageNumber: 1,
+            pageSize: config.defaultFilters.pbiSize*tempPBIPage.pageCount,
+            estimated: true
+          }
+        }) //filters
+      );
+    } catch (err) {
+      console.error("Failed to fetch the pbis: ", err);
+    }
+  }
+  }
 
   useEffect(() => {
     if (isLoggedIn && refreshRequired) {
@@ -90,7 +136,7 @@ export default function SprintList() {
     }
   };
 
-   const handleSprintAdd=()=> {
+   const handleSprintAdd=(values:any)=> {
     /*try {
       store.dispatch(
         Actions.addRepositoryThunk({
@@ -127,18 +173,18 @@ export default function SprintList() {
     return <Navigate to="/login" />;
   }
   return (
-    <section className="container">
+    <section className="container" style={{ marginLeft:"1vh", marginRight:"1vh"}}>
       <PageHeader
         ghost={false}
-        title={"Add new Sprint"}
-        subTitle={""}
+        title={"Sprint List"}
+        subTitle={`The number of sprints in ${ownerName?.split("/")[1]} is ${sprintPage && sprintPage.list ?sprintPage.list.length: 0}.`}
         extra={[
-          <Button key="1" type="link" onClick={handleSprintAdd}> Add </Button>,
+          <Button key="1" type="link" onClick={()=>{handleUpdate();fetchMore();setIsAddModalVisible(true);}}> Add New Sprint </Button>,
         ]}
-        style={{ marginBottom: "4vh",  marginLeft:"4.5%", marginRight:"4.5%"}}
+        style={{ marginBottom: "4vh",}}
       >
       </PageHeader>
-      <Divider style={{width:"91%", alignSelf:"center"}}/>
+      <Divider style={{alignSelf:"center"}}/>
       {sprintPage && sprintPage.list && 
       <InfiniteScroll
         dataLength={sprintPage.list.length}
@@ -148,7 +194,7 @@ export default function SprintList() {
         loader={
           (displayLoader && <LoadingOutlined />) || (!displayLoader && <></>)
         }>
-          <Row style={{ background:"transparent", marginLeft:"2.5%", marginRight:"2.5%",width:"95%"}} gutter={{xs:8, sm:16, md:24, lg:32}}>
+          <Row style={{ background:"transparent", marginLeft:"1vh", marginRight:"1vh",width:"95%"}} gutter={{xs:8, sm:16, md:24, lg:32}}>
           {
             sprintPage.list.map((rep: ISprint,key:number) => {
               
@@ -170,6 +216,9 @@ export default function SprintList() {
           }
           </Row>
         </InfiniteScroll>}
+        {isAddModalVisible && !loading && <CustomAddSprintPopup data={initSprint} pbiData={tempPBIPage.list as IProductBacklogItem[]} visible={isAddModalVisible}
+          onCreate={function (values: any): void { handleSprintAdd(values) }}
+          onCancel={() => { setIsAddModalVisible(false); }} />}
     </section >
   );
 

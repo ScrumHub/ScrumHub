@@ -18,10 +18,10 @@ const columns = [
   {
     key: "0",
     title: 'Name',
+    colSpan:2,
     dataIndex: 'name',
     align: 'center' as const,
-    // eslint-disable-next-line jsx-a11y/anchor-is-valid
-    render: (text: string) => <a>{text}</a>,
+    render:  (text: string) => {return ({ children: text,props: { colSpan: 2 }})},
     fixed: 'left' as const,
   },
   {

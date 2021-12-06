@@ -33,7 +33,8 @@ export const addRepositoryThunk = createAsyncThunk<
 ) => {
   const response: RequestResponse<IRepository, number> =
     await Fetching.addRepository(repoWithToken.id, repoWithToken.token);
-  if (response.code !== 200) {
+    console.log(response.code);
+  if (response.code !== 201) {
     return rejectWithValue(
       response as RequestResponse<IRepository, number>
     );

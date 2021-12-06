@@ -29,7 +29,7 @@ export default function Home() {
     (appState: State) => appState.reposRequireRefresh as boolean
   );
   const repos = useSelector(
-    (state: State) => state.repositories as IRepositoryList
+    (state: State) => state.repositories as IRepository[]
   );
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") : "";
@@ -37,6 +37,7 @@ export default function Home() {
   const [initialRefresh, setInitialRefresh] = useState(true);
   useEffect(() => {
     if (initialRefresh) {
+      //console.log("init");
       setInitialRefresh(false);
       store.dispatch(clearReposList());
     }
@@ -44,6 +45,8 @@ export default function Home() {
 
   useEffect(() => {
     if (isLoggedIn && refreshRequired) {
+      //console.log("fetch");
+      setDisplayLoader(true);
       try {
         store.dispatch(
           Actions.fetchRepositoriesThunk({
@@ -59,6 +62,7 @@ export default function Home() {
       } 
       finally{
         setFilters({ ...filters, pageNumber: config.defaultFilters.page + 1 });
+        setDisplayLoader(false);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -98,7 +102,7 @@ export default function Home() {
       console.error("Failed to add the repos: ", err);
     } finally {
       setFilters({ ...filters, pageNumber: config.defaultFilters.page });
-      setInitialRefresh(true);
+      //setInitialRefresh(true);
     }
   };
 
@@ -129,8 +133,8 @@ export default function Home() {
   }
   return (
     <section className="container">
-      {repos &&  repos.list && repos.list.length > 0 && <InfiniteScroll
-        dataLength={repos && repos.list ? repos.list.length:0}
+      {!initialRefresh && !refreshRequired &&repos && repos.length > 0 && <InfiniteScroll
+        dataLength={repos ? repos.length:0}
         scrollThreshold={0.7}
         next={fetchMore}
         hasMore={!lastPage && !fetching}
@@ -138,7 +142,7 @@ export default function Home() {
           (displayLoader && <LoadingOutlined />) || (!displayLoader && <></>)
         }>
         <div style={{display: "grid",placeItems:"center", margin:"4.5%", background:"transparent"}}>
-          { repos.list.map((rep: IRepository) => {
+          { repos.map((rep: IRepository) => {
               return (<section className="card" style={{ width: "85%", }} key={rep.gitHubId} >
                 <Card style={{ backgroundColor: "white", marginBottom: "3vh" }} type="inner" actions=
                   {[<Button disabled={rep.alreadyInScrumHub || !rep.hasAdminRights} style={{ width: "180px" }} onClick={() => { addProject(rep.gitHubId) }} ><span><FolderAddOutlined disabled={!rep.alreadyInScrumHub} />
