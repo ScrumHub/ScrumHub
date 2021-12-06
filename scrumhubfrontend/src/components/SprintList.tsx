@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { Button, Card, Col, Row } from 'antd';
+import { Button, Card, Col, Divider, PageHeader, Row } from 'antd';
 import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
 import { IFilters, IRepository, ISprint, ISprintList, State } from '../appstate/stateInterfaces';
@@ -90,8 +90,8 @@ export default function SprintList() {
     }
   };
 
-  /*function addProject(prop: number) {
-    try {
+   const handleSprintAdd=()=> {
+    /*try {
       store.dispatch(
         Actions.addRepositoryThunk({
           id: prop,
@@ -103,30 +103,8 @@ export default function SprintList() {
     } finally {
       setFilters({ ...filters, pageNumber: config.defaultFilters.page });
       setInitialRefresh(true);
-    }
+    }*/
   };
-
-  function redirectToProject(props: IRepository) { 
-    localStorage.setItem("ownerName", props.name);
-    try {
-      store.dispatch(
-        Actions.fetchPBIsThunk({
-          ownerName: props.name,
-          token: token,
-          filters: {
-            ...filters,
-            pageSize: config.defaultFilters.pbiSize
-          }
-        }) //filters
-      );
-    } catch (err) {
-      console.error("Failed to add the repos: ", err);
-      localStorage.setItem("ownerName", "");
-    } finally {
-      navigate(`/${props.name.split("/")[0]}/${props.name.split("/")[1]}`, { replace: true });
-    }
-    
-  };*/
   function openSprint(props: number) {
     localStorage.setItem("sprintID", JSON.stringify(props));
     try {
@@ -150,6 +128,17 @@ export default function SprintList() {
   }
   return (
     <section className="container">
+      <PageHeader
+        ghost={false}
+        title={"Add new Sprint"}
+        subTitle={""}
+        extra={[
+          <Button key="1" type="link" onClick={handleSprintAdd}> Add </Button>,
+        ]}
+        style={{ marginBottom: "4vh",  marginLeft:"4.5%", marginRight:"4.5%"}}
+      >
+      </PageHeader>
+      <Divider style={{width:"91%", alignSelf:"center"}}/>
       {sprintPage && sprintPage.list && 
       <InfiniteScroll
         dataLength={sprintPage.list.length}

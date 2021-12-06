@@ -80,13 +80,14 @@ export const reducer = createReducer(initState, {
     config.defaultFilters.size
   );
   const repos = payload.payload.response as IRepositoryList;
-  if (newState.repositories !== null && pageNumber !== 1) {
+  if (newState.repositories == null || pageNumber === 1) {
+    newState.repositories = (repos.list).slice(0, (pageNumber + 1) * pageSize);
+  }else{
     newState.repositories = newState.repositories
       .concat(repos.list)
       .slice(0, (pageNumber + 1) * pageSize);
-  } else {
-    newState.repositories = (repos.list).slice(0, (pageNumber + 1) * pageSize);
-  }
+  } 
+    
   // if response is shorter than default size - it means end is reached.
   newState.reposLastPage = repos.list.length < pageSize;
   newState.reposRequireRefresh = false;
@@ -437,6 +438,41 @@ export const reducer = createReducer(initState, {
 },
 
 [Actions.fetchOneSprintThunk.rejected.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<undefined, undefined>>
+) => {
+  let newState = _.cloneDeep(state);
+  let errorResponse = payload.payload;
+  newState.loading = false;
+  newState.error = {
+    hasError: true,
+    errorCode: errorResponse ? errorResponse.code : -1,
+    erorMessage: errorResponse ? (errorResponse.response as IError).message : "",
+  };
+  return newState;
+},
+[Actions.updateOneSprintThunk.pending.toString()]: (
+  state: State,
+  payload: PayloadAction<undefined>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = true;
+  return newState;
+},
+
+[Actions.updateOneSprintThunk.fulfilled.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<ISprint, number>>
+) => {
+  let newState = _.cloneDeep(state);
+  console.log(payload.payload.response);
+  newState.openSprint = payload.payload.response as ISprint;
+  newState.loading = false;
+  newState.sprintRequireRefresh = false;
+  return newState;
+},
+
+[Actions.updateOneSprintThunk.rejected.toString()]: (
   state: State,
   payload: PayloadAction<RequestResponse<undefined, undefined>>
 ) => {

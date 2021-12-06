@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Button, Card } from 'antd';
 import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
-import { IFilters, IRepository, State } from '../appstate/stateInterfaces';
+import { IFilters, IRepository, IRepositoryList, State } from '../appstate/stateInterfaces';
 import { AuthContext } from '../App';
 import { Navigate, useNavigate } from 'react-router';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -29,7 +29,7 @@ export default function Home() {
     (appState: State) => appState.reposRequireRefresh as boolean
   );
   const repos = useSelector(
-    (state: State) => state.repositories as IRepository[]
+    (state: State) => state.repositories as IRepositoryList
   );
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") : "";
@@ -129,17 +129,16 @@ export default function Home() {
   }
   return (
     <section className="container">
-       <InfiniteScroll
-        dataLength={repos.length}
+      {repos &&  repos.list && repos.list.length > 0 && <InfiniteScroll
+        dataLength={repos && repos.list ? repos.list.length:0}
         scrollThreshold={0.7}
         next={fetchMore}
         hasMore={!lastPage && !fetching}
         loader={
           (displayLoader && <LoadingOutlined />) || (!displayLoader && <></>)
         }>
-        <div style={{display: "grid",placeItems:"center", margin:"80px", background:"transparent"}}>
-          {
-            repos.map((rep: IRepository) => {
+        <div style={{display: "grid",placeItems:"center", margin:"4.5%", background:"transparent"}}>
+          { repos.list.map((rep: IRepository) => {
               return (<section className="card" style={{ width: "85%", }} key={rep.gitHubId} >
                 <Card style={{ backgroundColor: "white", marginBottom: "3vh" }} type="inner" actions=
                   {[<Button disabled={rep.alreadyInScrumHub || !rep.hasAdminRights} style={{ width: "180px" }} onClick={() => { addProject(rep.gitHubId) }} ><span><FolderAddOutlined disabled={!rep.alreadyInScrumHub} />
@@ -161,6 +160,7 @@ export default function Home() {
           }
         </div>
       </InfiniteScroll>
+}
     </section >
   );
 
