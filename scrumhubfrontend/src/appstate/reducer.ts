@@ -2,7 +2,7 @@ import * as Actions from "./actions";
 import { createReducer, PayloadAction } from "@reduxjs/toolkit";
 import { RequestResponse } from "./response";
 import config from "../configuration/config";
-import { IError, initState, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, State } from "./stateInterfaces";
+import { IError, initState, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, State } from "./stateInterfaces";
 var _ = require('lodash');
 
 export const reducer = createReducer(initState, {
@@ -36,6 +36,22 @@ export const reducer = createReducer(initState, {
   newState.pages = 1;
   return newState;
 },
+[Actions.clearSprintList.type]: (state: State) => {
+  let newState = _.cloneDeep(state);
+  newState.sprintPage=null;
+  newState.sprintRequireRefresh = true;
+  newState.sprintLastPage = false;
+  newState.pages = 1;
+  return newState;
+},
+[Actions.clearSprint.type]: (state: State) => {
+  let newState = _.cloneDeep(state);
+  newState.openSprint=null;
+  newState.sprintRequireRefresh = true;
+  newState.sprintLastPage = false;
+  newState.pages = 1;
+  return newState;
+},
 [Actions.fetchRepositoriesThunk.pending.toString()]: (
   state: State,
   payload: PayloadAction<undefined>
@@ -64,13 +80,14 @@ export const reducer = createReducer(initState, {
     config.defaultFilters.size
   );
   const repos = payload.payload.response as IRepositoryList;
-  if (newState.repositories !== null && pageNumber !== 1) {
+  if (newState.repositories == null || pageNumber === 1) {
+    newState.repositories = (repos.list).slice(0, (pageNumber + 1) * pageSize);
+  }else{
     newState.repositories = newState.repositories
       .concat(repos.list)
       .slice(0, (pageNumber + 1) * pageSize);
-  } else {
-    newState.repositories = (repos.list).slice(0, (pageNumber + 1) * pageSize);
-  }
+  } 
+    
   // if response is shorter than default size - it means end is reached.
   newState.reposLastPage = repos.list.length < pageSize;
   newState.reposRequireRefresh = false;
@@ -106,6 +123,7 @@ export const reducer = createReducer(initState, {
 ) => {
   let newState = _.cloneDeep(state);
   newState.loading = false;
+  newState.reposRequireRefresh = true;
   newState.pages = 1;
   return newState;
 },
@@ -325,6 +343,166 @@ export const reducer = createReducer(initState, {
 },
 
 [Actions.editPBIThunk.rejected.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<undefined, undefined>>
+) => {
+  let newState = _.cloneDeep(state);
+  let errorResponse = payload.payload;
+  newState.loading = false;
+  newState.error = {
+    hasError: true,
+    errorCode: errorResponse ? errorResponse.code : -1,
+    erorMessage: errorResponse ? (errorResponse.response as IError).message : "",
+  };
+  return newState;
+},
+[Actions.fetchSprintsThunk.pending.toString()]: (
+  state: State,
+  payload: PayloadAction<undefined>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = true;
+  return newState;
+},
+
+[Actions.fetchSprintsThunk.fulfilled.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<ISprintList, number>>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = false;
+  // if page filter not specified - set to default
+  const pageNumber = _.get(
+    payload,
+    ["meta", "arg", "filters", "pageNumber"],
+    config.defaultFilters.page
+  );
+  // if size filter not specified - set pageSize to default
+  const pageSize = _.get(
+    payload,
+    ["meta", "arg", "filters", "pageSize"],
+    config.defaultFilters.size
+  );
+  const sprints = payload.payload.response as ISprintList;
+  if (newState.sprintPage !== null && pageNumber !== 1) {
+    newState.sprintPage.pageSize = sprints.pageSize;
+    newState.sprintPage.pageNumber = sprints.pageNumber;
+    newState.sprintPage.pageCount = sprints.pageCount;
+    newState.sprintPage.realSize = sprints.pageCount;
+    newState.sprintPage.list = newState.sprintPage.list
+      .concat(sprints.list)
+      .slice(0, (pageNumber + 1) * pageSize);
+  } else {
+    newState.sprintPage = sprints;
+  }
+  // if response is shorter than default size - it means end is reached.
+  newState.sprintLastPage = sprints.list.length < pageSize;
+  newState.sprintRequireRefresh = false;
+  return newState;
+},
+
+[Actions.fetchSprintsThunk.rejected.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<undefined, undefined>>
+) => {
+  let newState = _.cloneDeep(state);
+  let errorResponse = payload.payload;
+  newState.loading = false;
+  newState.error = {
+    hasError: true,
+    errorCode: errorResponse ? errorResponse.code : -1,
+    erorMessage: errorResponse ? (errorResponse.response as IError).message : "",
+  };
+  return newState;
+},
+[Actions.fetchOneSprintThunk.pending.toString()]: (
+  state: State,
+  payload: PayloadAction<undefined>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = true;
+  return newState;
+},
+
+[Actions.fetchOneSprintThunk.fulfilled.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<ISprint, number>>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.openSprint = payload.payload.response as ISprint;
+  newState.loading = false;
+  newState.sprintRequireRefresh = false;
+  return newState;
+},
+
+[Actions.fetchOneSprintThunk.rejected.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<undefined, undefined>>
+) => {
+  let newState = _.cloneDeep(state);
+  let errorResponse = payload.payload;
+  newState.loading = false;
+  newState.error = {
+    hasError: true,
+    errorCode: errorResponse ? errorResponse.code : -1,
+    erorMessage: errorResponse ? (errorResponse.response as IError).message : "",
+  };
+  return newState;
+},
+[Actions.updateOneSprintThunk.pending.toString()]: (
+  state: State,
+  payload: PayloadAction<undefined>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = true;
+  return newState;
+},
+
+[Actions.updateOneSprintThunk.fulfilled.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<ISprint, number>>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.openSprint = payload.payload.response as ISprint;
+  newState.loading = false;
+  newState.sprintRequireRefresh = false;
+  return newState;
+},
+
+[Actions.updateOneSprintThunk.rejected.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<undefined, undefined>>
+) => {
+  let newState = _.cloneDeep(state);
+  let errorResponse = payload.payload;
+  newState.loading = false;
+  newState.error = {
+    hasError: true,
+    errorCode: errorResponse ? errorResponse.code : -1,
+    erorMessage: errorResponse ? (errorResponse.response as IError).message : "",
+  };
+  return newState;
+},
+[Actions.addSprintThunk.pending.toString()]: (
+  state: State,
+  payload: PayloadAction<undefined>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = true;
+  return newState;
+},
+
+[Actions.addSprintThunk.fulfilled.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<ISprint, number>>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = false;
+  newState.sprintRequireRefresh = true;
+  return newState;
+},
+
+[Actions.addSprintThunk.rejected.toString()]: (
   state: State,
   payload: PayloadAction<RequestResponse<undefined, undefined>>
 ) => {

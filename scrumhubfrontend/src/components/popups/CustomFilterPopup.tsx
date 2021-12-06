@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Modal, Form, Input, Switch } from 'antd';
-import { IPBIFilter } from '../appstate/stateInterfaces';
+import { IPBIFilter } from '../../appstate/stateInterfaces';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
 interface Values {

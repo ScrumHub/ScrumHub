@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Modal, Form, Input, InputNumber, Space } from 'antd';
-import { IAddPBI } from '../appstate/stateInterfaces';
+import { IAddPBI } from '../../appstate/stateInterfaces';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 

@@ -9,10 +9,10 @@ import config from '../configuration/config';
 import { useSelector } from 'react-redux';
 import { CheckOutlined, StopOutlined } from '@ant-design/icons';
 import { store } from '../appstate/store';
-import { CustomAddPopup } from './CustomAddPopup';
-import { CustomEditPopup } from './CustomEditPopup';
-import { CustomEstimatePopup } from './CustomEstimatePopup';
-import { CustomFilterPopup } from './CustomFilterPopup';
+import { CustomAddPopup } from './popups/CustomAddPopup';
+import { CustomEditPopup } from './popups/CustomEditPopup';
+import { CustomEstimatePopup } from './popups/CustomEstimatePopup';
+import { CustomFilterPopup } from './popups/CustomFilterPopup';
 
 const columns = [
   {

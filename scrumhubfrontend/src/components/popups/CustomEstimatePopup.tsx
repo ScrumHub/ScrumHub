@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, Form, InputNumber } from 'antd';
-import { IProductBacklogItem } from '../appstate/stateInterfaces';
+import { IProductBacklogItem } from '../../appstate/stateInterfaces';
 
 interface Values {
   title: string;
