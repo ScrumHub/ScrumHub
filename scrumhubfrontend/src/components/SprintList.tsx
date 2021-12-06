@@ -51,7 +51,6 @@ export default function SprintList() {
   const tempPBIPage = useSelector((appState: State) => appState.pbiPage as IProductBacklogList);
   const handleUpdate= () => {
     try {
-      console.log(tempPBIPage.pageCount);
       store.dispatch(
         Actions.fetchPBIsThunk({
           ownerName: ownerName as string,
@@ -69,7 +68,6 @@ export default function SprintList() {
   }
 
   const fetchMoreUpdates=() => {
-    console.log(tempPBIPage.pageCount);
     if(tempPBIPage.pageCount > 1){
     try {
       store.dispatch(
@@ -136,20 +134,24 @@ export default function SprintList() {
     }
   };
 
-   const handleSprintAdd=(values:any)=> {
-    /*try {
+   const handleSprintAdd=(pbi: ISprint)=> {
+    setIsAddModalVisible(false);
+    const ids = pbi.backlogItems.map((value: IProductBacklogItem) => 
+   {  return((value.sprintNumber === Number(sprintID) ? value.id.toString():"")) }).filter((x) => x !== "");
+    try {
       store.dispatch(
-        Actions.addRepositoryThunk({
-          id: prop,
-          token: token,
+        Actions.addSprintThunk({
+          token: token as string,
+          ownerName: ownerName as string,
+          sprint:{"number":pbi.sprintNumber, "goal":pbi.goal, "pbIs":ids}
         }) //filters
       );
     } catch (err) {
-      console.error("Failed to add the repos: ", err);
+      console.error("Failed to add the sprint: ", err);
     } finally {
-      setFilters({ ...filters, pageNumber: config.defaultFilters.page });
-      setInitialRefresh(true);
-    }*/
+      //setFilters({ ...filters, pageNumber: config.defaultFilters.page });
+      //setInitialRefresh(true);
+    }
   };
   function openSprint(props: number) {
     localStorage.setItem("sprintID", JSON.stringify(props));

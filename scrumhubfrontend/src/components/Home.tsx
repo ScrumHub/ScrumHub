@@ -37,7 +37,6 @@ export default function Home() {
   const [initialRefresh, setInitialRefresh] = useState(true);
   useEffect(() => {
     if (initialRefresh) {
-      //console.log("init");
       setInitialRefresh(false);
       store.dispatch(clearReposList());
     }
@@ -45,7 +44,6 @@ export default function Home() {
 
   useEffect(() => {
     if (isLoggedIn && refreshRequired) {
-      //console.log("fetch");
       setDisplayLoader(true);
       try {
         store.dispatch(

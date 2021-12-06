@@ -261,3 +261,20 @@ export function fetchSprints(token: string, ownerName:string, filters: IFilters,
         )
       );
     }
+
+    export function addSprint(token: string, ownerName:string,  sprint:any
+      ): Promise<RequestResponse<ISprint, number>> {
+        return getResponse(
+          axios.post(
+            `https://${config.backend.ip}:${config.backend.port}/api/Sprints/${ownerName}`,
+            sprint,
+            {
+              headers: {
+                'authToken': token,
+                'Accept': "application/json",
+                'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
+              },
+            }
+          )
+        );
+      }

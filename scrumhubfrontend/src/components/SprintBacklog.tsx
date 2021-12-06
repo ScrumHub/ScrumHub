@@ -112,10 +112,8 @@ export default function SprintBacklog() {
   }
   const handleUpdatePBI = (pbi: IUpdateSprint) => {
     setIsUpdateModalVisible(false);
-    console.log(pbi);
      const ids = pbi.backlogItems.map((value: IProductBacklogItem) => 
     {  return((value.sprintNumber === Number(sprintID) ? value.id.toString():"")) }).filter((x) => x !== "");
-    console.log(ids);
     try {
       store.dispatch(
         Actions.updateOneSprintThunk({
@@ -195,7 +193,6 @@ export default function SprintBacklog() {
   }
   const handleUpdate= () => {
     try {
-      console.log(tempPBIPage.pageCount);
       store.dispatch(
         Actions.fetchPBIsThunk({
           ownerName: ownerName,
@@ -213,7 +210,6 @@ export default function SprintBacklog() {
   }
 
   const fetchMore=() => {
-    console.log(tempPBIPage.pageCount);
     if(tempPBIPage.pageCount > 1){
     try {
       store.dispatch(

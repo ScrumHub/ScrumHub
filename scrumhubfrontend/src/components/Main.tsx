@@ -9,6 +9,7 @@ import { AuthContext } from '../App';
 import { store } from '../appstate/store';
 import { clearState } from '../appstate/actions';
 import config from '../configuration/config';
+//@ts-ignore
 import { useCookies } from "react-cookie";
 import './Main.css';
 const { Header, Footer, Content, Sider} = Layout;
@@ -58,17 +59,13 @@ function Main(props: any) {
   const handleProjects = () => {
     store.dispatch(clearState());
     localStorage.removeItem("ownerName");
-<<<<<<< HEAD
     localStorage.removeItem("sprintID");
-=======
->>>>>>> 1fed599254bdb219c15c836716e38e42b8843ad9
     navigate("/", { replace: true });
   }
 
   const handleTeams = () => {
     store.dispatch(clearState());
     localStorage.removeItem("ownerName");
-<<<<<<< HEAD
     localStorage.removeItem("sprintID");
     navigate("/teams", { replace: true });
   }
@@ -90,11 +87,6 @@ function Main(props: any) {
     }
   }
 
-=======
-    navigate("/teams", { replace: true });
-  }
-
->>>>>>> 1fed599254bdb219c15c836716e38e42b8843ad9
   const [isCollapsed, setIsCollapsed] = useState(true);
   return (
     <section className="container">
@@ -112,36 +104,20 @@ function Main(props: any) {
         </Header>
         <Content className="content">
           <Layout className="site-layout-background" style={{ padding: ownerName === "" ? '':'24px 0' }}>
-<<<<<<< HEAD
           <Sider hidden={ownerName === ""} theme="dark" style={{height:'auto',backgroundColor:"white", borderColor:"transparent"}} collapsedWidth="0" onCollapse={()=>setIsCollapsed(!isCollapsed)} collapsible={true} collapsed={isCollapsed} className="site-layout-background" width={200}>
           <Menu
           mode="inline"
           defaultSelectedKeys={[selectedSiderKey]}
-=======
-          <Sider hidden={ownerName === ""} theme="dark" style={{backgroundColor:"white", borderColor:"transparent"}} collapsedWidth="0" onCollapse={()=>setIsCollapsed(!isCollapsed)} collapsible={true} collapsed={isCollapsed} className="site-layout-background" width={200}>
-          <Menu
-          mode="inline"
-          defaultSelectedKeys={['2']}
->>>>>>> 1fed599254bdb219c15c836716e38e42b8843ad9
           style={{ height: 'auto' }}
           >
           <Menu.Item key="1"><FileOutlined />
               <span>Project Details</span></Menu.Item>
-<<<<<<< HEAD
           <Menu.Item key="2" onClick={()=> handlePBacklog()}><FileOutlined />
               <span>Product Backlog</span></Menu.Item>
           <Menu.Item key="3" onClick={()=> handleSprints()}><FileOutlined />
               <span>Sprints List</span></Menu.Item>
           <Menu.Item key="4"><CarOutlined />
               <span>Roadmap</span></Menu.Item>
-=======
-          <Menu.Item key="2"><FileOutlined />
-              <span>Product Backlog</span></Menu.Item>
-          <Menu.Item key="3"><FileOutlined />
-              <span>Sprint Backlog</span></Menu.Item>
-          <Menu.Item key="4"><CarOutlined />
-              <span>Sprint Backlog</span></Menu.Item>
->>>>>>> 1fed599254bdb219c15c836716e38e42b8843ad9
           <Menu.Item key="5"><HourglassOutlined />
               <span>Planning Poker</span></Menu.Item>
               <Menu.Item key="6"><PieChartOutlined />

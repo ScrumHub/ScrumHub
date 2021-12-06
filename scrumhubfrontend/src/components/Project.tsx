@@ -18,17 +18,17 @@ const columns = [
   {
     key: "0",
     title: 'Name',
+    colSpan: 2,
     dataIndex: 'name',
     align: 'center' as const,
-    render:  (text: string) => {return ({ children: text,props: { colSpan: 2 }})},
+    render: (text: string) => { return ({ children: text, props: { colSpan: 2 } }) },
     fixed: 'left' as const,
-    colSpan:2
   },
   {
     key: "1",
     title: 'Story Points',
     dataIndex: 'expectedTimeInHours',
-    render: (val: number) => val===0 ? "" : val, 
+    render: (val: number) => val === 0 ? "" : val,
     align: 'center' as const,
   },
   {
@@ -72,14 +72,14 @@ const columns = [
     dataIndex: 'finished',
     render: (finishValue: boolean) => finishValue ? <CheckOutlined /> : <StopOutlined />,
     align: 'center' as const,
-  }
 
+  }
 ];
 
 export default function Project() {
   const { state } = useContext(AuthContext);
   const { token } = state;
-  const [filterPBI, setFiltersPBI] = useState<IPBIFilter>({pageNumber: config.defaultFilters.page,pageSize: config.defaultFilters.size,nameFilter: "",});
+  const [filterPBI, setFiltersPBI] = useState<IPBIFilter>({ pageNumber: config.defaultFilters.page, pageSize: config.defaultFilters.size, nameFilter: "", });
   const [selectionType, setSelectionType] = useState<'pbi' | 'tasks'>('pbi');
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);

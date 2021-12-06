@@ -30,22 +30,18 @@ export const CustomFilterPopup: React.FC<CollectionCreateFormProps> = ({
   return (
     <Modal
       visible={visible}
-<<<<<<< HEAD
       title="Filter Backlog Items"
-=======
-      title="Filter Product Backlog"
->>>>>>> 1fed599254bdb219c15c836716e38e42b8843ad9
       okText="Save"
       cancelText="Cancel"
       onCancel={onCancel}
       onOk={() => {
         form
           .validateFields()
-          .then(values => {
+          .then((values: Values) => {
             form.resetFields();
             onCreate(values);
           })
-          .catch(info => {
+          .catch((info: any) => {
             console.error('Validate Failed:', info);
           });
       }}
@@ -65,11 +61,7 @@ export const CustomFilterPopup: React.FC<CollectionCreateFormProps> = ({
           <Input />
         </Form.Item>
         <Form.Item hidden={!isNameOpen}>
-<<<<<<< HEAD
           <Button type="primary" onClick={() => { form.setFieldsValue({ "nameFilter": null });setIsNameOpen(false)}} block icon={<MinusCircleOutlined />}>
-=======
-          <Button type="primary" onClick={() => setIsNameOpen(false)} block icon={<MinusCircleOutlined />}>
->>>>>>> 1fed599254bdb219c15c836716e38e42b8843ad9
             Do Not Filter By Name
           </Button>
         </Form.Item>
@@ -85,26 +77,15 @@ export const CustomFilterPopup: React.FC<CollectionCreateFormProps> = ({
           hidden={!isFinishedOpen}
           valuePropName="checked"
         >
-<<<<<<< HEAD
           <Switch/>
         </Form.Item>
         <Form.Item hidden={!isFinishedOpen} >
           <Button type="primary" onClick={() => { form.setFieldsValue({ "finished": null }); setIsFinishedOpen(false);}} block icon={<MinusCircleOutlined />}>
-=======
-          <Switch />
-        </Form.Item>
-        <Form.Item hidden={!isFinishedOpen} >
-          <Button type="primary" onClick={() => setIsFinishedOpen(false)} block icon={<MinusCircleOutlined />}>
->>>>>>> 1fed599254bdb219c15c836716e38e42b8843ad9
             Do Not Filter By Finished Status
           </Button>
         </Form.Item>
         <Form.Item hidden={isFinishedOpen} >
-<<<<<<< HEAD
           <Button type="dashed" onClick={() => {form.setFieldsValue({"finished": false }); setIsFinishedOpen(true);}} block icon={<PlusOutlined />}>
-=======
-          <Button type="dashed" onClick={() => setIsFinishedOpen(true)} block icon={<PlusOutlined />}>
->>>>>>> 1fed599254bdb219c15c836716e38e42b8843ad9
             Filter By Finished Status
           </Button>
         </Form.Item>
@@ -117,20 +98,12 @@ export const CustomFilterPopup: React.FC<CollectionCreateFormProps> = ({
         >  <Switch />
         </Form.Item>
         <Form.Item hidden={!isEstimatedOpen}>
-<<<<<<< HEAD
           <Button type="primary" onClick={() =>{form.setFieldsValue({ "estimated": null }); setIsEstimatedOpen(false);}} block icon={<MinusCircleOutlined />}>
-=======
-          <Button type="primary" onClick={() => setIsEstimatedOpen(false)} block icon={<MinusCircleOutlined />}>
->>>>>>> 1fed599254bdb219c15c836716e38e42b8843ad9
             Do Not Filter By Estimated Status
           </Button>
         </Form.Item>
         <Form.Item hidden={isEstimatedOpen}>
-<<<<<<< HEAD
           <Button type="dashed" onClick={() => {form.setFieldsValue({ "estimated": false }); setIsEstimatedOpen(true);}} block icon={<PlusOutlined />}>
-=======
-          <Button type="dashed" onClick={() => setIsEstimatedOpen(true)} block icon={<PlusOutlined />}>
->>>>>>> 1fed599254bdb219c15c836716e38e42b8843ad9
             Filter By Estimated Status
           </Button>
         </Form.Item>
@@ -144,20 +117,12 @@ export const CustomFilterPopup: React.FC<CollectionCreateFormProps> = ({
           <Switch />
         </Form.Item>
         <Form.Item hidden={!isSprintOpen}>
-<<<<<<< HEAD
           <Button type="primary" onClick={() => {form.setFieldsValue({ "isSprintOpen": null }); setIsSprintOpen(false);}} block icon={<MinusCircleOutlined />}>
-=======
-          <Button type="primary" onClick={() => setIsSprintOpen(false)} block icon={<MinusCircleOutlined />}>
->>>>>>> 1fed599254bdb219c15c836716e38e42b8843ad9
             Do Not Filter By Sprint Status
           </Button>
         </Form.Item>
         <Form.Item hidden={isSprintOpen}>
-<<<<<<< HEAD
           <Button type="dashed" onClick={() => {form.setFieldsValue({ "isSprintOpen": false }); setIsSprintOpen(true);}} block icon={<PlusOutlined />}>
-=======
-          <Button type="dashed" onClick={() => setIsSprintOpen(true)} block icon={<PlusOutlined />}>
->>>>>>> 1fed599254bdb219c15c836716e38e42b8843ad9
             Filter By Sprint Status
           </Button>
         </Form.Item>

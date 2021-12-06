@@ -47,11 +47,11 @@ export const CustomAddSprintPopup: React.FC<CollectionCreateFormProps> = ({
       onOk={() => {
         form
           .validateFields()
-          .then(values => {
+          .then((values: Values) => {
             form.resetFields();
             onCreate(values);
           })
-          .catch(info => {
+          .catch((info: any) => {
             console.error('Validate Failed:', info);
           });
       }}
@@ -68,9 +68,9 @@ export const CustomAddSprintPopup: React.FC<CollectionCreateFormProps> = ({
           name="sprintNumber"
           labelAlign="left"
           label={<Title style={{marginTop:"10%"}} level={4}>{"Sprint Number"}</Title>}
-          rules={[{ required: true, message: 'Please input the goal of this sprint!' }]}
+          rules={[{ required: true, message: 'Please input the number of this sprint!' }]}
         >
-          <InputNumber/>
+          <InputNumber onChange={()=>{}}/>
         </Form.Item>
         <Form.Item
           initialValue={data.goal}
@@ -102,7 +102,6 @@ export const CustomAddSprintPopup: React.FC<CollectionCreateFormProps> = ({
                     }} />
                   <Form.Item
                     name={key}
-                  //rules={[{ required: key<1?true:false, message: 'Please input at least one acceptance criteria!' }]}
                   >
                     <Typography>{pbiData[key].name +(pbiData[key].isInSprint?" from Sprint "+ pbiData[key].sprintNumber:"")}</Typography>
                   </Form.Item>

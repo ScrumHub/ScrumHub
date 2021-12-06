@@ -13,12 +13,8 @@ export const authReducer = (state: any, action: any ) => {
     case "LOGOUT": {
       localStorage.removeItem("isLoggedIn")
       localStorage.removeItem("token")
-<<<<<<< HEAD
       localStorage.removeItem("ownerName");
       localStorage.removeItem("sprintID");
-=======
-      //localStorage.removeItem("ownerName");
->>>>>>> 1fed599254bdb219c15c836716e38e42b8843ad9
       //localStorage.clear()
       var cookies = document.cookie.split(";");
       for (var i = 0; i < cookies.length; i++) {

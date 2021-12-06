@@ -2,7 +2,7 @@
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit"
 import type { RequestResponse } from "./response";
 import * as Fetching from "./fetching";
-import { IAddPBI, IFilters, IFiltersAndToken, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList } from "./stateInterfaces";
+import { IAddPBI, IFilters, IFiltersAndToken, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, IUpdateIdSprint } from "./stateInterfaces";
 
 export const fetchRepositoriesThunk = createAsyncThunk<
   RequestResponse<IRepositoryList, number>,
@@ -21,11 +21,7 @@ export const fetchRepositoriesThunk = createAsyncThunk<
 
 export const addRepositoryThunk = createAsyncThunk<
   RequestResponse<IRepository, number>,
-<<<<<<< HEAD
   { id: number; token: string },
-=======
-  { id: number; token: string},
->>>>>>> 1fed599254bdb219c15c836716e38e42b8843ad9
   { rejectValue: RequestResponse<IRepository, number> }
 >("addRepositories", async (
   repoWithToken: {
@@ -68,11 +64,7 @@ export const fetchPBIsThunk = createAsyncThunk<
 
 export const finishPBIThunk = createAsyncThunk<
   RequestResponse<IProductBacklogItem, number>,
-<<<<<<< HEAD
   { ownerName: string; token: string; pbild: number; },
-=======
-  { ownerName: string; token: string; pbild: number;},
->>>>>>> 1fed599254bdb219c15c836716e38e42b8843ad9
   { rejectValue: RequestResponse<IProductBacklogItem, number> }
 >("finishPBI", async (
   item: {
@@ -93,7 +85,6 @@ export const finishPBIThunk = createAsyncThunk<
 });
 
 export const deletePBIThunk = createAsyncThunk<
-<<<<<<< HEAD
   RequestResponse<number, number>,
   { ownerName: string; token: string; pbild: number; },
   { rejectValue: RequestResponse<number, number> }
@@ -113,36 +104,11 @@ export const deletePBIThunk = createAsyncThunk<
     );
   }
   return response as RequestResponse<number, number>;
-=======
-RequestResponse<number, number>,
-{ ownerName: string; token: string; pbild: number;},
-{ rejectValue: RequestResponse<number, number> }
->("deletePBI", async (
-item: {
-  ownerName: string;
-  token: string;
-  pbild: number;
-},
-{ rejectWithValue }
-) => {
-const response: RequestResponse<number, number> =
-  await Fetching.deletePBI(item.ownerName, item.token, item.pbild);
-if (response.code !== 204) { 
-  return rejectWithValue(
-    response as RequestResponse<number, number>
-  );
-}
-return response as RequestResponse<number, number>;
->>>>>>> 1fed599254bdb219c15c836716e38e42b8843ad9
 });
 
 export const addPBIThunk = createAsyncThunk<
   RequestResponse<IProductBacklogItem, number>,
-<<<<<<< HEAD
   { ownerName: string; token: string; pbi: IAddPBI; },
-=======
-  { ownerName: string; token: string; pbi: IAddPBI;},
->>>>>>> 1fed599254bdb219c15c836716e38e42b8843ad9
   { rejectValue: RequestResponse<IProductBacklogItem, number> }
 >("addPBI", async (
   item: {
@@ -164,21 +130,13 @@ export const addPBIThunk = createAsyncThunk<
 
 export const estimatePBIThunk = createAsyncThunk<
   RequestResponse<IProductBacklogItem, number>,
-<<<<<<< HEAD
   { ownerName: string; token: string; pbiId: number; hours: number; },
-=======
-  { ownerName: string; token: string; pbiId:number; hours: number;},
->>>>>>> 1fed599254bdb219c15c836716e38e42b8843ad9
   { rejectValue: RequestResponse<IProductBacklogItem, number> }
 >("estimatePBI", async (
   item: {
     ownerName: string;
     token: string;
-<<<<<<< HEAD
     pbiId: number;
-=======
-    pbiId:number;
->>>>>>> 1fed599254bdb219c15c836716e38e42b8843ad9
     hours: number;
   },
   { rejectWithValue }
@@ -195,22 +153,14 @@ export const estimatePBIThunk = createAsyncThunk<
 
 export const editPBIThunk = createAsyncThunk<
   RequestResponse<IProductBacklogItem, number>,
-<<<<<<< HEAD
   { ownerName: string; token: string; pbi: IAddPBI; pbiId: number; },
-=======
-  { ownerName: string; token: string; pbi: IAddPBI;pbiId:number;},
->>>>>>> 1fed599254bdb219c15c836716e38e42b8843ad9
   { rejectValue: RequestResponse<IProductBacklogItem, number> }
 >("editPBI", async (
   item: {
     ownerName: string;
     token: string;
     pbi: IAddPBI;
-<<<<<<< HEAD
     pbiId: number
-=======
-    pbiId:number
->>>>>>> 1fed599254bdb219c15c836716e38e42b8843ad9
   },
   { rejectWithValue }
 ) => {
@@ -224,7 +174,6 @@ export const editPBIThunk = createAsyncThunk<
   return response as RequestResponse<IProductBacklogItem, number>;
 });
 
-<<<<<<< HEAD
 //SPRINTS
 export const fetchSprintsThunk = createAsyncThunk<
   RequestResponse<ISprintList, number>,
@@ -290,6 +239,27 @@ export const updateOneSprintThunk = createAsyncThunk<
   return response as RequestResponse<ISprint, number>;
 });
 
+export const addSprintThunk = createAsyncThunk<
+  RequestResponse<ISprint, number>,
+  { token: string, ownerName: string; sprint:any; },
+  { rejectValue: RequestResponse<ISprint, number> }
+>("addSprint", async (
+  item: {
+    token: string;
+    ownerName: string;
+    sprint:any;
+  },
+  { rejectWithValue }) => {
+  const response: RequestResponse<ISprint, number> =
+    await Fetching.addSprint(item.token, item.ownerName,item.sprint);
+  if (response.code !== 201) {
+    return rejectWithValue(
+      response as RequestResponse<ISprint, number>
+    );
+  }
+  return response as RequestResponse<ISprint, number>;
+});
+
 
 export const clearError = createAction("clearError");
 export const clearState = createAction("clearState");
@@ -298,13 +268,3 @@ export const clearSprint = createAction("clearSprint");
 export const clearReposList = createAction("clearReposList");
 export const clearPBIsList = createAction("clearPBIsList");
 
-=======
-
-export const clearError = createAction("clearError");
-export const clearState = createAction("clearState");
-export const clearReposList = createAction("clearReposList");
-export const clearPBIsList = createAction("clearPBIsList");
-
-
-
->>>>>>> 1fed599254bdb219c15c836716e38e42b8843ad9
