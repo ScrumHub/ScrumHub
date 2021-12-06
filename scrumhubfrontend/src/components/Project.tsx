@@ -115,16 +115,29 @@ export default function Project() {
         }) //filters
       );
     } catch (err) {
-      console.error("Failed to add the repos: ", err);
+      console.error("Failed to add the pbis: ", err);
     }
     finally {
       setIsFilterModalVisible(false);
     }
   }
 
-  const handleAddPBI = (pbi: IPBIFilter) => {
-    setFiltersPBI(pbi);
-    setInitialRefresh(true);
+  const handleAddPBI = (pbi: IAddPBI) => {
+    setIsAddModalVisible(false);
+    //check if all elements of acceptanceCriteria array are defined
+    pbi.acceptanceCriteria = pbi.acceptanceCriteria.filter((value:any)=>
+    {return( typeof(value)==="string");});
+    try {
+      store.dispatch(
+        Actions.addPBIThunk({
+          ownerName: ownerName,
+          token: token,
+          pbi:pbi
+        }) //filters
+      );
+    } catch (err) {
+      console.error("Failed to add the pbis: ", err);
+    }
   }
 
   const handleEstimatePBI = (pbi: IProductBacklogItem) => {
@@ -138,7 +151,7 @@ export default function Project() {
         }) //filters
       );
     } catch (err) {
-      console.error("Failed to estimate the repos: ", err);
+      console.error("Failed to estimate the pbis: ", err);
     }
     finally {
       setIsEstimateModalVisible(false);
@@ -146,6 +159,10 @@ export default function Project() {
   }
 
   const handleEditPBI = (pbi: IAddPBI) => {
+    setIsEditModalVisible(false);
+    //check if all elements of acceptanceCriteria array are defined
+    pbi.acceptanceCriteria = pbi.acceptanceCriteria.filter((value:any)=>
+    {return( typeof(value)==="string");});
     try {
       store.dispatch(
         Actions.editPBIThunk({
@@ -157,9 +174,6 @@ export default function Project() {
       );
     } catch (err) {
       console.error("Failed to add the repos: ", err);
-    }
-    finally {
-      setIsEditModalVisible(false);
     }
   }
   const handleFinish = () => {

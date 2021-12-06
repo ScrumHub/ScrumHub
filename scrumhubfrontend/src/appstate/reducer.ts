@@ -64,7 +64,7 @@ export const reducer = createReducer(initState, {
     config.defaultFilters.size
   );
   const repos = payload.payload.response as IRepositoryList;
-  if (newState.repositories !== null || pageNumber !== 1) {
+  if (newState.repositories !== null && pageNumber !== 1) {
     newState.repositories = newState.repositories
       .concat(repos.list)
       .slice(0, (pageNumber + 1) * pageSize);

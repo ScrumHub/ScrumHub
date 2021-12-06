@@ -16,7 +16,7 @@ const { Meta } = Card;
 
 export default function Home() {
   const { state } = useContext(AuthContext);
-  const { token } = state;
+  const { token, isLoggedIn } = state;
   const [filters, setFilters] = useState<IFilters>({
     pageNumber: config.defaultFilters.page,
     pageSize: config.defaultFilters.size,
@@ -37,13 +37,13 @@ export default function Home() {
   const [initialRefresh, setInitialRefresh] = useState(true);
   useEffect(() => {
     if (initialRefresh) {
-      store.dispatch(clearReposList());
       setInitialRefresh(false);
+      store.dispatch(clearReposList());
     }
   }, [initialRefresh]);
 
   useEffect(() => {
-    if (state.isLoggedIn && refreshRequired) {
+    if (isLoggedIn && refreshRequired) {
       try {
         store.dispatch(
           Actions.fetchRepositoriesThunk({
@@ -56,12 +56,13 @@ export default function Home() {
         );
       } catch (err) {
         console.error("Failed to fetch the repos: ", err);
-      } finally {
-        setInitialRefresh(false);
+      } 
+      finally{
+        setFilters({ ...filters, pageNumber: config.defaultFilters.page + 1 });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refreshRequired, state.isLoggedIn]);
+  }, [refreshRequired, isLoggedIn]);
 
   const fetchMore = () => {
     if (!fetching) {
@@ -71,7 +72,7 @@ export default function Home() {
           Actions.fetchRepositoriesThunk({
             filters: {
               ...filters,
-              pageNumber: filters.pageNumber < 2 ? 2 : filters.pageNumber,
+              pageNumber: filters.pageNumber,
             },
             token: token,
           }) //filters
@@ -79,7 +80,7 @@ export default function Home() {
       } catch (err) {
         console.error("Failed to fetch the repos: ", err);
       } finally {
-        setFilters({ ...filters, pageNumber: filters.pageNumber < 2 ? 3 : filters.pageNumber + 1 });
+        setFilters({ ...filters, pageNumber: filters.pageNumber + 1 });
         setFetching(false);
       }
     }
@@ -97,7 +98,6 @@ export default function Home() {
       console.error("Failed to add the repos: ", err);
     } finally {
       setFilters({ ...filters, pageNumber: config.defaultFilters.page });
-      setFetching(false);
       setInitialRefresh(true);
     }
   };
@@ -124,7 +124,7 @@ export default function Home() {
     
   };
 
-  if (!state.isLoggedIn) {
+  if (!isLoggedIn) {
     return <Navigate to="/login" />;
   }
   return (
@@ -154,7 +154,7 @@ export default function Home() {
                   ></Meta>
                   <br />
                   <p>{"There are " + rep.sprints.length + " sprints and " + rep.backlogItems.length + " backlog items.\n"}</p>
-                  <p>{"The last activity in the repository was " + rep.typeOfLastActivity}</p>
+                  <p>{rep.typeOfLastActivity+(rep.dateOfLastActivity === "No recent activity"?" ":" was the last activity")+" in the repository."}</p>
                 </Card>
               </section>);
             })

@@ -1,40 +1,36 @@
-import { Layout, Menu, Typography} from 'antd';
-import { Navigate, useNavigate } from 'react-router';
-import { NavLink } from 'react-router-dom';
+import { Layout, Menu} from 'antd';
+import { useNavigate } from 'react-router';
 import { useContext } from 'react';
-import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
-import { CarOutlined, FileOutlined, GithubOutlined, HourglassOutlined, LaptopOutlined, NotificationOutlined, PaperClipOutlined, PieChartOutlined, UserOutlined } from '@ant-design/icons';
+import { CarOutlined, FileOutlined, GithubOutlined, HourglassOutlined, PieChartOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import AppRouter from '../Approuter';
 import { AuthContext } from '../App';
 import { store } from '../appstate/store';
-import { clearReposList } from '../appstate/actions';
+import { clearState } from '../appstate/actions';
 import config from '../configuration/config';
-import { useSelector } from 'react-redux';
-import { State } from '../appstate/stateInterfaces';
-import SubMenu from 'antd/lib/menu/SubMenu';
-import logo from './scrum.jpg';
+import { useCookies } from "react-cookie";
+import './Main.css';
 const { Header, Footer, Content, Sider} = Layout;
 
 
 
 function Main(props: any) {
   const { state, dispatch: unAuth } = useContext(AuthContext);
-  const { token, isLoggedIn } = state;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [cookies, setCookie, removeCookie] = useCookies();
+  const { isLoggedIn } = state;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const token = cookies[config.token];
+  
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const navigate = useNavigate();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState({ errorMessage: "", isLoading: false });
   const [logout, setLogout] = useState(false);
-  const [initialRefresh, setInitialRefresh] = useState(true);
-  const refreshRequired = useSelector(
-    (appState: State) => appState.reposRequireRefresh as boolean
-  );
   const ownerName = localStorage.getItem("ownerName")?localStorage.getItem("ownerName"):"";
   useEffect(() => {
     if (logout) {
-      //deleteCookie("user_session", "/", "github.com")
       var cookies = document.cookie.split(";");
 
       for (var i = 0; i < cookies.length; i++) {
@@ -44,56 +40,29 @@ function Main(props: any) {
         document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
       }
       //clearing local storage
-      localStorage.removeItem("ownerName");
-      localStorage.clear();
-      store.dispatch(clearReposList());
+      store.dispatch(clearState());
+      removeCookie("token", { path: "/" });
       unAuth({
         type: "LOGOUT"
       });
       setLogout(false);
     }
-  }, [state, unAuth, data, logout, token]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [logout]);
 
-  useEffect(() => {
-    if (initialRefresh) {
-      store.dispatch(clearReposList());
-      setInitialRefresh(false);
-    }
-  }, [initialRefresh]);
-
-  useEffect(() => {
-    if (state.isLoggedIn && refreshRequired) {
-      //store.dispatch(clearReposList());
-      try {
-        store.dispatch(
-          Actions.fetchRepositoriesThunk({
-            filters: {
-              pageSize: config.defaultFilters.size,
-              pageNumber: config.defaultFilters.page,
-            },
-            token: token,
-          }) //filters
-        );
-      } catch (err) {
-        console.error("Failed to fetch the repos: ", err);
-      } finally {
-        //setFilters({ ...filters, pageNumber: config.defaultFilters.page + 1 });
-        setInitialRefresh(false);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refreshRequired, state.isLoggedIn]);
 
   const handleLogout = () => {
     setLogout(true);
   }
 
   const handleProjects = () => {
+    store.dispatch(clearState());
     localStorage.removeItem("ownerName");
     navigate("/", { replace: true });
   }
 
   const handleTeams = () => {
+    store.dispatch(clearState());
     localStorage.removeItem("ownerName");
     navigate("/teams", { replace: true });
   }
@@ -108,9 +77,9 @@ function Main(props: any) {
             display: 'flex',
             justifyContent: 'center',
           }}>
-            <Menu.Item key="proj" style={{ marginRight: "20px", marginLeft: "20px", fontSize: "20px" }} onClick={()=> handleProjects()}>Projects</Menu.Item>
-            <Menu.Item key="team" style={{ marginRight: "20px", marginLeft: "20px", fontSize: "20px" }}onClick={()=> handleTeams()}>Teams</Menu.Item>
-            <Menu.Item key="logout" onClick={() => handleLogout()} style={{ marginRight: "20px", marginLeft: "20px", fontSize: "20px" }}>Logout</Menu.Item>
+            <Menu.Item key="proj" className="menu" onClick={()=> handleProjects()}>Projects</Menu.Item>
+            <Menu.Item key="team" className="menu" onClick={()=> handleTeams()}>Teams</Menu.Item>
+            <Menu.Item key="logout" onClick={() => handleLogout()} className="menu">Logout</Menu.Item>
           </Menu>
         </Header>
         <Content className="content">
@@ -119,7 +88,7 @@ function Main(props: any) {
           <Menu
           mode="inline"
           defaultSelectedKeys={['2']}
-          style={{ height: '100vh' }}
+          style={{ height: 'auto' }}
           >
           <Menu.Item key="1"><FileOutlined />
               <span>Project Details</span></Menu.Item>

@@ -71,7 +71,7 @@ visible,
               <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
                 <Form.Item
                   name={key}
-                  rules={[{ required: key<1?true:false, message: 'Please input at least one acceptance criteria!' }]}
+                  rules={[{ required:key<1?true:false, message: 'Please input the acceptance criteria!' }]}
                 >
                   <Input placeholder={`Cirteria ${key+1}`} />
                 </Form.Item>
