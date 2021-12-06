@@ -1,0 +1,16 @@
+{
+    "environment_name": "Production",
+    "backend": {
+      "ip": "localhost",
+      "port": 5033
+    },
+    "defaultFilters": {
+      "size": 5,
+      "page": 1,
+      "pbiSize":10,
+      "sprintSize":6
+    },
+    "token": "token"
+}
+
+  

@@ -1,0 +1,14 @@
+{
+    "environment_name": "Development",
+    "backend": {
+      "ip": "localhost",
+      "port": 7033
+    },
+    "defaultFilters": {
+      "size": 5,
+      "page": 1,
+      "pbiSize":10,
+      "sprintSize":6
+    },
+      "token": "token"
+  }
