@@ -4,10 +4,13 @@ import { GithubOutlined } from "@ant-design/icons";
 import { AuthContext } from "../App";
 import logo from './scrum.jpg';
 import {useNavigate} from "react-router";
-
+import { useCookies } from "react-cookie";
+import config from "../configuration/config";
 
 export default function Login(props:any) {
-  const { state, dispatch } = useContext(AuthContext);
+  const { state, dispatch: auth } = useContext(AuthContext);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [cookies, setCookie, removeCookie] = useCookies();
   const [data, setData] = useState({ errorMessage: "", isLoading: false });
   let navigate = useNavigate();
   const { client_id, redirect_uri, proxy_url} = state;
@@ -35,7 +38,8 @@ export default function Login(props:any) {
             let params = new URLSearchParams(response);
             const access_token = params.get("access_token");
             if (access_token){ 
-            dispatch({
+            setCookie(config.token, access_token, { path: "/" });
+            auth({
               type: "LOGIN",
               payload: { token: access_token, isLoggedIn: true }
             }); }
@@ -57,7 +61,8 @@ export default function Login(props:any) {
           
         });
     }
-  }, [state, dispatch, data, proxy_url]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state, auth, data, proxy_url]);
   useEffect(() => {
   if (state.isLoggedIn)
   {

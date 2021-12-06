@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { Navigate } from "react-router";
 import Styled from "styled-components";
 import { AuthContext } from "../App";
+import 'antd/dist/antd.css';
 
 export default function Teams(props:any) {
 const { state } = useContext(AuthContext);

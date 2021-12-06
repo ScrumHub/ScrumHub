@@ -1,3 +1,5 @@
+import config from "../configuration/config"
+
 export type Error = {
   hasError: boolean;
   errorCode: number;
@@ -23,12 +25,19 @@ export type State = {
   error: Error;
   redirect: string | null;
   pages: number;
+  pbiPage : IProductBacklogList;
   repositories: IRepositoryList | any;
   openRepository: IRepository | any;
   reposLastPage: boolean;
   reposRequireRefresh: boolean;
+  productLastPage: boolean;
+  productRequireRefresh: boolean;
+  sprintLastPage: boolean;
+  sprintRequireRefresh: boolean;
+  repoId: number;
+  ownerName: string;
 };
-export interface IBacklogItem {
+export interface IProductBacklogItem {
   id: number;
   name: string;
   finished: boolean;
@@ -42,7 +51,42 @@ export interface IBacklogItem {
   tasks: any
 }
 
-export const initBacklogItem: IBacklogItem = {
+export interface IAddPBI {
+  name: string;
+  priority: number;
+  acceptanceCriteria: string[];
+}
+
+export interface IPBIFilter {
+  pageNumber: number;
+  pageSize: number;
+  nameFilter?: string;
+  finished?: boolean;
+  estimated?: boolean;
+  inSprint?: boolean;
+}
+
+export const initPBIFilter: IPBIFilter = {
+  pageNumber: config.defaultFilters.page,
+  pageSize: config.defaultFilters.pbiSize,
+
+};
+
+export const initAddPBI: IAddPBI = {
+  name: "Item",
+  priority: 0,
+  acceptanceCriteria: ["criteria", "criteria2"],
+};
+
+export interface IProductBacklogList {
+  pageNumber: number;
+  pageCount: number;
+  pageSize: number;
+  realSize: number;
+  list: IProductBacklogItem[];
+}
+
+export const initProductBacklogItem: IProductBacklogItem = {
   id: 0,
   name: "Item",
   finished: false,
@@ -52,20 +96,29 @@ export const initBacklogItem: IBacklogItem = {
   isInSprint: false,
   timeSpentInHours: 0,
   priority: 0,
-  acceptanceCriteria: ["string", "string2"],
+  acceptanceCriteria: ["criteria", "criteria2"],
   tasks: [],
 };
+
+export const initProductBacklogList: IProductBacklogList = {
+  pageNumber: 1,
+  pageCount: 1,
+  pageSize: 10,
+  realSize: 10,
+  list: [],
+};
+
 
 export interface ISprint {
   sprintNumber: number;
   goal: string;
-  backlogItems: IBacklogItem[] | any
+  backlogItems: IProductBacklogItem[] | any
 }
 
 export const initSprint: ISprint = {
   sprintNumber: 1,
   goal: "Goal 1",
-  backlogItems: [initBacklogItem],
+  backlogItems: [initProductBacklogItem],
 }
 
 export interface IRepository {
@@ -76,7 +129,7 @@ export interface IRepository {
   gitHubId: number;
   hasAdminRights: boolean;
   alreadyInScrumHub: boolean;
-  backlogItems: IBacklogItem[] | any;
+  backlogItems: IProductBacklogItem[] | any;
   sprints: ISprint[] | any;
 }
 
@@ -85,7 +138,7 @@ export const initRepository: IRepository = {
   gitHubId: 0,
   hasAdminRights: true,
   alreadyInScrumHub: true,
-  backlogItems: [initBacklogItem],
+  backlogItems: [initProductBacklogItem],
   sprints: [initSprint],
   description: "",
   dateOfLastActivity: null,
@@ -108,8 +161,6 @@ export const initRepositoryList: IRepositoryList = {
   list: [],
 }
 
-
-
 export const initState: State = {
   loading: false,
   error: {
@@ -117,10 +168,17 @@ export const initState: State = {
     errorCode: 0,
     erorMessage: "",
   },
+  pbiPage:initProductBacklogList,
   redirect: null,
   pages: 1,
   repositories: [],
   openRepository: null,
   reposLastPage: false,
   reposRequireRefresh: false,
+  productLastPage: false,
+  productRequireRefresh: false,
+  sprintLastPage: false,
+  sprintRequireRefresh: false,
+  repoId:-1,
+  ownerName:""
 };

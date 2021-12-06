@@ -1,9 +1,8 @@
 import * as Actions from "./actions";
 import { createReducer, PayloadAction } from "@reduxjs/toolkit";
-//import _ from "lodash";
 import { RequestResponse } from "./response";
 import config from "../configuration/config";
-import { IError, initState, IRepository, IRepositoryList, State } from "./stateInterfaces";
+import { IError, initState, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, State } from "./stateInterfaces";
 var _ = require('lodash');
 
 export const reducer = createReducer(initState, {
@@ -20,6 +19,19 @@ export const reducer = createReducer(initState, {
   let newState = _.cloneDeep(state);
   newState.repositories = [];
   newState.reposRequireRefresh = true;
+  newState.reposLastPage = false;
+  return newState;
+},
+[Actions.clearState.type]: (state: State) => {
+  let newState = _.cloneDeep(state);
+  newState = initState;
+  return newState;
+},
+[Actions.clearPBIsList.type]: (state: State) => {
+  let newState = _.cloneDeep(state);
+  if(newState.openRepository){
+  newState.openRepository.backlogItems = [];}
+  newState.productRequireRefresh = true;
   newState.reposLastPage = false;
   newState.pages = 1;
   return newState;
@@ -52,7 +64,7 @@ export const reducer = createReducer(initState, {
     config.defaultFilters.size
   );
   const repos = payload.payload.response as IRepositoryList;
-  if (newState.repositories !== null || pageNumber !== 1) {
+  if (newState.repositories !== null && pageNumber !== 1) {
     newState.repositories = newState.repositories
       .concat(repos.list)
       .slice(0, (pageNumber + 1) * pageSize);
@@ -61,7 +73,6 @@ export const reducer = createReducer(initState, {
   }
   // if response is shorter than default size - it means end is reached.
   newState.reposLastPage = repos.list.length < pageSize;
-  newState.pages = pageNumber + 1;
   newState.reposRequireRefresh = false;
   return newState;
 },
@@ -95,14 +106,225 @@ export const reducer = createReducer(initState, {
 ) => {
   let newState = _.cloneDeep(state);
   newState.loading = false;
-  newState.repositories = [];
-  newState.reposRequireRefresh = true;
-  newState.reposLastPage = false;
   newState.pages = 1;
   return newState;
 },
 
 [Actions.addRepositoryThunk.rejected.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<undefined, undefined>>
+) => {
+  let newState = _.cloneDeep(state);
+  let errorResponse = payload.payload;
+  newState.loading = false;
+  newState.error = {
+    hasError: true,
+    errorCode: errorResponse ? errorResponse.code : -1,
+    erorMessage: errorResponse ? (errorResponse.response as IError).message : "",
+  };
+  return newState;
+},
+[Actions.finishPBIThunk.pending.toString()]: (
+  state: State,
+  payload: PayloadAction<undefined>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = true;
+  return newState;
+},
+
+[Actions.finishPBIThunk.fulfilled.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<IProductBacklogItem, number>>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = false;
+  newState.pbiPage = [];
+  newState.productRequireRefresh = true;
+  newState.pages = 1;
+  return newState;
+},
+
+[Actions.finishPBIThunk.rejected.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<undefined, undefined>>
+) => {
+  let newState = _.cloneDeep(state);
+  let errorResponse = payload.payload;
+  newState.loading = false;
+  newState.error = {
+    hasError: true,
+    errorCode: errorResponse ? errorResponse.code : -1,
+    erorMessage: errorResponse ? (errorResponse.response as IError).message : "",
+  };
+  return newState;
+},
+
+[Actions.addPBIThunk.pending.toString()]: (
+  state: State,
+  payload: PayloadAction<undefined>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = true;
+  return newState;
+},
+
+[Actions.addPBIThunk.fulfilled.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<IProductBacklogItem, number>>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = false;
+  newState.pbiPage = [];
+  newState.productRequireRefresh = true;
+  newState.pages = 1;
+  return newState;
+},
+
+[Actions.addPBIThunk.rejected.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<undefined, undefined>>
+) => {
+  let newState = _.cloneDeep(state);
+  let errorResponse = payload.payload;
+  newState.loading = false;
+  newState.error = {
+    hasError: true,
+    errorCode: errorResponse ? errorResponse.code : -1,
+    erorMessage: errorResponse ? (errorResponse.response as IError).message : "",
+  };
+  return newState;
+},
+
+[Actions.deletePBIThunk.pending.toString()]: (
+  state: State,
+  payload: PayloadAction<undefined>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = true;
+  return newState;
+},
+
+[Actions.deletePBIThunk.fulfilled.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<number, number>>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = false;
+  newState.pbiPage = [];
+  newState.productRequireRefresh = true;
+  newState.pages = 1;
+  return newState;
+},
+
+[Actions.deletePBIThunk.rejected.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<undefined, undefined>>
+) => {
+  let newState = _.cloneDeep(state);
+  let errorResponse = payload.payload;
+  newState.loading = false;
+  newState.error = {
+    hasError: true,
+    errorCode: errorResponse ? errorResponse.code : -1,
+    erorMessage: errorResponse ? (errorResponse.response as IError).message : "",
+  };
+  return newState;
+},
+
+[Actions.fetchPBIsThunk.pending.toString()]: (
+  state: State,
+  payload: PayloadAction<undefined>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = true;
+  return newState;
+},
+
+[Actions.fetchPBIsThunk.fulfilled.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<IProductBacklogList, number>>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = false;
+  newState.ownerName = localStorage.getItem("ownerName");
+  newState.openRepository = newState.repositories.find((e : IRepository) => e.name === newState.ownerName) as IRepository;
+  newState.pbiPage = payload.payload.response as IProductBacklogList;
+  newState.productRequireRefresh = false;
+  return newState;
+},
+
+[Actions.fetchPBIsThunk.rejected.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<undefined, undefined>>
+) => {
+  let newState = _.cloneDeep(state);
+  let errorResponse = payload.payload;
+  newState.loading = false;
+  newState.error = {
+    hasError: true,
+    errorCode: errorResponse ? errorResponse.code : -1,
+    erorMessage: errorResponse ? (errorResponse.response as IError).message : "",
+  };
+  return newState;
+},
+[Actions.estimatePBIThunk.pending.toString()]: (
+  state: State,
+  payload: PayloadAction<undefined>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = true;
+  return newState;
+},
+
+[Actions.estimatePBIThunk.fulfilled.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<IProductBacklogItem, number>>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = false;
+  newState.pbiPage = [];
+  newState.productRequireRefresh = true;
+  newState.pages = 1;
+  return newState;
+},
+
+[Actions.estimatePBIThunk.rejected.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<undefined, undefined>>
+) => {
+  let newState = _.cloneDeep(state);
+  let errorResponse = payload.payload;
+  newState.loading = false;
+  newState.error = {
+    hasError: true,
+    errorCode: errorResponse ? errorResponse.code : -1,
+    erorMessage: errorResponse ? (errorResponse.response as IError).message : "",
+  };
+  return newState;
+},
+[Actions.editPBIThunk.pending.toString()]: (
+  state: State,
+  payload: PayloadAction<undefined>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = true;
+  return newState;
+},
+
+[Actions.editPBIThunk.fulfilled.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<IProductBacklogItem, number>>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = false;
+  newState.pbiPage = [];
+  newState.productRequireRefresh = true;
+  newState.pages = 1;
+  return newState;
+},
+
+[Actions.editPBIThunk.rejected.toString()]: (
   state: State,
   payload: PayloadAction<RequestResponse<undefined, undefined>>
 ) => {
