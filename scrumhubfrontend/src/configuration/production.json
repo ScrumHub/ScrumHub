@@ -5,8 +5,9 @@
       "port": 5033
     },
     "defaultFilters": {
-      "size": 15,
-      "page": 1
+      "size": 5,
+      "page": 1,
+      "pbiSize":10
     },
     "token": "token"
 }
