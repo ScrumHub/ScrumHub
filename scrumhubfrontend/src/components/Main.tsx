@@ -9,6 +9,7 @@ import { AuthContext } from '../App';
 import { store } from '../appstate/store';
 import { clearState } from '../appstate/actions';
 import config from '../configuration/config';
+//@ts-ignore
 import { useCookies } from "react-cookie";
 import './Main.css';
 const { Header, Footer, Content, Sider} = Layout;
@@ -58,13 +59,32 @@ function Main(props: any) {
   const handleProjects = () => {
     store.dispatch(clearState());
     localStorage.removeItem("ownerName");
+    localStorage.removeItem("sprintID");
     navigate("/", { replace: true });
   }
 
   const handleTeams = () => {
     store.dispatch(clearState());
     localStorage.removeItem("ownerName");
+    localStorage.removeItem("sprintID");
     navigate("/teams", { replace: true });
+  }
+
+  const [selectedSiderKey, setSelectedSiderKey] = useState('2');
+
+  const handleSprints = () => {
+    if(ownerName && ownerName!==""){
+    store.dispatch(clearState());
+    setSelectedSiderKey('1');
+    navigate(`/${ownerName.split("/")[0]}/${ownerName.split("/")[1]}/sprints`, { replace: true });
+    }
+  }
+  const handlePBacklog = () => {
+    if(ownerName && ownerName!==""){
+    store.dispatch(clearState());
+    setSelectedSiderKey('2');
+    navigate(`/${ownerName.split("/")[0]}/${ownerName.split("/")[1]}`, { replace: true });
+    }
   }
 
   const [isCollapsed, setIsCollapsed] = useState(true);
@@ -84,20 +104,20 @@ function Main(props: any) {
         </Header>
         <Content className="content">
           <Layout className="site-layout-background" style={{ padding: ownerName === "" ? '':'24px 0' }}>
-          <Sider hidden={ownerName === ""} theme="dark" style={{backgroundColor:"white", borderColor:"transparent"}} collapsedWidth="0" onCollapse={()=>setIsCollapsed(!isCollapsed)} collapsible={true} collapsed={isCollapsed} className="site-layout-background" width={200}>
+          <Sider hidden={ownerName === ""} theme="dark" style={{height:'auto',backgroundColor:"white", borderColor:"transparent"}} collapsedWidth="0" onCollapse={()=>setIsCollapsed(!isCollapsed)} collapsible={true} collapsed={isCollapsed} className="site-layout-background" width={200}>
           <Menu
           mode="inline"
-          defaultSelectedKeys={['2']}
+          defaultSelectedKeys={[selectedSiderKey]}
           style={{ height: 'auto' }}
           >
           <Menu.Item key="1"><FileOutlined />
               <span>Project Details</span></Menu.Item>
-          <Menu.Item key="2"><FileOutlined />
+          <Menu.Item key="2" onClick={()=> handlePBacklog()}><FileOutlined />
               <span>Product Backlog</span></Menu.Item>
-          <Menu.Item key="3"><FileOutlined />
-              <span>Sprint Backlog</span></Menu.Item>
+          <Menu.Item key="3" onClick={()=> handleSprints()}><FileOutlined />
+              <span>Sprints List</span></Menu.Item>
           <Menu.Item key="4"><CarOutlined />
-              <span>Sprint Backlog</span></Menu.Item>
+              <span>Roadmap</span></Menu.Item>
           <Menu.Item key="5"><HourglassOutlined />
               <span>Planning Poker</span></Menu.Item>
               <Menu.Item key="6"><PieChartOutlined />
