@@ -54,7 +54,7 @@ namespace ScrumHubBackend.CQRS.PBI
             var filteredPBIsName = PBIs.Where(pbi => pbi.Name.ToLower().Contains(nameFilter?.ToLower() ?? ""));
             var filteredPBIsFinished = filteredPBIsName.Where(pbi => finishedFilter == null || pbi.Finished == finishedFilter);
             var filteredPBIsInSprint = filteredPBIsFinished.Where(pbi => inSprintFilter == null || ((pbi.SprintId != null && pbi.SprintId > 0) == inSprintFilter));
-            var filteredPBIsEstimated = filteredPBIsInSprint.Where(pbi => estimatedFilter == null || (pbi.ExpectedTimeInHours == 0 && !estimatedFilter.Value));
+            var filteredPBIsEstimated = filteredPBIsInSprint.Where(pbi => estimatedFilter == null || pbi.ExpectedTimeInHours > 0 == estimatedFilter.Value);
             var sortedPBIs = filteredPBIsEstimated.OrderByDescending(pbi => pbi.Priority).ThenBy(pbi => pbi.Name);
             int startIndex = pageSize * (pageNumber - 1);
             int endIndex = Math.Min(startIndex + pageSize, sortedPBIs.Count());
