@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { Button, Modal, Form, Input, InputNumber, Space, Typography, Checkbox, PageHeader } from 'antd';
-import { IAddPBI, IProductBacklogItem, IUpdateSprint } from '../../appstate/stateInterfaces';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Modal, Form, Space, Typography, Checkbox } from 'antd';
+import { IProductBacklogItem, IUpdateSprint } from '../../appstate/stateInterfaces';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import TextArea from 'antd/lib/input/TextArea';
 import _ from 'lodash';
-import { Header } from 'antd/lib/layout/layout';
 import Title from 'antd/lib/typography/Title';
 
 interface Values {

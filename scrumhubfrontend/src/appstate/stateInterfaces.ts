@@ -15,7 +15,7 @@ export interface IFiltersAndToken {
 
 export interface IError {
   data: any;
-  message: string;
+  Message: string;
   metadata: any;
   successful: boolean;
 }

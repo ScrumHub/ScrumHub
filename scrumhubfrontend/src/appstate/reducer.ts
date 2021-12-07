@@ -104,7 +104,7 @@ export const reducer = createReducer(initState, {
   newState.error = {
     hasError: true,
     errorCode: errorResponse ? errorResponse.code : -1,
-    erorMessage: errorResponse ? (errorResponse.response as IError).message : "",
+    erorMessage: errorResponse ? (errorResponse.response as IError).Message : "",
   };
   return newState;
 },
@@ -138,7 +138,7 @@ export const reducer = createReducer(initState, {
   newState.error = {
     hasError: true,
     errorCode: errorResponse ? errorResponse.code : -1,
-    erorMessage: errorResponse ? (errorResponse.response as IError).message : "",
+    erorMessage: errorResponse ? (errorResponse.response as IError).Message : "",
   };
   return newState;
 },
@@ -173,7 +173,7 @@ export const reducer = createReducer(initState, {
   newState.error = {
     hasError: true,
     errorCode: errorResponse ? errorResponse.code : -1,
-    erorMessage: errorResponse ? (errorResponse.response as IError).message : "",
+    erorMessage: errorResponse ? (errorResponse.response as IError).Message : "",
   };
   return newState;
 },
@@ -209,7 +209,7 @@ export const reducer = createReducer(initState, {
   newState.error = {
     hasError: true,
     errorCode: errorResponse ? errorResponse.code : -1,
-    erorMessage: errorResponse ? (errorResponse.response as IError).message : "",
+    erorMessage: errorResponse ? (errorResponse.response as IError).Message : "",
   };
   return newState;
 },
@@ -245,7 +245,7 @@ export const reducer = createReducer(initState, {
   newState.error = {
     hasError: true,
     errorCode: errorResponse ? errorResponse.code : -1,
-    erorMessage: errorResponse ? (errorResponse.response as IError).message : "",
+    erorMessage: errorResponse ? (errorResponse.response as IError).Message : "",
   };
   return newState;
 },
@@ -282,7 +282,7 @@ export const reducer = createReducer(initState, {
   newState.error = {
     hasError: true,
     errorCode: errorResponse ? errorResponse.code : -1,
-    erorMessage: errorResponse ? (errorResponse.response as IError).message : "",
+    erorMessage: errorResponse ? (errorResponse.response as IError).Message : "",
   };
   return newState;
 },
@@ -317,7 +317,7 @@ export const reducer = createReducer(initState, {
   newState.error = {
     hasError: true,
     errorCode: errorResponse ? errorResponse.code : -1,
-    erorMessage: errorResponse ? (errorResponse.response as IError).message : "",
+    erorMessage: errorResponse ? (errorResponse.response as IError).Message : "",
   };
   return newState;
 },
@@ -352,7 +352,7 @@ export const reducer = createReducer(initState, {
   newState.error = {
     hasError: true,
     errorCode: errorResponse ? errorResponse.code : -1,
-    erorMessage: errorResponse ? (errorResponse.response as IError).message : "",
+    erorMessage: errorResponse ? (errorResponse.response as IError).Message : "",
   };
   return newState;
 },
@@ -411,7 +411,7 @@ export const reducer = createReducer(initState, {
   newState.error = {
     hasError: true,
     errorCode: errorResponse ? errorResponse.code : -1,
-    erorMessage: errorResponse ? (errorResponse.response as IError).message : "",
+    erorMessage: errorResponse ? (errorResponse.response as IError).Message : "",
   };
   return newState;
 },
@@ -445,7 +445,7 @@ export const reducer = createReducer(initState, {
   newState.error = {
     hasError: true,
     errorCode: errorResponse ? errorResponse.code : -1,
-    erorMessage: errorResponse ? (errorResponse.response as IError).message : "",
+    erorMessage: errorResponse ? (errorResponse.response as IError).Message : "",
   };
   return newState;
 },
@@ -479,7 +479,7 @@ export const reducer = createReducer(initState, {
   newState.error = {
     hasError: true,
     errorCode: errorResponse ? errorResponse.code : -1,
-    erorMessage: errorResponse ? (errorResponse.response as IError).message : "",
+    erorMessage: errorResponse ? (errorResponse.response as IError).Message : "",
   };
   return newState;
 },
@@ -499,6 +499,7 @@ export const reducer = createReducer(initState, {
   let newState = _.cloneDeep(state);
   newState.loading = false;
   newState.sprintRequireRefresh = true;
+  newState.error={hasError: false,errorCode:201, errorMessage:""};
   return newState;
 },
 
@@ -512,7 +513,7 @@ export const reducer = createReducer(initState, {
   newState.error = {
     hasError: true,
     errorCode: errorResponse ? errorResponse.code : -1,
-    erorMessage: errorResponse ? (errorResponse.response as IError).message : "",
+    erorMessage: errorResponse ? (payload.payload.response as IError).Message : "",
   };
   return newState;
 },

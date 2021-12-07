@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Button, Card } from 'antd';
 import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
-import { IFilters, IRepository, IRepositoryList, State } from '../appstate/stateInterfaces';
+import { IFilters, IRepository, State } from '../appstate/stateInterfaces';
 import { AuthContext } from '../App';
 import { Navigate, useNavigate } from 'react-router';
 import InfiniteScroll from 'react-infinite-scroll-component';

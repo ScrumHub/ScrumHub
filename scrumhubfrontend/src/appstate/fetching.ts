@@ -2,7 +2,7 @@ import type { APIResponse, RequestResponse } from "./response";
 import config from "../configuration/config";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import axios, { AxiosResponse } from "axios";
-import { IAddPBI, IFilters, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, IUpdateIdSprint, IUpdateSprint } from "./stateInterfaces";
+import { IAddPBI, IFilters, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, IUpdateIdSprint } from "./stateInterfaces";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function getResponse<T, K>(

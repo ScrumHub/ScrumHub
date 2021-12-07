@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
-import { Button, Modal, Form, Input, InputNumber, Space, Typography, Checkbox, PageHeader } from 'antd';
-import { IAddPBI, IProductBacklogItem, IProductBacklogList, ISprint, ISprintList, IUpdateSprint, State } from '../../appstate/stateInterfaces';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Modal, Form, InputNumber, Space, Typography, Checkbox } from 'antd';
+import { IProductBacklogItem, ISprint } from '../../appstate/stateInterfaces';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import TextArea from 'antd/lib/input/TextArea';
 import _ from 'lodash';
-import { Header } from 'antd/lib/layout/layout';
 import Title from 'antd/lib/typography/Title';
-import { useSelector } from 'react-redux';
 
 interface Values {
   title: string;
@@ -17,6 +14,7 @@ interface Values {
 
 interface CollectionCreateFormProps {
   data: ISprint;
+  error:string;
   pbiData:IProductBacklogItem[];
   visible: boolean;
   onCreate: (values: Values) => void;
@@ -25,6 +23,7 @@ interface CollectionCreateFormProps {
 
 export const CustomAddSprintPopup: React.FC<CollectionCreateFormProps> = ({
   data,
+  error,
   pbiData,
   visible,
   onCreate,
@@ -70,8 +69,9 @@ export const CustomAddSprintPopup: React.FC<CollectionCreateFormProps> = ({
           label={<Title style={{marginTop:"10%"}} level={4}>{"Sprint Number"}</Title>}
           rules={[{ required: true, message: 'Please input the number of this sprint!' }]}
         >
-          <InputNumber onChange={()=>{}}/>
+          <InputNumber/>
         </Form.Item>
+        <Typography style={{color:"red"}}>{error}</Typography>
         <Form.Item
           initialValue={data.goal}
           name="goal"

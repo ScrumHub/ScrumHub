@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Button, Divider, PageHeader, Radio, Table, Typography, } from 'antd';
 import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
-import { IAddPBI, IFilters, IProductBacklogItem, IProductBacklogList, IRepository, ISprint, IUpdateIdSprint, IUpdateSprint, State } from '../appstate/stateInterfaces';
+import { IAddPBI, IFilters, IProductBacklogItem, IProductBacklogList, ISprint, IUpdateIdSprint, IUpdateSprint, State } from '../appstate/stateInterfaces';
 import { AuthContext } from '../App';
 import { Navigate } from 'react-router';
 import config from '../configuration/config';
@@ -73,6 +73,7 @@ const columns = [
 export default function SprintBacklog() {
   const { state } = useContext(AuthContext);
   const { token } = state;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [filterPBI, setFiltersPBI] = useState<IFilters>({
     pageNumber: config.defaultFilters.page,
     pageSize: config.defaultFilters.size,
@@ -265,24 +266,6 @@ export default function SprintBacklog() {
 
   const [prevselectedRowKeys, setPrevSelectedRowKeys] = useState([] as React.Key[]);
   const [selectedPBI, setSelectedPBI] = useState({} as IProductBacklogItem);
-  const handleTableChange = (pagination: IFilters) => {
-    try {
-      store.dispatch(
-        Actions.fetchOneSprintThunk({
-          token: token,
-          ownerName: ownerName,
-          sprintNumber: Number(sprintID)
-        }) //filters
-      );
-    } catch (err) {
-      console.error("Failed to fetch sprint: ", err);
-      localStorage.setItem("ownerName", "");
-      localStorage.setItem("sprintID", "");
-    } finally {
-      setFiltersPBI({ ...filterPBI, pageNumber: pagination.current });
-    }
-  };
-
   if (!state.isLoggedIn) {
     return <Navigate to="/login" />;
   }

@@ -1,15 +1,16 @@
 import { useContext, useEffect, useState } from 'react';
-import { Button, Card, Col, Divider, PageHeader, Row } from 'antd';
+import { Button, Card, Divider, PageHeader, Row } from 'antd';
 import 'antd/dist/antd.css';
 import * as Actions from "../appstate/actions";
 import { Navigate, useNavigate } from 'react-router';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useSelector } from 'react-redux';
-import { CalendarOutlined, FolderAddOutlined, InfoCircleOutlined, LoadingOutlined } from '@ant-design/icons';
+import { LoadingOutlined } from '@ant-design/icons';
 import { AuthContext } from '../App';
 import { IFilters, IProductBacklogList, ISprint, IProductBacklogItem, initSprint, State, ISprintList } from '../appstate/stateInterfaces';
 import { store } from '../appstate/store';
 import config from '../configuration/config';
+import { CustomAddSprintPopup } from './popups/CustomAddSprintPopup';
 const { Meta } = Card;
 
 
@@ -26,6 +27,9 @@ export default function SprintList() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const refreshRequired = useSelector(
     (appState: State) => appState.sprintRequireRefresh as boolean
+  );
+  const error = useSelector(
+    (appState: State) => appState.error
   );
   const sprintPage = useSelector(
     (state: State) => state.sprintPage as ISprintList
@@ -54,7 +58,7 @@ export default function SprintList() {
           ownerName: ownerName as string,
           token: token,
           filters: {
-            pageNumber: filters.pageNumber,
+            pageNumber: config.defaultFilters.page,
             pageSize: config.defaultFilters.pbiSize,
             estimated: true
           }
@@ -73,7 +77,7 @@ export default function SprintList() {
           ownerName: ownerName as string,
           token: token,
           filters: {
-            pageNumber: 1,
+            pageNumber: config.defaultFilters.page,
             pageSize: config.defaultFilters.pbiSize*tempPBIPage.pageCount,
             estimated: true
           }
@@ -132,8 +136,9 @@ export default function SprintList() {
     }
   };
 
+  const[isFetch, setIsFetch] = useState(false);
+
    const handleSprintAdd=(pbi: ISprint)=> {
-    setIsAddModalVisible(false);
     const ids = pbi.backlogItems.map((value: IProductBacklogItem) => 
    {  return((value.sprintNumber === Number(sprintID) ? value.id.toString():"")) }).filter((x: string) => x !== "");
     try {
@@ -147,10 +152,17 @@ export default function SprintList() {
     } catch (err) {
       console.error("Failed to add the sprint: ", err);
     } finally {
-      //setFilters({ ...filters, pageNumber: config.defaultFilters.page });
-      //setInitialRefresh(true);
+      setIsAddModalVisible(false);
+      setIsFetch(true);
     }
   };
+  useEffect(() => {
+        if(error.hasError && !loading && isFetch){
+        setIsAddModalVisible(true);
+      setIsFetch(false);}
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error]);
+
   function openSprint(props: number) {
     localStorage.setItem("sprintID", JSON.stringify(props));
     try {
@@ -179,7 +191,7 @@ export default function SprintList() {
         title={"Sprint List"}
         subTitle={`The number of sprints in ${ownerName?.split("/")[1]} is ${sprintPage && sprintPage.list ?sprintPage.list.length: 0}.`}
         extra={[
-          <Button key="1" type="link" onClick={()=>{handleUpdate();fetchMore();setIsAddModalVisible(true);}}> Add New Sprint </Button>,
+          <Button key="1" type="link" onClick={()=>{handleUpdate();fetchMoreUpdates();setIsAddModalVisible(true);}}> Add New Sprint </Button>,
         ]}
         style={{ marginBottom: "4vh",}}
       >
@@ -194,12 +206,12 @@ export default function SprintList() {
         loader={
           (displayLoader && <LoadingOutlined />) || (!displayLoader && <></>)
         }>
-          <Row style={{ background:"transparent", marginLeft:"1vh", marginRight:"1vh",width:"95%"}} gutter={{xs:8, sm:16, md:24, lg:32}}>
+          <Row style={{ background:"transparent", justifyContent:"center"}} >
           {
             sprintPage.list.map((rep: ISprint,key:number) => {
               
               return (<section className="card" 
-              style={{ width: "46%", height:"30vh",marginTop:"3vh", marginBottom:"3vh", marginLeft:"2%",marginRight:"2%"}} key={rep.sprintNumber} >
+              style={{ width: "31%", height:"30vh",marginTop:"3vh", marginBottom:"3vh", marginRight:"1%", marginLeft:"1%"}} key={rep.sprintNumber} >
                 <Card style={{ backgroundColor: "white" }} type="inner" actions=
                   {[<Button onClick={() => { openSprint(rep.sprintNumber) }} >
                     {" Open Sprint "}</Button>,]}>
@@ -216,7 +228,7 @@ export default function SprintList() {
           }
           </Row>
         </InfiniteScroll>}
-        {isAddModalVisible && !loading && <CustomAddSprintPopup data={initSprint} pbiData={tempPBIPage.list as IProductBacklogItem[]} visible={isAddModalVisible}
+        {isAddModalVisible && !loading && <CustomAddSprintPopup error={error.erorMessage} data={initSprint} pbiData={tempPBIPage.list as IProductBacklogItem[]} visible={isAddModalVisible}
           onCreate={function (values: any): void { handleSprintAdd(values) }}
           onCancel={() => { setIsAddModalVisible(false); }} />}
     </section >
