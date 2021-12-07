@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Moq;
 using ScrumHubBackend;
+using ScrumHubBackend.CQRS.Sprints;
 using ScrumHubBackend.DatabaseModel;
 using ScrumHubBackend.GitHubClient;
 using System;
@@ -12,7 +13,7 @@ using Xunit;
 
 namespace ScrumHubBackendTests.CQRS.Sprints
 {
-    public class GetSprintsQueryHandler
+    public class GetSprintsQueryHandlerTests
     {
         private static readonly List<Sprint> sprintsData = new()
         {
@@ -29,11 +30,11 @@ namespace ScrumHubBackendTests.CQRS.Sprints
         [Fact]
         public void FilterAndPaginateSprints_Should_ReturnProperList()
         {
-            var loggerMock = new Mock<ILogger<ScrumHubBackend.CQRS.Sprints.GetSprintsQueryHandler>>();
+            var loggerMock = new Mock<ILogger<GetSprintsQueryHandler>>();
             var gitHubClientFactoryMock = new Mock<IGitHubClientFactory>();
             var dbContextMock = new Mock<DatabaseContext>();
 
-            var handler = new ScrumHubBackend.CQRS.Sprints.GetSprintsQueryHandler(loggerMock.Object, gitHubClientFactoryMock.Object, dbContextMock.Object);
+            var handler = new GetSprintsQueryHandler(loggerMock.Object, gitHubClientFactoryMock.Object, dbContextMock.Object);
 
             var res1 = handler.FilterAndPaginateSprints(sprintsData, 1, 3);
             var res2 = handler.FilterAndPaginateSprints(sprintsData, 2, 3);

@@ -39,7 +39,7 @@ namespace ScrumHubBackend.CommunicationModel
         public string? Description { get; set; } = String.Empty;
 
         /// <summary>
-        /// Date of last user activity in format YYYY-MM-DD or "No recent activity"
+        /// Date of last user activity in format "yyyy-MM-dd HH:mm:ss 'UTC'" or "No recent activity"
         /// </summary>
         public string? DateOfLastActivity { get; set; } = String.Empty;
 

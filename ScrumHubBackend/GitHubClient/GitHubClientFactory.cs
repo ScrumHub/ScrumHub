@@ -9,7 +9,7 @@
         /// Creates GitHubClient
         /// </summary>
         /// <param name="authToken">Authorization token for requests</param>
-        Octokit.GitHubClient Create(string authToken);
+        Octokit.IGitHubClient Create(string authToken);
     }
 
     /// <summary>
@@ -20,7 +20,7 @@
         private const string appName = "ScrumHub";
 
         /// <inheritdoc/>
-        public Octokit.GitHubClient Create(string authToken)
+        public Octokit.IGitHubClient Create(string authToken)
         {
             var tokenAuthorization = new Octokit.Credentials(authToken);
             var client = new Octokit.GitHubClient(new Octokit.ProductHeaderValue(appName))

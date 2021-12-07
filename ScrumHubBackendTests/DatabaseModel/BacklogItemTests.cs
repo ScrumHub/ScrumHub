@@ -11,7 +11,7 @@ using Xunit;
 
 namespace ScrumHubBackendTests.DatabaseModel
 {
-    public class BacklogItem
+    public class BacklogItemTests
     {
         private static readonly List<AcceptanceCriterium> AcceptanceCriterium = new()
         {
@@ -46,12 +46,12 @@ namespace ScrumHubBackendTests.DatabaseModel
             var mockContext = new Mock<DatabaseContext>();
             mockContext.Setup(m => m.AcceptanceCriteria).Returns(mockAcceptanceCriteriaSet.Object);
 
-            var pbi1 = new ScrumHubBackend.DatabaseModel.BacklogItem()
+            var pbi1 = new BacklogItem()
             {
                 Id = 1,
             };
 
-            var pbi2 = new ScrumHubBackend.DatabaseModel.BacklogItem()
+            var pbi2 = new BacklogItem()
             {
                 Id = 2,
             };

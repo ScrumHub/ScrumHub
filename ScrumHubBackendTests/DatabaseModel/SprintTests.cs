@@ -8,31 +8,31 @@ using Xunit;
 
 namespace ScrumHubBackendTests.DatabaseModel
 {
-    public class Sprint
+    public class SprintTests
     {
-        private static readonly List<ScrumHubBackend.DatabaseModel.BacklogItem> pbisForRepository = new List<ScrumHubBackend.DatabaseModel.BacklogItem>
+        private static readonly List<BacklogItem> pbisForRepository = new()
         {
-            new ScrumHubBackend.DatabaseModel.BacklogItem()
+            new BacklogItem()
             {
                 Id = 1,
                 SprintId = 10,
             },
-            new ScrumHubBackend.DatabaseModel.BacklogItem()
+            new BacklogItem()
             {
                 Id = 2,
                 SprintId = 10,
             },
-            new ScrumHubBackend.DatabaseModel.BacklogItem()
+            new BacklogItem()
             {
                 Id = 3,
                 SprintId = 20,
             },
-            new ScrumHubBackend.DatabaseModel.BacklogItem()
+            new BacklogItem()
             {
                 Id = 4,
                 SprintId = 20,
             },
-            new ScrumHubBackend.DatabaseModel.BacklogItem()
+            new BacklogItem()
             {
                 Id = 5,
                 SprintId = 10,
@@ -42,12 +42,12 @@ namespace ScrumHubBackendTests.DatabaseModel
         [Fact]
         public void GetPBIsForSprint_Should_ReturnProperPBIs()
         {
-            var sprint10 = new ScrumHubBackend.DatabaseModel.Sprint()
+            var sprint10 = new Sprint()
             {
                 SprintNumber = 10,
             };
 
-            var sprint20 = new ScrumHubBackend.DatabaseModel.Sprint()
+            var sprint20 = new Sprint()
             {
                 SprintNumber = 20,
             };

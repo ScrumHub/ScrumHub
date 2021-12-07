@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Moq;
 using ScrumHubBackend;
+using ScrumHubBackend.DatabaseModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +11,9 @@ using Xunit;
 
 namespace ScrumHubBackendTests.DatabaseModel
 {
-    public class Repository
+    public class RepositoryTests
     {
-        private static readonly List<ScrumHubBackend.DatabaseModel.Sprint> sprintsData = new()
+        private static readonly List<Sprint> sprintsData = new()
         {
             new ScrumHubBackend.DatabaseModel.Sprint()
             {
@@ -31,7 +32,7 @@ namespace ScrumHubBackendTests.DatabaseModel
             },
         };
 
-        private static readonly List<ScrumHubBackend.DatabaseModel.BacklogItem> pbiData = new()
+        private static readonly List<BacklogItem> pbiData = new()
         {
             new ScrumHubBackend.DatabaseModel.BacklogItem()
             {
@@ -50,7 +51,7 @@ namespace ScrumHubBackendTests.DatabaseModel
             },
         };
 
-        private static readonly List<ScrumHubBackend.DatabaseModel.SHTask> taskData = new()
+        private static readonly List<SHTask> taskData = new()
         {
             new ScrumHubBackend.DatabaseModel.SHTask()
             {
@@ -136,20 +137,20 @@ namespace ScrumHubBackendTests.DatabaseModel
         {
             var tData = taskData.AsQueryable();
 
-            var mockTestSet = new Mock<DbSet<ScrumHubBackend.DatabaseModel.SHTask>>();
-            mockTestSet.As<IQueryable<ScrumHubBackend.DatabaseModel.SHTask>>().Setup(m => m.Provider).Returns(tData.Provider);
-            mockTestSet.As<IQueryable<ScrumHubBackend.DatabaseModel.SHTask>>().Setup(m => m.Expression).Returns(tData.Expression);
-            mockTestSet.As<IQueryable<ScrumHubBackend.DatabaseModel.SHTask>>().Setup(m => m.ElementType).Returns(tData.ElementType);
-            mockTestSet.As<IQueryable<ScrumHubBackend.DatabaseModel.SHTask>>().Setup(m => m.GetEnumerator()).Returns(tData.GetEnumerator());
+            var mockTestSet = new Mock<DbSet<SHTask>>();
+            mockTestSet.As<IQueryable<SHTask>>().Setup(m => m.Provider).Returns(tData.Provider);
+            mockTestSet.As<IQueryable<SHTask>>().Setup(m => m.Expression).Returns(tData.Expression);
+            mockTestSet.As<IQueryable<SHTask>>().Setup(m => m.ElementType).Returns(tData.ElementType);
+            mockTestSet.As<IQueryable<SHTask>>().Setup(m => m.GetEnumerator()).Returns(tData.GetEnumerator());
 
             var mockContext = new Mock<DatabaseContext>();
             mockContext.Setup(m => m.Tasks).Returns(mockTestSet.Object);
 
-            var repo1 = new ScrumHubBackend.DatabaseModel.Repository()
+            var repo1 = new Repository()
             {
                 Id = 1
             };
-            var repo2 = new ScrumHubBackend.DatabaseModel.Repository()
+            var repo2 = new Repository()
             {
                 Id = 2
             };

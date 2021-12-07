@@ -18,7 +18,7 @@ namespace ScrumHubBackendTests.GitHubClient
             var factory = new ScrumHubGitHubClientFactory();
             var client = factory.Create(authToken);
 
-            Assert.True(client.Credentials.AuthenticationType == Octokit.AuthenticationType.Oauth);
+            Assert.True(client.Connection.Credentials.AuthenticationType == Octokit.AuthenticationType.Oauth);
         }
     }
 }
