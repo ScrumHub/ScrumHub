@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Modal, Form, Input, InputNumber, Space } from 'antd';
-import { IAddPBI } from '../appstate/stateInterfaces';
+import { IAddPBI } from '../../appstate/stateInterfaces';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 
@@ -17,7 +17,7 @@ interface CollectionCreateFormProps {
   onCancel: () => void;
 }
 
-export const CustomAddPopup: React.FC<CollectionCreateFormProps> = ({
+export const CustomEditPopup: React.FC<CollectionCreateFormProps> = ({
   data,
 visible,
   onCreate,
@@ -27,18 +27,18 @@ visible,
   return (
     <Modal
       visible={visible}
-      title="Add PBI"
+      title="Edit Backlog Item"
       okText="Save"
       cancelText="Cancel"
       onCancel={onCancel}
       onOk={() => {
         form
           .validateFields()
-          .then(values => {
+          .then((values: Values) => {
             form.resetFields();
             onCreate(values);
           })
-          .catch(info => {
+          .catch((info: any) => {
             console.error('Validate Failed:', info);
           });
       }}
@@ -50,6 +50,7 @@ visible,
         initialValues={{ modifier: 'public' }}
       >
         <Form.Item
+          initialValue={data.name}
           name="name"
           label="Name"
           rules={[{ required: true, message: 'Please input the name of the new backlog item!' }]}
@@ -57,6 +58,7 @@ visible,
           <Input />
         </Form.Item>
         <Form.Item
+        initialValue={data.priority}
           name="priority"
           label="Priority"
           rules={[{ required: true, message: 'Please input the priority of the new backlog item!' }]}
@@ -64,14 +66,14 @@ visible,
           <InputNumber type="number" min={0} />
         </Form.Item>
         <FormItemLabel prefixCls="acceptanceCriteria" label="Acceptance Criteria" required={true}/>
-        <Form.List name="acceptanceCriteria" initialValue={[""]}>
+        <Form.List name="acceptanceCriteria" initialValue={data.acceptanceCriteria}>
         {(fields, { add, remove }) => (
           <>
             {fields.map(({ key, name }) => (
               <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
                 <Form.Item
                   name={key}
-                  rules={[{ required:key<1?true:false, message: 'Please input the acceptance criteria!' }]}
+                  rules={[{ required: key<1?true:false, message: 'Please input at least one acceptance criteria!' }]}
                 >
                   <Input placeholder={`Cirteria ${key+1}`} />
                 </Form.Item>

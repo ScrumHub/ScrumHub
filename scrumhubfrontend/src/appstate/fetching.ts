@@ -2,7 +2,7 @@ import type { APIResponse, RequestResponse } from "./response";
 import config from "../configuration/config";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import axios, { AxiosResponse } from "axios";
-import { IAddPBI, IFilters, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList } from "./stateInterfaces";
+import { IAddPBI, IFilters, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, IUpdateIdSprint } from "./stateInterfaces";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function getResponse<T, K>(
@@ -147,7 +147,7 @@ export function addPBI(ownerName: string, token: string, pbi: IAddPBI
       {
         "name": pbi.name,
         "priority": pbi.priority,
-        "acceptanceCriteria":pbi.acceptanceCriteria
+        "acceptanceCriteria": pbi.acceptanceCriteria
       },
       {
         headers: {
@@ -161,42 +161,120 @@ export function addPBI(ownerName: string, token: string, pbi: IAddPBI
   );
 }
 
-export function estimatePBI(ownerName: string, token: string, pbiId:number, hours: number
-  ): Promise<RequestResponse<IProductBacklogItem, number>> {
-    return getResponse(
-      axios.patch(
-        `https://${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}/${pbiId}/estimate`,
-        {"hours":JSON.stringify(hours)},
-        {
-          headers: {
-            'authToken': token,
-            'Accept': "application/json",
-            'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
-          },
-        }
-      )
-    );
-  }
+export function estimatePBI(ownerName: string, token: string, pbiId: number, hours: number
+): Promise<RequestResponse<IProductBacklogItem, number>> {
+  return getResponse(
+    axios.patch(
+      `https://${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}/${pbiId}/estimate`,
+      { "hours": JSON.stringify(hours) },
+      {
+        headers: {
+          'authToken': token,
+          'Accept': "application/json",
+          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
+        },
+      }
+    )
+  );
+}
 
-  export function editPBI(ownerName: string, token: string, pbi: IAddPBI, pbiId:number
-    ): Promise<RequestResponse<IProductBacklogItem, number>> {
-      return getResponse(
-        axios.put(
-          `https://${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}/${pbiId}`,
-          {
-            "name": pbi.name,
-            "priority": pbi.priority,
-            "acceptanceCriteria":pbi.acceptanceCriteria
-          },
-          {
-            headers: {
-              'authToken': token,
-              'Accept': "application/json",
-              'contentType': "application/json",
-              'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
-            },
-          }
-        )
-      );
-    }
-    
+export function editPBI(ownerName: string, token: string, pbi: IAddPBI, pbiId: number
+): Promise<RequestResponse<IProductBacklogItem, number>> {
+  return getResponse(
+    axios.put(
+      `https://${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}/${pbiId}`,
+      {
+        "name": pbi.name,
+        "priority": pbi.priority,
+        "acceptanceCriteria": pbi.acceptanceCriteria
+      },
+      {
+        headers: {
+          'authToken': token,
+          'Accept': "application/json",
+          'contentType': "application/json",
+          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
+        },
+      }
+    )
+  );
+}
+
+//SPRINTS
+export function fetchSprints(token: string, ownerName: string, filters: IFilters,
+): Promise<RequestResponse<ISprintList, number>> {
+  const filtersString =
+    filters === undefined
+      ? ""
+      : Object.keys(filters)
+        .map((filterName) => {
+          const value = String(filters[filterName]).trim();
+          return value && value !== "null" ? `${filterName}=${value}` : "";
+          //}
+        })
+        .filter((x) => x !== "")
+        .join("&");
+  return getResponse(
+    axios.get(
+      `https://${config.backend.ip}:${config.backend.port}/api/Sprints/${ownerName}?${filtersString}`,
+      {
+        headers: {
+          'authToken': token,
+          'Accept': "application/json",
+          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
+        },
+      }
+    )
+  );
+}
+
+export function fetchOneSprint(token: string, ownerName: string, sprintNumber: number,
+): Promise<RequestResponse<ISprint, number>> {
+  return getResponse(
+    axios.get(
+      `https://${config.backend.ip}:${config.backend.port}/api/Sprints/${ownerName}/${sprintNumber}`,
+      {
+        headers: {
+          'authToken': token,
+          'Accept': "application/json",
+          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
+        },
+      }
+    )
+  );
+}
+
+
+export function updateOneSprint(token: string, ownerName: string, sprintNumber: number, sprint: IUpdateIdSprint
+): Promise<RequestResponse<ISprint, number>> {
+  return getResponse(
+    axios.put(
+      `https://${config.backend.ip}:${config.backend.port}/api/Sprints/${ownerName}/${sprintNumber}`,
+      sprint,
+      {
+        headers: {
+          'authToken': token,
+          'Accept': "application/json",
+          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
+        },
+      }
+    )
+  );
+}
+
+export function addSprint(token: string, ownerName: string, sprint: any
+): Promise<RequestResponse<ISprint, number>> {
+  return getResponse(
+    axios.post(
+      `https://${config.backend.ip}:${config.backend.port}/api/Sprints/${ownerName}`,
+      sprint,
+      {
+        headers: {
+          'authToken': token,
+          'Accept': "application/json",
+          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
+        },
+      }
+    )
+  );
+}

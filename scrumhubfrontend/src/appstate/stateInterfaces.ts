@@ -15,35 +15,18 @@ export interface IFiltersAndToken {
 
 export interface IError {
   data: any;
-  message: string;
+  Message: string;
   metadata: any;
   successful: boolean;
 }
 
-export type State = {
-  loading: boolean;
-  error: Error;
-  redirect: string | null;
-  pages: number;
-  pbiPage : IProductBacklogList;
-  repositories: IRepositoryList | any;
-  openRepository: IRepository | any;
-  reposLastPage: boolean;
-  reposRequireRefresh: boolean;
-  productLastPage: boolean;
-  productRequireRefresh: boolean;
-  sprintLastPage: boolean;
-  sprintRequireRefresh: boolean;
-  repoId: number;
-  ownerName: string;
-};
 export interface IProductBacklogItem {
   id: number;
   name: string;
   finished: boolean;
   expectedTimeInHours: number;
   estimated: boolean;
-  sprintNumber: number;
+  sprintNumber: number|null;
   isInSprint: boolean;
   timeSpentInHours: number;
   priority: number;
@@ -108,18 +91,46 @@ export const initProductBacklogList: IProductBacklogList = {
   list: [],
 };
 
-
-export interface ISprint {
+export interface ISprint extends IUpdateSprint {
   sprintNumber: number;
-  goal: string;
-  backlogItems: IProductBacklogItem[] | any
 }
 
 export const initSprint: ISprint = {
   sprintNumber: 1,
+  goal: "",
+  backlogItems: [],
+}
+
+export interface IUpdateSprint {
+  goal: string;
+  backlogItems: IProductBacklogItem[]
+}
+
+export interface IUpdateIdSprint {
+  "goal": string;
+  "pbIs": string[]
+}
+
+export const initUpdateSprint: IUpdateSprint = {
   goal: "Goal 1",
   backlogItems: [initProductBacklogItem],
 }
+
+export interface ISprintList {
+  pageNumber: 1,
+  pageCount: 1,
+  pageSize: 10,
+  realSize: 10,
+  list: ISprint[];
+}
+
+export const initSprintList: ISprintList = {
+  pageNumber: 1,
+  pageCount: 1,
+  pageSize: 10,
+  realSize: 10,
+  list: [],
+};
 
 export interface IRepository {
   name: string;
@@ -161,6 +172,26 @@ export const initRepositoryList: IRepositoryList = {
   list: [],
 }
 
+export type State = {
+  loading: boolean;
+  error: Error;
+  redirect: string | null;
+  pages: number;
+  pbiPage : IProductBacklogList;
+  repositories: IRepositoryList | any;
+  openRepository: IRepository | null;
+  reposLastPage: boolean;
+  reposRequireRefresh: boolean;
+  productLastPage: boolean;
+  productRequireRefresh: boolean;
+  sprintLastPage: boolean;
+  sprintRequireRefresh: boolean;
+  sprintPage: ISprintList;
+  openSprint:ISprint|null;
+  repoId: number;
+  ownerName: string;
+};
+
 export const initState: State = {
   loading: false,
   error: {
@@ -169,9 +200,11 @@ export const initState: State = {
     erorMessage: "",
   },
   pbiPage:initProductBacklogList,
+  sprintPage:initSprintList,
   redirect: null,
   pages: 1,
   repositories: [],
+  openSprint:null,
   openRepository: null,
   reposLastPage: false,
   reposRequireRefresh: false,
