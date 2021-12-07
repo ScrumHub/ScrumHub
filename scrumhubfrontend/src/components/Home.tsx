@@ -44,6 +44,7 @@ export default function Home() {
 
   useEffect(() => {
     if (isLoggedIn && refreshRequired) {
+      setDisplayLoader(true);
       try {
         store.dispatch(
           Actions.fetchRepositoriesThunk({
@@ -56,9 +57,10 @@ export default function Home() {
         );
       } catch (err) {
         console.error("Failed to fetch the repos: ", err);
-      } 
-      finally{
+      }
+      finally {
         setFilters({ ...filters, pageNumber: config.defaultFilters.page + 1 });
+        setDisplayLoader(false);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -98,11 +100,11 @@ export default function Home() {
       console.error("Failed to add the repos: ", err);
     } finally {
       setFilters({ ...filters, pageNumber: config.defaultFilters.page });
-      setInitialRefresh(true);
+      //setInitialRefresh(true);
     }
   };
 
-  function redirectToProject(props: IRepository) { 
+  function redirectToProject(props: IRepository) {
     localStorage.setItem("ownerName", props.name);
     try {
       store.dispatch(
@@ -121,7 +123,7 @@ export default function Home() {
     } finally {
       navigate(`/${props.name.split("/")[0]}/${props.name.split("/")[1]}`, { replace: true });
     }
-    
+
   };
 
   if (!isLoggedIn) {
@@ -129,39 +131,38 @@ export default function Home() {
   }
   return (
     <section className="container">
-      <InfiniteScroll
-        dataLength={repos.length}
+      {!initialRefresh && !refreshRequired && repos && repos.length > 0 && <InfiniteScroll
+        dataLength={repos ? repos.length : 0}
         scrollThreshold={0.7}
         next={fetchMore}
         hasMore={!lastPage && !fetching}
         loader={
           (displayLoader && <LoadingOutlined />) || (!displayLoader && <></>)
         }>
-        <div style={{display: "grid",placeItems:"center", margin:"80px", background:"transparent"}}>
-          {
-            repos.map((rep: IRepository) => {
-              return (<section className="card" style={{ width: "85%", }} key={rep.gitHubId} >
-                <Card style={{ backgroundColor: "white", marginBottom: "3vh" }} type="inner" actions=
-                  {[<Button disabled={rep.alreadyInScrumHub || !rep.hasAdminRights} style={{ width: "180px" }} onClick={() => { addProject(rep.gitHubId) }} ><span><FolderAddOutlined disabled={!rep.alreadyInScrumHub} />
-                    {" Add to ScrumHub"}</span></Button>,
-                  <Button disabled={!rep.alreadyInScrumHub} style={{ width: "180px" }} onClick={() => { redirectToProject(rep) }}><span><InfoCircleOutlined />{" Project Details"}</span></Button>,
-                  <Button style={{ width: "180px" }}><span><CalendarOutlined />
-                    {rep.dateOfLastActivity === "No recent activity" ? " Not updated" : " Updated " + new Date(rep.dateOfLastActivity as Date).toLocaleString(['en-US'], { year: 'numeric', month: 'short', day: 'numeric' })}</span></Button>
-                  ]}>
-                  <Meta
-                    title={rep.name.split("/")[1]}
-                    description={rep.description}
-                  ></Meta>
-                  <br />
-                  <p>{"There are " + rep.sprints.length + " sprints and " + rep.backlogItems.length + " backlog items.\n"}</p>
-                  <p>{rep.typeOfLastActivity+(rep.dateOfLastActivity === "No recent activity"?" ":" was the last activity")+" in the repository."}</p>
-                </Card>
-              </section>);
-            })
+        <div style={{ display: "grid", placeItems: "center", margin: "4.5%", background: "transparent" }}>
+          {repos.map((rep: IRepository) => {
+            return (<section className="card" style={{ width: "85%", }} key={rep.gitHubId} >
+              <Card style={{ backgroundColor: "white", marginBottom: "3vh" }} type="inner" actions=
+                {[<Button disabled={rep.alreadyInScrumHub || !rep.hasAdminRights} style={{ width: "180px" }} onClick={() => { addProject(rep.gitHubId) }} ><span><FolderAddOutlined disabled={!rep.alreadyInScrumHub} />
+                  {" Add to ScrumHub"}</span></Button>,
+                <Button disabled={!rep.alreadyInScrumHub} style={{ width: "180px" }} onClick={() => { redirectToProject(rep) }}><span><InfoCircleOutlined />{" Project Details"}</span></Button>,
+                <Button style={{ width: "180px" }}><span><CalendarOutlined />
+                  {rep.dateOfLastActivity === "No recent activity" ? " Not updated" : " Updated " + new Date(rep.dateOfLastActivity as Date).toLocaleString(['en-US'], { year: 'numeric', month: 'short', day: 'numeric' })}</span></Button>
+                ]}>
+                <Meta
+                  title={rep.name.split("/")[1]}
+                  description={rep.description}
+                ></Meta>
+                <br />
+                <p>{"There are " + rep.sprints.length + " sprints and " + rep.backlogItems.length + " backlog items.\n"}</p>
+                <p>{rep.typeOfLastActivity + (rep.dateOfLastActivity === "No recent activity" ? " " : " was the last activity") + " in the repository."}</p>
+              </Card>
+            </section>);
+          })
           }
         </div>
       </InfiniteScroll>
+      }
     </section >
   );
-
 }

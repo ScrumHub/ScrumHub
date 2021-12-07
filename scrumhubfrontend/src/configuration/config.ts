@@ -1,19 +1,20 @@
 export type Config = {
-    environment_name: string;
-    backend: {
-      ip: string;
-      port: number;
-    };
-    defaultFilters: {
-      size: number;
-      page: number;
-      pbiSize:number;
-    };
-    token:string;
+  environment_name: string;
+  backend: {
+    ip: string;
+    port: number;
   };
-  
-  const configObject: Config = require(process.env.NODE_ENV === "development"
-    ? "./development.json"
-    : "./production.json");
-  
-  export default configObject;
+  defaultFilters: {
+    size: number;
+    page: number;
+    pbiSize:number;
+    sprintSize:number;
+  };
+  token:string;
+};
+
+const configObject: Config = require(process.env.NODE_ENV === "development"
+  ? "./development.json"
+  : "./production.json");
+
+export default configObject;
