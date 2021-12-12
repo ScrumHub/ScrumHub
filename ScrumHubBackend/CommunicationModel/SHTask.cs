@@ -38,6 +38,11 @@ namespace ScrumHubBackend.CommunicationModel
         public string Link { get; set; } = String.Empty;
 
         /// <summary>
+        /// People assigned to the task, "IsCurrentUser" is always false
+        /// </summary>
+        public IEnumerable<Person> Assigness { get; set; } = new List<Person>();
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public SHTask() { }
@@ -58,6 +63,8 @@ namespace ScrumHubBackend.CommunicationModel
             Finished = issue.State.Value == Octokit.ItemState.Closed;
             PBIId = dbTask.PBI;
             Link = issue.HtmlUrl;
+
+            Assigness = issue.Assignees.Select(assignee => new Person(assignee, -1));
         }
     }
 }
