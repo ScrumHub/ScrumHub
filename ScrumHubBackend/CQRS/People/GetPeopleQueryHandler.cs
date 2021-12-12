@@ -42,7 +42,7 @@ namespace ScrumHubBackend.CQRS.People
                 throw new NotFoundException("Repository not found in ScrumHub");
 
             var collabolators = gitHubClient.Repository.Collaborator.GetAll(repository.Id).Result;
-            var collabolatorsSh = collabolators.Select(user => new Person(user));
+            var collabolatorsSh = collabolators.Select(user => new Person(user, gitHubClient.User.Current().Result.Id));
 
             return Task.FromResult(new PaginatedList<Person>(collabolatorsSh, 1, collabolatorsSh.Count(), 1));
         }

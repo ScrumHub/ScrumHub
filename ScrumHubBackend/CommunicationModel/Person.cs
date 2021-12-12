@@ -26,14 +26,20 @@
         public string? AvatarLink { get; set; } = String.Empty;
 
         /// <summary>
+        /// True if this person is the current user
+        /// </summary>
+        public bool IsCurrentUser { get; set; } = false;
+
+        /// <summary>
         /// Constructor
         /// </summary>
-        public Person(Octokit.User user)
+        public Person(Octokit.User user, long currentUserId)
         {
             Name = user.Name;
             Login = user.Login;
             GitHubId = user.Id;
             AvatarLink = user.AvatarUrl;
+            IsCurrentUser = user.Id == currentUserId;
         }
     }
 }
