@@ -1,0 +1,43 @@
+/* table */
+ /*.expand-sprints {
+    margin-top: "20px";
+      margin-bottom: "20px";
+  }*/
+
+
+  .ant-table table {
+    border-radius: 50%;
+    border-collapse: separate;
+    
+  }
+  .ant-table-tbody {
+    border-radius: 50%;
+    border-color:#f0f2f5;
+
+  }
+  .ant-table-tbody > tr  {
+    border-radius: 50%;
+    border-color: #f0f2f5;
+  }
+  .ant-table-tbody > tr > expanded-row:hover > td {
+    background: none;
+    background-color: transparent;
+  }
+  tr.ant-table-expanded-row > td,
+   tr.ant-table-expanded-row:hover > td {
+    background:"none";
+    background-color:#f0f2f5;
+  }
+ /*
+.expand-bitems {
+}
+  /* row data 
+  ant-table-tbody  {
+    background-color: violet;
+    /*height: 5px;
+    padding: 4px;
+  }
+  ant-table-tbody > tr > ant-table-row > ant-table-row-level-0 {
+      margin-top: "2vh";
+      margin-bottom: "2vh";
+  }*/

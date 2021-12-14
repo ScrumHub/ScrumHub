@@ -2,7 +2,7 @@ import type { APIResponse, RequestResponse } from "./response";
 import config from "../configuration/config";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import axios, { AxiosResponse } from "axios";
-import { IAddPBI, IFilters, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, IUpdateIdSprint } from "./stateInterfaces";
+import { IAddPBI, IFilters, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, ITaskNamed, IUpdateIdSprint } from "./stateInterfaces";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function getResponse<T, K>(
@@ -278,3 +278,148 @@ export function addSprint(token: string, ownerName: string, sprint: any
     )
   );
 }
+
+//TASKS
+export function fetchTasks(token: string, ownerName: string, filters: IFilters,
+): Promise<RequestResponse<ITaskList, number>> {
+  const filtersString =
+    filters === undefined
+      ? ""
+      : Object.keys(filters)
+        .map((filterName) => {
+          const value = String(filters[filterName]).trim();
+          return value && value !== "null" ? `${filterName}=${value}` : "";
+          //}
+        })
+        .filter((x) => x !== "")
+        .join("&");
+  return getResponse(
+    axios.get(
+      `https://${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}?${filtersString}`,
+      {
+        headers: {
+          'authToken': token,
+          'Accept': "application/json",
+          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
+        },
+      }
+    )
+  );
+}
+
+export function fetchPBITasks(token: string, ownerName: string, pbiId: number,
+): Promise<RequestResponse<ITaskList, number>> {
+  return getResponse(
+    axios.get(
+      `https://${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/PBI/${pbiId}`,
+      {
+        headers: {
+          'authToken': token,
+          'Accept': "application/json",
+          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
+        },
+      }
+    )
+  );
+}
+
+export function addTasksToPBI(token: string, ownerName: string, pbiId: number,
+): Promise<RequestResponse<ITaskList, number>> {
+  console.log(ownerName);
+  console.log(pbiId);
+  return getResponse(
+    axios.get(
+      `https://${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/PBI/${pbiId}`,
+      {
+        headers: {
+          'authToken': token,
+          'Accept': "application/json",
+          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
+        },
+      }
+    )
+  );
+}
+
+export function addTasksToSprint(token: string, ownerName: string, pbiId: number,
+  ): Promise<RequestResponse<ITaskList, number>> {
+    console.log(ownerName);
+    console.log(pbiId);
+    return getResponse(
+      axios.get(
+        `https://${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/PBI/${pbiId}`,
+        {
+          headers: {
+            'authToken': token,
+            'Accept': "application/json",
+            'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
+          },
+        }
+      )
+    );
+  }
+
+export function addTask(token: string, ownerName: string, pbiId: number, name: string,
+): Promise<RequestResponse<ITask, number>> {
+  return getResponse(
+    axios.post(
+      `https://${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}`,
+      {
+        "name": name,
+        "pbiId": pbiId.toString()
+      },
+      {
+        headers: {
+          'authToken': token,
+          'Accept': "application/json",
+          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
+        },
+      }
+    )
+  );
+}
+
+export function getPBINames(ownerName: any, token: string, filters: IFilters
+  ): Promise<RequestResponse<IProductBacklogList[], number>> {
+    const filtersString =
+      filters === undefined
+        ? ""
+        : Object.keys(filters)
+          .map((filterName) => {
+            const value = String(filters[filterName]).trim();
+            return value && value !== "null" && value !== "undefined" ? `${filterName}=${value}` : "";
+          })
+          .filter((x) => x !== "")
+          .join("&");
+    return getResponse(
+      axios.get(
+        `https://${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}?${filtersString}`,
+        {
+          headers: {
+            'authToken': token,
+            'Accept': "application/json",
+            'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
+          },
+        }
+      )
+    );
+  }
+
+  export function assignTask(token: string, ownerName: string, pbiId: number, taskId: number, currId: number
+    ): Promise<RequestResponse<ITask, number>> {
+      return getResponse(
+        axios.patch(
+          `https://${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/${taskId}/assignpbi`,
+          {
+            "index": pbiId === null ? 0 : pbiId
+          },
+          {
+            headers: {
+              'authToken': token,
+              'Accept': "application/json",
+              'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
+            },
+          }
+        )
+      );
+    }

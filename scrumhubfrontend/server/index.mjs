@@ -6,7 +6,6 @@ import {FormData} from "formdata-node";
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 const { client_id, redirect_uri, client_secret} = require("./serverconfig");
-
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.json({ type: "text/*" }));
