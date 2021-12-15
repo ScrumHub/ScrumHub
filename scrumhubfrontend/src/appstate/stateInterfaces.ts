@@ -25,18 +25,20 @@ export interface ITask {
   id: number;
   name: string;
   finished: boolean;
-  pbiId:number;
-  isAssignedToPBI:boolean;
-  link:string;
+  pbiId: number;
+  isAssignedToPBI: boolean;
+  link: string;
+  assigness: IPeople[];
 }
 
 export const initTask: ITask = {
   id: 0,
   name: "",
   finished: false,
-  pbiId:0,
-  isAssignedToPBI:false,
-  link:"",
+  pbiId: 0,
+  isAssignedToPBI: false,
+  link: "",
+  assigness: [],
 };
 
 // export const initTask2: ITask = {
@@ -52,20 +54,20 @@ export interface ITaskNamed {
   id: number;
   name: string;
   finished: boolean;
-  pbiId:number;
-  pbiName:string;
-  isAssignedtoPBI:boolean;
-  link:string;
+  pbiId: number;
+  pbiName: string;
+  isAssignedtoPBI: boolean;
+  link: string;
 }
 
 export const initTaskNamed: ITaskNamed = {
   id: 0,
   name: "",
   finished: false,
-  pbiId:0,
-  pbiName:"",
-  isAssignedtoPBI:false,
-  link:"",
+  pbiId: 0,
+  pbiName: "",
+  isAssignedtoPBI: false,
+  link: "",
 };
 
 export interface ITaskList {
@@ -85,13 +87,13 @@ export const initTaskList: ITaskList = {
 };
 
 
-export interface IProductBacklogItem{
-  id:number;
-  name:string;
+export interface IProductBacklogItem {
+  id: number;
+  name: string;
   finished: boolean;
   expectedTimeInHours: number;
   estimated: boolean;
-  sprintNumber: number|null;
+  sprintNumber: number | null;
   isInSprint: boolean;
   timeSpentInHours: number;
   priority: number;
@@ -99,18 +101,18 @@ export interface IProductBacklogItem{
   tasks: ITask[]
 }
 
-export const backlogPriorities = ["Could","Should","Must"];
-export const backlogColors = ["green","blue","red"];
+export const backlogPriorities = ["Could", "Should", "Must"];
+export const backlogColors = ["green", "blue", "red"];
 
 
-export interface ICheckedProductBacklogItem{
-  checked:boolean;
-  id:number;
-  name:string;
+export interface ICheckedProductBacklogItem {
+  checked: boolean;
+  id: number;
+  name: string;
   finished: boolean;
   expectedTimeInHours: number;
   estimated: boolean;
-  sprintNumber: number|null;
+  sprintNumber: number | null;
   isInSprint: boolean;
   timeSpentInHours: number;
   priority: number;
@@ -176,7 +178,7 @@ export interface IAssignPBI {
   id: number;
 }
 
-export interface ICheckedAssignPBI extends IAssignPBI{
+export interface ICheckedAssignPBI extends IAssignPBI {
   name: string;
   id: number;
   checked: boolean;
@@ -290,6 +292,48 @@ export const initRepository: IRepository = {
   typeOfLastActivity: ""
 }
 
+export interface IPeople {
+  name: string;
+  login: string;
+  gitHubId: number;
+  avatarLink:string;
+  isCurrentUser:boolean;
+}
+
+export const initPeople: IPeople = {
+  "name": "string",
+  "login": "string",
+  "gitHubId": 0,
+  "avatarLink": "string",
+  "isCurrentUser": true
+}
+
+
+export interface IPeopleList {
+  pageNumber: number;
+  pageCount: number;
+  pageSize: number;
+  realSize: number;
+  list: IPeople[];
+}
+
+export const initPeopleList: IPeopleList =
+{
+  "pageNumber": 0,
+  "pageCount": 0,
+  "pageSize": 0,
+  "realSize": 0,
+  "list": [
+    {
+      "name": "string",
+      "login": "string",
+      "gitHubId": 0,
+      "avatarLink": "string",
+      "isCurrentUser": true
+    }
+  ]
+}
+
 export interface IRepositoryList {
   pageNumber: number;
   pageCount: number;
@@ -311,7 +355,7 @@ export type State = {
   error: Error;
   redirect: string | null;
   pages: number;
-  pbiPage : IProductBacklogList;
+  pbiPage: IProductBacklogList;
   repositories: IRepositoryList | any;
   openRepository: IRepository | null;
   reposLastPage: boolean;
@@ -324,30 +368,31 @@ export type State = {
   taskLastPage: boolean;
   taskRequireRefresh: boolean;
   taskPage: ITaskList;
-  tasks:ITask[]|ITaskNamed[];
-  openSprint:ISprint|null;
+  tasks: ITask[] | ITaskNamed[];
+  openSprint: ISprint | null;
   repoId: number;
   ownerName: string;
-  namedPBI:IAssignPBI[]
+  namedPBI: IAssignPBI[];
+  people: IPeople[];
 };
 
-export const initError={
-    hasError: false,
-    errorCode: 0,
-    erorMessage: "",
-  
+export const initError = {
+  hasError: false,
+  errorCode: 0,
+  erorMessage: "",
+
 }
 
 export const initState: State = {
   loading: false,
   error: initError,
-  pbiPage:initProductBacklogList,
-  sprintPage:initSprintList,
-  taskPage:initTaskList,
+  pbiPage: initProductBacklogList,
+  sprintPage: initSprintList,
+  taskPage: initTaskList,
   redirect: null,
   pages: 1,
   repositories: [],
-  openSprint:null,
+  openSprint: null,
   openRepository: null,
   reposLastPage: false,
   reposRequireRefresh: false,
@@ -357,8 +402,9 @@ export const initState: State = {
   sprintRequireRefresh: false,
   taskLastPage: false,
   taskRequireRefresh: false,
-  tasks:[],
-  namedPBI:[],
-  repoId:-1,
-  ownerName:""
+  tasks: [],
+  namedPBI: [],
+  repoId: -1,
+  ownerName: "",
+  people: []
 };

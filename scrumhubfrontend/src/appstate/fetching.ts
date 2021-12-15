@@ -106,6 +106,22 @@ export function fetchPBIs(ownerName: any, token: string, filters: IFilters
   );
 }
 
+export function fetchPeople(ownerName: any, token: string
+  ): Promise<RequestResponse<IProductBacklogList, number>> {
+    return getResponse(
+      axios.get(
+        `https://${config.backend.ip}:${config.backend.port}/api/People/${ownerName}`,
+        {
+          headers: {
+            'authToken': token,
+            'Accept': "application/json",
+            'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
+          },
+        }
+      )
+    );
+  }
+
 export function finishPBI(ownerName: string, token: string, pbild: number
 ): Promise<RequestResponse<IProductBacklogItem, number>> {
   return getResponse(

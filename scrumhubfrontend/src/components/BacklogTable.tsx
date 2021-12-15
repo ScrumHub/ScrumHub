@@ -3,7 +3,7 @@ import { Badge, Button, Space, Table, Input, PageHeader, Divider, Progress, Typo
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import * as Actions from '../appstate/actions';
-import {backlogColors, backlogPriorities, IAddPBI, IFilters, initAddPBI, initSprint, IPBIFilter, IProductBacklogItem, IProductBacklogList, ISprint, ISprintList, ITask, IUpdateIdSprint, IUpdateSprint, State } from '../appstate/stateInterfaces';
+import {backlogColors, backlogPriorities, IAddPBI, IAssignPBI, ICheckedAssignPBI, ICheckedProductBacklogItem, IFilters, initAddPBI, initSprint, IPBIFilter, IProductBacklogItem, IProductBacklogList, ISprint, ISprintList, ITask, IUpdateIdSprint, IUpdateSprint, State } from '../appstate/stateInterfaces';
 import 'antd/dist/antd.css';
 import './Dragtable.css';
 import { store } from '../appstate/store';
@@ -19,6 +19,8 @@ import { CustomEditPopup } from './popups/CustomEditPopup';
 import { CustomEstimatePopup } from './popups/CustomEstimatePopup';
 import { CustomAddPopup } from './popups/CustomAddPopup';
 import { CustomUpdateSprintPopup } from './popups/CustomUpdateSprintPopup';
+import { CustomAddTaskPopup } from './popups/CustomAddTaskPopup';
+import { CustomAssignTaskPopup } from './popups/CustomAssignTaskPopup';
 
 const { Search } = Input;
 
@@ -225,6 +227,9 @@ export const BacklogTableWithSprints: React.FC = () => {
   const pbiPage = useSelector((appState: State) => appState.pbiPage as IProductBacklogList);
   const [selectedPBI, setSelectedPBI] = useState({} as IProductBacklogItem);
   const [selectedSprint, setSelectedSprint] = useState({} as ISprint);
+  const [selectedTask, setSelectedTask] = useState({} as ITask);
+  const [isAddTaskModalVisible, setIsAddTaskModalVisible] = useState(false);
+  const [isAssignTaskModalVisible, setIsAssignTaskModalVisible] = useState(false);
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
   const [isAddPBIModalVisible, setIsAddPBIModalVisible] = useState(false);
@@ -239,6 +244,45 @@ export const BacklogTableWithSprints: React.FC = () => {
     (appState: State) => appState.error
   );
   
+  const handleAddTask = (input: IFilters) => {
+    setIsAddTaskModalVisible(false); //check if all elements of acceptanceCriteria array are defined
+    try {
+      store.dispatch(
+        Actions.addTaskThunk({
+          token: token,
+          ownerName: ownerName,
+          pbiId: selectedPBI.id,
+          name: input.name
+        }) //filters
+      );
+    } catch (err) { console.error("Failed to add the pbis: ", err); }
+    finally{
+      setSelectedPBI({} as IProductBacklogItem);
+      setInitialRefresh(true);
+    }
+  }
+
+  const handleAssignTask = (input: any) => {
+    const ids = input.backlogItems.map((value: ICheckedProductBacklogItem) => 
+    {  return((value.checked ? value.id.toString():"")) }).filter((x: string) => x !== "")
+    setIsAssignTaskModalVisible(false); //check if all elements of acceptanceCriteria array are defined
+    try {
+      store.dispatch(
+        Actions.assignTaskThunk({
+          token: token,
+          ownerName: ownerName,
+          pbiId: ids.length > 1 ? 0: ids[0],
+          taskId:selectedTask.id,
+          currId:selectedTask.pbiId
+        }) //filters
+      );
+    } catch (err) { console.error("Failed to add the pbis: ", err); }
+    finally{
+      setSelectedTask({} as ITask);
+      setInitialRefresh(true);
+    }
+  }
+
   const DraggableBodyRow = ({ index: index_row, moveRow, className, style, ...restProps }: BodyRowProps) => {
     const ref = useRef();
     const [{ isOver, dropClassName }, drop] = useDrop({
@@ -299,10 +343,10 @@ export const BacklogTableWithSprints: React.FC = () => {
         key: "isAssignedToPBI",
         title: 'Assigned',
         dataIndex: 'isAssignedToPBI',
-        render: (val: boolean) => (
+        render: (record: ITask) => (
           <span>
-            <Badge status={val ? "success" : "error"} />
-            {val ? "Assigned" : "Not Assigned"}
+            <Badge status={record.isAssignedToPBI ? "success" : "error"} />
+            {record.assigness && record.assigness.length >0? record.assigness[0].name : "Not Assigned"}
           </span>
         ),
         align: 'center' as const,
@@ -316,8 +360,8 @@ export const BacklogTableWithSprints: React.FC = () => {
         render: (text: string) => <a href={text}>{"See on GitHub"}</a>
       },
       {
-        title: 'Action', colSpan: 1, align: "center" as const, key: 'operation', render: () => {
-          return (<Button type="link" onClick={() => { }} >
+        title: 'Action', colSpan: 1, align: "center" as const, key: 'operation', render: (record:ITask) => {
+          return (<Button type="link" onClick={()=>{setSelectedTask(record); setIsAssignTaskModalVisible(true)}} >
             {"Assign"}
           </Button>)
         }
@@ -396,7 +440,7 @@ export const BacklogTableWithSprints: React.FC = () => {
           {item.id !==0 &&<Button type="link" onClick={() => { setSelectedPBI(item); setIsEditModalVisible(true); }} >
               {"Edit"}
             </Button>}
-            <Button type="link" onClick={() => { console.log("task") }} >
+            <Button type="link" onClick={() => { setSelectedPBI(item); setIsAddTaskModalVisible(true); }} >
             {"Add Task"}
           </Button>
             </span>,props: { colSpan: 3 }})
@@ -739,7 +783,7 @@ console.log(pbiPage);
       try {
         const ids = IDs;
         setIDs({ oldSprintId: -1, newSprintId: -1, pbiId: -1 });
-        console.log("fetch");
+        //g("fetch");
         //fetch unassigned tasks
         if (ids.oldSprintId !== 0) {
           const oldSprint = sprintPage.list.find((i: ISprint) => i.sprintNumber === ids.oldSprintId);
@@ -889,7 +933,7 @@ console.log(pbiPage);
   };
   //console.log(loading+"/"+refreshRequired+"/"+ sprintRefreshRequired +"/"+  initialRefresh);
   //console.log(fetchPBIs+"/"+fetchSprints+"/"+ fetchSprintsPBI +"/"+  fetched);
-  console.log(IDs);
+  //console.log(IDs);
   if (!state.isLoggedIn) { return <Navigate to="/login" />; }
   return (
     <>
@@ -948,9 +992,15 @@ console.log(pbiPage);
       {isEstimateModalVisible && selectedPBI && selectedPBI.id && <CustomEstimatePopup data={selectedPBI as IProductBacklogItem} visible={isEstimateModalVisible}
         onCreate={function (values: any): void { handleEstimatePBI(values) }}
         onCancel={() => { setIsEstimateModalVisible(false); }} />}
+        {isAddTaskModalVisible && <CustomAddTaskPopup data={{ name: "" } as IFilters} visible={isAddTaskModalVisible}
+            onCreate={function (values: any): void { handleAddTask(values) }}
+            onCancel={() => { setIsAddTaskModalVisible(false); }} />}
         {isUpdateModalVisible && !loading && <CustomUpdateSprintPopup data={selectedSprint} pbiData={pbiPage.list as IProductBacklogItem[]} visible={isUpdateModalVisible}
           onCreate={function (values: any): void { handleUpdatePBI(values) }}
-          onCancel={() => { setIsUpdateModalVisible(false); }} />}
-    </>
+          onCancel={() => { setIsUpdateModalVisible(false); }} />}   
+          {isAssignTaskModalVisible && pbiPage && <CustomAssignTaskPopup error={error.erorMessage} pbiData={pbiPage.list as IAssignPBI[] as ICheckedAssignPBI[]} visible={isAssignTaskModalVisible}
+            onCreate={function (values: any): void { handleAssignTask(values) }}
+            onCancel={() => { setIsAssignTaskModalVisible(false); }} />}
+            </>
   );
 };
