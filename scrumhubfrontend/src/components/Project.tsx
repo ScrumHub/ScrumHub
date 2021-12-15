@@ -261,20 +261,23 @@ export default function Project() {
   const routes = [
     {
       path: "",
+      key:0,
       breadcrumbName: window.location.href.split("/")[3],
     },
     {
-      path: "",
+      path: "Projects",
+      key:1,
       breadcrumbName: "Projects",
     },
     {
-      path:window.location.href.split("/")[4],
-      breadcrumbName: window.location.href.split("/")[4],
+      path:"path",
+      key:2,
+      breadcrumbName: window.location.href.split("/")[4].concat(" Project"),
     },
   ];
   function itemRender(route:any, params:any[], routes:any[], paths:any[]) {
     return (
-      <span>{route.breadcrumbName}</span>)
+      <span key={route.breadcrumbName+route.path}>{route.breadcrumbName}</span>)
   }
 
   if (!state.isLoggedIn) { return <Navigate to="/login" />; }
