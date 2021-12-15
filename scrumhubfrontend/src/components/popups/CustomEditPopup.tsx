@@ -49,18 +49,18 @@ visible,
         name="form_in_modal"
         initialValues={{ modifier: 'public' }}
       >
+        <FormItemLabel prefixCls="name" label="Name" required={true}/>
         <Form.Item
           initialValue={data.name}
           name="name"
-          label="Name"
           rules={[{ required: true, message: 'Please input the name of the new backlog item!' }]}
         >
           <Input />
         </Form.Item>
+        <FormItemLabel prefixCls="priority" label="Priority" required={true}/>
         <Form.Item
         initialValue={data.priority}
           name="priority"
-          label="Priority"
           rules={[{ required: true, message: 'Please input the priority of the new backlog item!' }]}
         >
           <InputNumber type="number" min={0} />
@@ -82,7 +82,7 @@ visible,
             ))}
             <Form.Item>
               <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                Add field
+                Add criterion
               </Button>
             </Form.Item>
           </>

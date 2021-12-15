@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Modal, Form, InputNumber, Space, Typography, Checkbox } from 'antd';
 import { IProductBacklogItem, ISprint } from '../../appstate/stateInterfaces';
@@ -29,13 +30,9 @@ export const CustomAddSprintPopup: React.FC<CollectionCreateFormProps> = ({
   onCreate,
   onCancel,
 }) => {
-  //TO DO
-  //DELETE after backend is fixed
-
-  pbiData = pbiData.filter((item)=>item.estimated !== false);
+  pbiData = pbiData.filter((item)=>item.estimated !== false && item.id !== 0);
   const [form] = Form.useForm();
   const [temp, setTemp] = useState(pbiData);
-  const id = Number(localStorage.getItem("sprintID"));
   return (
     <Modal
       visible={visible}
@@ -93,11 +90,10 @@ export const CustomAddSprintPopup: React.FC<CollectionCreateFormProps> = ({
             <>
               {fields.map(({ key, name }) => (
                 <Space key={key} style={{ display: 'flex', margin:0}} align="baseline">
-                  <Checkbox checked={form.getFieldValue("backlogItems")[key].sprintNumber != null}
+                  <Checkbox checked={form.getFieldValue("backlogItems")[key].isInSprint === true}
                     onClick={() => {
                       const temp2 = _.cloneDeep(temp);
-                      temp2[key].sprintNumber = (temp2[key].sprintNumber === id) ? null : id;
-                      setTemp(temp2);
+                      temp2[key].isInSprint = !temp2[key].isInSprint;
                       form.setFieldsValue({ "backlogItems": temp2 });
                     }} />
                   <Form.Item
