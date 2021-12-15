@@ -2,7 +2,7 @@ import * as Actions from "./actions";
 import { createReducer, PayloadAction } from "@reduxjs/toolkit";
 import { RequestResponse } from "./response";
 import config from "../configuration/config";
-import { IAssignPBI, IError, initError, initState, IPeopleList, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, ITaskNamed, State, unassignedPBI } from "./stateInterfaces";
+import { IAssignPBI, IError, IMessCodeError, initError, initState, IPeopleList, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, ITaskNamed, State, unassignedPBI } from "./stateInterfaces";
 var _ = require('lodash');
 
 export const reducer = createReducer(initState, {
@@ -533,7 +533,7 @@ export const reducer = createReducer(initState, {
   newState.error = {
     hasError: true,
     errorCode: errorResponse ? errorResponse.code : -1,
-    erorMessage: errorResponse ? (errorResponse.response as IError).Message : "",
+    erorMessage: errorResponse ? (errorResponse.response as IMessCodeError).Message : "",
   };
   return newState;
 },
