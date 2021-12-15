@@ -335,9 +335,14 @@ export const BacklogTableWithSprints: React.FC = () => {
       },
       {
         title: 'Progress', colSpan: 1, key: 'operation', align: "center" as const, render: (item: IProductBacklogItem) => {
-          return (<span><Progress  width={30} type="circle" percent={item.tasks && item.tasks.length > 0 ?
-            (item.tasks.filter((item: ITask) => item.finished).length)
-            : 100} format={percent => `${item.tasks && item.tasks.length > 0 ?percent:0}/${item.tasks && item.tasks.length > 0 ?item.tasks.length as number:0}`}></Progress></span>)
+          return (<span><Progress  width={30} type="circle" status={`${item.tasks && item.tasks.length > 0?(item.tasks.filter((item: ITask) => item.finished).length/item.tasks.length)!==0?"normal":"exception":"normal"}`} percent={item.tasks && item.tasks.length > 0 ?
+            (item.tasks.filter((item: ITask) => item.finished).length/item.tasks.length)
+            : 100} format={percent => `${item.tasks && item.tasks.length > 0 ?item.tasks.filter((item: ITask) => item.finished).length:0}/${item.tasks && item.tasks.length > 0 ?item.tasks.length as number:0}`}></Progress></span>)
+        }
+      },
+      {
+        title: 'Story Points', colSpan: 1, key: 'operation', align: "center" as const, render: (item: IProductBacklogItem) => {
+          return (<span><Progress  width={30} type="circle" percent={100} status="exception" format={percent => `${item.timeSpentInHours}h`}></Progress></span>)
         }
       },
       {
@@ -580,7 +585,7 @@ console.log(pbiPage);
   }
 
   const handleAddPBI = (pbi: IAddPBI) => {
-    setIsAddModalVisible(false); //check if all elements of acceptanceCriteria array are defined
+    setIsAddPBIModalVisible(false); //check if all elements of acceptanceCriteria array are defined
     pbi.acceptanceCriteria = pbi.acceptanceCriteria.filter((value: any) => { return (typeof (value) === "string"); });
     try {
       store.dispatch(
@@ -593,6 +598,7 @@ console.log(pbiPage);
     } catch (err) { console.error("Failed to add the pbis: ", err); }
     finally {
       setSelectedPBI({} as IProductBacklogItem);
+      setInitialRefresh(true);
     }
   }
 
