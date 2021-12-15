@@ -1,9 +1,9 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
-import { Badge, Button, Space, Table, Input, PageHeader, Divider, Progress, Typography, Tag, Popconfirm } from 'antd';
+import { Button, Space, Table, Input, Popconfirm } from 'antd';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import * as Actions from '../appstate/actions';
-import { IAddPBI, IAssignPBI, ICheckedAssignPBI, ICheckedProductBacklogItem, IFilters, initAddPBI, initPBIFilter, initSprint, IPBIFilter, IPeople, IProductBacklogItem, IProductBacklogList, ISprint, ISprintList, ITask, IUpdateIdSprint, IUpdateSprint, State } from '../appstate/stateInterfaces';
+import { IAddPBI, IAssignPBI, ICheckedAssignPBI, ICheckedProductBacklogItem, IFilters, initAddPBI, initPBIFilter, initSprint, IPBIFilter, IProductBacklogItem, IProductBacklogList, ISprint, ISprintList, ITask, IUpdateIdSprint, IUpdateSprint, State } from '../appstate/stateInterfaces';
 import 'antd/dist/antd.css';
 import './BacklogTable.css';
 import { store } from '../appstate/store';
@@ -18,9 +18,9 @@ import { CustomAddPopup } from './popups/CustomAddPopup';
 import { CustomUpdateSprintPopup } from './popups/CustomUpdateSprintPopup';
 import { CustomAddTaskPopup } from './popups/CustomAddTaskPopup';
 import { CustomAssignTaskPopup } from './popups/CustomAssignTaskPopup';
-import { initFetchVals, initIDs, initModalVals } from './utility/commonInitValues';
-import { BodyRowProps } from './utility/commonInterfaces';
-import { validate } from './utility/validators';
+import { initIDs, initModalVals } from './utility/commonInitValues';
+import { BodyRowProps, IModals } from './utility/commonInterfaces';
+import { useIsMounted, validate } from './utility/commonFunctions';
 import { taskAssigneeCol, taskFinishCol, taskGhLinkCol, taskNameCol, pbiNameCol, pbiPriorityCol, pbiProgressCol, pbiStoryPtsCol } from './utility/BodyRowsAndColumns';
 //import { addTaskToPBI } from './utility/BacklogHandlers';
 
@@ -44,13 +44,17 @@ export const BacklogTableWithSprints: React.FC = () => {
   const [selectedPBI, setSelectedPBI] = useState({} as IProductBacklogItem);
   const [selectedSprint, setSelectedSprint] = useState({} as ISprint);
   const [selectedTask, setSelectedTask] = useState({} as ITask);
-  const [isModal, setIsModal] = useState<IFilters>(initModalVals);
-  const [isFetched, setIsFetched] = useState<IFilters>(initFetchVals);
+  const [isModal, setIsModal] = useState<IModals>(initModalVals);
+  const [fetchSprints, setFetchSprints] = useState(false);
+  const [fetchSprintsPBI, setFetchSprintsPBI] = useState(false);
+  const [fetchPBIs, setFetchPBIs] = useState(false);
+  const [fetched, setFetched] = useState(false);
   const [isError, setIsError] = useState(false);
+  const isMounted = useIsMounted();
   const navigate = useNavigate();
 
   const addTaskToPBI = (input: IFilters) => {
-    setIsModal({...isModal,isAddTaskModalVisible:false}); 
+    setIsModal({...isModal,addTask:false}); 
     try {
       store.dispatch(
         Actions.addTaskThunk({
@@ -62,13 +66,15 @@ export const BacklogTableWithSprints: React.FC = () => {
       );
     } catch (err) { console.error("Failed to add the pbis: ", err); }
     finally {
+      if (isMounted()) {
       setSelectedPBI({} as IProductBacklogItem);
       setInitialRefresh(true);
+      }
     }
   };
   const assignTask = (input: any) => {
     const ids = input.backlogItems.map((value: ICheckedProductBacklogItem) => { return ((value.checked ? value.id.toString() : "")) }).filter((x: string) => x !== "");
-    setIsModal({...isModal,isAssignTaskModalVisible:false}); 
+    setIsModal({...isModal,assgnTask:false}); 
     try {
       store.dispatch(
         Actions.assignTaskThunk({
@@ -81,8 +87,10 @@ export const BacklogTableWithSprints: React.FC = () => {
       );
     } catch (err) { console.error("Failed to add the pbis: ", err); }
     finally {
+      if (isMounted()) {
       setSelectedTask({} as ITask);
       setInitialRefresh(true);
+      }
     }
   };
   const estimatePBI = (pbi: IProductBacklogItem) => {
@@ -97,13 +105,15 @@ export const BacklogTableWithSprints: React.FC = () => {
       );
     } catch (err) { console.error("Failed to estimate the pbis: ", err); }
     finally {
-      setIsModal({...isModal,isEstimateModalVisible:false});
+      if (isMounted()) {
+      setIsModal({...isModal,estimatePBI:false});
       setSelectedPBI({} as IProductBacklogItem);
       setInitialRefresh(true);
+      }
     }
   };
   const addPBI = (pbi: IAddPBI) => {
-    setIsModal({...isModal,isAddPBIModalVisible:false}); //check if all elements of acceptanceCriteria array are defined
+    setIsModal({...isModal,addPBI:false}); //check if all elements of acceptanceCriteria array are defined
     pbi.acceptanceCriteria = pbi.acceptanceCriteria.filter((value: any) => { return (typeof (value) === "string"); });
     try {
       store.dispatch(
@@ -115,12 +125,14 @@ export const BacklogTableWithSprints: React.FC = () => {
       );
     } catch (err) { console.error("Failed to add the pbis: ", err); }
     finally {
+      if (isMounted()) {
       setSelectedPBI({} as IProductBacklogItem);
       setInitialRefresh(true);
+      }
     }
   };
   const editPBI = (pbi: IAddPBI) => {
-    setIsModal({...isModal,isEditModalVisible:false});//check if all elements of acceptanceCriteria array are defined    
+    setIsModal({...isModal,editPBI:false});//check if all elements of acceptanceCriteria array are defined    
     pbi.acceptanceCriteria = pbi.acceptanceCriteria.filter((value: any) => { return (typeof (value) === "string"); });
     try {
       store.dispatch(
@@ -133,8 +145,10 @@ export const BacklogTableWithSprints: React.FC = () => {
       );
     } catch (err) { console.error("Failed to edit the pbis: ", err); }
     finally {
+      if (isMounted()) {
       setSelectedPBI({} as IProductBacklogItem);
       setInitialRefresh(true);
+      }
     }
   };
   /*const handleFinish = () => {
@@ -162,12 +176,14 @@ export const BacklogTableWithSprints: React.FC = () => {
       );
     } catch (err) { console.error("Failed to add the repos: ", err); }
     finally {
+      if (isMounted()) {
       setSelectedPBI({} as IProductBacklogItem);
       setInitialRefresh(true);
+      }
     }
   };
   const updateSprint = (pbi: IUpdateSprint) => {
-    setIsModal({...isModal,isUpdateModalVisible:false});
+    setIsModal({...isModal,updateSprint:false});
     const sprintID = selectedSprint.sprintNumber;
     const ids = pbi.backlogItems.map((value: IProductBacklogItem) => { return ((value.sprintNumber === Number(sprintID) ? value.id.toString() : "")) }).filter((x) => x !== "");
     try {
@@ -183,9 +199,11 @@ export const BacklogTableWithSprints: React.FC = () => {
       console.error("Failed to update the pbis: ", err);
     }
     finally {
+      if (isMounted()) {
       setSelectedSprint({} as ISprint);
       setInitialRefresh(true);
     }
+  }
   };
   const addSprint = (pbi: ISprint) => {
     const ids = pbi.backlogItems.map((value: IProductBacklogItem) => { return ((value.isInSprint ? value.id.toString() : "")) }).filter((x: string) => x !== "");
@@ -200,9 +218,10 @@ export const BacklogTableWithSprints: React.FC = () => {
     } catch (err) {
       console.error("Failed to add the sprint: ", err);
     } finally {
-      setIsModal({...isModal,isAddModalVisible:false});
+      if (isMounted()) {
+      setIsModal({...isModal,addSprint:false});
       setIsError(true);
-    }
+    }}
   };
   const DraggableBodyRow = ({ index: index_row, moveRow, className, style, ...restProps }: BodyRowProps) => {
     const ref = useRef();
@@ -245,7 +264,7 @@ export const BacklogTableWithSprints: React.FC = () => {
       taskGhLinkCol,
       {
         title: 'Action', dataIndex:"",align: "right" as const, key: 'operation', render: (record: ITask) => {
-          return (<Button type="link" onClick={() => { setSelectedTask(record); setIsModal({...isModal,isAssignTaskModalVisible:true}); }} >
+          return (<Button type="link" onClick={() => { setSelectedTask(record); setIsModal({...isModal,assgnTask:true}); }} >
             {"Move PBI"}
           </Button>)
         }
@@ -308,13 +327,13 @@ export const BacklogTableWithSprints: React.FC = () => {
         title: 'Action', align: "right" as const, colSpan: 2, key: 'actions', render: (item: IProductBacklogItem) => {
           return ({
             children: <span>
-              {item.id !== 0 && <Button type="link" onClick={() => { setSelectedPBI(item); setIsModal({...isModal,isEstimateModalVisible:true}); }} >
+              {item.id !== 0 && <Button type="link" onClick={() => { setSelectedPBI(item); setIsModal({...isModal,estimatePBI:true}); }} >
                 {"Estimate"}
               </Button>}
-              {item.id !== 0 && <Button type="link" onClick={() => { setSelectedPBI(item); setIsModal({...isModal,isEditModalVisible:true}); }} >
+              {item.id !== 0 && <Button type="link" onClick={() => { setSelectedPBI(item); setIsModal({...isModal,editPBI:true}); }} >
                 {"Edit"}
               </Button>}
-              <Button type="link" onClick={() => { setSelectedPBI(item); setIsModal({...isModal,isAddTaskModalVisible:true}); }} >
+              <Button type="link" onClick={() => { setSelectedPBI(item); setIsModal({...isModal,addTask:true}); }} >
                 {"Add Task"}
               </Button>
             </span>, props: { colSpan: 2 }
@@ -360,14 +379,19 @@ export const BacklogTableWithSprints: React.FC = () => {
       </DndProvider>
     )
   };
+  
 
   useEffect(() => {
-    if (initialRefresh) {
+    //console.log(isMounted()+"/"+initialRefresh);
+    if (initialRefresh && isMounted()) {
       store.dispatch(Actions.clearPBIsList());
       store.dispatch(Actions.clearSprintList());
+      if(isMounted()){
       setInitialRefresh(false);
+      }
     }
-  }, [initialRefresh]);
+  }, [initialRefresh, isMounted]);
+
   useEffect(() => {
     if (refreshRequired && ownerName && ownerName !== "") {
       try {
@@ -385,14 +409,14 @@ export const BacklogTableWithSprints: React.FC = () => {
         console.error("Failed to fetch the pbis: ", err);
       }
       finally {
-        setIsFetched({...isFetched,fetchPBIs:true});
+        setFetchPBIs(true);
       }
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshRequired]);
-  console.log(pbiPage);
+  //console.log(pbiPage);
   useEffect(() => {
-    if (isFetched.fetchPBIs && ownerName && ownerName !== "" && pbiPage && pbiPage.pageCount !== null) {
-      setIsFetched({...isFetched,fetchPBIs:false});
+    if (fetchPBIs && ownerName && ownerName !== "" && pbiPage && pbiPage.pageCount !== null) {
+      setFetchPBIs(false);
       try {
         store.dispatch(
           Actions.fetchPBIsThunk({
@@ -410,13 +434,13 @@ export const BacklogTableWithSprints: React.FC = () => {
         console.error("Failed to fetch the pbis: ", err);
       }
       finally {
-        setIsFetched({...isFetched,fetched:true});
+        setFetched(true);
       }
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pbiPage]);
   useEffect(() => {
-    if (!refreshRequired && isFetched.fetched && typeof (pbiPage) !== "undefined" && typeof (pbiPage.list) !== "undefined") {
-      setIsFetched({...isFetched,fetched:false});
+    if (!refreshRequired && fetched && typeof (pbiPage) !== "undefined" && typeof (pbiPage.list) !== "undefined") {
+      setFetched(false);
       store.dispatch(
         Actions.addTasksToPBIThunk({
           token: token,
@@ -435,7 +459,7 @@ export const BacklogTableWithSprints: React.FC = () => {
         );
       })
     } // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFetched.fetched, refreshRequired]);
+  }, [fetched, refreshRequired]);
 
   useEffect(() => {
     if (sprintRefreshRequired && ownerName && ownerName !== "") {
@@ -452,14 +476,14 @@ export const BacklogTableWithSprints: React.FC = () => {
       }
       finally {
         //console.log("count"+sprintPage.pageCount);
-        setIsFetched({...isFetched,fetchSprints:true});
+        setFetchSprints(true);
       }
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sprintRefreshRequired]);
   useEffect(() => {
     //console.log(sprintPage);
-    if (isFetched.fetchSprints && ownerName && ownerName !== "" && sprintPage && sprintPage.pageCount !== null) {
-      setIsFetched({...isFetched,fetchSprints:false});
+    if (fetchSprints && ownerName && ownerName !== "" && sprintPage && sprintPage.pageCount !== null) {
+      setFetchSprints(false);
       try {
         store.dispatch(
           Actions.fetchSprintsThunk({
@@ -474,15 +498,15 @@ export const BacklogTableWithSprints: React.FC = () => {
         console.error("Failed to fetch the sprints: ", err);
       }
       finally {
-        setIsFetched({...isFetched,fetchSprintsPBI:true});
+        setFetchSprintsPBI(true);
       }
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sprintPage]);
   useEffect(() => {
-    if (!sprintRefreshRequired && isFetched.fetchSprintsPBI) {
+    if (!sprintRefreshRequired && fetchSprintsPBI) {
       try{
       // console.log("fetch sprint tasks");
-      setIsFetched({...isFetched,fetchSprintsPBI:false});
+      setFetchSprintsPBI(false);
       sprintPage.list.map((sprint: ISprint) => {
         sprint.backlogItems.map((item: IProductBacklogItem) => {
           // console.log(item.id);
@@ -504,7 +528,7 @@ export const BacklogTableWithSprints: React.FC = () => {
     }
   }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFetched.fetchSprintsPBI, sprintRefreshRequired]);
+  }, [fetchSprintsPBI, sprintRefreshRequired]);
 
   useEffect(() => {
     if (IDs.dropped && IDs.oldSprintId === -1) {
@@ -543,14 +567,16 @@ export const BacklogTableWithSprints: React.FC = () => {
         console.error(error.erorMessage);
       }
       finally {
+        if (isMounted()) {
         setInitialRefresh(true);
+        }
       }
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [IDs]);
 
   useEffect(() => {
     if (error.hasError && !loading && isError) {
-      setIsModal({...isModal,isAddModalVisible:true});
+      setIsModal({...isModal,addSprint:true});
       setIsError(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -568,7 +594,7 @@ export const BacklogTableWithSprints: React.FC = () => {
     },
     {
       title: 'Action', colSpan: 1, align: "right" as const, key: 'operation', render: (record: ISprint) => {
-        return (record.sprintNumber !== 0 && <Button type="link" onClick={() => { setSelectedSprint(record); setIsModal({...isModal,isUpdateModalVisible:true}); }} >
+        return (record.sprintNumber !== 0 && <Button type="link" onClick={() => { setSelectedSprint(record); setIsModal({...isModal,updateSprint:true}); }} >
           {"Update"}
         </Button>)
       },
@@ -582,15 +608,15 @@ export const BacklogTableWithSprints: React.FC = () => {
       <Space direction="horizontal"
         style={{ marginLeft: "2%", marginRight: "2%" }}>
         <Search placeholder="input search text" onSearch={onSearch} enterButton />
-        <Button onClick={() => setIsModal({...isModal,isAddModalVisible:true})}>{"Create Sprint"}</Button>
-        <Button onClick={() => setIsModal({...isModal,isAddPBIModalVisible:true})}>{"Add Product Backlog Item"}</Button>
+        <Button onClick={() => setIsModal({...isModal,addSprint:true})}>{"Create Sprint"}</Button>
+        <Button onClick={() => setIsModal({...isModal,addPBI:true})}>{"Add Product Backlog Item"}</Button>
       </Space>
       {sprintPage && sprintPage.list && pbiPage && pbiPage.list &&
         <Table
           style={{ borderSpacing: "separate", marginLeft: "2%", marginRight: "2%", marginTop: "2%" }}
           scroll={{ x: 800 }}
           size="small"
-          loading={loading || refreshRequired || sprintRefreshRequired || initialRefresh || isFetched.fetchPBIs || isFetched.fetchSprints || isFetched.fetchSprintsPBI || isFetched.fetched}
+          loading={loading || refreshRequired || sprintRefreshRequired || initialRefresh || fetchPBIs || fetchSprints || fetchSprintsPBI || fetched}
           showHeader={false}
           pagination={false}
           dataSource={([{ sprintNumber: 0, goal: "Product Backlog", backlogItems: pbiPage.list } as ISprint] as ISprint[]).concat(sprintPage.list)}
@@ -618,27 +644,27 @@ export const BacklogTableWithSprints: React.FC = () => {
           }}
         />
       }
-      {isModal.isAddModalVisible && !loading && !isFetched.fetchPBIs && <CustomAddSprintPopup error={error.erorMessage} data={initSprint} pbiData={pbiPage.list as IProductBacklogItem[]} visible={isModal.AddModalVisible}
+      {isModal.addSprint && !loading && !fetchPBIs && <CustomAddSprintPopup error={error.erorMessage} data={initSprint} pbiData={pbiPage.list as IProductBacklogItem[]} visible={isModal.addSprint}
         onCreate={function (values: any): void { addSprint(values) }}
-        onCancel={() => { setIsModal({...isModal,isAddModalVisible:false}); }} />}
-      {isModal.isAddPBIModalVisible && <CustomAddPopup data={initAddPBI} visible={isModal.AddPBIModalVisible}
+        onCancel={() => { setIsModal({...isModal,addSprint:false}); }} />}
+      {isModal.addPBI && <CustomAddPopup data={initAddPBI} visible={isModal.addPBI}
         onCreate={function (values: any): void { addPBI(values) }}
-        onCancel={() => { setIsModal({...isModal,isAddPBIModalVisible:false}); }} />}
-      {isModal.EditModalVisible && selectedPBI && selectedPBI.id && <CustomEditPopup data={selectedPBI as IAddPBI} visible={isModal.EditModalVisible}
+        onCancel={() => { setIsModal({...isModal,addPBI:false}); }} />}
+      {isModal.editPBI && selectedPBI && selectedPBI.id && <CustomEditPopup data={selectedPBI as IAddPBI} visible={isModal.editPBI}
         onCreate={function (values: any): void { editPBI(values) }}
-        onCancel={() => { setIsModal({...isModal,isEditModalVisible:false}); }} />}
-      {isModal.EstimateModalVisible && selectedPBI && selectedPBI.id && <CustomEstimatePopup data={selectedPBI as IProductBacklogItem} visible={isModal.EstimateModalVisible}
+        onCancel={() => { setIsModal({...isModal,editPBI:false}); }} />}
+      {isModal.estimatePBI && selectedPBI && selectedPBI.id && <CustomEstimatePopup data={selectedPBI as IProductBacklogItem} visible={isModal.estimatePBI}
         onCreate={function (values: any): void { estimatePBI(values) }}
-        onCancel={() => { setIsModal({...isModal,isEstimateModalVisible:false}); }} />}
-      {isModal.AddTaskModalVisible && <CustomAddTaskPopup data={{ name: "" } as IFilters} visible={isModal.AddTaskModalVisible}
+        onCancel={() => { setIsModal({...isModal,estimatePBI:false}); }} />}
+      {isModal.addTask && <CustomAddTaskPopup data={{ name: "" } as IFilters} visible={isModal.addTask}
         onCreate={function (values: any): void { addTaskToPBI(values);}}//,isModal,setIsModal,setInitialRefresh, setSelectedPBI,token,ownerName, selectedPBI) }}
-        onCancel={() => { setIsModal({...isModal,isAddTaskModalVisible:false}); }} />}
-      {isModal.UpdateModalVisible && !loading && <CustomUpdateSprintPopup data={selectedSprint} pbiData={pbiPage.list as IProductBacklogItem[]} visible={isModal.UpdateModalVisible}
+        onCancel={() => { setIsModal({...isModal,addTask:false}); }} />}
+      {isModal.updateSprint && !loading && <CustomUpdateSprintPopup data={selectedSprint} pbiData={pbiPage.list as IProductBacklogItem[]} visible={isModal.updateSprint}
         onCreate={function (values: any): void { updateSprint(values) }}
-        onCancel={() => { setIsModal({...isModal,isUpdateModalVisible:false}); }} />}
-      {isModal.AssignTaskModalVisible && pbiPage && <CustomAssignTaskPopup error={error.erorMessage} pbiData={pbiPage.list as IAssignPBI[] as ICheckedAssignPBI[]} visible={isModal.AssignTaskModalVisible}
+        onCancel={() => { setIsModal({...isModal,updateSprint:false}); }} />}
+      {isModal.assgnPpl && pbiPage && <CustomAssignTaskPopup error={error.erorMessage} pbiData={pbiPage.list as IAssignPBI[] as ICheckedAssignPBI[]} visible={isModal.assgnPpl}
         onCreate={function (values: any): void { assignTask(values) }}
-        onCancel={() => { setIsModal({...isModal,isAssignTaskModalVisible:false}); }} />}
+        onCancel={() => { setIsModal({...isModal,assgnTask:false}); }} />}
     </>
   );
 };
