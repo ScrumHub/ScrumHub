@@ -189,7 +189,8 @@ export const reducer = createReducer(initState, {
   let newState = _.cloneDeep(state);
   newState.loading = false;
   newState.pbiPage = [];
-  newState.productRequireRefresh = true;
+  //newState.productRequireRefresh = true;
+  newState.error = initError;
   newState.pages = 1;
   return newState;
 },
@@ -222,7 +223,8 @@ export const reducer = createReducer(initState, {
   let newState = _.cloneDeep(state);
   newState.loading = false;
   newState.pbiPage = [];
-  newState.productRequireRefresh = true;
+  //newState.productRequireRefresh = true;
+  newState.error = initError;
   newState.pages = 1;
   return newState;
 },
@@ -320,8 +322,9 @@ export const reducer = createReducer(initState, {
   let newState = _.cloneDeep(state);
   newState.loading = false;
   newState.pbiPage = [];
-  newState.productRequireRefresh = true;
+  //newState.productRequireRefresh = true;
   newState.pages = 1;
+  newState.error = initError;
   return newState;
 },
 [Actions.estimatePBIThunk.rejected.toString()]: (

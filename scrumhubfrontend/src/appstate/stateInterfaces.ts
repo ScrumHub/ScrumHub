@@ -99,6 +99,10 @@ export interface IProductBacklogItem{
   tasks: ITask[]
 }
 
+export const backlogPriorities = ["Could","Should","Must"];
+export const backlogColors = ["green","blue","red"];
+
+
 export interface ICheckedProductBacklogItem{
   checked:boolean;
   id:number;
