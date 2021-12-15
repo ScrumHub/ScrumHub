@@ -21,6 +21,11 @@ export interface IError {
   successful: boolean;
 }
 
+export interface IMessCodeError {
+  Message: string;
+  code:number;
+}
+
 export interface ITask {
   assigness: IPeople[]|any[];
   id: number;
@@ -201,7 +206,14 @@ export interface IPBIFilter {
 export const initPBIFilter: IPBIFilter = {
   pageNumber: config.defaultFilters.page,
   pageSize: config.defaultFilters.pbiSize,
+  nameFilter: "",
+};
 
+
+export const initSprintFilter: IFilters = {
+  pageNumber: config.defaultFilters.page,
+  pageSize: config.defaultFilters.sprintSize,
+  nameFilter: "",
 };
 
 

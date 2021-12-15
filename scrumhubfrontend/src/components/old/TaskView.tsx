@@ -1,15 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Badge, Button, Divider, Table, } from 'antd';
-import * as Actions from '../appstate/actions';
+import * as Actions from '../../appstate/actions';
 import 'antd/dist/antd.css';
-import { IAssignPBI, ICheckedAssignPBI, ICheckedProductBacklogItem, IFilters, IPBIFilter, IProductBacklogItem, IProductBacklogList, ITask, State } from '../appstate/stateInterfaces';
-import { AuthContext } from '../App';
+import { IAssignPBI, ICheckedAssignPBI, ICheckedProductBacklogItem, IFilters, IPBIFilter, IProductBacklogItem, IProductBacklogList, ITask, State } from '../../appstate/stateInterfaces';
+import { AuthContext } from '../../App';
 import { Navigate } from 'react-router';
-import config from '../configuration/config';
+import config from '../../configuration/config';
 import { useSelector } from 'react-redux';
-import { store } from '../appstate/store';
-import { CustomAddTaskPopup } from './popups/CustomAddTaskPopup';
-import { CustomAssignTaskPopup } from './popups/CustomAssignTaskPopup';
+import { store } from '../../appstate/store';
+import { CustomAddTaskPopup } from '../popups/CustomAddTaskPopup';
+import { CustomAssignTaskPopup } from '../popups/CustomAssignTaskPopup';
 
 export default function TaskView() {
   const { state } = useContext(AuthContext);
@@ -185,11 +185,11 @@ export default function TaskView() {
         title: 'Related Link',
         dataIndex: 'link',
         key: 'link',
-        align: 'right' as const,
+        align: 'center' as const,
         render: (text: string) => <a href={text}>{"See on GitHub"}</a>
       },
       {
-        title: 'Action', colSpan: 1, align: "right" as const, key: 'operation', render: (record:ITask) =>{
+        title: 'Action', colSpan: 1, align: "center" as const, key: 'operation', render: (record:ITask) =>{
          return( <Button type="link" onClick={()=>{setTaskIdToAdd(record.id); setPbIdToAdd(record.pbiId); handleUpdate();setIsAssignTaskModalVisible(true)}} >
             <a>Assign</a>
           </Button>)}
@@ -201,8 +201,6 @@ export default function TaskView() {
       <Table
         loading={refreshRequired || initialRefresh}
         scroll={{ x: 800 }}
-        size="small"
-        showHeader={false}
         rowKey={(record: ITask) => record.id}
         columns={nestedColumns}
         dataSource={record.tasks}
@@ -227,7 +225,6 @@ export default function TaskView() {
   return (<>
           <Table
             loading={loading}
-            size="small"
             scroll={{ x: 800 }}
             showHeader={false}
             columns={taskColumns}
@@ -235,7 +232,7 @@ export default function TaskView() {
             expandable={{ expandedRowRender: expandedRowRender, defaultExpandAllRows: false }}
             dataSource={(pbiPage && pbiPage.list) ? pbiPage.list : []}
             onChange={handleTableChange}
-            pagination={{ current: pbiPage.pageNumber, pageSize: config.defaultFilters.pbiSize, total: pbiPage.pageCount*config.defaultFilters.pbiSize, showSizeChanger: false }}
+            pagination={{ current: pbiPage.pageNumber, pageSize: config.defaultFilters.pbiSize, total: pbiPage.pageCount, showSizeChanger: false }}
           />
           <Divider />
           {isAddTaskModalVisible && !loading &&<CustomAddTaskPopup data={{ name: "" } as IFilters} visible={isAddTaskModalVisible}

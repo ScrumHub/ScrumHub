@@ -1,15 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Badge, Button, Divider, Table, } from 'antd';
-import * as Actions from '../appstate/actions';
+import * as Actions from '../../appstate/actions';
 import 'antd/dist/antd.css';
-import { IAssignPBI, ICheckedAssignPBI, ICheckedProductBacklogItem, IFilters, IPBIFilter, IProductBacklogItem, IProductBacklogList, ITask, State } from '../appstate/stateInterfaces';
-import { AuthContext } from '../App';
+import { IAssignPBI, ICheckedAssignPBI, ICheckedProductBacklogItem, IFilters, IPBIFilter, IProductBacklogItem, IProductBacklogList, ITask, State } from '../../appstate/stateInterfaces';
+import { AuthContext } from '../../App';
 import { Navigate } from 'react-router';
-import config from '../configuration/config';
+import config from '../../configuration/config';
 import { useSelector } from 'react-redux';
-import { store } from '../appstate/store';
-import { CustomAddTaskPopup } from './popups/CustomAddTaskPopup';
-import { CustomAssignTaskPopup } from './popups/CustomAssignTaskPopup';
+import { store } from '../../appstate/store';
+import { CustomAddTaskPopup } from '../popups/CustomAddTaskPopup';
+import { CustomAssignTaskPopup } from '../popups/CustomAssignTaskPopup';
 
 export default function TaskView() {
   const { state } = useContext(AuthContext);
@@ -44,14 +44,16 @@ export default function TaskView() {
     } catch (err) { console.error("Failed to add the pbis: ", err); }
   }
 
-  const handleAssignTask = (id: number) => {
+  const handleAssignTask = (input: any) => {
+    const ids = input.backlogItems.map((value: ICheckedProductBacklogItem) => 
+    {  return((value.checked ? value.id.toString():"")) }).filter((x: string) => x !== "")
     setIsAssignTaskModalVisible(false); //check if all elements of acceptanceCriteria array are defined
     try {
       store.dispatch(
         Actions.assignTaskThunk({
           token: token,
           ownerName: ownerName,
-          pbiId: id<0 ? 0: id,
+          pbiId: ids.length > 1 ? 0: ids[0],
           taskId:taskIdToAdd,
           currId: pbiIdToAdd
         }) //filters
@@ -235,10 +237,10 @@ export default function TaskView() {
             pagination={{ current: pbiPage.pageNumber, pageSize: config.defaultFilters.pbiSize, total: pbiPage.pageCount, showSizeChanger: false }}
           />
           <Divider />
-          {isAddTaskModalVisible && !loading &&<CustomAddTaskPopup data={{ name: "" } as IFilters} visible={isAddTaskModalVisible}
+          {isAddTaskModalVisible && <CustomAddTaskPopup data={{ name: "" } as IFilters} visible={isAddTaskModalVisible}
             onCreate={function (values: any): void { handleAddTask(values) }}
             onCancel={() => { setIsAddTaskModalVisible(false); }} />}
-            {isAssignTaskModalVisible && pbiPage && !loading &&<CustomAssignTaskPopup error={error.erorMessage} pbiData={namedPBIS as ICheckedAssignPBI[]} visible={isAssignTaskModalVisible}
+            {isAssignTaskModalVisible && pbiPage && <CustomAssignTaskPopup error={error.erorMessage} pbiData={namedPBIS as ICheckedAssignPBI[]} visible={isAssignTaskModalVisible}
             onCreate={function (values: any): void { handleAssignTask(values) }}
             onCancel={() => { setIsAssignTaskModalVisible(false); }} />}
             </>
