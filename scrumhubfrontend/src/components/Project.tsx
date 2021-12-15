@@ -283,12 +283,7 @@ export default function Project() {
   if (!state.isLoggedIn) { return <Navigate to="/login" />; }
   return (
     <div>
-      {/*<Radio.Group onChange={({ target: { value } }) => { setSelectionType(value); }} value={selectionType}>
-        <Radio value="pbi">PBI View</Radio>
-        <Radio value="tasks">Tasks View</Radio>
-      </Radio.Group>
-  <Divider />*/}
-          {error.hasError &&<Alert type="error" message={error.erorMessage} banner />}
+          {error.hasError &&<Alert type="error" message={error.erorMessage} banner closable/>}
           <PageHeader
     className="site-page-header"
     title="Product Backlog"
