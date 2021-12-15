@@ -701,7 +701,7 @@ export const reducer = createReducer(initState, {
   if (tasks && tasks.list.length>0) {
     //console.log("tasks to add");
     //console.log(tasks.list);
-    if(newState.pbiPage.list.length<1 || newState.pbiPage.list[0].id !==0){
+    if(newState.pbiPage && newState.pbiPage.list && (newState.pbiPage.list.length<1 || newState.pbiPage.list[0].id !==0)){
       //console.log("added empty");
       newState.pbiPage.list = pbisList.concat(newState.pbiPage.list);//empty pbi that holds unassigned tasks
     }
