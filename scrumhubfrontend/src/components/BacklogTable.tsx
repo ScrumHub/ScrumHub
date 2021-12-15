@@ -131,7 +131,8 @@ export const BacklogTableWithSprints: React.FC = () => {
   const loading = useSelector((appState: State) => appState.loading as boolean);
   const [filterPBI, setFiltersPBI] = useState<IPBIFilter>({
     pageNumber: config.defaultFilters.page,
-    pageSize: config.defaultFilters.size, nameFilter: "",
+    pageSize: config.defaultFilters.size, 
+    nameFilter: "",
   });
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : "";
   const [initialRefresh, setInitialRefresh] = useState(true);
@@ -143,6 +144,7 @@ export const BacklogTableWithSprints: React.FC = () => {
   const [selectedTask, setSelectedTask] = useState({} as ITask);
   const [isAddTaskModalVisible, setIsAddTaskModalVisible] = useState(false);
   const [isAssignTaskModalVisible, setIsAssignTaskModalVisible] = useState(false);
+  const [isAssignPeopleModalVisible, setIsAssignPeopleModalVisible] = useState(false);
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
   const [isAddPBIModalVisible, setIsAddPBIModalVisible] = useState(false);
@@ -281,14 +283,14 @@ export const BacklogTableWithSprints: React.FC = () => {
           </Button>)
         }
       }
-        ,
+       /* ,
         {
           title: 'Assign', colSpan: 1, align: "right" as const, key: 'operation', render: (record:ITask) => {
-            return (<Button type="link" onClick={()=>{setSelectedTask(record); setIsAssignTaskModalVisible(true)}} >
+            return (<Button type="link" onClick={()=>{setSelectedTask(record); setIsAssignPeopleModalVisible(true)}} >
               {"Assign"}
             </Button>)
           }
-      }
+      }*/
     ];
     const sprintsComponents = {
       body: {
@@ -393,7 +395,7 @@ export const BacklogTableWithSprints: React.FC = () => {
             defaultExpandAllRows: false, rowExpandable: record => record.tasks && record.tasks.length > 0,
           }}
           components={nestedcomponents}
-          dataSource={item.backlogItems}
+          dataSource={item.backlogItems}//:item.backlogItems.filter((item:IProductBacklogItem)=>{item.name.startsWith(filterPBI.nameFilter as string)})}
           pagination={false}
           onRow={(record) => {
             return {
@@ -531,7 +533,7 @@ console.log(pbiPage);
             Actions.addTasksToSprintThunk({
               token: token,
               ownerName: ownerName,
-              pbiId: item.id
+              pbiId: item.id,
             }) //filters
           );
           return ({});
@@ -766,7 +768,13 @@ console.log(pbiPage);
       ,
     }
   ];
-  const onSearch = (value: any) => { };//console.log(value);
+
+  const handleFilterPBI = () => {
+    if(filterPBI.nameFilter !== ""){
+    setInitialRefresh(true);
+    }
+  }
+  const onSearch = (value: string) => {setFiltersPBI({...filterPBI, nameFilter:value}); handleFilterPBI();};//console.log(value);
 
   const fixedComponents = {
     body: {
@@ -822,7 +830,7 @@ console.log(pbiPage);
         />
         //</></DndProvider>
       }
-      {isAddModalVisible && !loading && <CustomAddSprintPopup error={error.erorMessage} data={initSprint} pbiData={pbiPage.list as IProductBacklogItem[]} visible={isAddModalVisible}
+      {isAddModalVisible && !loading && !fetchPBIs && <CustomAddSprintPopup error={error.erorMessage} data={initSprint} pbiData={pbiPage.list as IProductBacklogItem[]} visible={isAddModalVisible}
         onCreate={function (values: any): void { handleSprintAdd(values) }}
         onCancel={() => { setIsAddModalVisible(false); }} />}
         {isAddPBIModalVisible && <CustomAddPopup data={initAddPBI} visible={isAddPBIModalVisible}

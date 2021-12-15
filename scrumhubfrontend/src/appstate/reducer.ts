@@ -39,7 +39,7 @@ export const reducer = createReducer(initState, {
 },
 [Actions.clearSprintList.type]: (state: State) => {
   let newState = _.cloneDeep(state);
-  newState.sprintPage=null;
+  newState.sprintPage.list = [];
   newState.sprintRequireRefresh = true;
   newState.sprintLastPage = false;
   newState.pages = 1;
