@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Button, Divider, Radio, Table, } from 'antd';
+import { Alert, Breadcrumb, Button, Divider, PageHeader, Radio, Table, Typography, } from 'antd';
 import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
 import { IAddPBI, IFilters, initAddPBI, IPBIFilter, IProductBacklogItem, IProductBacklogList, State } from '../appstate/stateInterfaces';
@@ -14,7 +14,8 @@ import { CustomEditPopup } from './popups/CustomEditPopup';
 import { CustomEstimatePopup } from './popups/CustomEstimatePopup';
 import { CustomFilterPopup } from './popups/CustomFilterPopup';
 import { TreeList } from './TreeList';
-import { SprintsSortingTable } from './Dragtable';
+import { BacklogTableWithSprints } from './BacklogTable';
+import { Link } from 'react-router-dom';
 
 const columns = [
   {
@@ -82,7 +83,10 @@ export default function Project() {
   const { state } = useContext(AuthContext);
   const { token } = state;
   const [filterPBI, setFiltersPBI] = useState<IPBIFilter>({ pageNumber: config.defaultFilters.page, pageSize: config.defaultFilters.size, nameFilter: "", });
-  const [selectionType, setSelectionType] = useState<'pbi' | 'tasks'>('pbi');
+  const error = useSelector(
+    (appState: State) => appState.error
+  );
+  /*const [selectionType, setSelectionType] = useState<'pbi' | 'tasks'>('pbi');
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [isEstimateModalVisible, setIsEstimateModalVisible] = useState(false);
@@ -253,7 +257,25 @@ export default function Project() {
     finally {
       setFiltersPBI({ ...filterPBI, pageNumber: pagination.current });
     }
-  };
+  };*/
+  const routes = [
+    {
+      path: "",
+      breadcrumbName: window.location.href.split("/")[3],
+    },
+    {
+      path: "",
+      breadcrumbName: "Projects",
+    },
+    {
+      path:window.location.href.split("/")[4],
+      breadcrumbName: window.location.href.split("/")[4],
+    },
+  ];
+  function itemRender(route:any, params:any[], routes:any[], paths:any[]) {
+    return (
+      <span>{route.breadcrumbName}</span>)
+  }
 
   if (!state.isLoggedIn) { return <Navigate to="/login" />; }
   return (
@@ -263,8 +285,14 @@ export default function Project() {
         <Radio value="tasks">Tasks View</Radio>
       </Radio.Group>
   <Divider />*/}
-  
-      <SprintsSortingTable/>
+          {error.hasError &&<Alert type="error" message={error.erorMessage} banner />}
+          <PageHeader
+    className="site-page-header"
+    title="Product Backlog"
+    breadcrumb={<Breadcrumb itemRender={itemRender} routes={routes} />}
+  >
+  </PageHeader>
+      <BacklogTableWithSprints/>
       <Divider />
   
     </div>

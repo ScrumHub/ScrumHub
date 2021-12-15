@@ -327,13 +327,16 @@ export type State = {
   namedPBI:IAssignPBI[]
 };
 
-export const initState: State = {
-  loading: false,
-  error: {
+export const initError={
     hasError: false,
     errorCode: 0,
     erorMessage: "",
-  },
+  
+}
+
+export const initState: State = {
+  loading: false,
+  error: initError,
   pbiPage:initProductBacklogList,
   sprintPage:initSprintList,
   taskPage:initTaskList,

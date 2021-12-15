@@ -325,8 +325,6 @@ export function fetchPBITasks(token: string, ownerName: string, pbiId: number,
 
 export function addTasksToPBI(token: string, ownerName: string, pbiId: number,
 ): Promise<RequestResponse<ITaskList, number>> {
-  console.log(ownerName);
-  console.log(pbiId);
   return getResponse(
     axios.get(
       `https://${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/PBI/${pbiId}`,
@@ -343,8 +341,6 @@ export function addTasksToPBI(token: string, ownerName: string, pbiId: number,
 
 export function addTasksToSprint(token: string, ownerName: string, pbiId: number,
   ): Promise<RequestResponse<ITaskList, number>> {
-    console.log(ownerName);
-    console.log(pbiId);
     return getResponse(
       axios.get(
         `https://${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/PBI/${pbiId}`,
