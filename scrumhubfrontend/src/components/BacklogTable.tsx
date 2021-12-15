@@ -3,7 +3,7 @@ import { Badge, Button, Space, Table, Input, PageHeader, Divider, Progress, Typo
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import * as Actions from '../appstate/actions';
-import {backlogColors, backlogPriorities, IAddPBI, IAssignPBI, ICheckedAssignPBI, ICheckedProductBacklogItem, IFilters, initAddPBI, initSprint, IPBIFilter, IPeople, IProductBacklogItem, IProductBacklogList, ISprint, ISprintList, ITask, IUpdateIdSprint, IUpdateSprint, State } from '../appstate/stateInterfaces';
+import { IAddPBI, IAssignPBI, ICheckedAssignPBI, ICheckedProductBacklogItem, IFilters, initAddPBI, initSprint, IPBIFilter, IPeople, IProductBacklogItem, IProductBacklogList, ISprint, ISprintList, ITask, IUpdateIdSprint, IUpdateSprint, State } from '../appstate/stateInterfaces';
 import 'antd/dist/antd.css';
 import './Dragtable.css';
 import { store } from '../appstate/store';
@@ -11,9 +11,6 @@ import { AuthContext } from '../App';
 import { useSelector } from 'react-redux';
 import config from '../configuration/config';
 import { Navigate, useNavigate } from 'react-router';
-import { DragOutlined, MinusCircleTwoTone, PlusCircleTwoTone } from '@ant-design/icons';
-import dragula from "dragula";
-import "dragula/dist/dragula.css";
 import { CustomAddSprintPopup } from './popups/CustomAddSprintPopup';
 import { CustomEditPopup } from './popups/CustomEditPopup';
 import { CustomEstimatePopup } from './popups/CustomEstimatePopup';
@@ -123,90 +120,6 @@ const DraggableBodyRowNested = ({ index: index_row, moveRow, className, style, .
   );
 };
 
-
-
-/*export const DragSortingTable: React.FC = () => {
-  const [data, setData] = useState([initProductBacklogItem, init2ProductBacklogItem]);
-    {
-      key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-    },
-    {
-      key: '3',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-    },
-  ]);
-
-
-  
-
-  const components = {
-    body: {
-      row: DraggableBodyRow,
-    },
-  };
-
-  const moveRow = useCallback(
-    (dragIndex, hoverIndex) => {
-      console.log("dr"+dragIndex);
-      console.log("hov"+hoverIndex);
-      console.log("from"+data[dragIndex].name);
-      console.log("to"+data[hoverIndex].name);
-      const dragRow = data[dragIndex];
-      setData(
-        update(data, {
-          $splice: [
-            [dragIndex, 1],
-            [hoverIndex, 0, dragRow],
-          ],
-        }),
-      );
-    },
-    [],
-  );
-  const taskColumns = [
-    { title: 'Name', fixed: "left" as const, colSpan: 2, dataIndex: 'name', key: 'name' },
-    {
-      title: 'Action', colSpan: 1, align: "right" as const, key: 'operation', render: () => {
-        return (<Button type="link" onClick={() => {  }} >
-          <a>Add</a>
-        </Button>)
-      }
-      ,
-    }
-  ];
-  return (
-    data &&(
-    <DndProvider backend={HTML5Backend}>
-      <Table
-      scroll={{ x: 800 }}
-      size="small"
-      showHeader={false}
-      pagination={false}
-        dataSource={data}
-        columns={taskColumns}
-        rowKey={(record: IProductBacklogItem) => record.id}
-        expandable={{expandedRowRender: ExpandedRowRender, defaultExpandAllRows: false, rowExpandable: record => record.tasks && record.tasks.length > 0, }}
-        components={components}
-        onRow={(record, index) => ({
-          index,
-          moveRow,
-        }) as any}
-      />
-    </DndProvider>)
-  );
-};*/
-
 export const BacklogTableWithSprints: React.FC = () => {
   const { state } = useContext(AuthContext);
   const sprintPage = useSelector(
@@ -239,6 +152,8 @@ export const BacklogTableWithSprints: React.FC = () => {
   const [fetchSprintsPBI, setFetchSprintsPBI] = useState(false);
   const [fetchPBIs, setFetchPBIs] = useState(false);
   const [fetched, setFetched] = useState(false);
+  const backlogPriorities = ["Could", "Should", "Must"];
+  const backlogColors = ["green", "blue", "red"];
   const navigate = useNavigate();
   const error = useSelector(
     (appState: State) => appState.error
@@ -361,11 +276,18 @@ export const BacklogTableWithSprints: React.FC = () => {
       },
       {
         title: 'Action', colSpan: 1, align: "right" as const, key: 'operation', render: (record:ITask) => {
-          return (<Button type="link" onClick={()=>{console.log(typeof(record.assigness));console.log(record.assigness.length > 0);setSelectedTask(record); setIsAssignTaskModalVisible(true)}} >
-            {"Assign"}
+          return (<Button type="link" onClick={()=>{setSelectedTask(record); setIsAssignTaskModalVisible(true)}} >
+            {"Move PBI"}
           </Button>)
         }
+      }
         ,
+        {
+          title: 'Assign', colSpan: 1, align: "right" as const, key: 'operation', render: (record:ITask) => {
+            return (<Button type="link" onClick={()=>{setSelectedTask(record); setIsAssignTaskModalVisible(true)}} >
+              {"Assign"}
+            </Button>)
+          }
       }
     ];
     const sprintsComponents = {
@@ -405,9 +327,9 @@ export const BacklogTableWithSprints: React.FC = () => {
       { title: 'Name', fixed: "left" as const, colSpan: 2, dataIndex: 'name', key: 'name', render:  (text: string) => {return ({ children: text,props: { colSpan: 2 }})},
     },
       {
-        title: 'Priority', align: "center" as const, colSpan: 2, dataIndex: 'priority', key: 'priority',
-        render: (item: IProductBacklogItem) => item.priority % 3 !== 0 && item.id !==0 ? 
-          <Tag color={backlogColors.at(item.priority % 3)}>{backlogPriorities.at(item.priority % 3)}</Tag>
+        title: 'Priority', align: "center" as const, colSpan: 2,  key: 'priority',
+        render: (item: IProductBacklogItem) =>  item.id !==0 && item.priority < 3 ? 
+          <Tag color={backlogColors[item.priority]}>{backlogPriorities[item.priority]}</Tag>
           :<></>
 
       },
@@ -446,15 +368,6 @@ export const BacklogTableWithSprints: React.FC = () => {
             </span>,props: { colSpan: 2 }})
         }
       },
-/*
-      {
-        title: 'Action', align: "right" as const, colSpan: 1, key: 'operation', render: () => {
-          return (<Button type="link" onClick={() => { console.log("task") }} >
-            {"Add Task"}
-          </Button>)
-        }
-
-      }*/
     ];
     const nestedcomponents = {
       body: {
@@ -471,13 +384,7 @@ export const BacklogTableWithSprints: React.FC = () => {
           columns={taskColumns}
           rowKey={(record: IProductBacklogItem) => record.id}
           expandable={{
-            expandedRowRender: TaskTableforPBI,/*expandIcon: ({ expanded, onExpand, record }) =>
-              expanded ? (
-                <MinusCircleTwoTone onClick={e => {onExpand(record, e);}} />
-              ) : (
-                <PlusCircleTwoTone onClick={e => {onExpand(record, e);}} />
-              )
-          ,*/
+            expandedRowRender: TaskTableforPBI,
             defaultExpandAllRows: false, rowExpandable: record => record.tasks && record.tasks.length > 0,
           }}
           components={nestedcomponents}
@@ -485,28 +392,19 @@ export const BacklogTableWithSprints: React.FC = () => {
           pagination={false}
           onRow={(record) => {
             return {
-              //onDragStart:()=>{console.log("start")},//setIDs({ ...IDs, pbiId: record.id, oldSprintId: IDs.pbiId !== 0 ? item.sprintNumber : -1 });},
+              
               onDrag: () => {
                 if (record.id !== IDs.pbiId) { setIDs({ ...IDs, pbiId: record.id, oldSprintId: IDs.pbiId !== 0 ? item.sprintNumber : -1 }); }
               },
-              //setIDs({ ...IDs, newSprintId: -1, pbiId: -1, oldSprintId: -1 }) },
-              //onPointerDown: () => { setIDs({ ...IDs, pbiId: record.id, oldSprintId: IDs.pbiId !== 0 ? item.sprintNumber : -1 }); },
-              //onMouseUp: () => { setIDs({ ...IDs, newSprintId: -1, pbiId: -1, oldSprintId: -1 }) },
-              //onClick:()=>{if (record.id!==0) {setIDs({ ...IDs, pbiId: record.id, oldSprintId: IDs.pbiId !== 0 ?item.sprintNumber:-1 });}},
-              //onMouseUpCapture: () => { setIDs({ ...IDs, newSprintId: -1, pbiId: -1, oldSprintId: -1 }) },
               onMouseEnter: () => {
                 let tmp = IDs.oldSprintId === record.sprintNumber && IDs.dropped;
                 let temp = IDs.pbiId > 0 && IDs.oldSprintId !== record.sprintNumber && IDs.newSprintId !== item.sprintNumber;
                 // if(temp){
                 setIDs({ ...IDs, oldSprintId: tmp ? -1 : IDs.oldSprintId, dropped: tmp, newSprintId: temp ? item.sprintNumber : IDs.newSprintId });
               },
-              //onMouseLeave:()=>{console.log("leave");setIDs({ ...IDs,pbiId:-1, oldSprintId:-1});},
             };
 
-          }}/*({
-          index,
-          moveRowNested,
-        }) as any}*/
+          }}
         />
       </DndProvider>
     )
@@ -555,7 +453,7 @@ console.log(pbiPage);
             filters: {
               ...filterPBI,
               pageNumber: config.defaultFilters.page,
-              pageSize: config.defaultFilters.pbiSize * pbiPage.pageCount,
+              pageSize: config.defaultFilters.pbiSize * (pbiPage.pageCount < 0 || isNaN(pbiPage.pageCount)? 1: pbiPage.pageCount),
               inSprint: false
             }
           })
@@ -639,7 +537,7 @@ console.log(pbiPage);
   }, [fetchSprintsPBI, sprintRefreshRequired]);
 
   useEffect(() => {
-    if (!refreshRequired && fetched) {
+    if (!refreshRequired && fetched && typeof(pbiPage)!== "undefined" && typeof(pbiPage.list)!== "undefined") {
       setFetched(false);
       // console.log("fetching tasks");
       //fetch unassigned tasks
@@ -844,68 +742,6 @@ console.log(pbiPage);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
-
-  /* const DraggableBodyRow = ({ index: index_row, moveRow, className, style, ...restProps }:BodyRowProps) => {
-     const ref = useRef();
-     const [{ isOver, dropClassName }, drop] = useDrop({
-       accept: type,
-       collect: monitor => {
-         const index  = monitor.getItem() || {} as number;
-         if (index === index_row) {
-           return {};
-         }
-         return {
-           isOver: monitor.isOver(),
-           dropClassName: index as number < index_row ? ' drop-over-downward' : ' drop-over-upward',
-         };
-       },
-       drop: (item:any) => {
-         console.log(item);
-         if(item.index && typeof(item.index)!= "undefined"){
-           console.log("move backlog item");
-         moveRow(item.index, index_row);
-         }
-       },
-     });
-     const [, drag] = useDrag({
-       type,
-       item: { index: index_row },
-       collect: monitor => ({
-         isDragging: monitor.isDragging(),
-       }),
-     });
-     drop(drag(ref));
-   
-     return (
-       <tr
-         ref={ref as any}
-         className={`${className}${isOver ? dropClassName : ''}`}
-         style={{ cursor: 'move', ...style }}
-         {...restProps}
-       />
-     );
-   };*/
-  /*const getIndexInParent = (el: any) => Array.from(el.parentNode.children).indexOf(el);
-  useEffect(() => {
-   let start: any;
-   let end;
-   const container = document.querySelector(".ant-table-container");
-   console.log(container);
-   const drake = dragula([container as Element], {
-     moves: (el) => {
-       console.log(el);
-       start = getIndexInParent(el);
-       return true;
-     },
-   });
-
-   drake.on("drop", (el) => { 
-     console.log(el);
-     end = getIndexInParent(el);
-     console.log("end")
-     //handleReorder(start, end);
-   });
- }, []);*/
  
   const sprintColumns = [
     {
