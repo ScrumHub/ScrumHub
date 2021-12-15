@@ -185,11 +185,11 @@ export default function TaskView() {
         title: 'Related Link',
         dataIndex: 'link',
         key: 'link',
-        align: 'center' as const,
+        align: 'right' as const,
         render: (text: string) => <a href={text}>{"See on GitHub"}</a>
       },
       {
-        title: 'Action', colSpan: 1, align: "center" as const, key: 'operation', render: (record:ITask) =>{
+        title: 'Action', colSpan: 1, align: "right" as const, key: 'operation', render: (record:ITask) =>{
          return( <Button type="link" onClick={()=>{setTaskIdToAdd(record.id); setPbIdToAdd(record.pbiId); handleUpdate();setIsAssignTaskModalVisible(true)}} >
             <a>Assign</a>
           </Button>)}

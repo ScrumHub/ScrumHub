@@ -22,13 +22,13 @@ export interface IError {
 }
 
 export interface ITask {
+  assigness: IPeople[]|any[];
   id: number;
   name: string;
   finished: boolean;
   pbiId: number;
   isAssignedToPBI: boolean;
   link: string;
-  assigness: IPeople[];
 }
 
 export const initTask: ITask = {
@@ -293,19 +293,19 @@ export const initRepository: IRepository = {
 }
 
 export interface IPeople {
-  name: string;
-  login: string;
-  gitHubId: number;
   avatarLink:string;
+  gitHubId: number;
   isCurrentUser:boolean;
+  login: string;
+  name: string|null;
 }
 
 export const initPeople: IPeople = {
-  "name": "string",
-  "login": "string",
-  "gitHubId": 0,
-  "avatarLink": "string",
-  "isCurrentUser": true
+  name: "string",
+  login: "string",
+  gitHubId: 0,
+  avatarLink: "string",
+  isCurrentUser: true
 }
 
 

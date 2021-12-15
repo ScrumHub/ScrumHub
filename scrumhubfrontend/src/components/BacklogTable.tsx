@@ -3,7 +3,7 @@ import { Badge, Button, Space, Table, Input, PageHeader, Divider, Progress, Typo
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import * as Actions from '../appstate/actions';
-import {backlogColors, backlogPriorities, IAddPBI, IAssignPBI, ICheckedAssignPBI, ICheckedProductBacklogItem, IFilters, initAddPBI, initSprint, IPBIFilter, IProductBacklogItem, IProductBacklogList, ISprint, ISprintList, ITask, IUpdateIdSprint, IUpdateSprint, State } from '../appstate/stateInterfaces';
+import {backlogColors, backlogPriorities, IAddPBI, IAssignPBI, ICheckedAssignPBI, ICheckedProductBacklogItem, IFilters, initAddPBI, initSprint, IPBIFilter, IPeople, IProductBacklogItem, IProductBacklogList, ISprint, ISprintList, ITask, IUpdateIdSprint, IUpdateSprint, State } from '../appstate/stateInterfaces';
 import 'antd/dist/antd.css';
 import './Dragtable.css';
 import { store } from '../appstate/store';
@@ -342,11 +342,11 @@ export const BacklogTableWithSprints: React.FC = () => {
       {
         key: "isAssignedToPBI",
         title: 'Assigned',
-        dataIndex: 'isAssignedToPBI',
         render: (record: ITask) => (
           <span>
-            <Badge status={record.isAssignedToPBI ? "success" : "error"} />
-            {record.assigness && record.assigness.length >0? record.assigness[0].name : "Not Assigned"}
+            <Badge status={(typeof(record.assigness)!=="undefined" && record.assigness.length > 0)  ? "success" : "error"} />
+            {(typeof(record.assigness)!=="undefined" && record.assigness.length > 0) ? 
+            record.assigness.at(0).login as string : "Not Assigned"}
           </span>
         ),
         align: 'center' as const,
@@ -356,12 +356,12 @@ export const BacklogTableWithSprints: React.FC = () => {
         title: 'Related Link',
         dataIndex: 'link',
         key: 'link',
-        align: 'center' as const,
+        align: 'right' as const,
         render: (text: string) => <a href={text}>{"See on GitHub"}</a>
       },
       {
-        title: 'Action', colSpan: 1, align: "center" as const, key: 'operation', render: (record:ITask) => {
-          return (<Button type="link" onClick={()=>{setSelectedTask(record); setIsAssignTaskModalVisible(true)}} >
+        title: 'Action', colSpan: 1, align: "right" as const, key: 'operation', render: (record:ITask) => {
+          return (<Button type="link" onClick={()=>{console.log(typeof(record.assigness));console.log(record.assigness.length > 0);setSelectedTask(record); setIsAssignTaskModalVisible(true)}} >
             {"Assign"}
           </Button>)
         }
@@ -432,7 +432,7 @@ export const BacklogTableWithSprints: React.FC = () => {
         }
       },
       {
-        title: 'Action', align: "right" as const, colSpan: 3, key: 'right', render: (item: IProductBacklogItem) => {
+        title: 'Action', align: "right" as const, colSpan: 2, key: 'right', render: (item: IProductBacklogItem) => {
           return ({children:<span>
             {item.id !==0 && <Button type="link" onClick={() => { setSelectedPBI(item); setIsEstimateModalVisible(true); }} >
             {"Estimate"}
@@ -443,7 +443,7 @@ export const BacklogTableWithSprints: React.FC = () => {
             <Button type="link" onClick={() => { setSelectedPBI(item); setIsAddTaskModalVisible(true); }} >
             {"Add Task"}
           </Button>
-            </span>,props: { colSpan: 3 }})
+            </span>,props: { colSpan: 2 }})
         }
       },
 /*

@@ -433,12 +433,12 @@ export const reducer = createReducer(initState, {
     config.defaultFilters.size
   );
   const sprints = payload.payload.response as ISprintList;
-  console.log(sprints);
+  //console.log(sprints);
   if (newState.sprintPage !== null && pageNumber !== 1) {
     newState.sprintPage.pageSize = sprints.pageSize;
     newState.sprintPage.pageNumber = sprints.pageNumber;
-    newState.sprintPage.pageCount = sprints.pageCount;
-    newState.sprintPage.realSize = sprints.pageCount;
+    newState.sprintPage.pageCount = sprints.pageCount<0 ?1:sprints.pageCount;
+    newState.sprintPage.realSize = sprints.realSize;
     newState.sprintPage.list = newState.sprintPage.list
       .concat(sprints.list)
       .slice(0, (pageNumber + 1) * pageSize);
@@ -594,7 +594,7 @@ export const reducer = createReducer(initState, {
     newState.taskPage.pageNumber = tasks.pageNumber;
     newState.taskPage.pageCount = tasks.pageCount;
     newState.taskPage.realSize = tasks.pageCount;
-    newState.taskPage.list = newState.sprintPage.list
+    newState.taskPage.list = newState.taskPage.list
       .concat(tasks.list)
       .slice(0, (pageNumber + 1) * pageSize);
   } else {
@@ -686,11 +686,11 @@ export const reducer = createReducer(initState, {
   const pbisList = [unassignedPBI] as IProductBacklogItem[];
   //console.log(payload.payload.response);
   //console.log(newState.pbiPage.list);
-  //console.log(payload.payload.response);
+  //console.log(tasks);
   //console.log(`${newState.pbiPage}|${newState.pbiPage.list}|${newState.pbiPage.list.length>0}|${tasks}|${tasks.list.length>0}`);
   if (tasks && tasks.list.length>0) {
     //console.log("tasks to add");
-    console.log(tasks.list);
+    //console.log(tasks.list);
     if(newState.pbiPage.list.length<1 || newState.pbiPage.list[0].id !==0){
       //console.log("added empty");
       newState.pbiPage.list = pbisList.concat(newState.pbiPage.list);//empty pbi that holds unassigned tasks
@@ -703,6 +703,7 @@ export const reducer = createReducer(initState, {
       if(item.id === tasks.list[0].pbiId){
         return {...item, tasks:tasks.list};
       }
+      //console.log(item.tasks);
       return item;
     })
   }
@@ -747,6 +748,8 @@ export const reducer = createReducer(initState, {
     newState.sprintPage.list = newState.sprintPage.list.map((sprint:ISprint)=>{
       sprint.backlogItems = sprint.backlogItems.map((item:IProductBacklogItem)=>{
       if(item.id === tasks.list[0].pbiId){
+        ///const temp = tasks.list as ITask[];
+        //console.log(temp.length>1 ?temp[1].assigness:"");
         return {...item, tasks:tasks.list};
       }
       return item;
