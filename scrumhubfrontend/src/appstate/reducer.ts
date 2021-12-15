@@ -2,7 +2,7 @@ import * as Actions from "./actions";
 import { createReducer, PayloadAction } from "@reduxjs/toolkit";
 import { RequestResponse } from "./response";
 import config from "../configuration/config";
-import { IAssignPBI, IError, initState, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, ITaskNamed, State, unassignedPBI } from "./stateInterfaces";
+import { IAssignPBI, IError, initError, initState, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, ITaskNamed, State, unassignedPBI } from "./stateInterfaces";
 var _ = require('lodash');
 
 export const reducer = createReducer(initState, {
@@ -398,6 +398,7 @@ export const reducer = createReducer(initState, {
     config.defaultFilters.size
   );
   const sprints = payload.payload.response as ISprintList;
+  console.log(sprints);
   if (newState.sprintPage !== null && pageNumber !== 1) {
     newState.sprintPage.pageSize = sprints.pageSize;
     newState.sprintPage.pageNumber = sprints.pageNumber;
@@ -476,6 +477,7 @@ export const reducer = createReducer(initState, {
   newState.openSprint = payload.payload.response as ISprint;
   newState.loading = false;
   newState.sprintRequireRefresh = false;
+  newState.error = initError;
   return newState;
 },
 [Actions.updateOneSprintThunk.rejected.toString()]: (
@@ -647,20 +649,20 @@ export const reducer = createReducer(initState, {
   newState.loading = false;
   const tasks = payload.payload.response as ITaskList;
   const pbisList = [unassignedPBI] as IProductBacklogItem[];
-  console.log(payload.payload.response);
-  console.log(newState.pbiPage.list);
-  console.log(payload.payload.response);
-  console.log(`${newState.pbiPage}|${newState.pbiPage.list}|${newState.pbiPage.list.length>0}|${tasks}|${tasks.list.length>0}`);
+  //console.log(payload.payload.response);
+  //console.log(newState.pbiPage.list);
+  //console.log(payload.payload.response);
+  //console.log(`${newState.pbiPage}|${newState.pbiPage.list}|${newState.pbiPage.list.length>0}|${tasks}|${tasks.list.length>0}`);
   if (tasks && tasks.list.length>0) {
-    console.log("tasks to add");
-    console.log(tasks.list);
+    //console.log("tasks to add");
+    //console.log(tasks.list);
     if(newState.pbiPage.list.length<1 || newState.pbiPage.list[0].id !==0){
-      console.log("added empty");
+      //console.log("added empty");
       newState.pbiPage.list = pbisList.concat(newState.pbiPage.list);//empty pbi that holds unassigned tasks
     }
     newState.pbiPage.list = newState.pbiPage.list.map((item:IProductBacklogItem)=>{
       if(item.id === 0 && !tasks.list[0].isAssignedToPBI){
-        console.log("added null");
+        //console.log("added null");
         return {...item, tasks:tasks.list};
       }
       if(item.id === tasks.list[0].pbiId){
@@ -703,8 +705,8 @@ export const reducer = createReducer(initState, {
   let newState = _.cloneDeep(state);
   newState.loading = false;
   const tasks = payload.payload.response as ITaskList;
-  console.log(tasks);
-  console.log(newState.sprintPage);
+  //console.log(tasks);
+  //console.log(newState.sprintPage);
   if (newState.sprintPage && newState.sprintPage.list.length >0 && tasks && tasks.list.length>0) {
 
     newState.sprintPage.list = newState.sprintPage.list.map((sprint:ISprint)=>{

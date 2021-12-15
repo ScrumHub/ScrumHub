@@ -2,9 +2,29 @@
  /*.expand-sprints {
     margin-top: "20px";
       margin-bottom: "20px";
+  }*//*
+  .ant-table-expanded-row .draggable {
+    cursor: move;
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+    font-size: 1.2rem;
+    transform: rotate(90deg);
+  }
+
+  .gu-mirror {
+    background-color: rgba(16, 142, 233, 0.15);
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
   }*/
-
-
+  #components-table-demo-drag-sorting tr.drop-over-downward td {
+    border-bottom: 2px dashed #1890ff;
+  }
+  
+  #components-table-demo-drag-sorting tr.drop-over-upward td {
+    border-top: 2px dashed #1890ff;
+  }
   .ant-table table {
     border-radius: 50%;
     border-collapse: separate;

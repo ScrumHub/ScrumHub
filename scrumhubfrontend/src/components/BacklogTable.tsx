@@ -199,7 +199,7 @@ const DraggableBodyRowNested = ({ index: index_row, moveRow, className, style, .
   );
 };*/
 
-export const SprintsSortingTable: React.FC = () => {
+export const BacklogTableWithSprints: React.FC = () => {
   const { state } = useContext(AuthContext);
   const sprintPage = useSelector(
     (state: State) => state.sprintPage as ISprintList
@@ -263,8 +263,8 @@ export const SprintsSortingTable: React.FC = () => {
     );
   };
 
-  const RenderTaskforPBI: React.FC<IProductBacklogItem> = (item: IProductBacklogItem) => {
-    const nestedColumns = [
+  const TaskTableforPBI: React.FC<IProductBacklogItem> = (item: IProductBacklogItem) => {
+    const sprintsColumns = [
       { title: 'Name', align: 'left' as const, fixed: "left" as const, dataIndex: 'name', key: 'name' },
       {
         title: 'Finished',
@@ -307,7 +307,7 @@ export const SprintsSortingTable: React.FC = () => {
         ,
       }
     ];
-    const expandedComponents = {
+    const sprintsComponents = {
       body: {
         row: DraggableBodyRowNested,
       },
@@ -319,8 +319,8 @@ export const SprintsSortingTable: React.FC = () => {
           showHeader={false}
           scroll={{ x: 800 }}
           rowKey={(record: ITask) => record.id}
-          columns={nestedColumns}
-          components={expandedComponents}
+          columns={sprintsColumns}
+          components={sprintsComponents}
           dataSource={item.tasks}
           pagination={false}
           onRow={(record) => {
@@ -337,7 +337,7 @@ export const SprintsSortingTable: React.FC = () => {
     )
   };
 
-  const RenderPBIforSprint: React.FC<ISprint> = (item: ISprint) => {
+  const PBITableforSprint: React.FC<ISprint> = (item: ISprint) => {
     const taskColumns = [
       { title: 'Name', fixed: "left" as const, colSpan: 2, dataIndex: 'name', key: 'name',},
       {
@@ -364,7 +364,7 @@ export const SprintsSortingTable: React.FC = () => {
           columns={taskColumns}
           rowKey={(record: IProductBacklogItem) => record.id}
           expandable={{
-            expandedRowRender: RenderTaskforPBI,/*expandIcon: ({ expanded, onExpand, record }) =>
+            expandedRowRender: TaskTableforPBI,/*expandIcon: ({ expanded, onExpand, record }) =>
               expanded ? (
                 <MinusCircleTwoTone onClick={e => {onExpand(record, e);}} />
               ) : (
@@ -708,7 +708,7 @@ export const SprintsSortingTable: React.FC = () => {
           columns={sprintColumns}
           rowKey={(record: ISprint) => record.sprintNumber}
           expandable={{
-            expandedRowRender: RenderPBIforSprint, defaultExpandAllRows: false,
+            expandedRowRender: PBITableforSprint, defaultExpandAllRows: false,
             rowExpandable: record => record.backlogItems && record.backlogItems.length > 0, defaultExpandedRowKeys: [0, 1]
           }}
           onRow={(record) => {
