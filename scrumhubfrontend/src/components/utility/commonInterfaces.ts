@@ -9,3 +9,21 @@
       [x: string]: any;
     };
   }
+
+  export interface IModals {
+    addTask: boolean,
+    assgnTask: boolean,
+    assgnPpl: boolean,
+    addSprint: boolean,
+    updateSprint: boolean,
+    addPBI: boolean,
+    editPBI: boolean,
+    estimatePBI: boolean,
+  }
+
+  export interface IFetch  {
+    fetchSprints: boolean;
+    fetchSprintsPBI: boolean;
+    fetchPBIs: boolean;
+    fetched: boolean;
+  }
