@@ -282,10 +282,10 @@ export const SprintsSortingTable: React.FC = () => {
         key: "isAssignedToPBI",
         title: 'Assigned',
         dataIndex: 'isAssignedToPBI',
-        render: (val: boolean) => (
+        render: (record: ITask) => (
           <span>
-            <Badge status={val ? "success" : "error"} />
-            {val ? "Assigned" : "Not Assigned"}
+            <Badge status={record.isAssignedToPBI ? "success" : "error"} />
+            {record.assigness && record.assigness.length >0? record.assigness[0].name : "Not Assigned"}
           </span>
         ),
         align: 'center' as const,

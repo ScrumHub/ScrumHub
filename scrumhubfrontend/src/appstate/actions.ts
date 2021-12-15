@@ -2,7 +2,7 @@
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit"
 import type { RequestResponse } from "./response";
 import * as Fetching from "./fetching";
-import { IAddPBI, IFilters, IFiltersAndToken, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, ITaskNamed, IUpdateIdSprint } from "./stateInterfaces";
+import { IAddPBI, IFilters, IFiltersAndToken, IPeopleList, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, ITaskNamed, IUpdateIdSprint } from "./stateInterfaces";
 
 export const fetchRepositoriesThunk = createAsyncThunk<
   RequestResponse<IRepositoryList, number>,
@@ -17,6 +17,21 @@ export const fetchRepositoriesThunk = createAsyncThunk<
     );
   }
   return response as RequestResponse<IRepositoryList, number>;
+});
+
+export const fetchPeopleThunk = createAsyncThunk<
+  RequestResponse<IPeopleList, number>,
+  { ownerName: string; token: string},
+  { rejectValue: RequestResponse<IPeopleList, number> }
+>("fetchPeople", async (item: { ownerName: string; token: string}, { rejectWithValue }) => {
+  const response: RequestResponse<IRepositoryList, number> =
+    await Fetching.fetchPeople(item.ownerName, item.ownerName);
+  if (response.code !== 200) {
+    return rejectWithValue(
+      response as RequestResponse<IPeopleList, number>
+    );
+  }
+  return response as RequestResponse<IPeopleList, number>;
 });
 
 export const addRepositoryThunk = createAsyncThunk<

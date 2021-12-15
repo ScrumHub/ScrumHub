@@ -27,7 +27,9 @@ export const CustomAssignTaskPopup: React.FC<CollectionCreateFormProps> = ({
   onCreate,
   onCancel,
 }) => {
+  pbiData = pbiData.filter((item)=>item.id !== 0);
   const [form] = Form.useForm();
+  const [temp, setTemp] = useState(pbiData);
   return (
     <Modal
       visible={visible}
@@ -64,7 +66,7 @@ export const CustomAssignTaskPopup: React.FC<CollectionCreateFormProps> = ({
                 <Space key={key} style={{ display: 'flex', margin:0}} align="baseline">
                   <Checkbox checked={form.getFieldValue("backlogItems")[key].checked}
                     onClick={() => {
-                      const temp2 = _.cloneDeep(pbiData);
+                      const temp2 = _.cloneDeep(temp);
                       temp2[key].checked = temp2[key].checked===null?true:!temp2[key].checked;
                       form.setFieldsValue({ "backlogItems": temp2 });
                     }} />

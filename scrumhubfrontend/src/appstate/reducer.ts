@@ -2,7 +2,7 @@ import * as Actions from "./actions";
 import { createReducer, PayloadAction } from "@reduxjs/toolkit";
 import { RequestResponse } from "./response";
 import config from "../configuration/config";
-import { IAssignPBI, IError, initError, initState, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, ITaskNamed, State, unassignedPBI } from "./stateInterfaces";
+import { IAssignPBI, IError, initError, initState, IPeopleList, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, ITaskNamed, State, unassignedPBI } from "./stateInterfaces";
 var _ = require('lodash');
 
 export const reducer = createReducer(initState, {
@@ -263,6 +263,38 @@ export const reducer = createReducer(initState, {
   return newState;
 },
 [Actions.fetchPBIsThunk.rejected.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<undefined, undefined>>
+) => {
+  let newState = _.cloneDeep(state);
+  let errorResponse = payload.payload;
+  newState.loading = false;
+  newState.error = {
+    hasError: true,
+    errorCode: errorResponse ? errorResponse.code : -1,
+    erorMessage: errorResponse ? (errorResponse.response as IError).Message : "",
+  };
+  return newState;
+},
+[Actions.fetchPeopleThunk.pending.toString()]: (
+  state: State,
+  payload: PayloadAction<undefined>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = true;
+  return newState;
+},
+[Actions.fetchPeopleThunk.fulfilled.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<IPeopleList, number>>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = false;
+  newState.people = payload.payload.response as IPeopleList;
+  //newState.productRequireRefresh = false;
+  return newState;
+},
+[Actions.fetchPeopleThunk.rejected.toString()]: (
   state: State,
   payload: PayloadAction<RequestResponse<undefined, undefined>>
 ) => {
@@ -658,7 +690,7 @@ export const reducer = createReducer(initState, {
   //console.log(`${newState.pbiPage}|${newState.pbiPage.list}|${newState.pbiPage.list.length>0}|${tasks}|${tasks.list.length>0}`);
   if (tasks && tasks.list.length>0) {
     //console.log("tasks to add");
-    //console.log(tasks.list);
+    console.log(tasks.list);
     if(newState.pbiPage.list.length<1 || newState.pbiPage.list[0].id !==0){
       //console.log("added empty");
       newState.pbiPage.list = pbisList.concat(newState.pbiPage.list);//empty pbi that holds unassigned tasks
@@ -786,7 +818,8 @@ export const reducer = createReducer(initState, {
 ) => {
   let newState = _.cloneDeep(state);
   newState.loading = false;
-  newState.productRequireRefresh = true;
+  newState.error = initError;
+  //newState.productRequireRefresh = true;
   return newState;
 },
 [Actions.assignTaskThunk.rejected.toString()]: (
