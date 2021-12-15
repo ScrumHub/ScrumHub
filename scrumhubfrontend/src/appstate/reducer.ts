@@ -258,7 +258,9 @@ export const reducer = createReducer(initState, {
   newState.loading = false;
   newState.ownerName = localStorage.getItem("ownerName");
   newState.openRepository = newState.repositories.find((e : IRepository) => e.name === newState.ownerName) as IRepository;
+  newState.error = initError;
   newState.pbiPage = payload.payload.response as IProductBacklogList;
+  //newState.pbiPage = newState.pbiPage.pageCount < 0 ? 1 : newState.pbiPage.pageCount;
   newState.productRequireRefresh = false;
   return newState;
 },
@@ -291,6 +293,7 @@ export const reducer = createReducer(initState, {
   let newState = _.cloneDeep(state);
   newState.loading = false;
   newState.people = payload.payload.response as IPeopleList;
+  newState.error = initError;
   //newState.productRequireRefresh = false;
   return newState;
 },
@@ -322,6 +325,7 @@ export const reducer = createReducer(initState, {
 ) => {
   let newState = _.cloneDeep(state);
   newState.loading = false;
+  newState.error = initError;
   newState.namedPBI = (payload.payload.response as IProductBacklogList).list as IAssignPBI[];
   return newState;
 },
@@ -355,6 +359,7 @@ export const reducer = createReducer(initState, {
   newState.loading = false;
   newState.pbiPage = [];
   //newState.productRequireRefresh = true;
+  newState.error = initError;
   newState.pages = 1;
   newState.error = initError;
   return newState;
@@ -389,6 +394,7 @@ export const reducer = createReducer(initState, {
   newState.loading = false;
   newState.pbiPage = [];
   newState.productRequireRefresh = true;
+  newState.error = initError;
   newState.pages = 1;
   return newState;
 },
@@ -448,6 +454,7 @@ export const reducer = createReducer(initState, {
   // if response is shorter than default size - it means end is reached.
   newState.sprintLastPage = sprints.list.length < pageSize;
   newState.sprintRequireRefresh = false;
+  newState.error = initError;
   return newState;
 },
 [Actions.fetchSprintsThunk.rejected.toString()]: (
@@ -480,6 +487,7 @@ export const reducer = createReducer(initState, {
   newState.openSprint = payload.payload.response as ISprint;
   newState.loading = false;
   newState.sprintRequireRefresh = false;
+  newState.error = initError;
   return newState;
 },
 [Actions.fetchOneSprintThunk.rejected.toString()]: (
@@ -544,7 +552,7 @@ export const reducer = createReducer(initState, {
   let newState = _.cloneDeep(state);
   newState.loading = false;
   newState.sprintRequireRefresh = true;
-  newState.error={hasError: false,errorCode:201, errorMessage:""};
+  newState.error = initError;
   return newState;
 },
 [Actions.addSprintThunk.rejected.toString()]: (
@@ -603,6 +611,7 @@ export const reducer = createReducer(initState, {
   // if response is shorter than default size - it means end is reached.
   newState.taskLastPage = tasks.list.length < pageSize;
   newState.taskRequireRefresh = false;
+  newState.error = initError;
   return newState;
 },
 [Actions.fetchTasksThunk.rejected.toString()]: (
@@ -652,6 +661,7 @@ export const reducer = createReducer(initState, {
   // if response is shorter than default size - it means end is reached.
   //newState.taskLastPage = tasks.length < pageSize;
   newState.taskRequireRefresh = false;
+  newState.error = initError;
   return newState;
 },
 [Actions.fetchPBITasksThunk.rejected.toString()]: (
@@ -710,6 +720,7 @@ export const reducer = createReducer(initState, {
   // if response is shorter than default size - it means end is reached.
   //newState.taskLastPage = tasks.length < pageSize;
   newState.productRequireRefresh = false;
+  newState.error = initError;
   return newState;
 },
 [Actions.addTasksToPBIThunk.rejected.toString()]: (
@@ -760,6 +771,7 @@ export const reducer = createReducer(initState, {
   // if response is shorter than default size - it means end is reached.
   //newState.taskLastPage = tasks.length < pageSize;
   newState.productRequireRefresh = false;
+  newState.error = initError;
   return newState;
 },
 [Actions.addTasksToSprintThunk.rejected.toString()]: (
@@ -791,6 +803,7 @@ export const reducer = createReducer(initState, {
   let newState = _.cloneDeep(state);
   newState.loading = false;
   newState.productRequireRefresh = true;
+  newState.error = initError;
   return newState;
 },
 [Actions.addTaskThunk.rejected.toString()]: (
@@ -821,6 +834,7 @@ export const reducer = createReducer(initState, {
 ) => {
   let newState = _.cloneDeep(state);
   newState.loading = false;
+  newState.error = initError;
   newState.error = initError;
   //newState.productRequireRefresh = true;
   return newState;
