@@ -354,7 +354,7 @@ export default function SprintBacklog() {
         {isEstimateModalVisible && selectedPBI && <CustomEstimatePopup data={selectedPBI as IProductBacklogItem} visible={isEstimateModalVisible}
           onCreate={function (values: any): void { handleEstimatePBI(values) }}
           onCancel={() => { setIsEstimateModalVisible(false); }} />}
-          {isUpdateModalVisible && !loading && <CustomUpdateSprintPopup data={sprintPage as IUpdateSprint} pbiData={tempPBIPage.list as IProductBacklogItem[]} visible={isUpdateModalVisible}
+          {isUpdateModalVisible && !loading && <CustomUpdateSprintPopup data={sprintPage as ISprint} pbiData={tempPBIPage.list as IProductBacklogItem[]} visible={isUpdateModalVisible}
           onCreate={function (values: any): void { handleUpdatePBI(values) }}
           onCancel={() => { setIsUpdateModalVisible(false); }} />}
       </span>

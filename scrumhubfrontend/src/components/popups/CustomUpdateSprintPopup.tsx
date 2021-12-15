@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Form, Space, Typography, Checkbox } from 'antd';
-import { IProductBacklogItem, IUpdateSprint } from '../../appstate/stateInterfaces';
+import { IProductBacklogItem, ISprint, IUpdateSprint } from '../../appstate/stateInterfaces';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import TextArea from 'antd/lib/input/TextArea';
 import _ from 'lodash';
@@ -13,7 +13,7 @@ interface Values {
 }
 
 interface CollectionCreateFormProps {
-  data: IUpdateSprint;
+  data: ISprint;
   pbiData: IProductBacklogItem[];
   visible: boolean;
   onCreate: (values: Values) => void;
@@ -29,10 +29,10 @@ export const CustomUpdateSprintPopup: React.FC<CollectionCreateFormProps> = ({
 }) => {
   //TO DO
   //DELETE after backend is fixed
-  pbiData = pbiData.filter((item)=>item.estimated !== false);
+  pbiData = pbiData.filter((item)=>item.estimated !== false && item.id !== 0);
   const [form] = Form.useForm();
   const [temp, setTemp] = useState(pbiData);
-  const id = Number(localStorage.getItem("sprintID"));
+  const id = data.sprintNumber!== null ? data.sprintNumber:localStorage.getItem("sprintID")?.toString() as unknown as number;
   return (
     <Modal
       visible={visible}

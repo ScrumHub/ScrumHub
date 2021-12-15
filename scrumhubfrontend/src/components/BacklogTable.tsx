@@ -3,7 +3,7 @@ import { Badge, Button, Space, Table, Input, PageHeader, Divider, Progress, Typo
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import * as Actions from '../appstate/actions';
-import {backlogColors, backlogPriorities, IAddPBI, IFilters, initAddPBI, initSprint, IPBIFilter, IProductBacklogItem, IProductBacklogList, ISprint, ISprintList, ITask, State } from '../appstate/stateInterfaces';
+import {backlogColors, backlogPriorities, IAddPBI, IFilters, initAddPBI, initSprint, IPBIFilter, IProductBacklogItem, IProductBacklogList, ISprint, ISprintList, ITask, IUpdateIdSprint, IUpdateSprint, State } from '../appstate/stateInterfaces';
 import 'antd/dist/antd.css';
 import './Dragtable.css';
 import { store } from '../appstate/store';
@@ -18,6 +18,7 @@ import { CustomAddSprintPopup } from './popups/CustomAddSprintPopup';
 import { CustomEditPopup } from './popups/CustomEditPopup';
 import { CustomEstimatePopup } from './popups/CustomEstimatePopup';
 import { CustomAddPopup } from './popups/CustomAddPopup';
+import { CustomUpdateSprintPopup } from './popups/CustomUpdateSprintPopup';
 
 const { Search } = Input;
 
@@ -223,7 +224,9 @@ export const BacklogTableWithSprints: React.FC = () => {
   const sprintRefreshRequired = useSelector((appState: State) => appState.sprintRequireRefresh as boolean);
   const pbiPage = useSelector((appState: State) => appState.pbiPage as IProductBacklogList);
   const [selectedPBI, setSelectedPBI] = useState({} as IProductBacklogItem);
+  const [selectedSprint, setSelectedSprint] = useState({} as ISprint);
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+  const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
   const [isAddPBIModalVisible, setIsAddPBIModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [isEstimateModalVisible, setIsEstimateModalVisible] = useState(false);
@@ -355,7 +358,8 @@ export const BacklogTableWithSprints: React.FC = () => {
   const PBITableforSprint: React.FC<ISprint> = (item: any) => {
 
     const taskColumns = [
-      { title: 'Name', fixed: "left" as const, colSpan: 2, dataIndex: 'name', key: 'name', },
+      { title: 'Name', fixed: "left" as const, colSpan: 2, dataIndex: 'name', key: 'name', render:  (text: string) => {return ({ children: text,props: { colSpan: 2 }})},
+    },
       {
         title: 'Priority', align: "center" as const, colSpan: 2, dataIndex: 'priority', key: 'priority',
         render: (item: IProductBacklogItem) => item.priority % 3 !== 0 && item.id !==0 ? 
@@ -365,36 +369,12 @@ export const BacklogTableWithSprints: React.FC = () => {
       },
       {
         title: 'Progress', colSpan: 1, key: 'operation', align: "center" as const, render: (item: IProductBacklogItem) => {
-          return (<><Progress width={30} type="circle" percent={item.tasks && item.tasks.length > 0 ?
-            (item.tasks.filter((item: ITask) => item.finished).length / item.tasks.length)
-            : 100} /><Typography>{"Done"}</Typography></>)
+          return (<span><Progress  width={30} type="circle" percent={item.tasks && item.tasks.length > 0 ?
+            (item.tasks.filter((item: ITask) => item.finished).length)
+            : 100} format={percent => `${item.tasks && item.tasks.length > 0 ?percent:0}/${item.tasks && item.tasks.length > 0 ?item.tasks.length as number:0}`}></Progress></span>)
         }
       },
       {
-        title: 'Action', align: "right" as const, colSpan: 2, key: 'right', render: (item: IProductBacklogItem) => {
-          return (<span>
-            {item.id !==0 && <Button type="link" onClick={() => { setSelectedPBI(item); setIsEstimateModalVisible(true); }} >
-            {"Estimate"}
-          </Button>}
-          {item.id !==0 &&<Button type="link" onClick={() => { setSelectedPBI(item); setIsEditModalVisible(true); }} >
-              {"Edit"}
-            </Button>}
-            <Button type="link" onClick={() => { console.log("task") }} >
-            {"Add Task"}
-          </Button>
-            {item.id !==0 &&
-            <Popconfirm
-              title="Are you sure you want to delete this?"
-              onConfirm={()=>{setSelectedPBI(item);handleDelete(item);}}
-              okText="Yes"
-              cancelText="No"
-            ><Button type="link">
-              {"Delete"}</Button>
-            </Popconfirm>}
-            </span>)
-        }
-      },
-      /*{
         title: 'Action', align: "right" as const, colSpan: 1, key: 'delete', render: (item: IProductBacklogItem) => {
           return (item.id !==0 &&<span>
             <Popconfirm
@@ -407,6 +387,22 @@ export const BacklogTableWithSprints: React.FC = () => {
             </Popconfirm></span>)
         }
       },
+      {
+        title: 'Action', align: "right" as const, colSpan: 3, key: 'right', render: (item: IProductBacklogItem) => {
+          return ({children:<span>
+            {item.id !==0 && <Button type="link" onClick={() => { setSelectedPBI(item); setIsEstimateModalVisible(true); }} >
+            {"Estimate"}
+          </Button>}
+          {item.id !==0 &&<Button type="link" onClick={() => { setSelectedPBI(item); setIsEditModalVisible(true); }} >
+              {"Edit"}
+            </Button>}
+            <Button type="link" onClick={() => { console.log("task") }} >
+            {"Add Task"}
+          </Button>
+            </span>,props: { colSpan: 3 }})
+        }
+      },
+/*
       {
         title: 'Action', align: "right" as const, colSpan: 1, key: 'operation', render: () => {
           return (<Button type="link" onClick={() => { console.log("task") }} >
@@ -708,6 +704,29 @@ console.log(pbiPage);
     }
   }
 
+  const handleUpdatePBI = (pbi: IUpdateSprint) => {
+    setIsUpdateModalVisible(false);
+    const sprintID = selectedSprint.sprintNumber;
+     const ids = pbi.backlogItems.map((value: IProductBacklogItem) => 
+    {  return((value.sprintNumber === Number(sprintID) ? value.id.toString():"")) }).filter((x) => x !== "");
+    try {
+      store.dispatch(
+        Actions.updateOneSprintThunk({
+          token: token as string,
+          ownerName: ownerName,
+          sprintNumber: Number(sprintID),
+          sprint: {"goal":pbi.goal,"pbIs":ids} as IUpdateIdSprint
+        }) //filters
+      );
+    } catch (err) {
+      console.error("Failed to update the pbis: ", err);
+    }
+    finally {
+      setSelectedSprint({} as ISprint);
+      setInitialRefresh(true);
+    }
+  }
+
   const validate = (IDs: IFilters) => {
     if (IDs.dropped && IDs.oldSprintId === -1) {
       setIDs({ ...IDs, oldSprintId: -1, newSprintId: -1, pbiId: -1, dropped: false });
@@ -848,13 +867,13 @@ console.log(pbiPage);
     {
       title: 'Name', colSpan: 1, dataIndex: 'sprintNumber', key: 'sprintNumber',
       render: (sprintNumber: number) => {
-        return (sprintNumber === 0 ? "Product Backlog" : (<a href="/" onClick={()=>{localStorage.setItem("sprintID", JSON.stringify(sprintNumber));
-        navigate(`/${(ownerName as string).split("/")[0]}/${(ownerName as string).split("/")[1]}/sprints/${sprintNumber}`, { replace: true });}}>{"Sprint " + sprintNumber}</a>))
+        return (sprintNumber === 0 ? "Product Backlog" : (<Button type="link" onClick={()=>{localStorage.setItem("sprintID", JSON.stringify(sprintNumber));
+        navigate(`/${(ownerName as string).split("/")[0]}/${(ownerName as string).split("/")[1]}/sprints/${sprintNumber}`, { replace: true });}}>{"Sprint " + sprintNumber}</Button>))
       },
     },
     {
-      title: 'Action', colSpan: 1, align: "right" as const, key: 'operation', render: () => {
-        return (<Button type="link" onClick={() => { }} >
+      title: 'Action', colSpan: 1, align: "right" as const, key: 'operation', render: (record:ISprint) => {
+        return (record.sprintNumber !== 0 &&<Button type="link" onClick={() => {setSelectedSprint(record); setIsUpdateModalVisible(true);}} >
           {"Update"}
         </Button>)
       }
@@ -929,6 +948,9 @@ console.log(pbiPage);
       {isEstimateModalVisible && selectedPBI && selectedPBI.id && <CustomEstimatePopup data={selectedPBI as IProductBacklogItem} visible={isEstimateModalVisible}
         onCreate={function (values: any): void { handleEstimatePBI(values) }}
         onCancel={() => { setIsEstimateModalVisible(false); }} />}
+        {isUpdateModalVisible && !loading && <CustomUpdateSprintPopup data={selectedSprint} pbiData={pbiPage.list as IProductBacklogItem[]} visible={isUpdateModalVisible}
+          onCreate={function (values: any): void { handleUpdatePBI(values) }}
+          onCancel={() => { setIsUpdateModalVisible(false); }} />}
     </>
   );
 };
