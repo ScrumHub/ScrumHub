@@ -71,3 +71,9 @@ test("fetching the repositories with a wrong token results in an error", async (
       await Fetching.fetchOneSprint("", config.token,0);
     expect(data).toEqual(errorObject);
   });
+
+  test("fetch sprints with a wrong token results in an error", async () => {
+    const data: RequestResponse<ISprintList, undefined> =
+      await Fetching.fetchSprints("", config.token,{});
+    expect(data).toEqual(errorObject);
+  });
