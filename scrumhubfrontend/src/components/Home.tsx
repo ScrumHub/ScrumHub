@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { Button, Card } from 'antd';
+import { Button, Card, Popover } from 'antd';
 import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
 import { IFilters, IRepository, State } from '../appstate/stateInterfaces';
@@ -8,9 +8,10 @@ import { Navigate, useNavigate } from 'react-router';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import config from '../configuration/config';
 import { useSelector } from 'react-redux';
-import { CalendarOutlined, FolderAddOutlined, InfoCircleOutlined, LoadingOutlined } from '@ant-design/icons';
+import { CalendarOutlined, CheckCircleOutlined, CloseCircleOutlined, FolderAddOutlined, InfoCircleOutlined, LoadingOutlined } from '@ant-design/icons';
 import { store } from '../appstate/store';
 import { clearReposList } from '../appstate/actions';
+import SkeletonList, { content } from './utility/LoadAnimations';
 const { Meta } = Card;
 
 
@@ -24,14 +25,13 @@ export default function Home() {
   const lastPage = useSelector((state: State) => state.reposLastPage); // eslint-disable-next-line
   const [displayLoader, setDisplayLoader] = useState(false); // eslint-disable-next-line
   const [fetching, setFetching] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const loading = useSelector((state: State) => state.loading);
   const refreshRequired = useSelector(
     (appState: State) => appState.reposRequireRefresh as boolean
   );
   const repos = useSelector(
     (state: State) => state.repositories as IRepository[]
   );
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") : "";
   const navigate = useNavigate();
   const [initialRefresh, setInitialRefresh] = useState(true);
@@ -130,39 +130,40 @@ export default function Home() {
     return <Navigate to="/login" />;
   }
   return (
-    <section className="container">
-      {!initialRefresh && !refreshRequired && repos && repos.length > 0 && <InfiniteScroll
-        dataLength={repos ? repos.length : 0}
-        scrollThreshold={0.7}
-        next={fetchMore}
-        hasMore={!lastPage && !fetching}
-        loader={
-          (displayLoader && <LoadingOutlined />) || (!displayLoader && <></>)
-        }>
-        <div style={{ display: "grid", placeItems: "center", margin: "4.5%", background: "transparent" }}>
-          {repos.map((rep: IRepository) => {
-            return (<section className="card" style={{ width: "85%", }} key={rep.gitHubId} >
-              <Card style={{ backgroundColor: "white", marginBottom: "3vh" }} type="inner" actions=
-                {[<Button disabled={rep.alreadyInScrumHub || !rep.hasAdminRights} style={{ width: "180px" }} onClick={() => { addProject(rep.gitHubId) }} ><span><FolderAddOutlined disabled={!rep.alreadyInScrumHub} />
-                  {" Add to ScrumHub"}</span></Button>,
-                <Button disabled={!rep.alreadyInScrumHub} style={{ width: "180px" }} onClick={() => { redirectToProject(rep) }}><span><InfoCircleOutlined />{" Project Details"}</span></Button>,
-                <Button style={{ width: "180px" }}><span><CalendarOutlined />
-                  {rep.dateOfLastActivity === "No recent activity" ? " Not updated" : " Updated " + new Date(rep.dateOfLastActivity as Date).toLocaleString(['en-US'], { year: 'numeric', month: 'short', day: 'numeric' })}</span></Button>
-                ]}>
-                <Meta
-                  title={rep.name.split("/")[1]}
-                  description={rep.description}
-                ></Meta>
-                <br />
-                <p>{"There are " + rep.sprints.length + " sprints and " + rep.backlogItems.length + " backlog items.\n"}</p>
-                <p>{rep.typeOfLastActivity + (rep.dateOfLastActivity === "No recent activity" ? " " : " was the last activity") + " in the repository."}</p>
-              </Card>
-            </section>);
-          })
-          }
-        </div>
-      </InfiniteScroll>
-      }
+    <section className="container"><InfiniteScroll
+      dataLength={repos ? repos.length : 0}
+      scrollThreshold={0.7}
+      next={fetchMore}
+      hasMore={!lastPage && !fetching}
+      loader={<></>}>
+      <div style={{ display: "grid", placeItems: "center", margin: "4.5%", background: "transparent" }}>
+        {repos.map((rep: IRepository) => {
+          return (<section className="card" style={{ width: "85%", }} key={rep.gitHubId} >
+            <Card style={{ backgroundColor: "white", marginBottom: "3vh" }} type="inner" actions=
+              {[!rep.hasAdminRights ?
+              <Popover content={content}><Button disabled={true} style={{ width: "180px" }}>
+                <span>{<CloseCircleOutlined disabled={true} />}{" Cannot Add"}</span></Button></Popover>:
+                <Button disabled={rep.alreadyInScrumHub} style={{ width: "180px" }} onClick={() => { addProject(rep.gitHubId) }} >
+                <span>{rep.alreadyInScrumHub ? <CheckCircleOutlined disabled={true} /> :<FolderAddOutlined disabled={!rep.alreadyInScrumHub} />}
+                {rep.alreadyInScrumHub ? " In ScrumHub" :  " Add to ScrumHub" }</span></Button>,
+              <Button disabled={!rep.alreadyInScrumHub} type="primary" style={{ width: "180px" }} onClick={() => { redirectToProject(rep) }}><span><InfoCircleOutlined />{" Manage project"}</span></Button>,
+              <Button style={{ width: "180px" }}><span><CalendarOutlined />
+                {rep.dateOfLastActivity === "No recent activity" ? " Not updated" : " Updated " + new Date(rep.dateOfLastActivity as Date).toLocaleString(['en-US'], { year: 'numeric', month: 'short', day: 'numeric' })}</span></Button>
+              ]}>
+              <Meta
+                title={rep.alreadyInScrumHub ? <div className='link-button' onClick={() => { redirectToProject(rep) }}>{rep.name.split("/")[1]}</div> : <div>{rep.name.split("/")[1]}</div>}
+                description={rep.description}
+              ></Meta>
+              <br />
+              <p>{"This project has " + (rep.sprints && rep.sprints.length === 1 ? "1 sprint and " : (rep.sprints.length + " sprints and ")) + (rep.backlogItems && rep.backlogItems.length === 1 ? "1 backlog item.\n" : rep.backlogItems.length + " backlog items.\n")}</p>
+              <p>{rep.typeOfLastActivity + (rep.dateOfLastActivity === "No recent activity" ? " " : " was the last activity") + " in the repository."}</p>
+            </Card>
+          </section>);
+        })
+        }
+        <SkeletonList loading={loading} number={5} />
+      </div>
+    </InfiniteScroll>
     </section >
   );
 }

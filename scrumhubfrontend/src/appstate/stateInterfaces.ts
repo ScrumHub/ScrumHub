@@ -1,4 +1,3 @@
-import { string } from "joi";
 import config from "../configuration/config"
 
 export type Error = {
@@ -27,7 +26,7 @@ export interface IMessCodeError {
 }
 
 export interface ITask {
-  assigness: IPeople[]|any[];
+  assigness: IPerson[]|any[];
   id: number;
   name: string;
   finished: boolean;
@@ -233,8 +232,10 @@ export const initProductBacklogList: IProductBacklogList = {
   list: [],
 };
 
-export interface ISprint extends IUpdateSprint {
+export interface ISprint {
   sprintNumber: number;
+  goal: string;
+  backlogItems: IProductBacklogItem[]
 }
 
 export const initSprint: ISprint = {
@@ -249,19 +250,14 @@ export const initSprint2: ISprint = {
   backlogItems: [],
 }
 
-export interface IUpdateSprint {
-  goal: string;
-  backlogItems: IProductBacklogItem[]
-}
-
 export interface IUpdateIdSprint {
-  "goal": string;
-  "pbIs": string[]
+  goal: string;
+  pbiIDs: string[]
 }
 
-export const initUpdateSprint: IUpdateSprint = {
+export const initUpdateSprint: IUpdateIdSprint = {
   goal: "Goal 1",
-  backlogItems: [initProductBacklogItem],
+  pbiIDs: [],
 }
 
 export interface ISprintList {
@@ -304,7 +300,7 @@ export const initRepository: IRepository = {
   typeOfLastActivity: ""
 }
 
-export interface IPeople {
+export interface IPerson {
   avatarLink:string;
   gitHubId: number;
   isCurrentUser:boolean;
@@ -312,7 +308,7 @@ export interface IPeople {
   name: string|null;
 }
 
-export const initPeople: IPeople = {
+export const initPeople: IPerson = {
   name: "string",
   login: "string",
   gitHubId: 0,
@@ -326,7 +322,7 @@ export interface IPeopleList {
   pageCount: number;
   pageSize: number;
   realSize: number;
-  list: IPeople[];
+  list: IPerson[];
 }
 
 export const initPeopleList: IPeopleList =
@@ -385,7 +381,7 @@ export type State = {
   repoId: number;
   ownerName: string;
   namedPBI: IAssignPBI[];
-  people: IPeople[];
+  people: IPeopleList;
 };
 
 export const initError = {
@@ -418,5 +414,5 @@ export const initState: State = {
   namedPBI: [],
   repoId: -1,
   ownerName: "",
-  people: []
+  people: initPeopleList
 };

@@ -106,7 +106,7 @@ export function fetchPBIs(ownerName: any, token: string, filters: IFilters
   );
 }
 
-export function fetchPeople(ownerName: any, token: string
+export function fetchPeople(ownerName: string, token: string
   ): Promise<RequestResponse<IProductBacklogList, number>> {
     return getResponse(
       axios.get(

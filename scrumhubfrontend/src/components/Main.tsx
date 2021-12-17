@@ -63,13 +63,6 @@ function Main(props: any) {
     navigate("/", { replace: true });
   }
 
-  const handleTeams = () => {
-    store.dispatch(clearState());
-    localStorage.removeItem("ownerName");
-    localStorage.removeItem("sprintID");
-    navigate("/teams", { replace: true });
-  }
-
   const [selectedSiderKey, setSelectedSiderKey] = useState('2');
 
   const handleSprints = () => {
@@ -90,25 +83,26 @@ function Main(props: any) {
   const [isCollapsed, setIsCollapsed] = useState(true);
   return (
     <section className="container">
-      <Layout style={{ minHeight: "100vh" }}>
-        <Header hidden={!isLoggedIn} style={{ minHeight: "15%", minWidth: "100%" }}>
-          <Menu mode="horizontal" theme="dark" style={{
+      <Layout style={{ minHeight: "100vh"}}>
+        <Header hidden={!isLoggedIn} className="clearfix" style={{ height: "5vh", minWidth: "100%", backgroundColor:"white" }}>
+          <Menu mode="horizontal" theme="light" style={{
+            breakAfter:"auto",
             position: 'relative',
-            display: 'flex',
-            justifyContent: 'center',
+            display:'flex',
+            maxHeight: "5vh",
+            justifyContent: 'right',
+            verticalAlign:"center",
           }}>
             <Menu.Item key="proj" className="menu" onClick={()=> handleProjects()}>Projects</Menu.Item>
-            <Menu.Item key="team" className="menu" onClick={()=> handleTeams()}>Teams</Menu.Item>
             <Menu.Item key="logout" onClick={() => handleLogout()} className="menu">Logout</Menu.Item>
           </Menu>
         </Header>
-        <Content className="content">
-          <Layout className="site-layout-background" style={{ padding: ownerName === "" ? '':'24px 0' }}>
-          <Sider hidden={ownerName === ""} theme="dark" style={{height:'auto',backgroundColor:"white", borderColor:"transparent"}} collapsedWidth="0" onCollapse={()=>setIsCollapsed(!isCollapsed)} collapsible={true} collapsed={isCollapsed} className="site-layout-background" width={200}>
+        <Content className="content" style={{ height: "95vh",}}>
+          <Layout className="site-layout-background" style={{ /*padding: ownerName === "" ? '':'24px 0' */}}>
+          <Sider hidden={ownerName === ""} theme="dark" style={{height:'95vh',backgroundColor:"white", borderColor:"transparent"}} collapsedWidth="0" onCollapse={()=>setIsCollapsed(!isCollapsed)} collapsible={true} collapsed={isCollapsed} className="site-layout-background" width={200}>
           <Menu
           mode="inline"
           defaultSelectedKeys={[selectedSiderKey]}
-          style={{ height: 'auto' }}
           >
           <Menu.Item key="1"><FileOutlined />
               <span>Project Details</span></Menu.Item>
@@ -124,12 +118,11 @@ function Main(props: any) {
               <span>Progress Report</span></Menu.Item>
           </Menu>
           </Sider>
-          <Content style={ownerName === "" ?{}:{ padding: '0 50px', minHeight: 280 }}>
+          <Content style={ownerName === "" ?{height:'90vh'}:{height:'90vh', padding: '0 50px'}}>
           <AppRouter />
           </Content>
           </Layout>
-        </Content>
-        <Footer hidden={!isLoggedIn} style={{ textAlign: 'center', minHeight: "10%" }}>ScrumHub © Created in 2021{true && (<a
+          <Footer hidden={!isLoggedIn} style={{ height:'5vh',textAlign: 'center', verticalAlign:"center"}}>ScrumHub © Created in 2021{true && (<a
           href="http://github.com/ScrumHub/ScrumHub"
           target="_blank"
           rel="noreferrer"
@@ -138,6 +131,7 @@ function Main(props: any) {
           <GithubOutlined style={{marginLeft:"5px"}}/>
         </a>)}
         </Footer>
+        </Content>
       </Layout>
     </section>
   );

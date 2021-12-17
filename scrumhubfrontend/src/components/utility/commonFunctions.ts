@@ -12,5 +12,6 @@ export function useIsMounted() {
   return isMounted;
 }
 export const validate = (IDs: IFilters) => {
-    return (IDs.oldSprintId !== -1 && IDs.newSprintId !== -1 && IDs.pbiId !== -1 && IDs.newSprintId !== IDs.oldSprintId)
+  console.log(IDs);
+    return (IDs.oldSprintId !== -1 && IDs.newSprintId !== null &&IDs.newSprintId !== -1 && IDs.pbiId !== -1 && IDs.newSprintId !== IDs.oldSprintId)
   }
