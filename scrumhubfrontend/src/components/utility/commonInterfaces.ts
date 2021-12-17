@@ -20,10 +20,3 @@
     editPBI: boolean,
     estimatePBI: boolean,
   }
-
-  export interface IFetch  {
-    fetchSprints: boolean;
-    fetchSprintsPBI: boolean;
-    fetchPBIs: boolean;
-    fetched: boolean;
-  }

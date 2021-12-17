@@ -25,7 +25,7 @@ export const fetchPeopleThunk = createAsyncThunk<
   { rejectValue: RequestResponse<IPeopleList, number> }
 >("fetchPeople", async (item: { ownerName: string; token: string}, { rejectWithValue }) => {
   const response: RequestResponse<IRepositoryList, number> =
-    await Fetching.fetchPeople(item.ownerName, item.ownerName);
+    await Fetching.fetchPeople(item.ownerName, item.token);
   if (response.code !== 200) {
     return rejectWithValue(
       response as RequestResponse<IPeopleList, number>

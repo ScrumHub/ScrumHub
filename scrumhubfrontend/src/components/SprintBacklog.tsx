@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Button, Divider, PageHeader, Radio, Table, Typography, } from 'antd';
 import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
-import { IAddPBI, IFilters, IProductBacklogItem, IProductBacklogList, ISprint, IUpdateIdSprint, IUpdateSprint, State } from '../appstate/stateInterfaces';
+import { IAddPBI, IFilters, IProductBacklogItem, IProductBacklogList, ISprint, IUpdateIdSprint, State } from '../appstate/stateInterfaces';
 import { AuthContext } from '../App';
 import { Navigate } from 'react-router';
 import config from '../configuration/config';
@@ -111,7 +111,7 @@ export default function SprintBacklog() {
       setInitialRefresh(true);
     }
   }
-  const handleUpdatePBI = (pbi: IUpdateSprint) => {
+  const handleUpdatePBI = (pbi: ISprint) => {
     setIsUpdateModalVisible(false);
      const ids = pbi.backlogItems.map((value: IProductBacklogItem) => 
     {  return((value.sprintNumber === Number(sprintID) ? value.id.toString():"")) }).filter((x) => x !== "");
@@ -121,7 +121,7 @@ export default function SprintBacklog() {
           token: token as string,
           ownerName: ownerName,
           sprintNumber: Number(sprintID),
-          sprint: {"goal":pbi.goal,"pbIs":ids} as IUpdateIdSprint
+          sprint: {"goal":pbi.goal,"pbiIDs":ids} as IUpdateIdSprint
         }) //filters
       );
     } catch (err) {
@@ -296,6 +296,7 @@ export default function SprintBacklog() {
       <Table
         loading={refreshRequired || initialRefresh}
         scroll={{ x: 800 }}
+        size="small"
         rowKey={(record: IProductBacklogItem) => record.id}
         rowSelection={{
           type: "checkbox",

@@ -1,5 +1,5 @@
 import { IFilters } from "../../appstate/stateInterfaces";
-import { IFetch, IModals } from "./commonInterfaces";
+import { IModals } from "./commonInterfaces";
 
 export const initIDs: IFilters = {
     oldSprintId: -1, newSprintId: -1, pbiId: -1, dropped: false
@@ -16,11 +16,4 @@ export const initIDs: IFilters = {
     addPBI: false,
     editPBI: false,
     estimatePBI: false,
-  }
-
-  export const initFetchVals : IFetch = {
-    fetchSprints: false,
-    fetchSprintsPBI: false,
-    fetchPBIs: false,
-    fetched: false,
   }
