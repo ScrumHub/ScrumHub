@@ -1,4 +1,4 @@
-import { Badge, Progress, Tag } from "antd";
+import { Badge, InputNumber, Progress, Statistic, Tag } from "antd";
 import { any } from "joi";
 import { useEffect, useRef } from "react";
 import { useDrop, useDrag } from "react-dnd";
@@ -6,11 +6,11 @@ import { render } from "react-dom";
 import { IProductBacklogItem, ITask } from "../../appstate/stateInterfaces";
 import { type } from "../BacklogTable";
 import { BodyRowProps } from "./commonInterfaces";
+import "../Home.css";
 
 //rows
 export const NonDraggableBodyRow = ({
-  index: index_row,
-  moveRow,
+  index:index_row,
   className,
   style,
   ...restProps
@@ -59,8 +59,7 @@ export const NonDraggableBodyRow = ({
 };
 
 export const DraggableBodyRowNested = ({
-  index: index_row,
-  moveRow,
+  index:index_row,
   className,
   style,
   ...restProps
@@ -121,7 +120,6 @@ export const backlogColors = ["green", "blue", "red"];
 export const taskNameCol = {
   title: "Name",
   align: "left" as const,
-  fixed: "left" as const,
   dataIndex: "name",
   key: "name",
 };
@@ -132,7 +130,7 @@ export const taskFinishCol = {
   align: "center" as const,
   render: (val: boolean) => (
     <span>
-      <Badge status={val ? "success" : "error"} />
+      <Badge size='small' status={val ? "success" : "error"} />
       {val ? "Finished" : "In Progress"}
     </span>
   ),
@@ -143,7 +141,7 @@ export const taskAssigneeCol =
   title: "Assigned",
   render: (record: ITask) => (
     <span>
-      <Badge
+      <Badge size='small'
         status={
           typeof record.assigness !== "undefined" &&
             record.assigness.length > 0
@@ -167,24 +165,18 @@ export const taskGhLinkCol = {
 };
 
 //sprint columns
-export const pbiNameCol = {title: 'Name', fixed: "left" as const, colSpan: 2, dataIndex: 'name', key: 'name', render: (text: string) => { return ({ children: text, props: { colSpan: 2 } }) },};
+export const pbiNameCol = {title: 'Name',  align: "left" as const, colSpan: 2, dataIndex: 'name', key: 'name', render: (text: string) => { return ({ children: text, props: { colSpan: 2 } }) },};
 export const pbiPriorityCol = {
-  title: 'Priority', align: "center" as const, colSpan: 2, key: 'priority',
+  title: 'Priority', align: "center" as const, colSpan: 1, key: 'priority',
   render: (item: IProductBacklogItem) => item.id !== 0 ?
     <Tag color={backlogColors[item.priority%3]}>{backlogPriorities[item.priority%3]}</Tag>
     : <></>
 
 };
 export const pbiProgressCol ={
-  title: 'Progress', colSpan: 1, key: 'operation', align: "center" as const, render: (item: IProductBacklogItem) => {
-    return (<span><Progress width={30} type="circle" status={`${item.tasks && item.tasks.length > 0 ? (item.tasks.filter((item: ITask) => item.finished).length / item.tasks.length) !== 0 ? "normal" : "exception" : "normal"}`} percent={item.tasks && item.tasks.length > 0 ?
+  title: 'Tasks Done', colSpan: 1, key: 'operation', align: "center" as const, render: (item: IProductBacklogItem) => {
+    return (<span><Progress size='small' width={30} type="circle" status={`${item.tasks && item.tasks.length > 0 ? (item.tasks.filter((item: ITask) => item.finished).length / item.tasks.length) !== 0 ? "normal" : "exception" : "normal"}`} percent={item.tasks && item.tasks.length > 0 ?
       (item.tasks.filter((item: ITask) => item.finished).length / item.tasks.length)
       : 100} format={percent => `${item.tasks && item.tasks.length > 0 ? item.tasks.filter((item: ITask) => item.finished).length : 0}/${item.tasks && item.tasks.length > 0 ? item.tasks.length as number : 0}`}></Progress></span>)
-  }
-};
-export const pbiStoryPtsCol =
-{
-  title: 'Story Points', colSpan: 1, key: 'operation', align: "center" as const, render: (item: IProductBacklogItem) => {
-    return (<span><Progress width={30} type="circle" percent={100} status="exception" format={percent => `${item.timeSpentInHours}h`}></Progress></span>)
   }
 };

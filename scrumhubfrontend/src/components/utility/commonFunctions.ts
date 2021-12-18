@@ -1,4 +1,4 @@
-import { IFilters } from "../../appstate/stateInterfaces"
+import { IFilters, ISprint } from "../../appstate/stateInterfaces"
 import { useCallback, useEffect, useRef } from "react";
 
 export function useIsMounted() {
@@ -13,5 +13,24 @@ export function useIsMounted() {
 }
 export const validate = (IDs: IFilters) => {
   console.log(IDs);
-    return (IDs.oldSprintId !== -1 && IDs.newSprintId !== null &&IDs.newSprintId !== -1 && IDs.pbiId !== -1 && IDs.newSprintId !== IDs.oldSprintId)
-  }
+  return (IDs.oldSprintId !== -1 && IDs.newSprintId !== null && IDs.newSprintId !== -1 && IDs.pbiId !== -1 && IDs.newSprintId !== IDs.oldSprintId)
+}
+
+export function dateFormat(date: Date) {
+  return new Date(date as Date).toLocaleString(['en-US'], { year: 'numeric', month: 'short', day: 'numeric' });
+}
+
+/*export function MenuWithPeople(people: IPeopleList) {
+  return (<Menu>{people.list.map((item: IPerson) => {
+    return (
+      <MenuItem key={item.login}>
+        {item.login as string}
+      </MenuItem>);
+  })
+  }</Menu>);
+}*/
+
+
+export function getIndex(record: ISprint) {
+  return record.sprintNumber;
+}
