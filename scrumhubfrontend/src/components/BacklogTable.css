@@ -19,34 +19,50 @@
     cursor: -webkit-grabbing;
   }*/
   #components-table-demo-drag-sorting tr.drop-over-downward td {
-    border-bottom: 2px dashed #1890ff;
+    border-bottom: 1px dashed #1890ff;
   }
   
   #components-table-demo-drag-sorting tr.drop-over-upward td {
-    border-top: 2px dashed #1890ff;
+    border-top: 1px dashed #1890ff;
   }
   .ant-table table {
-    border-radius: 50%;
+    border-radius: 30px;
     border-collapse: separate;
     
   }
   .ant-table-tbody {
-    border-radius: 50%;
+    border-collapse: collapse;
+    border-radius: 30px;
     border-color:#f0f2f5;
 
   }
   .ant-table-tbody > tr  {
-    border-radius: 50%;
+    border-collapse: collapse;
+    border-radius: 30px;
     border-color: #f0f2f5;
   }
+
+  .ant-table-cell > ant-table-cell-row-hover > td  {
+    border-collapse: collapse;
+    border-radius: 30px;
+    border-color: #f0f2f5;
+  }
+  
   .ant-table-tbody > tr > expanded-row:hover > td {
-    background: none;
-    background-color: transparent;
+    border-collapse: collapse;
+    border-radius: 30px;
+    background:"none";
+    background-color:#f0f2f5;
   }
   tr.ant-table-expanded-row > td,
    tr.ant-table-expanded-row:hover > td {
+     
     background:"none";
     background-color:#f0f2f5;
+  }
+  .ant-input-number-input {
+    align-self: center;
+    text-align: center;
   }
  /*
 .expand-bitems {

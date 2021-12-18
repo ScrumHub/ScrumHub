@@ -1,9 +1,9 @@
-import React, { useState, useRef, useContext, useEffect } from 'react';
-import { Button, Space, Table, Input, Popconfirm, Select, Dropdown, Menu } from 'antd';
+import React, { useState, useRef, useContext, useEffect, useCallback } from 'react';
+import { Button, Space, Table, Input, Popconfirm, Select, Dropdown, InputNumber, Menu, Avatar } from 'antd';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import * as Actions from '../appstate/actions';
-import { IAddPBI, IAssignPBI, ICheckedAssignPBI, ICheckedProductBacklogItem, IFilters, initAddPBI, initPBIFilter, initSprint, IPBIFilter, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, ISprint, ISprintList, ITask, IUpdateIdSprint, State } from '../appstate/stateInterfaces';
+import { BodyRowTypes, IAddPBI, IAssignPBI, ICheckedAssignPBI, ICheckedProductBacklogItem, IFilters, initAddPBI, initPBIFilter, initPeopleList, initSprint, IPBIFilter, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, ISprint, ISprintList, ITask, IUpdateIdSprint, State } from '../appstate/stateInterfaces';
 import 'antd/dist/antd.css';
 import './BacklogTable.css';
 import { store } from '../appstate/store';
@@ -20,15 +20,18 @@ import { CustomAddTaskPopup } from './popups/CustomAddTaskPopup';
 import { CustomAssignTaskPopup } from './popups/CustomAssignTaskPopup';
 import { initIDs, initModalVals } from './utility/commonInitValues';
 import { BodyRowProps, IModals } from './utility/commonInterfaces';
-import { useIsMounted, validate } from './utility/commonFunctions';
-import { taskAssigneeCol, taskFinishCol, taskGhLinkCol, taskNameCol, pbiNameCol, pbiPriorityCol, pbiProgressCol, pbiStoryPtsCol } from './utility/BodyRowsAndColumns';
+import { useIsMounted, validate, } from './utility/commonFunctions';
+import { taskAssigneeCol, taskFinishCol, taskGhLinkCol, taskNameCol, pbiNameCol, pbiPriorityCol, pbiProgressCol } from './utility/BodyRowsAndColumns';
 import { Option } from 'antd/lib/mentions';
+import TaskTableComponent from './TaskTableComponent';
+import PBITableComponent from './PBITableComponent';
 import MenuItem from 'antd/lib/menu/MenuItem';
+import { DownOutlined, UserOutlined } from '@ant-design/icons';
+import { MenuWithPeople } from './utility/LoadAnimations';
 //import { addTaskToPBI } from './utility/BacklogHandlers';
 
 const { Search } = Input;
 export const type = 'DraggableBodyRow';
-
 
 export const BacklogTableWithSprints: React.FC = () => {
   const { state } = useContext(AuthContext);
@@ -227,11 +230,34 @@ export const BacklogTableWithSprints: React.FC = () => {
       }
     }
   };
-  const DraggableBodyRow = ({ index: index_row, moveRow, className, style, ...restProps }: BodyRowProps) => {
+  const moveRow = useCallback(
+    (dragIndex: any, hoverIndex: any) => {
+      //console.log(dragIndex);
+      //console.log(hoverIndex);
+      /*const dragRow = data[dragIndex];
+      setData(
+        update(data, {
+          $splice: [
+            [dragIndex, 1],
+            [hoverIndex, 0, dragRow],
+          ],
+        }),
+      );*/
+    },
+    [sprintPage.list, pbiPage]
+  );
+  const DraggableBodyRow = ({ index: index_row, className, style, bodyType, ...restProps }: BodyRowProps) => {
     const ref = useRef();
+    //console.log(restProps);
+    //["data-row-key"]);
+    //console.log(typeof(restProps));
+    //data-row-key
+    //console.log(typeof(index_row)!=="undefined"?index_row:"");
+    //console.log(typeof(restProps)!==undefined?restProps:"");
     const [{ isOver, dropClassName }, drop] = useDrop({
       accept: type,
       collect: monitor => {
+        //console.log(monitor.getHandlerId());
         const index = monitor.getItem() || {} as number;
         if (index === index_row) { return {}; }
         return {
@@ -240,12 +266,23 @@ export const BacklogTableWithSprints: React.FC = () => {
         };
       },
       drop: (item: any) => {
-        setIDs({ ...IDs, dropped: true });
+        if (typeof (index_row) !== "undefined") {
+          console.log(restProps);
+          const record = restProps["record"] as BodyRowTypes;
+          console.log();
+          console.log(record);
+          console.log(item);
+          console.log(index_row);
+
+          updateRow(record, item, index_row, bodyType);
+        }
+        //moveRow(item.index, index_row);
+        //setIDs({ ...IDs, dropped: true });
       },
     });
     const [, drag] = useDrag({
       type,
-      item: { index: index_row },
+      item: { index: index_row, bodyType: bodyType },
       collect: monitor => ({
         isDragging: monitor.isDragging(),
       }),
@@ -255,161 +292,101 @@ export const BacklogTableWithSprints: React.FC = () => {
       <tr
         ref={ref as any}
         className={`${className}${isOver ? dropClassName : ''}`}
-        style={{ cursor: "move", marginTop: "20px", marginBottom: "20px", ...style }}
+        style={{ cursor: "move", borderRadius: "0 10px 10px 0", ...style }}
         {...restProps}
       />
     );
   };
-  const TaskTableforPBI: React.FC<IProductBacklogItem> = (item: IProductBacklogItem) => {
-    const sprintsColumns = [
-      taskNameCol,
-      taskFinishCol,
-      taskAssigneeCol,
-      taskGhLinkCol,
-      {
-        title: 'Action', dataIndex: "", align: "right" as const, key: 'operation', render: (record: ITask) => {
-          return (<Button type="link" onClick={() => { setSelectedTask(record); setIsModal({ ...isModal, assgnTask: true }); }} >
-            {"Move PBI"}
-          </Button>)
-        }
-      }, {
-        title: 'Assign', colSpan: 1, align: "right" as const, key: 'operation', render: (record: ITask) => {
-          return (<Select
-            showSearch
-            placeholder="Select a person"
-            onChange={() => { }}
-            onSearch={() => { }}
-          //filterOption={(input:string, option) =>
-          // option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-          //}
-          >
-          
-            {people.list.map((item: IPerson) => {
-              return (
-                <Option key={item.login}>
-                  {item.login as string}
-                </Option>);})
-                }
-          </Select>)
-        }
+
+  const nestedcomponents = {
+    body: {
+      row: DraggableBodyRow,
+    },
+  };
+  const taskColumns = [
+    taskNameCol,
+    taskFinishCol,
+    taskAssigneeCol,
+    taskGhLinkCol,
+    {
+      title: 'Action', dataIndex: "", align: "right" as const, key: 'operation', render: (record: ITask) => {
+        return (<Button size='small' type="link" onClick={() => { setSelectedTask(record); setIsModal({ ...isModal, assgnTask: true }); }} >
+          {"Move PBI"}
+        </Button>)
       }
-    ];
-    const sprintsComponents = {
-      body: {
-        row: DraggableBodyRow,
-      },
-    };
+    },
+    {
+      title: 'Assign', colSpan: 1, align: "right" as const, key: 'operation', render: (record: ITask) => {
+        return (<Select
+          size='small'
+          showSearch
+          placeholder="Select a person"
+          onChange={() => { }}
+          onSearch={() => { }}
+        //filterOption={(input:string, option) =>
+        // option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+        //}
+        >
+
+          {people.list.map((item: IPerson) => {
+            return (
+              <Option key={item.login}>
+                {item.login as string}
+              </Option>);
+          })
+          }
+        </Select>)
+      }
+    }
+  ];
+  const TaskTableforPBI: React.FC<IProductBacklogItem> = (item: IProductBacklogItem) => {
     return (
-      <DndProvider backend={HTML5Backend} key={item.sprintNumber}>
-        <Table
-          size="small"
-          showHeader={false}
-          scroll={{ x: 800 }}
-          rowKey={(record: ITask) => record.id}
-          columns={sprintsColumns}
-          components={sprintsComponents}
-          dataSource={item.tasks}
-          pagination={false}
-          onRow={(record) => {
-            return {
-              onMouseEnter: () => {
-                if (IDs.pbiId > 0 && IDs.oldSprintId !== item.sprintNumber) { setIDs({ ...IDs, newSprintId: item.sprintNumber, drop: true }) }
-              },
-            };
-          }}
-        />
-      </DndProvider>
+      <TaskTableComponent item={item} taskColumns={taskColumns} taskComponents={nestedcomponents} />
     )
   };
-  const PBITableforSprint: React.FC<ISprint> = (item: any) => {
-
-    const taskColumns = [
-      pbiNameCol,
-      pbiPriorityCol,
-      pbiProgressCol,
-      pbiStoryPtsCol,
-      {
-        title: 'Delete', align: "right" as const, colSpan: 1, key: 'delete', render: (item: IProductBacklogItem) => {
-          return (item.id !== 0 && <span>
-            <Popconfirm
-              title="Are you sure you want to delete this?"
-              onConfirm={() => { setSelectedPBI(item); deletePBI(item); }}
-              okText="Yes"
-              cancelText="No"
-            ><Button type="link">
-                {"Delete"}</Button>
-            </Popconfirm></span>)
-        }
-      },
-      {
-        title: 'Action', align: "right" as const, colSpan: 2, key: 'actions', render: (item: IProductBacklogItem) => {
-          return ({
-            children: <span>
-              {item.id !== 0 && <Button type="link" onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, estimatePBI: true }); }} >
-                {"Estimate"}
-              </Button>}
-              {item.id !== 0 && <Button type="link" onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, editPBI: true }); }} >
-                {"Edit"}
-              </Button>}
-              <Button type="link" onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, addTask: true }); }} >
-                {"Add Task"}
-              </Button>
-            </span>, props: { colSpan: 2 }
-          })
-        }
-      },
-    ];
-    const nestedcomponents = {
-      body: {
-        row: DraggableBodyRow,
-      },
-    };
-
+  const pbiColumns = [
+    pbiNameCol,
+    pbiPriorityCol,
+    pbiProgressCol,
+    {
+      title: 'Story Points', colSpan: 1, key: 'operation', align: "center" as const, render: (item: IProductBacklogItem) => {
+        return (<span><InputNumber onInputCapture={(value) => { console.log(value) }} controls={true} keyboard={true} onChange={() => { }} max={40} min={0} defaultValue={item.expectedTimeInHours} bordered={false} />{/*<Statistic title="Story Points" value={item.expectedTimeInHours} /><Progress width={30} type="circle" percent={100} format={percent => `${item.expectedTimeInHours}`}></Progress>*/}</span>)
+      }
+    },
+    {
+      title: 'Delete', align: "center" as const, colSpan: 1, key: 'delete', render: (item: IProductBacklogItem) => {
+        return (item.id !== 0 && <span>
+          <Popconfirm
+            title="Are you sure you want to delete this?"
+            onConfirm={() => { setSelectedPBI(item); deletePBI(item); }}
+            okText="Yes"
+            cancelText="No"
+          ><Button size='small' type="link">
+              {"Delete"}</Button>
+          </Popconfirm></span>)
+      }
+    },
+    {
+      title: 'Action', align: "center" as const, colSpan: 2, key: 'actions', render: (item: IProductBacklogItem) => {
+        return ({
+          children: <span style={{ alignItems: "flex-end" }}>
+            {item.id !== 0 && <Button size='small' type="link" onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, estimatePBI: true }); }} >
+              {"Estimate"}
+            </Button>}
+            {item.id !== 0 && <Button size='small' type="link" onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, editPBI: true }); }} >
+              {"Edit"}
+            </Button>}
+            <Button size='small' type="link" onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, addTask: true }); }} >
+              {"Add Task"}
+            </Button>
+          </span>, props: { colSpan: 2 }
+        })
+      }
+    },
+  ];
+  const PBITableforSprint: React.FC<ISprint> = (item: ISprint) => {
     return (
-      <DndProvider backend={HTML5Backend} key={item.sprintNumber}>
-        <Table
-          size="small"
-          showHeader={false}
-          scroll={{ x: 800 }}
-          columns={taskColumns}
-          rowKey={(record: IProductBacklogItem) => record.id}
-          expandable={{
-            expandedRowRender: TaskTableforPBI,
-            defaultExpandAllRows: false, rowExpandable: record => record.tasks && record.tasks.length > 0,
-          }}
-          components={nestedcomponents}
-          dataSource={item.backlogItems}//:item.backlogItems.filter((item:IProductBacklogItem)=>{item.name.startsWith(filterPBI.nameFilter as string)})}
-          pagination={false}
-          onRow={(record) => {
-            return {
-              onDrag: () => {
-                if (record.id !== IDs.pbiId) { setIDs({ ...IDs, pbiId: record.id, oldSprintId: IDs.pbiId !== 0 ? item.sprintNumber : -1 }); }
-              },
-              //onDragEnter: () => {
-              //  console.log(record.name)
-              //},
-              onDragEnter: () => {
-                let tmp = IDs.oldSprintId === record.sprintNumber && IDs.dropped;
-                let temp = IDs.pbiId > 0 && IDs.oldSprintId !== record.sprintNumber && IDs.newSprintId !== record.sprintNumber;
-                if(isMounted()){
-                if(tmp){
-                  setIDs({ ...IDs, oldSprintId: -1, dropped: true});
-                }
-                //else{
-               //   setIDs({ ...IDs, dropped:false });
-                //}
-                if(temp)
-                {
-                  setIDs({ ...IDs,  newSprintId: record.sprintNumber });
-                }
-              }
-                
-              },
-            };
-
-          }}
-        />
-      </DndProvider>
+      <PBITableComponent TaskTableforPBI={TaskTableforPBI} item={item} pbiColumns={pbiColumns} nestedcomponents={nestedcomponents} />
     )
   };
 
@@ -626,7 +603,8 @@ export const BacklogTableWithSprints: React.FC = () => {
     {
       title: 'Name', colSpan: 1, dataIndex: 'sprintNumber', key: 'sprintNumber',
       render: (sprintNumber: number) => {
-        return (sprintNumber === 0 ? "Product Backlog" : (<div className='link-button' onClick={() => {
+        return (sprintNumber === 0 ? "Product Backlog" : (<div className='link-button' style={{ display: "inline-block" }} onClick={() => {
+          console.log("clicked");
           localStorage.setItem("sprintID", JSON.stringify(sprintNumber));
           navigate(`/${(ownerName as string).split("/")[0]}/${(ownerName as string).split("/")[1]}/sprints/${sprintNumber}`, { replace: true });
         }}>{"Sprint " + sprintNumber}</div>))
@@ -634,41 +612,47 @@ export const BacklogTableWithSprints: React.FC = () => {
     },
     {
       title: 'Action', colSpan: 1, align: "right" as const, key: 'operation', render: (record: ISprint) => {
-        return (record.sprintNumber !== 0 && <Button type="link" onClick={() => { setSelectedSprint(record); setIsModal({ ...isModal, updateSprint: true }); }} >
+        return (record.sprintNumber !== 0 && <Button size='small' type="link" onClick={() => { setSelectedSprint(record); setIsModal({ ...isModal, updateSprint: true }); }} >
           {"Update"}
         </Button>)
       },
     }
   ];
-  const menu = (
-    <Menu>{people.list.map((item: IPerson) => {
-      return (
-        <MenuItem key={item.login}>
-          {item.login as string}
-        </MenuItem>);})
-        }</Menu>
-  );
+
+  const updateRow = (record: any, item: any, index_row: any, bodyType: string) => {
+    console.log("sprint");
+  };
+
   const onSearch = (value: string) => { setFiltersPBI({ ...filterPBI, nameFilter: value }); filterPBI.nameFilter !== "" ? setInitialRefresh(true) : <></>; };
   if (!state.isLoggedIn) { return <Navigate to="/login" />; }
+
   return (
     <>
-      <Space direction="horizontal"
-        style={{ marginLeft: "2%", marginRight: "2%" }}>
 
-        {/*<Dropdown
-        overlay={menu}
-          //filterOption={(input:string, option) =>
-          // option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-          //}
-          >
-          
-            
-        </Dropdown>*/}
+
+
+      <Space direction="horizontal"
+        style={{ marginLeft: "2%", marginRight: "2%", marginTop: 0, marginBottom: "1%" }}>
+
         <Button onClick={() => setIsModal({ ...isModal, addSprint: true })}>{"Create Sprint"}</Button>
         <Button onClick={() => setIsModal({ ...isModal, addPBI: true })}>{"Add Product Backlog Item"}</Button>
-        <Search placeholder="input search text" onSearch={onSearch} enterButton />
+        <Search  placeholder="input backlog item name" onSearch={onSearch} enterButton />
+        <Dropdown
+        //filterOption={(input:string, option) =>
+        // option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+        //}        <Avatar icon={<UserOutlined />}/>
+        //trigger={['click']}
+        overlay={MenuWithPeople(people)}>
+          <span>
+        <div className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+
+          People <DownOutlined />
+        </div>
+        </span>
+      </Dropdown>
       </Space>
-      {sprintPage && sprintPage.list && pbiPage && pbiPage.list && people && people.list.length > 0 &&
+      {/*sprintPage && sprintPage.list && pbiPage && pbiPage.list && people && people.list.length > 0 &&
+      <DndProvider backend={HTML5Backend} key={"sprint"}>
         <Table
           style={{ borderSpacing: "separate", marginLeft: "2%", marginRight: "2%", marginTop: "2%" }}
           scroll={{ x: 800 }}
@@ -700,6 +684,98 @@ export const BacklogTableWithSprints: React.FC = () => {
             };
           }}
         />
+        </DndProvider>
+        
+        */}
+      {pbiPage && pbiPage.list && people && people.list.length > 0 &&
+        <DndProvider backend={HTML5Backend} key={"sprint"}>
+          <Table
+            style={{ borderSpacing: "separate", marginLeft: "2%", marginRight: "2%", marginTop: "1%" }}
+            scroll={{ x: 800 }}
+            size="small"
+            loading={loading}
+            showHeader={false}
+            pagination={false}
+            dataSource={([{ sprintNumber: 0, goal: "Product Backlog", backlogItems: pbiPage.list } as ISprint] as ISprint[])}
+            columns={sprintColumns}
+            rowKey={(record: ISprint) => record.sprintNumber}
+            expandable={{
+              expandedRowRender: PBITableforSprint, defaultExpandAllRows: false,
+              rowExpandable: record => record.backlogItems && record.backlogItems.length > 0, defaultExpandedRowKeys: [0, 1]
+            }}
+            /*onRow={(record) => {
+              return {
+                //onClick: () => {console.log("clicked");console.log(record.sprintNumber);},
+                //onClickCapture: () => {console.log("captured");console.log(record.sprintNumber);},
+                //onMouseDown: () => {console.log("sprintId");console.log(record.sprintNumber);},
+                //onMouseUp: () => {console.log("up");console.log(record.sprintNumber);},
+                onMouseEnter: () => {
+                  let tmp = IDs.oldSprintId === record.sprintNumber && IDs.dropped;
+                  ; setIDs({
+                    ...IDs, oldSprintId: tmp ? -1 : IDs.oldSprintId, dropped: tmp, newSprintId: IDs.pbiId > 0
+                      && IDs.oldSprintId !== record.sprintNumber ? record.sprintNumber : -1
+                  })
+                },
+                onMouseLeave: () => { setIDs({ ...IDs, newSprintId: -1, pbiId: -1, oldSprintId: -1 }) },
+              };
+            }}*/
+            onRow={(record, id) => {
+              const index = record.sprintNumber; const bodyType = "ISprint"; return ({
+                index,
+                record,
+                bodyType,
+              }) as any;
+            }}
+          />
+        </DndProvider>
+
+      }
+      {sprintPage && sprintPage.list && people && people.list.length > 0 &&
+        sprintPage.list.map((sprint) => {
+          return (
+            <DndProvider backend={HTML5Backend} key={"sprint" + sprint.sprintNumber}>
+              <Table
+                style={{ borderSpacing: "separate", marginLeft: "2%", marginRight: "2%", marginTop: "1%" }}
+                scroll={{ x: 800 }}
+                size="small"
+                loading={loading || sprintRefreshRequired || initialRefresh || fetchSprints || fetchSprintsPBI}
+                showHeader={false}
+                pagination={false}
+                dataSource={[sprint]}
+                columns={sprintColumns}
+                components={nestedcomponents}
+                rowKey={(record: ISprint) => record.sprintNumber}
+                expandable={{
+                  expandedRowRender: PBITableforSprint, defaultExpandAllRows: false,
+                  rowExpandable: record => record.backlogItems && record.backlogItems.length > 0, defaultExpandedRowKeys: [0, 1]
+                }}
+                /*onRow={(record) => {
+                  return {
+                    //onClick: () => {console.log("clicked");console.log(record.sprintNumber);},
+                    //onClickCapture: () => {console.log("captured");console.log(record.sprintNumber);},
+                    //onMouseDown: () => {console.log("sprintId");console.log(record.sprintNumber);},
+                    //onMouseUp: () => {console.log("up");console.log(record.sprintNumber);},
+                    onMouseEnter: () => {
+                      let tmp = IDs.oldSprintId === record.sprintNumber && IDs.dropped;
+                      ; setIDs({
+                        ...IDs, oldSprintId: tmp ? -1 : IDs.oldSprintId, dropped: tmp, newSprintId: IDs.pbiId > 0
+                          && IDs.oldSprintId !== record.sprintNumber ? record.sprintNumber : -1
+                      })
+                    },
+                    onMouseLeave: () => { setIDs({ ...IDs, newSprintId: -1, pbiId: -1, oldSprintId: -1 }) },
+                  };
+                }}*/
+                onRow={(record, id) => {
+                  const index = record.sprintNumber; const bodyType = "ISprint"; return ({
+                    index,
+                    record,
+                    bodyType
+                  }) as any;
+                }}
+              />
+            </DndProvider>)
+        })
+
       }
       {isModal.addSprint && !loading && !fetchPBIs && <CustomAddSprintPopup error={error.erorMessage} data={initSprint} pbiData={pbiPage.list as IProductBacklogItem[]} visible={isModal.addSprint}
         onCreate={function (values: any): void { addSprint(values) }}
@@ -725,3 +801,4 @@ export const BacklogTableWithSprints: React.FC = () => {
     </>
   );
 };
+

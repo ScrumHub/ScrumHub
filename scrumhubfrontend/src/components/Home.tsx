@@ -1,17 +1,19 @@
 import { useContext, useEffect, useState } from 'react';
-import { Button, Card, Popover } from 'antd';
+import { Button, Card } from 'antd';
 import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
+import './Home.css';
 import { IFilters, IRepository, State } from '../appstate/stateInterfaces';
 import { AuthContext } from '../App';
 import { Navigate, useNavigate } from 'react-router';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import config from '../configuration/config';
 import { useSelector } from 'react-redux';
-import { CalendarOutlined, CheckCircleOutlined, CloseCircleOutlined, FolderAddOutlined, InfoCircleOutlined, LoadingOutlined } from '@ant-design/icons';
+import { CalendarOutlined, FolderAddOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { store } from '../appstate/store';
 import { clearReposList } from '../appstate/actions';
-import SkeletonList, { content } from './utility/LoadAnimations';
+import SkeletonList, { CantAddToShButton, InShButton } from './utility/LoadAnimations';
+import { dateFormat } from './utility/commonFunctions';
 const { Meta } = Card;
 
 
@@ -32,7 +34,6 @@ export default function Home() {
   const repos = useSelector(
     (state: State) => state.repositories as IRepository[]
   );
-  const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") : "";
   const navigate = useNavigate();
   const [initialRefresh, setInitialRefresh] = useState(true);
   useEffect(() => {
@@ -130,26 +131,22 @@ export default function Home() {
     return <Navigate to="/login" />;
   }
   return (
-    <section className="container"><InfiniteScroll
+    <section className="container">
+      <InfiniteScroll
       dataLength={repos ? repos.length : 0}
       scrollThreshold={0.7}
       next={fetchMore}
       hasMore={!lastPage && !fetching}
       loader={<></>}>
-      <div style={{ display: "grid", placeItems: "center", margin: "4.5%", background: "transparent" }}>
+      <div className="reposGrid">
         {repos.map((rep: IRepository) => {
-          return (<section className="card" style={{ width: "85%", }} key={rep.gitHubId} >
-            <Card style={{ backgroundColor: "white", marginBottom: "3vh" }} type="inner" actions=
-              {[!rep.hasAdminRights ?
-              <Popover content={content}><Button disabled={true} style={{ width: "180px" }}>
-                <span>{<CloseCircleOutlined disabled={true} />}{" Cannot Add"}</span></Button></Popover>:
-                <Button disabled={rep.alreadyInScrumHub} style={{ width: "180px" }} onClick={() => { addProject(rep.gitHubId) }} >
-                <span>{rep.alreadyInScrumHub ? <CheckCircleOutlined disabled={true} /> :<FolderAddOutlined disabled={!rep.alreadyInScrumHub} />}
-                {rep.alreadyInScrumHub ? " In ScrumHub" :  " Add to ScrumHub" }</span></Button>,
-              <Button disabled={!rep.alreadyInScrumHub} type="primary" style={{ width: "180px" }} onClick={() => { redirectToProject(rep) }}><span><InfoCircleOutlined />{" Manage project"}</span></Button>,
-              <Button style={{ width: "180px" }}><span><CalendarOutlined />
-                {rep.dateOfLastActivity === "No recent activity" ? " Not updated" : " Updated " + new Date(rep.dateOfLastActivity as Date).toLocaleString(['en-US'], { year: 'numeric', month: 'short', day: 'numeric' })}</span></Button>
-              ]}>
+          return (<section className="card" style={{ width: "85%" }} key={rep.gitHubId} >
+            <Card className='repoCard' type="inner" actions=
+              {[!rep.hasAdminRights ? <CantAddToShButton/>:(rep.alreadyInScrumHub ? <InShButton/>:
+                <Button disabled={false} className='cardButton' onClick={() => { addProject(rep.gitHubId) }} >
+                <span>{<FolderAddOutlined disabled={false} />}{" Add to ScrumHub" }</span></Button>),
+              <Button disabled={!rep.alreadyInScrumHub} type="primary" className='cardButton' onClick={() => { redirectToProject(rep) }}><span><InfoCircleOutlined />{" Manage project"}</span></Button>,
+              <Button className='calButton'><span><CalendarOutlined />{rep.typeOfLastActivity === "No recent activity" ? " Not updated" : " " + dateFormat(rep.dateOfLastActivity as Date)}</span></Button>]}>
               <Meta
                 title={rep.alreadyInScrumHub ? <div className='link-button' onClick={() => { redirectToProject(rep) }}>{rep.name.split("/")[1]}</div> : <div>{rep.name.split("/")[1]}</div>}
                 description={rep.description}
@@ -161,7 +158,7 @@ export default function Home() {
           </section>);
         })
         }
-        <SkeletonList loading={loading} number={5} />
+        <SkeletonList loading={loading} number={repos.length < 1?5:1} />
       </div>
     </InfiniteScroll>
     </section >

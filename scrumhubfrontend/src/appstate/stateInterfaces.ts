@@ -327,21 +327,13 @@ export interface IPeopleList {
 
 export const initPeopleList: IPeopleList =
 {
-  "pageNumber": 0,
-  "pageCount": 0,
-  "pageSize": 0,
-  "realSize": 0,
-  "list": [
-    {
-      "name": "string",
-      "login": "string",
-      "gitHubId": 0,
-      "avatarLink": "string",
-      "isCurrentUser": true
-    }
-  ]
+  pageNumber: 0,
+  pageCount: 0,
+  pageSize: 0,
+  realSize: 0,
+  list: []
 }
-
+export type BodyRowTypes = ISprint | IProductBacklogItem | ITask;
 export interface IRepositoryList {
   pageNumber: number;
   pageCount: number;

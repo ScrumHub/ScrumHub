@@ -1,10 +1,14 @@
+import { IProductBacklogItem, ISprint, ITask } from "../../appstate/stateInterfaces";
+
   export interface BodyRowProps {
-    IDs:any[],
-    setIDs:any|any[],
     index: any;
-    moveRow: any;
     className: any;
     style: any;
+    bodyType:string;//"ISprint"|"IProductBacklogItem"|"ITask";
+    IDs?:any[];
+    setIDs?:any|any[];
+    "data-row-key":number;
+    "record":ISprint|IProductBacklogItem|ITask;
     restProps: {
       [x: string]: any;
     };

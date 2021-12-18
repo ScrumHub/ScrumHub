@@ -284,9 +284,9 @@ export default function Project() {
   return (
     <div>
           {error.hasError &&<Alert type="error" message={error.erorMessage} banner closable/>}
-          <PageHeader
-    title={<div style={{margin:0, fontWeight:"bold"}}>{"Product Backlog"}</div>}
-    breadcrumb={<Breadcrumb itemRender={itemRender} routes={routes} />}
+          <PageHeader style={{paddingLeft:"2%", marginBottom:0, paddingBottom:0}}
+    title={<div style={{fontWeight:"bold",paddingTop:0, marginTop:0}}>{"Product Backlog"}</div>}
+    breadcrumb={<Breadcrumb style={{marginTop:0}} itemRender={itemRender} routes={routes} />}
   >
   </PageHeader>
       <BacklogTableWithSprints/>
