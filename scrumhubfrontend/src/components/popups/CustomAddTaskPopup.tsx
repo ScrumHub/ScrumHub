@@ -4,7 +4,7 @@ import { IFilters } from '../../appstate/stateInterfaces';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 
-interface Values {
+interface Values{
   title: string;
   description: string;
   modifier: string;

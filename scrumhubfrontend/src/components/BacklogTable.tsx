@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext, useEffect, useCallback } from 'react';
-import { Button, Space, Table, Input, Popconfirm, Select, Dropdown, InputNumber, Menu, Avatar } from 'antd';
+import { Button, Space, Table, Input, Popconfirm, Select, Dropdown, InputNumber, Menu, Avatar, Statistic, Card } from 'antd';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import * as Actions from '../appstate/actions';
@@ -18,9 +18,9 @@ import { CustomAddPopup } from './popups/CustomAddPopup';
 import { CustomUpdateSprintPopup } from './popups/CustomUpdateSprintPopup';
 import { CustomAddTaskPopup } from './popups/CustomAddTaskPopup';
 import { CustomAssignTaskPopup } from './popups/CustomAssignTaskPopup';
-import { initIDs, initModalVals } from './utility/commonInitValues';
-import { BodyRowProps, IModals } from './utility/commonInterfaces';
-import { useIsMounted, validate, } from './utility/commonFunctions';
+import { initIDs, initModalVals, initRowIds } from './utility/commonInitValues';
+import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
+import { useIsMounted, validate, validatePBIDrag, validateTaskDrag, } from './utility/commonFunctions';
 import { taskAssigneeCol, taskFinishCol, taskGhLinkCol, taskNameCol, pbiNameCol, pbiPriorityCol, pbiProgressCol } from './utility/BodyRowsAndColumns';
 import { Option } from 'antd/lib/mentions';
 import TaskTableComponent from './TaskTableComponent';
@@ -88,7 +88,6 @@ export const BacklogTableWithSprints: React.FC = () => {
           ownerName: ownerName,
           pbiId: ids.length > 1 ? 0 : ids[0],
           taskId: selectedTask.id,
-          currId: selectedTask.pbiId
         }) //filters
       );
     } catch (err) { console.error("Failed to add the pbis: ", err); }
@@ -198,7 +197,7 @@ export const BacklogTableWithSprints: React.FC = () => {
           token: token as string,
           ownerName: ownerName,
           sprintNumber: Number(sprintID),
-          sprint: { "goal": pbi.goal, "pbiIDs": ids } as IUpdateIdSprint
+          sprint: { "goal": pbi.goal, "pbIs": ids } as IUpdateIdSprint
         }) //filters
       );
     } catch (err) {
@@ -246,9 +245,65 @@ export const BacklogTableWithSprints: React.FC = () => {
     },
     [sprintPage.list, pbiPage]
   );
-  const DraggableBodyRow = ({ index: index_row, className, style, bodyType, ...restProps }: BodyRowProps) => {
+
+  const updatePBI = (pbiId: number, oldSprintId: number, newSprintId: number) => {
+    try {
+      if (oldSprintId !== 0) {
+        const oldSprint = sprintPage.list.find((i: ISprint) => i.sprintNumber === oldSprintId);
+        const oldPbis = oldSprint?.backlogItems.map((i: IProductBacklogItem) => { return ((i.id !== pbiId ? i.id.toString() : "")) }).filter((x: string) => x !== "");
+        store.dispatch(
+          Actions.updateOneSprintThunk({
+            token: token,
+            ownerName: ownerName,
+            sprintNumber: oldSprintId,
+            sprint: { pbIs: oldPbis as string[], goal: oldSprint?.goal as string }
+          }) //filters
+        );
+      }
+      if (newSprintId !== 0) {
+        const newSprint = sprintPage.list.find((i: ISprint) => i.sprintNumber === newSprintId);
+        const newPbis = newSprint?.backlogItems.map((i: IProductBacklogItem) => { return (i.id.toString()) }).concat([pbiId.toString()]);
+        store.dispatch(
+          Actions.updateOneSprintThunk({
+            token: token,
+            ownerName: ownerName,
+            sprintNumber: newSprintId,
+            sprint: { pbIs: newPbis as string[], goal: newSprint?.goal as string }
+          }) //filters
+        );
+      }
+    }
+    catch {
+      console.error(error.erorMessage);
+    }
+    finally {
+      if (isMounted()) {
+        setInitialRefresh(true);
+      }
+    }
+  }
+
+  const updateTask = (pbiId: number, taskId: number) => {
+    try {
+      store.dispatch(
+        Actions.assignTaskThunk({
+          token: token,
+          ownerName: ownerName,
+          pbiId: pbiId,
+          taskId: taskId,
+        }) //filters
+      );
+    } catch (err) { console.error("Failed to add the pbis: ", err); }
+    finally {
+      if (isMounted()) {
+        setInitialRefresh(true);
+      }
+    }
+  }
+
+  const DraggableBodyRow = ({ index: index_row, bodyType, record, className, style, ...restProps }: BodyRowProps) => {
     const ref = useRef();
-    //console.log(restProps);
+    //console.log(record);
     //["data-row-key"]);
     //console.log(typeof(restProps));
     //data-row-key
@@ -257,7 +312,6 @@ export const BacklogTableWithSprints: React.FC = () => {
     const [{ isOver, dropClassName }, drop] = useDrop({
       accept: type,
       collect: monitor => {
-        //console.log(monitor.getHandlerId());
         const index = monitor.getItem() || {} as number;
         if (index === index_row) { return {}; }
         return {
@@ -267,14 +321,21 @@ export const BacklogTableWithSprints: React.FC = () => {
       },
       drop: (item: any) => {
         if (typeof (index_row) !== "undefined") {
-          console.log(restProps);
-          const record = restProps["record"] as BodyRowTypes;
-          console.log();
+          //console.log(restProps);
+          if (item.bodyType === "IProductBacklogItem" && validatePBIDrag(item.index, item.record.sprintNumber, record.sprintNumber)) {
+            updatePBI(item.index, item.record.sprintNumber, record.sprintNumber);
+          }
+          else if (item.bodyType === "ITask" && validateTaskDrag(record.pbiID, item.index)) {
+            updateTask(record.pbiID, item.index);
+          }
           console.log(record);
           console.log(item);
-          console.log(index_row);
+          const r = record;
+          //console.log(r);
+          //console.log(item);
+          //console.log(index_row);
 
-          updateRow(record, item, index_row, bodyType);
+          //updateRow(r, item, index_row, bodyType);
         }
         //moveRow(item.index, index_row);
         //setIDs({ ...IDs, dropped: true });
@@ -282,11 +343,14 @@ export const BacklogTableWithSprints: React.FC = () => {
     });
     const [, drag] = useDrag({
       type,
-      item: { index: index_row, bodyType: bodyType },
+      item: { index: index_row, bodyType: bodyType, record: record as IRowIds },
       collect: monitor => ({
         isDragging: monitor.isDragging(),
+
       }),
+      canDrag: index_row !== 0 && bodyType !== "ISprint" && index_row !== undefined
     });
+    //if(index_row !== 0 && bodyType !== "ISprint") {drop(drag(ref))};
     drop(drag(ref));
     return (
       <tr
@@ -350,7 +414,7 @@ export const BacklogTableWithSprints: React.FC = () => {
     pbiProgressCol,
     {
       title: 'Story Points', colSpan: 1, key: 'operation', align: "center" as const, render: (item: IProductBacklogItem) => {
-        return (<span><InputNumber onInputCapture={(value) => { console.log(value) }} controls={true} keyboard={true} onChange={() => { }} max={40} min={0} defaultValue={item.expectedTimeInHours} bordered={false} />{/*<Statistic title="Story Points" value={item.expectedTimeInHours} /><Progress width={30} type="circle" percent={100} format={percent => `${item.expectedTimeInHours}`}></Progress>*/}</span>)
+        return (<Statistic  title={"Story Points"} value={item.expectedTimeInHours}></Statistic>)
       }
     },
     {
@@ -563,7 +627,7 @@ export const BacklogTableWithSprints: React.FC = () => {
               token: token,
               ownerName: ownerName,
               sprintNumber: ids.oldSprintId,
-              sprint: { ...oldSprint, pbiIDs: oldPbis as string[], goal: oldSprint?.goal as string }
+              sprint: { pbIs: oldPbis as string[], goal: oldSprint?.goal as string }
             }) //filters
           );
         }
@@ -575,7 +639,7 @@ export const BacklogTableWithSprints: React.FC = () => {
               token: token,
               ownerName: ownerName,
               sprintNumber: ids.newSprintId,
-              sprint: { ...newSprint, pbiIDs: newPbis as string[], goal: newSprint?.goal as string }
+              sprint: { pbIs: newPbis as string[], goal: newSprint?.goal as string },
             }) //filters
           );
         }
@@ -629,28 +693,6 @@ export const BacklogTableWithSprints: React.FC = () => {
   return (
     <>
 
-
-
-      <Space direction="horizontal"
-        style={{ marginLeft: "2%", marginRight: "2%", marginTop: 0, marginBottom: "1%" }}>
-
-        <Button onClick={() => setIsModal({ ...isModal, addSprint: true })}>{"Create Sprint"}</Button>
-        <Button onClick={() => setIsModal({ ...isModal, addPBI: true })}>{"Add Product Backlog Item"}</Button>
-        <Search  placeholder="input backlog item name" onSearch={onSearch} enterButton />
-        <Dropdown
-        //filterOption={(input:string, option) =>
-        // option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-        //}        <Avatar icon={<UserOutlined />}/>
-        //trigger={['click']}
-        overlay={MenuWithPeople(people)}>
-          <span>
-        <div className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-
-          People <DownOutlined />
-        </div>
-        </span>
-      </Dropdown>
-      </Space>
       {/*sprintPage && sprintPage.list && pbiPage && pbiPage.list && people && people.list.length > 0 &&
       <DndProvider backend={HTML5Backend} key={"sprint"}>
         <Table
@@ -690,12 +732,13 @@ export const BacklogTableWithSprints: React.FC = () => {
       {pbiPage && pbiPage.list && people && people.list.length > 0 &&
         <DndProvider backend={HTML5Backend} key={"sprint"}>
           <Table
-            style={{ borderSpacing: "separate", marginLeft: "2%", marginRight: "2%", marginTop: "1%" }}
+            style={{ borderSpacing: "separate", marginLeft: "2%", marginRight: "2%", marginTop: "1px", marginBottom: "3px", height: "auto" }}
             scroll={{ x: 800 }}
             size="small"
             loading={loading}
             showHeader={false}
             pagination={false}
+            components={nestedcomponents}
             dataSource={([{ sprintNumber: 0, goal: "Product Backlog", backlogItems: pbiPage.list } as ISprint] as ISprint[])}
             columns={sprintColumns}
             rowKey={(record: ISprint) => record.sprintNumber}
@@ -719,11 +762,11 @@ export const BacklogTableWithSprints: React.FC = () => {
                 onMouseLeave: () => { setIDs({ ...IDs, newSprintId: -1, pbiId: -1, oldSprintId: -1 }) },
               };
             }}*/
-            onRow={(record, id) => {
-              const index = record.sprintNumber; const bodyType = "ISprint"; return ({
+            onRow={(row, id) => {
+              const index = row.sprintNumber; const record = { ...initRowIds, sprintNumber: row.sprintNumber }; const bodyType = "ISprint"; return ({
                 index,
                 record,
-                bodyType,
+                bodyType
               }) as any;
             }}
           />
@@ -735,7 +778,7 @@ export const BacklogTableWithSprints: React.FC = () => {
           return (
             <DndProvider backend={HTML5Backend} key={"sprint" + sprint.sprintNumber}>
               <Table
-                style={{ borderSpacing: "separate", marginLeft: "2%", marginRight: "2%", marginTop: "1%" }}
+                style={{ borderSpacing: "separate", marginLeft: "2%", marginRight: "2%", marginBottom: "3px", height: "auto" }}
                 scroll={{ x: 800 }}
                 size="small"
                 loading={loading || sprintRefreshRequired || initialRefresh || fetchSprints || fetchSprintsPBI}
@@ -765,8 +808,8 @@ export const BacklogTableWithSprints: React.FC = () => {
                     onMouseLeave: () => { setIDs({ ...IDs, newSprintId: -1, pbiId: -1, oldSprintId: -1 }) },
                   };
                 }}*/
-                onRow={(record, id) => {
-                  const index = record.sprintNumber; const bodyType = "ISprint"; return ({
+                onRow={(row, id) => {
+                  const index = row.sprintNumber; const record = { ...initRowIds, sprintNumber: row.sprintNumber }; const bodyType = "ISprint"; return ({
                     index,
                     record,
                     bodyType
@@ -795,7 +838,7 @@ export const BacklogTableWithSprints: React.FC = () => {
       {isModal.updateSprint && !loading && <CustomUpdateSprintPopup data={selectedSprint} pbiData={pbiPage.list as IProductBacklogItem[]} visible={isModal.updateSprint}
         onCreate={function (values: any): void { updateSprint(values) }}
         onCancel={() => { setIsModal({ ...isModal, updateSprint: false }); }} />}
-      {isModal.assgnPpl && pbiPage && <CustomAssignTaskPopup error={error.erorMessage} pbiData={pbiPage.list as IAssignPBI[] as ICheckedAssignPBI[]} visible={isModal.assgnPpl}
+      {isModal.assgnTask && pbiPage && <CustomAssignTaskPopup error={error.erorMessage} pbiData={pbiPage.list as IAssignPBI[] as ICheckedAssignPBI[]} visible={isModal.assgnTask}
         onCreate={function (values: any): void { assignTask(values) }}
         onCancel={() => { setIsModal({ ...isModal, assgnTask: false }); }} />}
     </>

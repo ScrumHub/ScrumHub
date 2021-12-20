@@ -19,11 +19,11 @@
     cursor: -webkit-grabbing;
   }*/
   #components-table-demo-drag-sorting tr.drop-over-downward td {
-    border-bottom: 1px dashed #1890ff;
+    border-bottom: 1px dashed ;
   }
   
   #components-table-demo-drag-sorting tr.drop-over-upward td {
-    border-top: 1px dashed #1890ff;
+    border-top: 1px dashed ;
   }
   .ant-table table {
     border-radius: 30px;
@@ -36,6 +36,7 @@
     border-color:#f0f2f5;
 
   }
+
   .ant-table-tbody > tr  {
     border-collapse: collapse;
     border-radius: 30px;

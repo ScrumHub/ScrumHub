@@ -417,7 +417,7 @@ export function getPBINames(ownerName: any, token: string, filters: IFilters
     );
   }
 
-  export function assignTask(token: string, ownerName: string, pbiId: number, taskId: number, currId: number
+  export function assignTask(token: string, ownerName: string, pbiId: number, taskId: number
     ): Promise<RequestResponse<ITask, number>> {
       return getResponse(
         axios.patch(

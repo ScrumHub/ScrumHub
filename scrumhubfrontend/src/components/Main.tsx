@@ -89,8 +89,8 @@ function Main(props: any) {
   return (
     <section className="container">
       <Layout style={{ height: "100vh" }}>
-        <Header hidden={!isLoggedIn} className="clearfix" style={{ padding: 0, height: "5vh", lineHeight: "5vh", width: "100%", backgroundColor: "white" }}>
-          <Menu mode="horizontal" theme="dark"
+        <Header hidden={!isLoggedIn} className="clearfix" style={{ position: 'fixed', zIndex: 1,padding: 0, height: "5vh", lineHeight: "5vh", width: "100%", backgroundColor: "white" }}>
+          <Menu mode="horizontal" theme="light"
             className="menu" >
             <Menu.Item className='menuItem' key="proj" onClick={() => handleProjects()}><span style={{ maxHeight: "1vh" }}>Projects</span></Menu.Item>
             <Menu.Item className='menuItem' key="logout" onClick={() => handleLogout()} >Logout</Menu.Item>
@@ -98,7 +98,7 @@ function Main(props: any) {
         </Header>
         <Content className="content">
           <Layout className="site-layout-background" style={{ /*padding: ownerName === "" ? '':'24px 0' */ }}>
-            <Sider hidden={ownerName === ""} theme="light" collapsedWidth={40} style={{ height: 'auto', backgroundColor: "white", borderColor: "transparent" }} onCollapse={() => setIsCollapsed(!isCollapsed)} collapsible={true} collapsed={isCollapsed} className="site-layout-background" width={200}>
+            <Sider hidden={ownerName === ""} theme="light" collapsedWidth={40} style={{ position:"fixed", marginTop:"5vh",height: '100vh', backgroundColor: "white", borderColor: "transparent" }} onCollapse={() => setIsCollapsed(!isCollapsed)} collapsible={true} collapsed={isCollapsed} className="site-layout-background" width={200}>
               <Menu
                 mode="inline"
                 defaultSelectedKeys={[selectedSiderKey]}
@@ -113,7 +113,7 @@ function Main(props: any) {
               <div style={{ minHeight: "90vh", margin: 0 }}>
                 <AppRouter />
               </div>
-              <Footer hidden={!isLoggedIn} style={{ margin: 0, lineHeight: 0, padding: 0, textAlign: 'center', height: "5vh" }}>
+              <Footer hidden={!isLoggedIn} style={{ margin: 0, lineHeight: "5vh !important", padding: 0, textAlign: 'center', height: "5vh", verticalAlign:"bottom" }}>
               {<a
                 href="http://github.com/ScrumHub/ScrumHub"
                 target="_blank"

@@ -121,7 +121,7 @@ export default function SprintBacklog() {
           token: token as string,
           ownerName: ownerName,
           sprintNumber: Number(sprintID),
-          sprint: {"goal":pbi.goal,"pbiIDs":ids} as IUpdateIdSprint
+          sprint: {"goal":pbi.goal,"pbIs":ids} as IUpdateIdSprint
         }) //filters
       );
     } catch (err) {
