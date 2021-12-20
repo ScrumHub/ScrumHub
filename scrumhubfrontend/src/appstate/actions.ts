@@ -407,7 +407,7 @@ export const getPBINamesThunk = createAsyncThunk<
 
 export const assignTaskThunk = createAsyncThunk<
   RequestResponse<ITask, number>,
-  { token: string, ownerName: string; pbiId:number; taskId:number, currId:number},
+  { token: string, ownerName: string; pbiId:number; taskId:number},
   { rejectValue: RequestResponse<ITask, number> }
 >("assignTask", async (
   item: {
@@ -415,11 +415,10 @@ export const assignTaskThunk = createAsyncThunk<
     ownerName: string;
     pbiId:number;
     taskId:number;
-    currId:number;
   },
   { rejectWithValue }) => {
   const response: RequestResponse<ITask, number> =
-    await Fetching.assignTask(item.token, item.ownerName, item.pbiId,item.taskId, item.currId);
+    await Fetching.assignTask(item.token, item.ownerName, item.pbiId,item.taskId);
   if (response.code !== 200) {
     return rejectWithValue(
       response as RequestResponse<ITask, number>

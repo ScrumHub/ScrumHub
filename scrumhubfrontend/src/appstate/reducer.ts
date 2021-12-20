@@ -835,7 +835,6 @@ export const reducer = createReducer(initState, {
   let newState = _.cloneDeep(state);
   newState.loading = false;
   newState.error = initError;
-  newState.error = initError;
   //newState.productRequireRefresh = true;
   return newState;
 },

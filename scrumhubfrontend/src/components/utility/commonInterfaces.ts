@@ -2,13 +2,14 @@ import { IProductBacklogItem, ISprint, ITask } from "../../appstate/stateInterfa
 
   export interface BodyRowProps {
     index: any;
+    bodyType:string;
+    //row :ISprint|IProductBacklogItem|ITask;
+    record:IRowIds;
     className: any;
     style: any;
-    bodyType:string;//"ISprint"|"IProductBacklogItem"|"ITask";
-    IDs?:any[];
-    setIDs?:any|any[];
+     //IDs?:any[];
+    //setIDs?:any|any[];
     "data-row-key":number;
-    "record":ISprint|IProductBacklogItem|ITask;
     restProps: {
       [x: string]: any;
     };
@@ -23,4 +24,10 @@ import { IProductBacklogItem, ISprint, ITask } from "../../appstate/stateInterfa
     addPBI: boolean,
     editPBI: boolean,
     estimatePBI: boolean,
+  }
+
+  export interface IRowIds {
+    pbiID:number;
+    taskID:number;
+    sprintNumber:number;
   }

@@ -1,21 +1,15 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Alert, Breadcrumb, Button, Divider, PageHeader, Radio, Table, Typography, } from 'antd';
-import * as Actions from '../appstate/actions';
+import { useContext, useState } from 'react';
+import { Alert, Breadcrumb, Button, Dropdown, Input, PageHeader, Space, } from 'antd';
 import 'antd/dist/antd.css';
-import { IAddPBI, IFilters, initAddPBI, IPBIFilter, IProductBacklogItem, IProductBacklogList, State } from '../appstate/stateInterfaces';
+import { initPeopleList, IPBIFilter, State } from '../appstate/stateInterfaces';
 import { AuthContext } from '../App';
 import { Navigate } from 'react-router';
 import config from '../configuration/config';
 import { useSelector } from 'react-redux';
-import { CheckOutlined, StopOutlined } from '@ant-design/icons';
-import { store } from '../appstate/store';
-import { CustomAddPopup } from './popups/CustomAddPopup';
-import { CustomEditPopup } from './popups/CustomEditPopup';
-import { CustomEstimatePopup } from './popups/CustomEstimatePopup';
-import { CustomFilterPopup } from './popups/CustomFilterPopup';
-import { TreeList } from './TreeList';
+import { CheckOutlined, DownOutlined, StopOutlined } from '@ant-design/icons';
 import { BacklogTableWithSprints } from './BacklogTable';
-import { Link } from 'react-router-dom';
+import { MenuWithPeople } from './utility/LoadAnimations';
+const { Search } = Input;
 
 const columns = [
   {
@@ -279,16 +273,37 @@ export default function Project() {
     return (
       <span key={route.breadcrumbName+route.path}>{route.breadcrumbName}</span>)
   }
+  const onSearch = (value: any) => console.log(value);
 
   if (!state.isLoggedIn) { return <Navigate to="/login" />; }
   return (
-    <div>
+    <div style={{marginTop:"5vh", marginBottom:"1%"}}>
           {error.hasError &&<Alert type="error" message={error.erorMessage} banner closable/>}
           <PageHeader style={{paddingLeft:"2%", marginBottom:0, paddingBottom:0}}
     title={<div style={{fontWeight:"bold",paddingTop:0, marginTop:0}}>{"Product Backlog"}</div>}
     breadcrumb={<Breadcrumb style={{marginTop:0}} itemRender={itemRender} routes={routes} />}
   >
   </PageHeader>
+  <Space direction="horizontal"
+        style={{ marginLeft: "2%", marginRight: "2%", marginTop: 0, marginBottom: "1%" }}>
+
+        <Button onClick={() => {}/*setIsModal({ ...isModal, addSprint: true })*/}>{"Create Sprint"}</Button>
+        <Button onClick={() => {}/*setIsModal({ ...isModal, addPBI: true })*/}>{"Add Product Backlog Item"}</Button>
+        <Search  placeholder="input backlog item name" onSearch={onSearch} enterButton />
+        <Dropdown
+        //filterOption={(input:string, option) =>
+        // option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+        //}        <Avatar icon={<UserOutlined />}/>
+        //trigger={['click']}
+        overlay={MenuWithPeople(initPeopleList)}>
+          <span>
+        <div className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+
+          People <DownOutlined />
+        </div>
+        </span>
+      </Dropdown>
+      </Space>
       <BacklogTableWithSprints/>
   
     </div>

@@ -2,6 +2,8 @@ import { Table } from "antd";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { IProductBacklogItem, ITask } from "../appstate/stateInterfaces";
+import { initRowIds } from "./utility/commonInitValues";
+import { IRowIds } from "./utility/commonInterfaces";
 
 export default function TaskTableComponent(props: any) {
 return(
@@ -22,7 +24,7 @@ return(
               },
             };
           }}*/
-          onRow={(record, id) => {const index = record.id; const bodyType="ITask"; return({
+          onRow={(row, id) => {const index = row.id; const record = {sprintNumber:props.item.sprintNumber,pbiID: row.pbiId ? row.pbiId:0,taskID: row.id} as IRowIds;const bodyType="ITask"; return({
             index,
             record,
             bodyType

@@ -42,7 +42,7 @@ export function MenuWithPeople(people: IPeopleList) {
         <MenuItem key={item.login}>
             <span>
             <Avatar src={`${item.avatarLink}`} ></Avatar>
-          {" "+item.login as string}
+          <a href={"https://github.com/"+item.login}>{" "+item.login as string}</a>
             </span>
         </MenuItem>);
     })

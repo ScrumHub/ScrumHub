@@ -252,12 +252,12 @@ export const initSprint2: ISprint = {
 
 export interface IUpdateIdSprint {
   goal: string;
-  pbiIDs: string[]
+  pbIs: string[]
 }
 
 export const initUpdateSprint: IUpdateIdSprint = {
   goal: "Goal 1",
-  pbiIDs: [],
+  pbIs: [],
 }
 
 export interface ISprintList {
