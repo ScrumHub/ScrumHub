@@ -1,4 +1,4 @@
-import { Layout, Menu } from 'antd';
+import { Avatar, Layout, Menu } from 'antd';
 import { useHref, useLocation, useNavigate } from 'react-router';
 import { useContext } from 'react';
 import 'antd/dist/antd.css';
@@ -11,7 +11,10 @@ import { clearReposList, clearState } from '../appstate/actions';
 import config from '../configuration/config';
 //@ts-ignore
 import { useCookies } from "react-cookie";
+import * as Actions from '../appstate/actions';
 import './Main.css';
+import { useSelector } from 'react-redux';
+import { State } from '../appstate/stateInterfaces';
 const { Header, Footer, Content, Sider } = Layout;
 
 
@@ -31,6 +34,9 @@ function Main(props: any) {
   const [data, setData] = useState({ errorMessage: "", isLoading: false });
   const [logout, setLogout] = useState(false);
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") : "";
+  const currentUser = useSelector(
+    (appState: State) => appState.currentUser
+  );
   useEffect(() => {
     if (logout) {
       var cookies = document.cookie.split(";");
@@ -58,7 +64,7 @@ function Main(props: any) {
   }
 
   const handleProjects = () => {
-    store.dispatch(clearState());
+    store.dispatch(Actions.clearProject());
     localStorage.removeItem("ownerName");
     localStorage.removeItem("sprintID");
     if (location.pathname === "/") {
@@ -85,23 +91,49 @@ function Main(props: any) {
     }
   }
 
+  useEffect(() => {
+    if(ownerName!==""){
+      try {
+        store.dispatch(
+          Actions.fetchPeopleThunk({
+            ownerName: ownerName as string,
+            token: token,
+          })
+        );
+      } catch (err) {
+        console.error("Failed to fetch the pbis: ", err);
+      }
+    
+    } // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ownerName]);
+
   const [isCollapsed, setIsCollapsed] = useState(true);
   return (
     <section className="container">
       <Layout style={{ height: "100vh" }}>
-        <Header hidden={!isLoggedIn} className="clearfix" style={{ position: 'fixed', zIndex: 1,padding: 0, height: "5vh", lineHeight: "5vh", width: "100%", backgroundColor: "white" }}>
+        <Header hidden={!isLoggedIn} className="clearfix" style={{ position: 'fixed', zIndex: 1, padding: 0, height: "5vh", lineHeight: "5vh", width: "100%", backgroundColor: "#f0f0f0" }}>
           <Menu mode="horizontal" theme="light"
             className="menu" >
+              
+            {currentUser!==null &&
+            <Menu.Item className='menuItem' key="0" hidden={currentUser===null} icon={<a href={"https://github.com/" + currentUser?.login}>
+            <span>
+              <Avatar style={{ transform:"scale(0.85)", marginBottom:"0.5vh"}} size="small" src={`${currentUser?.avatarLink}`} ></Avatar>
+              {" " + currentUser?.login as string}
+            </span></a>}>
+              
+              
+            </Menu.Item>}
             <Menu.Item className='menuItem' key="proj" onClick={() => handleProjects()}><span style={{ maxHeight: "1vh" }}>Projects</span></Menu.Item>
             <Menu.Item className='menuItem' key="logout" onClick={() => handleLogout()} >Logout</Menu.Item>
           </Menu>
         </Header>
         <Content className="content">
           <Layout className="site-layout-background" style={{ /*padding: ownerName === "" ? '':'24px 0' */ }}>
-            <Sider hidden={ownerName === ""} theme="light" collapsedWidth={40} style={{marginTop:"5vh",height: 'auto', backgroundColor: "white", borderColor: "transparent" }} onCollapse={() => setIsCollapsed(!isCollapsed)} collapsible={true} collapsed={isCollapsed} className="site-layout-background" width={200}>
+            <Sider hidden={ownerName === ""} theme="light" collapsedWidth={40} style={{ marginTop: "5vh", height: 'auto', backgroundColor: "white", borderColor: "transparent" }} onCollapse={() => setIsCollapsed(!isCollapsed)} collapsible={true} collapsed={isCollapsed} className="site-layout-background" width={200}>
               <Menu
                 mode="inline"
-                style={{position:"fixed", width:isCollapsed?40:200}}
+                style={{ position: "fixed", width: isCollapsed ? 40 : 200 }}
                 defaultSelectedKeys={[selectedSiderKey]}
               >
                 <Menu.Item key="1" icon={<ProjectOutlined />}>
@@ -114,16 +146,16 @@ function Main(props: any) {
               <div style={{ minHeight: "90vh", margin: 0 }}>
                 <AppRouter />
               </div>
-              <Footer hidden={!isLoggedIn} style={{ margin: 0, lineHeight: "5vh !important", padding: 0, textAlign: 'center', height: "5vh", verticalAlign:"bottom" }}>
-              {<a
-                href="http://github.com/ScrumHub/ScrumHub"
-                target="_blank"
-                rel="noreferrer"
-                className="GithubFooter"
-              >
-                <GithubOutlined style={{ marginLeft: "5px" }} />
-                {" ScrumHub"}
-              </a>}{"  © Created in 2021"}
+              <Footer hidden={!isLoggedIn} style={{ margin: 0, lineHeight: "5vh !important", padding: 0, textAlign: 'center', height: "5vh", verticalAlign: "bottom" }}>
+                {<a
+                  href="http://github.com/ScrumHub/ScrumHub"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="GithubFooter"
+                >
+                  <GithubOutlined style={{ marginLeft: "5px" }} />
+                  {" ScrumHub"}
+                </a>}{"  © Created in 2021"}
 
               </Footer>
             </Content>

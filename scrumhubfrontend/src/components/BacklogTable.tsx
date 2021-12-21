@@ -380,6 +380,7 @@ export const BacklogTableWithSprints: React.FC = () => {
         </Button>)
       }
     },
+    /*
     {
       title: 'Assign', colSpan: 1, align: "right" as const, key: 'operation', render: (record: ITask) => {
         return (<Select
@@ -402,7 +403,7 @@ export const BacklogTableWithSprints: React.FC = () => {
           }
         </Select>)
       }
-    }
+    }*/
   ];
   const TaskTableforPBI: React.FC<IProductBacklogItem> = (item: IProductBacklogItem) => {
     return (
@@ -415,7 +416,7 @@ export const BacklogTableWithSprints: React.FC = () => {
     pbiPriorityCol,
     {
       title: 'Story Points', colSpan: 1, key: 'operation', align: "center" as const, render: (item: IProductBacklogItem) => {
-        return (item.id !== 0 &&<Tag style={{cursor:"default"}} color={item.expectedTimeInHours>10?"red":"green"} onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, estimatePBI: true }); }}>
+        return (item.id !== 0 &&<Tag style={{cursor:"pointer"}} color={item.expectedTimeInHours>10?"red":"green"} onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, estimatePBI: true }); }}>
           {item.expectedTimeInHours+" Story Point"+(item.expectedTimeInHours!==1?"s":"")}
         {/*<Progress size='small' width={30} type="circle" percent={100} status={item.expectedTimeInHours>10?'exception':'normal'} format={()=>item.expectedTimeInHours}>{/*<Statistic  title={"Story Points"} value={item.expectedTimeInHours}></Statistic></Progress>*/}
         </Tag>
@@ -460,7 +461,6 @@ export const BacklogTableWithSprints: React.FC = () => {
     )
   };
 
-
   useEffect(() => {
     //console.log(isMounted()+"/"+initialRefresh);
     if (initialRefresh && isMounted()) {
@@ -483,12 +483,6 @@ export const BacklogTableWithSprints: React.FC = () => {
               ...initPBIFilter,
               inSprint: false
             }
-          })
-        );
-        store.dispatch(
-          Actions.fetchPeopleThunk({
-            ownerName: ownerName,
-            token: token,
           })
         );
       } catch (err) {

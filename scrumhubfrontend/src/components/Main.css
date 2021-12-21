@@ -19,6 +19,7 @@
 }
 .menuItem{
   max-height: 5vh;
+  padding-bottom: 1vh;
   /*color: rgba(255, 255, 255, 1);*/
   opacity:100;
 }

@@ -2,7 +2,7 @@ import * as Actions from "./actions";
 import { createReducer, PayloadAction } from "@reduxjs/toolkit";
 import { RequestResponse } from "./response";
 import config from "../configuration/config";
-import { IAssignPBI, IError, IMessCodeError, initError, initState, IPeopleList, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, ITaskNamed, State, unassignedPBI } from "./stateInterfaces";
+import { IAssignPBI, IError, IMessCodeError, initError, initState, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, ITaskNamed, State, unassignedPBI } from "./stateInterfaces";
 var _ = require('lodash');
 
 export const reducer = createReducer(initState, {
@@ -25,6 +25,11 @@ export const reducer = createReducer(initState, {
 [Actions.clearState.type]: (state: State) => {
   let newState = _.cloneDeep(state);
   newState = initState;
+  return newState;
+},
+[Actions.clearProject.type]: (state: State) => {
+  let newState = _.cloneDeep(state) as State;
+  newState = {...initState,repositories: newState.repositories, currentUser:newState.currentUser};
   return newState;
 },
 [Actions.clearPBIsList.type]: (state: State) => {
@@ -293,6 +298,7 @@ export const reducer = createReducer(initState, {
   let newState = _.cloneDeep(state);
   newState.loading = false;
   newState.people = payload.payload.response as IPeopleList;
+  newState.currentUser = newState.people.list.find((e : IPerson) => e.isCurrentUser) as IPerson;
   newState.error = initError;
   //newState.productRequireRefresh = false;
   return newState;

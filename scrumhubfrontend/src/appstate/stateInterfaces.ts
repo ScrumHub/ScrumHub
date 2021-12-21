@@ -374,6 +374,7 @@ export type State = {
   ownerName: string;
   namedPBI: IAssignPBI[];
   people: IPeopleList;
+  currentUser: IPerson|null;
 };
 
 export const initError = {
@@ -406,5 +407,6 @@ export const initState: State = {
   namedPBI: [],
   repoId: -1,
   ownerName: "",
-  people: initPeopleList
+  people: initPeopleList,
+  currentUser:null
 };

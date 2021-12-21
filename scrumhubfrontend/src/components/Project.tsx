@@ -1,7 +1,7 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Alert, Breadcrumb, Button, Dropdown, Input, PageHeader, Space, } from 'antd';
 import 'antd/dist/antd.css';
-import { initPeopleList, IPBIFilter, State } from '../appstate/stateInterfaces';
+import { initPeopleList, IPBIFilter, IPeopleList, State } from '../appstate/stateInterfaces';
 import { AuthContext } from '../App';
 import { Navigate } from 'react-router';
 import config from '../configuration/config';
@@ -9,69 +9,10 @@ import { useSelector } from 'react-redux';
 import { CheckOutlined, DownOutlined, StopOutlined } from '@ant-design/icons';
 import { BacklogTableWithSprints } from './BacklogTable';
 import { MenuWithPeople } from './utility/LoadAnimations';
+import { store } from '../appstate/store';
+import * as Actions from '../appstate/actions';
 const { Search } = Input;
 
-const columns = [
-  {
-    key: "0",
-    title: 'Name',
-    colSpan: 2,
-    dataIndex: 'name',
-    align: 'center' as const,
-    render: (text: string) => { return ({ children: text, props: { colSpan: 2 } }) },
-    fixed: 'left' as const,
-  },
-  {
-    key: "1",
-    title: 'Story Points',
-    dataIndex: 'expectedTimeInHours',
-    render: (val: number) => val === 0 ? "" : val,
-    align: 'center' as const,
-  },
-  {
-    key: "2",
-    title: 'Sprint',
-    dataIndex: 'sprintNumber',
-    align: 'center' as const,
-  },
-  {
-    key: "3",
-    title: 'Real Time',
-    dataIndex: 'realTime',
-    align: 'center' as const,
-  },
-  {
-    key: "4",
-    title: 'Priority',
-    dataIndex: 'priority',
-    align: 'center' as const,
-  },
-  {
-    key: "5",
-    colSpan: 2,
-    title: 'Acceptance Criteria',
-    dataIndex: 'acceptanceCriteria',
-    align: 'center' as const,
-    render: (record: string[]) => {
-      return ({
-        children:
-          <div style={{ verticalAlign: "center", alignItems: "center", textAlign: "center" }}>{
-            record.map((value: string, index: number) => { return (<p key={index} style={{ margin: "auto", marginTop: "5%", marginBottom: "5%" }}>{value}</p>) })
-          }
-          </div>,
-        props: { colSpan: 2 }
-      })
-    }
-  },
-  {
-    key: "6",
-    title: 'Finished',
-    dataIndex: 'finished',
-    render: (finishValue: boolean) => finishValue ? <CheckOutlined /> : <StopOutlined />,
-    align: 'center' as const,
-
-  }
-];
 
 export default function Project() {
   const { state } = useContext(AuthContext);
@@ -80,6 +21,8 @@ export default function Project() {
   const error = useSelector(
     (appState: State) => appState.error
   );
+  const people = useSelector((appState: State) => appState.people as IPeopleList);
+
   /*const [selectionType, setSelectionType] = useState<'pbi' | 'tasks'>('pbi');
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
