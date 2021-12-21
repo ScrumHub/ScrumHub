@@ -410,8 +410,8 @@ export const BacklogTableWithSprints: React.FC = () => {
     )
   };
   const pbiColumns = [
-    {title: 'Name',  align: "left" as const, colSpan: 2,  key: 'name', render: (item: IProductBacklogItem) => { return ({ children: item.id===0?<div>{item.name}</div>:
-    <div className='link-button' onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, editPBI: true }); }} style={{ display: "inline-block" }}>{item.name}</div>, props: { colSpan: 2 } }) },},
+    {title: 'Name',  align: "left" as const,fixed:"left" as const, colSpan: 2,  key: 'name', render: (item: IProductBacklogItem) => { return ({ children: 
+    <div className={item.id===0 ?'':'link-button'} onClick={() => { if(item.id!==0){setSelectedPBI(item); setIsModal({ ...isModal, editPBI: true });} }} style={{ display: "inline-block"}}>{item.name}</div>, props: { colSpan: 2 } }) },},
     pbiPriorityCol,
     pbiProgressCol,
     {
@@ -670,7 +670,7 @@ export const BacklogTableWithSprints: React.FC = () => {
     {
       title: 'Name', colSpan: 1, dataIndex: 'sprintNumber', key: 'sprintNumber',
       render: (sprintNumber: number) => {
-        return (sprintNumber === 0 ? "Product Backlog" : (<div className='link-button' style={{ display: "inline-block" }} onClick={() => {
+        return (sprintNumber === 0 ? <div style={{ display: "inline-block" }} >{"Product Backlog"}</div> : (<div className='link-button' style={{ display: "inline-block" }} onClick={() => {
           console.log("clicked");
           localStorage.setItem("sprintID", JSON.stringify(sprintNumber));
           navigate(`/${(ownerName as string).split("/")[0]}/${(ownerName as string).split("/")[1]}/sprints/${sprintNumber}`, { replace: true });
