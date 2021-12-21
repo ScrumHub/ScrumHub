@@ -98,7 +98,7 @@ function Main(props: any) {
         </Header>
         <Content className="content">
           <Layout className="site-layout-background" style={{ /*padding: ownerName === "" ? '':'24px 0' */ }}>
-            <Sider hidden={ownerName === ""} theme="light" collapsedWidth={40} style={{ position:"fixed", marginTop:"5vh",height: '100vh', backgroundColor: "white", borderColor: "transparent" }} onCollapse={() => setIsCollapsed(!isCollapsed)} collapsible={true} collapsed={isCollapsed} className="site-layout-background" width={200}>
+            <Sider hidden={ownerName === ""} theme="light" collapsedWidth={40} style={{  marginTop:"5vh",height: '100vh', backgroundColor: "white", borderColor: "transparent" }} onCollapse={() => setIsCollapsed(!isCollapsed)} collapsible={true} collapsed={isCollapsed} className="site-layout-background" width={200}>
               <Menu
                 mode="inline"
                 defaultSelectedKeys={[selectedSiderKey]}
