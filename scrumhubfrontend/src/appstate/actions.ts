@@ -430,6 +430,7 @@ export const assignTaskThunk = createAsyncThunk<
 
 export const clearError = createAction("clearError");
 export const clearState = createAction("clearState");
+export const clearProject = createAction("clearProject");
 export const clearSprintList = createAction("clearSprintList");
 export const clearSprint = createAction("clearSprint");
 export const clearReposList = createAction("clearReposList");
