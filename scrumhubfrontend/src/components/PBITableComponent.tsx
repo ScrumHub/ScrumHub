@@ -11,7 +11,7 @@ return(
         <Table
          style={{ borderSpacing: "separate" }}
           size="small"
-          showHeader={false}
+          showHeader={true}
           scroll={{ x: 800 }}
           columns={props.pbiColumns}
           rowKey={(record: IProductBacklogItem) => record.id}

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext, useEffect, useCallback } from 'react';
-import { Button, Space, Table, Input, Popconfirm, Select, Dropdown, InputNumber, Menu, Avatar, Statistic, Card } from 'antd';
+import { Button, Space, Table, Input, Popconfirm, Select, Dropdown, InputNumber, Menu, Avatar, Statistic, Card, Progress } from 'antd';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import * as Actions from '../appstate/actions';
@@ -21,13 +21,14 @@ import { CustomAssignTaskPopup } from './popups/CustomAssignTaskPopup';
 import { initIDs, initModalVals, initRowIds } from './utility/commonInitValues';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
 import { useIsMounted, validate, validatePBIDrag, validateTaskDrag, } from './utility/commonFunctions';
-import { taskAssigneeCol, taskFinishCol, taskGhLinkCol, taskNameCol, pbiNameCol, pbiPriorityCol, pbiProgressCol } from './utility/BodyRowsAndColumns';
+import { taskAssigneeCol, taskFinishCol, taskGhLinkCol, taskNameCol, pbiPriorityCol, pbiProgressCol } from './utility/BodyRowsAndColumns';
 import { Option } from 'antd/lib/mentions';
 import TaskTableComponent from './TaskTableComponent';
 import PBITableComponent from './PBITableComponent';
 import MenuItem from 'antd/lib/menu/MenuItem';
 import { DownOutlined, UserOutlined } from '@ant-design/icons';
 import { MenuWithPeople } from './utility/LoadAnimations';
+import { PokerCard } from './PokerCard';
 //import { addTaskToPBI } from './utility/BacklogHandlers';
 
 const { Search } = Input;
@@ -320,7 +321,7 @@ export const BacklogTableWithSprints: React.FC = () => {
         };
       },
       drop: (item: any) => {
-        if (typeof (index_row) !== "undefined") {
+        if (typeof (index_row) !== "undefined" && isMounted()) {
           //console.log(restProps);
           if (item.bodyType === "IProductBacklogItem" && validatePBIDrag(item.index, item.record.sprintNumber, record.sprintNumber)) {
             updatePBI(item.index, item.record.sprintNumber, record.sprintNumber);
@@ -356,7 +357,7 @@ export const BacklogTableWithSprints: React.FC = () => {
       <tr
         ref={ref as any}
         className={`${className}${isOver ? dropClassName : ''}`}
-        style={{ cursor: "move", borderRadius: "0 10px 10px 0", ...style }}
+        style={{ cursor: index_row !== 0 && bodyType !== "ISprint" && index_row !== undefined ?"move":"default", borderRadius: "0 10px 10px 0", ...style }}
         {...restProps}
       />
     );
@@ -409,15 +410,17 @@ export const BacklogTableWithSprints: React.FC = () => {
     )
   };
   const pbiColumns = [
-    pbiNameCol,
+    {title: 'Name',  align: "left" as const, colSpan: 2,  key: 'name', render: (item: IProductBacklogItem) => { return ({ children: item.id===0?<div>{item.name}</div>:
+    <div className='link-button' onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, editPBI: true }); }} style={{ display: "inline-block" }}>{item.name}</div>, props: { colSpan: 2 } }) },},
     pbiPriorityCol,
     pbiProgressCol,
     {
       title: 'Story Points', colSpan: 1, key: 'operation', align: "center" as const, render: (item: IProductBacklogItem) => {
-        return (<Statistic  title={"Story Points"} value={item.expectedTimeInHours}></Statistic>)
+        return (<Progress size='small' width={30} type="circle" percent={100} status={item.expectedTimeInHours>10?'exception':'normal'} format={()=>item.expectedTimeInHours}>{/*<Statistic  title={"Story Points"} value={item.expectedTimeInHours}></Statistic>*/}</Progress>
+       )
       }
     },
-    {
+    /*{
       title: 'Delete', align: "center" as const, colSpan: 1, key: 'delete', render: (item: IProductBacklogItem) => {
         return (item.id !== 0 && <span>
           <Popconfirm
@@ -429,17 +432,17 @@ export const BacklogTableWithSprints: React.FC = () => {
               {"Delete"}</Button>
           </Popconfirm></span>)
       }
-    },
+    },*/
     {
       title: 'Action', align: "center" as const, colSpan: 2, key: 'actions', render: (item: IProductBacklogItem) => {
         return ({
           children: <span style={{ alignItems: "flex-end" }}>
-            {item.id !== 0 && <Button size='small' type="link" onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, estimatePBI: true }); }} >
+            {/*item.id !== 0 && <Button size='small' type="link" onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, estimatePBI: true }); }} >
               {"Estimate"}
-            </Button>}
-            {item.id !== 0 && <Button size='small' type="link" onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, editPBI: true }); }} >
+        </Button>*/}
+            {/*item.id !== 0 && <Button size='small' type="link" onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, editPBI: true }); }} >
               {"Edit"}
-            </Button>}
+      </Button>*/}
             <Button size='small' type="link" onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, addTask: true }); }} >
               {"Add Task"}
             </Button>

@@ -165,7 +165,7 @@ export const taskGhLinkCol = {
 };
 
 //sprint columns
-export const pbiNameCol = {title: 'Name',  align: "left" as const, colSpan: 2, dataIndex: 'name', key: 'name', render: (text: string) => { return ({ children: text, props: { colSpan: 2 } }) },};
+//export const pbiNameCol = {title: 'Name',  align: "left" as const, colSpan: 2, dataIndex: 'name', key: 'name', render: (text: string) => { return ({ children: text, props: { colSpan: 2 } }) },};
 export const pbiPriorityCol = {
   title: 'Priority', align: "center" as const, colSpan: 1, key: 'priority',
   render: (item: IProductBacklogItem) => item.id !== 0 ?
