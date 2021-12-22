@@ -23,6 +23,9 @@
   /*color: rgba(255, 255, 255, 1);*/
   opacity:100;
 }
+.ant-menu-vertical.ant-menu-sub, .ant-menu-vertical-left.ant-menu-sub, .ant-menu-vertical-right.ant-menu-sub {
+   min-width: 0;
+}
 
 /*style={{
     breakAfter:"auto",

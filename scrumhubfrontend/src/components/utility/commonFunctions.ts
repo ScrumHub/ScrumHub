@@ -41,3 +41,4 @@ export function dateFormat(date: Date) {
 export function getIndex(record: ISprint) {
   return record.sprintNumber;
 }
+

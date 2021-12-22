@@ -1,5 +1,5 @@
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
-import { Avatar, Button, Menu, Popover, Skeleton } from "antd";
+import { Avatar, Button, Checkbox, Menu, Popover, Skeleton } from "antd";
 import MenuItem from "antd/lib/menu/MenuItem";
 import { IPeopleList, IPerson } from "../../appstate/stateInterfaces";
 import "../Home.css";
@@ -43,6 +43,8 @@ export function MenuWithPeople(people: IPeopleList) {
             <span>
             <Avatar src={`${item.avatarLink}`} ></Avatar>
           <a href={"https://github.com/"+item.login}>{" "+item.login as string}</a>
+          {" "}
+          <Checkbox/>
             </span>
         </MenuItem>);
     })

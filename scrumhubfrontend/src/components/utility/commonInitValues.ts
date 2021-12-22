@@ -11,9 +11,9 @@ export const initIDs: IFilters = {
     addTask: false,
     assgnTask: false,
     assgnPpl: false,
-    addSprint: false,
+    //addSprint: false,
     updateSprint: false,
-    addPBI: false,
+    //addPBI: false,
     editPBI: false,
     estimatePBI: false,
   }
@@ -23,3 +23,4 @@ export const initIDs: IFilters = {
     taskID: -2,
     sprintNumber: -2
   }
+
