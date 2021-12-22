@@ -180,17 +180,20 @@ export const initAddPBI: IAddPBI = {
 export interface IAssignPBI {
   name: string;
   id: number;
+  isInSprint:boolean;
 }
 
 export interface ICheckedAssignPBI extends IAssignPBI {
   name: string;
   id: number;
+  
   checked: boolean;
 }
 
 export const initAssignPBI: IAssignPBI = {
   name: "",
   id: 0,
+  isInSprint:false
 };
 
 export interface IPBIFilter {

@@ -1,8 +1,8 @@
 import { Avatar, Layout, Menu } from 'antd';
-import { useHref, useLocation, useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { useContext } from 'react';
 import 'antd/dist/antd.css';
-import { CarOutlined, FileOutlined, GithubOutlined, HourglassOutlined, PieChartOutlined, ProjectOutlined } from '@ant-design/icons';
+import { FileOutlined, GithubOutlined, ProjectOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import AppRouter from '../Approuter';
 import { AuthContext } from '../App';
@@ -16,6 +16,7 @@ import './Main.css';
 import { useSelector } from 'react-redux';
 import { State } from '../appstate/stateInterfaces';
 const { Header, Footer, Content, Sider } = Layout;
+const { SubMenu } = Menu;
 
 
 
@@ -116,14 +117,13 @@ function Main(props: any) {
             className="menu" >
               
             {currentUser!==null &&
-            <Menu.Item className='menuItem' key="0" hidden={currentUser===null} icon={<a href={"https://github.com/" + currentUser?.login}>
-            <span>
-              <Avatar style={{ transform:"scale(0.85)", marginBottom:"0.5vh"}} size="small" src={`${currentUser?.avatarLink}`} ></Avatar>
-              {" " + currentUser?.login as string}
-            </span></a>}>
+            <SubMenu style={{float:"unset"}} key="0" title={currentUser?.login as string} icon={
+                <Avatar style={{ transform:"scale(0.8)", marginBottom:"0.4vh"}} size="small" src={`${currentUser?.avatarLink}`} ></Avatar>}>
+              <Menu.Item key="4">
+              <a href={"https://github.com/" + currentUser?.login}>See on Github</a>
+              </Menu.Item>
               
-              
-            </Menu.Item>}
+            </SubMenu>}
             <Menu.Item className='menuItem' key="proj" onClick={() => handleProjects()}><span style={{ maxHeight: "1vh" }}>Projects</span></Menu.Item>
             <Menu.Item className='menuItem' key="logout" onClick={() => handleLogout()} >Logout</Menu.Item>
           </Menu>

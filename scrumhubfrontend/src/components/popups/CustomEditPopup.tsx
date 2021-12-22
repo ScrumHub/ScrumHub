@@ -1,8 +1,11 @@
 import React from 'react';
-import { Button, Modal, Form, Input, InputNumber, Space } from 'antd';
+import { Button, Modal, Form, Input, InputNumber, Space, Slider, Tag, Select, Popconfirm, message } from 'antd';
 import { IAddPBI } from '../../appstate/stateInterfaces';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { MinusCircleOutlined, PlusOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
+import { backlogColors, backlogPriorities } from '../utility/BodyRowsAndColumns';
+const { Option } = Select;
+
 
 interface Values {
   title: string;
@@ -15,23 +18,43 @@ interface CollectionCreateFormProps {
   visible: boolean;
   onCreate: (values: Values) => void;
   onCancel: () => void;
+  onDelete: () => void;
 }
 
 export const CustomEditPopup: React.FC<CollectionCreateFormProps> = ({
   data,
-visible,
+  visible,
   onCreate,
   onCancel,
+  onDelete
 }) => {
   const [form] = Form.useForm();
+
+  const formItemLayoutWithOutLabel = {
+    wrapperCol: {
+      xs: { offset: 0 },
+      sm: { offset: 0 },
+    },
+  };
   return (
     <Modal
       visible={visible}
       title="Edit Backlog Item"
-      okText="Save"
-      cancelText="Cancel"
-      onCancel={onCancel}
-      onOk={() => {
+      closable={true}
+      destroyOnClose={true}
+      footer={[
+        <Popconfirm
+          title="Are you sure you want to delete this backlog item?"
+          onConfirm={onDelete}
+          onCancel={(e)=>{message.info(data.name + " was not deleted")}}
+          okText="Yes"
+          cancelText="No"
+          icon={<QuestionCircleOutlined style={{ color: 'red' }}/>}
+        ><Button key="1">
+            {"Delete"}</Button>
+        </Popconfirm>,
+      <Button key="2" onClick={onCancel}>Cancel</Button>,
+      <Button key="3" type="primary" onClick={() => {
         form
           .validateFields()
           .then((values: Values) => {
@@ -41,7 +64,10 @@ visible,
           .catch((info: any) => {
             console.error('Validate Failed:', info);
           });
-      }}
+      }}>
+        Save
+      </Button>
+      ]}
     >
       <Form
         form={form}
@@ -49,7 +75,7 @@ visible,
         name="form_in_modal"
         initialValues={{ modifier: 'public' }}
       >
-        <FormItemLabel prefixCls="name" label="Name" required={true}/>
+        <FormItemLabel prefixCls="name" label="Name" required={true} />
         <Form.Item
           initialValue={data.name}
           name="name"
@@ -57,38 +83,44 @@ visible,
         >
           <Input />
         </Form.Item>
-        <FormItemLabel prefixCls="priority" label="Priority" required={true}/>
+        <FormItemLabel prefixCls="priority" label="Priority" required={true} />
         <Form.Item
-        initialValue={data.priority}
+          initialValue={data.priority}
           name="priority"
           rules={[{ required: true, message: 'Please input the priority of the new backlog item!' }]}
         >
-          <InputNumber type="number" min={0} />
+          <Select defaultValue={data.priority}>
+            {backlogPriorities.map((item: string, key: number) => {
+              return <Option key={key} value={key}  >{item}</Option>
+            })}
+          </Select>
+
         </Form.Item>
-        <FormItemLabel prefixCls="acceptanceCriteria" label="Acceptance Criteria" required={true}/>
+        <FormItemLabel prefixCls="acceptanceCriteria" label="Acceptance Criteria" required={true} />
         <Form.List name="acceptanceCriteria" initialValue={data.acceptanceCriteria}>
-        {(fields, { add, remove }) => (
-          <>
-            {fields.map(({ key, name }) => (
-              <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
-                <Form.Item
-                  name={key}
-                  rules={[{ required: key<1?true:false, message: 'Please input at least one acceptance criteria!' }]}
-                >
-                  <Input placeholder={`Cirteria ${key+1}`} />
+          {(fields, { add, remove }) => (
+            <>
+              {fields.map(({ key, name }) => (
+                <Form.Item {...formItemLayoutWithOutLabel} style={{ marginBottom: "4px" }}>
+                  <Form.Item
+                    noStyle
+                    name={key}
+                    rules={[{ required: key < 1 ? true : false, whitespace: true, message: 'Please input at least one acceptance criteria!' }]}
+                  >
+                    <Input style={{ width: "95%" }} placeholder={`Input New Cirterion`} />
+                  </Form.Item>
+                  <MinusCircleOutlined style={{ width: "5%" }} className="dynamic-delete-button" onClick={() => remove(name)} />
                 </Form.Item>
-                <MinusCircleOutlined onClick={() => remove(name)} />
-              </Space>
-            ))}
-            <Form.Item>
-              <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                Add criterion
-              </Button>
-            </Form.Item>
-          </>
-        )}
-      </Form.List>
-     
+              ))}
+              <Form.Item>
+                <Button style={{ marginTop: "20px" }} type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                  Add criterion
+                </Button>
+              </Form.Item>
+            </>
+          )}
+        </Form.List>
+
       </Form>
     </Modal>
   );

@@ -29,12 +29,15 @@ export const CustomAddSprintPopup: React.FC<CollectionCreateFormProps> = ({
   visible,
   onCreate,
   onCancel,
-}) => {
-  pbiData = pbiData.filter((item)=>item.estimated !== false && item.id !== 0);
+}) => {  
+  if(pbiData){
+  pbiData = pbiData.filter((item)=>item.estimated !== false && item.id !== 0);}
+
   const [form] = Form.useForm();
   const [temp, setTemp] = useState(pbiData);
   return (
     <Modal
+    style={{marginTop:"-8vh"}}
       visible={visible}
       title="Add Sprint"
       okText="Save"

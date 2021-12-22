@@ -19,9 +19,9 @@ import { IProductBacklogItem, ISprint, ITask } from "../../appstate/stateInterfa
     addTask: boolean,
     assgnTask: boolean,
     assgnPpl: boolean,
-    addSprint: boolean,
+    //addSprint: boolean,
     updateSprint: boolean,
-    addPBI: boolean,
+    //addPBI: boolean,
     editPBI: boolean,
     estimatePBI: boolean,
   }
