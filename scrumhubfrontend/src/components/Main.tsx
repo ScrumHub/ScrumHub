@@ -114,7 +114,7 @@ function Main(props: any) {
       <Layout style={{ height: "100vh" }}>
         <Header hidden={!isLoggedIn} className="clearfix" style={{ position: 'fixed', zIndex: 1, padding: 0, height: "5vh", lineHeight: "5vh", width: "100%", backgroundColor: "#f0f0f0" }}>
           <Menu mode="horizontal" theme="light"
-            className="menu" >
+            className="mainMenu" >
               
             {currentUser!==null &&
             <SubMenu style={{float:"unset"}} key="0" title={currentUser?.login as string} icon={
@@ -124,8 +124,8 @@ function Main(props: any) {
               </Menu.Item>
               
             </SubMenu>}
-            <Menu.Item className='menuItem' key="proj" onClick={() => handleProjects()}><span style={{ maxHeight: "1vh" }}>Projects</span></Menu.Item>
-            <Menu.Item className='menuItem' key="logout" onClick={() => handleLogout()} >Logout</Menu.Item>
+            <Menu.Item className='mainMenuItem' key="proj" onClick={() => handleProjects()}><span style={{ maxHeight: "1vh" }}>Projects</span></Menu.Item>
+            <Menu.Item className='mainMenuItem' key="logout" onClick={() => handleLogout()} >Logout</Menu.Item>
           </Menu>
         </Header>
         <Content className="content">
