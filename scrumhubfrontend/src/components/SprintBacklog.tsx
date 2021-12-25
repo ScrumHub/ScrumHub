@@ -9,10 +9,11 @@ import config from '../configuration/config';
 import { useSelector } from 'react-redux';
 import { CheckOutlined, StopOutlined } from '@ant-design/icons';
 import { store } from '../appstate/store';
-import { CustomEditPopup } from './popups/CustomEditPopup';
+import { EditPBIPopup } from './popups/EditPBIPopup';
 import { CustomEstimatePopup } from './popups/CustomEstimatePopup';
 import "./SprintBacklog.css";
-import { CustomUpdateSprintPopup } from './popups/CustomUpdateSprintPopup';
+import { UpdateSprintPopup } from './popups/UpdateSprintPopup';
+import { UpdateSprintPBIsPopup } from './popups/UpdateSprintPBIsPopup';
 
 const columns = [
   {
@@ -333,13 +334,13 @@ export default function SprintBacklog() {
         <Button disabled={prevselectedRowKeys.length < 1} onClick={handleEstimateButton} type="primary" style={{ marginRight: 16 }}>
           Estimate
         </Button>
-        {isEditModalVisible && selectedPBI && <CustomEditPopup data={selectedPBI as IAddPBI} visible={isEditModalVisible}
+        {isEditModalVisible && selectedPBI && <EditPBIPopup data={selectedPBI as IAddPBI} visible={isEditModalVisible}
           onCreate={function (values: any): void { handleEditPBI(values) }} onDelete={handleDelete}
           onCancel={() => { setIsEditModalVisible(false); }} />}
         {isEstimateModalVisible && selectedPBI && <CustomEstimatePopup data={selectedPBI as IProductBacklogItem} visible={isEstimateModalVisible}
           onCreate={function (values: any): void { handleEstimatePBI(values) }}
           onCancel={() => { setIsEstimateModalVisible(false); }} />}
-          {isUpdateModalVisible && !loading && <CustomUpdateSprintPopup data={sprintPage as ISprint} pbiData={tempPBIPage.list as IProductBacklogItem[]} visible={isUpdateModalVisible}
+          {isUpdateModalVisible && !loading && <UpdateSprintPBIsPopup data={sprintPage as ISprint} pbiData={tempPBIPage.list as IProductBacklogItem[]} visible={isUpdateModalVisible}
           onCreate={function (values: any): void { handleUpdateSprint(values) }}
           onCancel={() => { setIsUpdateModalVisible(false); }} />}
       </span>

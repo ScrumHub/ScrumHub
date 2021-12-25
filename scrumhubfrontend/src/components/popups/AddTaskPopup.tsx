@@ -4,7 +4,7 @@ import { IFilters } from '../../appstate/stateInterfaces';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 
-interface Values{
+interface Values {
   title: string;
   description: string;
   modifier: string;
@@ -17,16 +17,17 @@ interface CollectionCreateFormProps {
   onCancel: () => void;
 }
 
-export const CustomAddTaskPopup: React.FC<CollectionCreateFormProps> = ({
+export const AddTaskPopup: React.FC<CollectionCreateFormProps> = ({
   data,
-visible,
+  visible,
   onCreate,
   onCancel,
 }) => {
   const [form] = Form.useForm();
   return (
     <Modal
-    closable={true}
+      centered={true}
+      closable={true}
       visible={visible}
       title="Add New Task"
       okText="Save"
@@ -50,9 +51,9 @@ visible,
         name="form_in_modal"
         initialValues={{ modifier: 'public' }}
       >
+        <FormItemLabel prefixCls="name" label="Name" required={true} />
         <Form.Item
           name="name"
-          label="Name"
           rules={[{ required: true, message: 'Please input the name of the new task!' }]}
         >
           <Input />

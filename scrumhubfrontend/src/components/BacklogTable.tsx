@@ -11,10 +11,10 @@ import { AuthContext } from '../App';
 import { useSelector } from 'react-redux';
 import config from '../configuration/config';
 import { Navigate, useNavigate } from 'react-router';
-import { CustomEditPopup } from './popups/CustomEditPopup';
+import { EditPBIPopup } from './popups/EditPBIPopup';
 import { CustomEstimatePopup } from './popups/CustomEstimatePopup';
-import { CustomUpdateSprintPopup } from './popups/CustomUpdateSprintPopup';
-import { CustomAddTaskPopup } from './popups/CustomAddTaskPopup';
+import { UpdateSprintPopup } from './popups/UpdateSprintPopup';
+import { AddTaskPopup } from './popups/AddTaskPopup';
 import { CustomAssignTaskPopup } from './popups/CustomAssignTaskPopup';
 import { initIDs, initModalVals, initRowIds } from './utility/commonInitValues';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
@@ -261,8 +261,6 @@ export const BacklogTableWithSprints: React.FC<any> = (props:any) => {
             updatePBI(item.index, item.record.sprintNumber, record.sprintNumber);
           }
           else if (item.bodyType === "ITask" && validateTaskDrag(record.pbiID, item.index, item.record.pbiID)) {
-            console.log(item);
-            console.log(record);
             updateTask(record.pbiID, item.index);
           }
         }
@@ -300,9 +298,9 @@ export const BacklogTableWithSprints: React.FC<any> = (props:any) => {
     taskAssigneeCol,
     taskGhLinkCol,
     {
-      title: 'Action', dataIndex: "", align: "right" as const, key: 'operation', render: (record: ITask) => {
+      title: 'Action', width:"10%",dataIndex: "", align: "right" as const, key: 'operation', render: (record: ITask) => {
         return (<Button size='small' type="link" onClick={() => { setSelectedTask(record); setIsModal({ ...isModal, assgnTask: true }); }} >
-          {"Move PBI"}
+          {"Finish Task"}
         </Button>)
       }
     },
@@ -331,33 +329,32 @@ export const BacklogTableWithSprints: React.FC<any> = (props:any) => {
       }
     }*/
   ];
-  const TaskTableforPBI: React.FC<IProductBacklogItem> = (item: IProductBacklogItem, updateKeys:any) => {
+  const TaskTableforPBI: React.FC<IProductBacklogItem> = (item: IProductBacklogItem) => {
     return (
-      <TaskTableComponent peopleFilter={props.peopleFilter} updateKeys={function (key: any): void { console.log(key); }} item={item} taskColumns={taskColumns} taskComponents={nestedcomponents} />
+      <TaskTableComponent peopleFilter={props.peopleFilter} item={item} taskColumns={taskColumns} taskComponents={nestedcomponents} />
     )
   };
   const pbiColumns = [
-    {title: 'Name',  align: "left" as const, colSpan: 2,  key: 'name', render: (item: IProductBacklogItem) => { return ({ children: 
-    <div className={item.id===0 ?'':'link-button'} onClick={() => { if(item.id!==0){setSelectedPBI(item); setIsModal({ ...isModal, editPBI: true });} }} style={{ display: "inline-block"}}>{item.name}</div>, props: { colSpan: 2  } }) },},
+    {title: 'Name',  width:"40%",align: "left" as const,  key: 'name', render: (item: IProductBacklogItem) => { return (<div className={item.id===0 ?'':'link-button'} onClick={() => { if(item.id!==0){setSelectedPBI(item); setIsModal({ ...isModal, editPBI: true });} }}>{item.name}</div>) },},
     {
-      title: 'Priority', align: "center" as const, colSpan: 1, key: 'priority',
+      title: 'Priority', align: "center" as const, width:"20%", key: 'priority',
       render: (item: IProductBacklogItem) => item.id !== 0 ?
         <Tag style={{cursor:"pointer"}} color={backlogColors[item.priority%3]}>{backlogPriorities[item.priority%3]}</Tag>
         : <></>
     
     },
     {
-      title: 'Story Points', colSpan: 1, key: 'operation', align: "center" as const, render: (item: IProductBacklogItem) => {
-        return (item.id !== 0 &&<Tag style={{cursor:"pointer"}} color={item.expectedTimeInHours>10?"red":"green"} onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, estimatePBI: true }); }}>
+      title: 'Story Points', width:"20%", key: 'operation', align: "center" as const, render: (item: IProductBacklogItem) => {
+        return (item.id !== 0 ?<Tag style={{cursor:"pointer"}} color={item.expectedTimeInHours>10?"red":"green"} onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, estimatePBI: true }); }}>
           {item.expectedTimeInHours+" Story Point"+(item.expectedTimeInHours!==1?"s":"")}
         {/*<Progress size='small' width={30} type="circle" percent={100} status={item.expectedTimeInHours>10?'exception':'normal'} format={()=>item.expectedTimeInHours}>{/*<Statistic  title={"Story Points"} value={item.expectedTimeInHours}></Statistic></Progress>*/}
-        </Tag>
+        </Tag>:<></>
        )
       }
     },
     pbiProgressCol,
     {
-      title: 'Action', align: "right" as const, colSpan: 1, key: 'actions', render: (item: IProductBacklogItem) => {
+      title: '', align: "right" as const, width:"10%", key: 'actions', render: (item: IProductBacklogItem) => {
         return ({
           children: <span style={{ alignItems: "flex-end" }}>
             <Button size='small' type="link" onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, addTask: true }); }} >
@@ -537,7 +534,7 @@ export const BacklogTableWithSprints: React.FC<any> = (props:any) => {
   }, [error]);*/
   const sprintColumns = [
     {
-      title: 'Name', colSpan: 1, dataIndex: 'sprintNumber', key: 'sprintNumber',
+      title: 'Name', width:"80%", align: "left" as const,dataIndex: 'sprintNumber', key: 'sprintNumber',
       render: (sprintNumber: number) => {
         return (sprintNumber === 0 ? <div style={{ display: "inline-block" }} >{"Product Backlog"}</div> : (<div className='link-button' style={{ display: "inline-block" }} onClick={() => {
           console.log("clicked");
@@ -547,10 +544,10 @@ export const BacklogTableWithSprints: React.FC<any> = (props:any) => {
       },
     },
     {
-      title: 'Action', colSpan: 1, align: "right" as const, key: 'operation', render: (record: ISprint) => {
-        return (record.sprintNumber !== 0 && <Button size='small' type="link" onClick={() => { setSelectedSprint(record); setIsModal({ ...isModal, updateSprint: true }); }} >
+      title: 'Action', width:"20%", align: "right" as const, key: 'operation', render: (record: ISprint) => {
+        return (record.sprintNumber !== 0 ? <Button size='small' type="link" onClick={() => { setSelectedSprint(record); setIsModal({ ...isModal, updateSprint: true }); }} >
           {"Update"}
-        </Button>)
+        </Button>:<></>)
       },
     }
   ];
@@ -561,7 +558,7 @@ export const BacklogTableWithSprints: React.FC<any> = (props:any) => {
     <>
         <DndProvider backend={HTML5Backend} key={"sprint"}>
           <Table
-            style={{ borderSpacing: "separate", marginLeft: "2%", marginRight: "2%", marginTop: "1px", marginBottom: "3px", height: "auto" }}
+            style={{ borderSpacing: "separate", transform:"scale(0.96)", marginTop: "1px", marginBottom: "3px", height: "auto" }}
             scroll={{ x: 800 }}
             size="small"
             loading={!pbiPage || !pbiPage.list || fetchPBIs || fetched}
@@ -589,7 +586,7 @@ export const BacklogTableWithSprints: React.FC<any> = (props:any) => {
           return (
             <DndProvider backend={HTML5Backend} key={"sprint" + sprint.sprintNumber}>
               <Table
-                style={{ borderSpacing: "separate", marginLeft: "2%", marginRight: "2%", marginBottom: "3px", height: "auto" }}
+                style={{  borderSpacing: "separate",transform:"scale(0.96)", marginBottom: "3px", height: "auto" }}
                 scroll={{ x: 800 }}
                 size="small"
                 loading={!sprintPage || !sprintPage.list || sprintRefreshRequired || fetchSprints || fetchSprintsPBI}
@@ -616,16 +613,16 @@ export const BacklogTableWithSprints: React.FC<any> = (props:any) => {
         })
 
       }
-      {isModal.editPBI && selectedPBI && selectedPBI.id && <CustomEditPopup data={selectedPBI as IAddPBI} visible={isModal.editPBI}
+      {isModal.editPBI && selectedPBI && selectedPBI.id && <EditPBIPopup data={selectedPBI as IAddPBI} visible={isModal.editPBI}
         onCreate={function (values: any): void { editPBI(values) }} onDelete={() => {deletePBI(selectedPBI)}}
         onCancel={() => { setIsModal({ ...isModal, editPBI: false }); }} />}
       {isModal.estimatePBI && selectedPBI && selectedPBI.id && <CustomEstimatePopup data={selectedPBI as IProductBacklogItem} visible={isModal.estimatePBI}
         onCreate={function (values: any): void { estimatePBI(values) }}
         onCancel={() => { setIsModal({ ...isModal, estimatePBI: false }); }} />}
-      {isModal.addTask && <CustomAddTaskPopup data={{ name: "" } as IFilters} visible={isModal.addTask}
+      {isModal.addTask && <AddTaskPopup data={{ name: "" } as IFilters} visible={isModal.addTask}
         onCreate={function (values: any): void { addTaskToPBI(values); }}//,isModal,setIsModal,setInitialRefresh, setSelectedPBI,token,ownerName, selectedPBI) }}
         onCancel={() => { setIsModal({ ...isModal, addTask: false }); }} />}
-      {isModal.updateSprint && !loading && <CustomUpdateSprintPopup data={selectedSprint} pbiData={pbiPage.list as IProductBacklogItem[]} visible={isModal.updateSprint}
+      {isModal.updateSprint && !loading && <UpdateSprintPopup data={selectedSprint} visible={isModal.updateSprint}
         onCreate={function (values: any): void { updateSprint(values) }}
         onCancel={() => { setIsModal({ ...isModal, updateSprint: false }); }} />}
       {isModal.assgnTask && pbiPage && <CustomAssignTaskPopup error={error.erorMessage} pbiData={pbiPage.list as IAssignPBI[] as ICheckedAssignPBI[]} visible={isModal.assgnTask}

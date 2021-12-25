@@ -1,13 +1,11 @@
 import React from 'react';
-import { Button, Modal, Form, Input, InputNumber, Space, Slider, Tag, Select, Popconfirm, message } from 'antd';
+import { Button, Modal, Form, Input, Select } from 'antd';
 import { IAddPBI } from '../../appstate/stateInterfaces';
-import { MinusCircleOutlined, PlusCircleOutlined, PlusOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
-import { backlogColors, backlogPriorities } from '../utility/BodyRowsAndColumns';
+import { backlogPriorities } from '../utility/BodyRowsAndColumns';
 import { formItemLayoutWithOutLabel } from '../utility/commonInitValues';
 const { Option } = Select;
-
-
 interface Values {
   title: string;
   description: string;
@@ -19,37 +17,25 @@ interface CollectionCreateFormProps {
   visible: boolean;
   onCreate: (values: Values) => void;
   onCancel: () => void;
-  onDelete: () => void;
 }
 
-export const CustomEditPopup: React.FC<CollectionCreateFormProps> = ({
+export const AddPBIPopup: React.FC<CollectionCreateFormProps> = ({
   data,
-  visible,
+visible,
   onCreate,
   onCancel,
-  onDelete
 }) => {
   const [form] = Form.useForm();
   return (
     <Modal
-    style={{marginTop:"-2vh"}}
-      visible={visible}
-      title="Edit Backlog Item"
-      closable={true}
-      destroyOnClose={true}
-      footer={[
-        <Popconfirm
-          title="Are you sure you want to delete this backlog item?"
-          onConfirm={onDelete}
-          onCancel={(e)=>{message.info(data.name + " was not deleted")}}
-          okText="Yes"
-          cancelText="No"
-          icon={<QuestionCircleOutlined style={{ color: 'red' }}/>}
-        ><Button key="1">
-            {"Delete"}</Button>
-        </Popconfirm>,
-      <Button key="2" onClick={onCancel}>Cancel</Button>,
-      <Button key="3" type="primary" onClick={() => {
+     destroyOnClose={true}
+     closable={true}
+      visible={true}
+      title="Add Product Backlog Item"
+      okText="Save"
+      cancelText="Cancel"
+      onCancel={onCancel}
+      onOk={() => {
         form
           .validateFields()
           .then((values: Values) => {
@@ -59,10 +45,7 @@ export const CustomEditPopup: React.FC<CollectionCreateFormProps> = ({
           .catch((info: any) => {
             console.error('Validate Failed:', info);
           });
-      }}>
-        Save
-      </Button>
-      ]}
+      }}
     >
       <Form
         form={form}
@@ -70,30 +53,28 @@ export const CustomEditPopup: React.FC<CollectionCreateFormProps> = ({
         name="form_in_modal"
         initialValues={{ modifier: 'public' }}
       >
-        <FormItemLabel prefixCls="name" label="Name" required={true} />
+        <FormItemLabel prefixCls="name" label="Name" required={true}/>
         <Form.Item
-          initialValue={data.name}
           name="name"
           rules={[{ required: true, message: 'Please input the name of the new backlog item!' }]}
         >
           <Input />
         </Form.Item>
-        <FormItemLabel prefixCls="priority" label="Priority" required={true} />
+        <FormItemLabel prefixCls="priority" label="Priority" required={true}/>
         <Form.Item
-          initialValue={data.priority}
           name="priority"
           rules={[{ required: true, message: 'Please input the priority of the new backlog item!' }]}
         >
-          <Select defaultValue={data.priority}>
+          <Select defaultValue={""}>
             {backlogPriorities.map((item: string, key: number) => {
               return <Option key={key} value={key}  >{item}</Option>
             })}
           </Select>
 
         </Form.Item>
-        <FormItemLabel prefixCls="acceptanceCriteria" label="Acceptance Criteria" required={true} />
-        <Form.List name="acceptanceCriteria" initialValue={data.acceptanceCriteria}>
-          {(fields, { add, remove }) => (
+        <FormItemLabel prefixCls="acceptanceCriteria" label="Acceptance Criteria" required={true}/>
+        <Form.List name="acceptanceCriteria" initialValue={[""]}>
+        {(fields, { add, remove }) => (
             <>
               {fields.map(({ key, name }) => (
                 <Form.Item {...formItemLayoutWithOutLabel} style={{ marginBottom: "4px" }}>
@@ -108,7 +89,7 @@ export const CustomEditPopup: React.FC<CollectionCreateFormProps> = ({
                 </Form.Item>
               ))}
               <Form.Item>
-                <Button style={{ marginTop: "20px", float:"left"}} type="link" onClick={() => add()} block icon={<PlusCircleOutlined />}>
+                <Button style={{ marginTop: "20px", float: "left" }} type="link" onClick={() => add()} block icon={<PlusCircleOutlined />}>
                   Add criterion
                 </Button>
               </Form.Item>
@@ -116,6 +97,7 @@ export const CustomEditPopup: React.FC<CollectionCreateFormProps> = ({
           )}
         </Form.List>
 
+     
       </Form>
     </Modal>
   );

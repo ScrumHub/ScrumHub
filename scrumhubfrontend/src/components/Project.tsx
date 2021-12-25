@@ -11,8 +11,8 @@ import { MenuWithPeople } from './utility/LoadAnimations';
 import { store } from '../appstate/store';
 import * as Actions from '../appstate/actions';
 import React from 'react';
-import { CustomAddPopup } from './popups/CustomAddPopup';
-import { CustomAddSprintPopup } from './popups/CustomAddSprintPopup';
+import { AddPBIPopup } from './popups/AddPBIPopup';
+import { AddSprintPopup } from './popups/AddSprintPopup';
 import { useIsMounted } from './utility/commonFunctions';
 const { Search } = Input;
 
@@ -29,7 +29,6 @@ export default function Project() {
   const people = useSelector((appState: State) => appState.people as IPeopleList);
   const [isAddPBI, setIsAddPBI] = useState(false);
   const [isAddSprint, setIsAddSprint] = useState(false);
-  const [isHiddene, setIsHideden] = useState(false);
   const error = useSelector((appState: State) => appState.error);
   const isMounted = useIsMounted();
 
@@ -48,20 +47,18 @@ export default function Project() {
       );
     } catch (err) { console.error("Failed to add the pbis: ", err); }
     finally {
-      if (isMounted()) {
         setIsAddPBI(false);
-      }
     }
   };
 
-  const addSprint = (pbi: ISprint) => {
-    const ids = pbi.backlogItems.map((value: IProductBacklogItem) => { return ((value.isInSprint ? value.id.toString() : "")) }).filter((x: string) => x !== "");
+  const addSprint = (sprint: ISprint) => {
+    const ids = sprint.backlogItems.map((value: IProductBacklogItem) => { return ((value.isInSprint ? value.id.toString() : "")) }).filter((x: string) => x !== "");
     try {
       store.dispatch(
         Actions.addSprintThunk({
           token: token as string,
           ownerName: ownerName as string,
-          sprint: { "number": pbi.sprintNumber, "goal": pbi.goal, "pbIs": ids }
+          sprint: { "number": sprint.sprintNumber, "goal": sprint.goal, "pbIs": ids }
         }) //filters
       );
     } catch (err) {
@@ -88,8 +85,8 @@ console.log(filterPBI.peopleFilter);
         
         <Space direction="horizontal"
           style={{ marginLeft: "2%", marginRight: "2%", marginTop: 0, marginBottom: "1%" }}>
-          <Button onClick={() => { Actions.clearPBIsList(); setIsAddSprint(true); }}>{"Create Sprint"}</Button>
-          <Button onClick={() => { }/*setIsModal({ ...isModal, addPBI: true })*/}>{"Add Product Backlog Item"}</Button>
+          <Button onClick={() => { setIsAddSprint(true); }}>{"Create Sprint"}</Button>
+          <Button onClick={() => { setIsAddPBI(true);}}>{"Add Product Backlog Item"}</Button>
           <Search placeholder="input backlog item name" onSearch={onSearch} enterButton />
 
         </Space>
@@ -122,10 +119,10 @@ console.log(filterPBI.peopleFilter);
         </Space>
 
         <BacklogTableWithSprints peopleFilter={filterPBI.peopleFilter}/>
-        {isAddSprint && !loading && <CustomAddSprintPopup error={error.erorMessage} data={initSprint} visible={isAddSprint}
+        {isAddSprint &&  <AddSprintPopup error={error.erorMessage} data={initSprint} visible={isAddSprint}
           onCreate={function (values: any): void { addSprint(values); }}
           onCancel={() => { setIsAddSprint(false); }} pbiData={pbiPage.list} />}
-        {isAddPBI && <CustomAddPopup data={initAddPBI} visible={isAddPBI}
+        {isAddPBI && <AddPBIPopup data={initAddPBI} visible={isAddPBI}
           onCreate={function (values: any): void { addPBI(values) }}
           onCancel={() => { setIsAddPBI(false); }} />}
 

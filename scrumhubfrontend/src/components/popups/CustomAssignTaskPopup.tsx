@@ -13,8 +13,8 @@ interface Values {
 }
 
 interface CollectionCreateFormProps {
-  error:string;
-  pbiData:ICheckedAssignPBI[];
+  error: string;
+  pbiData: ICheckedAssignPBI[];
   visible: boolean;
   onCreate: (values: Values) => void;
   onCancel: () => void;
@@ -27,12 +27,13 @@ export const CustomAssignTaskPopup: React.FC<CollectionCreateFormProps> = ({
   onCreate,
   onCancel,
 }) => {
-  pbiData = pbiData.filter((item)=>item.id !== 0);
+  pbiData = pbiData.filter((item) => item.id !== 0);
   const [form] = Form.useForm();
   const [temp, setTemp] = useState(pbiData);
   return (
     <Modal
-    closable={true}
+      centered={true}
+      closable={true}
       visible={visible}
       title="Assign Task To Backlog Item"
       okText="Save"
@@ -57,18 +58,18 @@ export const CustomAssignTaskPopup: React.FC<CollectionCreateFormProps> = ({
         initialValues={{ modifier: 'public' }}
       >
         <FormItemLabel
-        labelAlign="left"
-        label={<Title level={4}>{"Estimated Backlog Items"}</Title>} prefixCls="backlogItems" required={true} />
+          labelAlign="left"
+          label={<Title level={4}>{"Estimated Backlog Items"}</Title>} prefixCls="backlogItems" required={true} />
         <></>
         <Form.List name="backlogItems" initialValue={pbiData}>
           {(fields) => (
             <>
               {fields.map(({ key, name }) => (
-                <Space key={key} style={{ display: 'flex', margin:0}} align="baseline">
+                <Space key={key} style={{ display: 'flex', margin: 0 }} align="baseline">
                   <Checkbox checked={form.getFieldValue("backlogItems")[key].checked}
                     onClick={() => {
                       const temp2 = _.cloneDeep(temp);
-                      temp2[key].checked = temp2[key].checked===null?true:!temp2[key].checked;
+                      temp2[key].checked = temp2[key].checked === null ? true : !temp2[key].checked;
                       form.setFieldsValue({ "backlogItems": temp2 });
                     }} />
                   <Form.Item

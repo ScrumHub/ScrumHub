@@ -20,7 +20,7 @@ interface CollectionCreateFormProps {
   onCancel: () => void;
 }
 
-export const CustomUpdateSprintPopup: React.FC<CollectionCreateFormProps> = ({
+export const UpdateSprintPBIsPopup: React.FC<CollectionCreateFormProps> = ({
   data,
   pbiData,
   visible,
@@ -30,13 +30,14 @@ export const CustomUpdateSprintPopup: React.FC<CollectionCreateFormProps> = ({
   //TO DO
   //DELETE after backend is fixed
   const [form] = Form.useForm();
-  const filteredData = pbiData.filter((item)=>item.estimated !== false && item.id !== 0);
+  const filteredData = pbiData.filter((item) => item.estimated !== false && item.id !== 0);
   const [temp, setTemp] = useState(filteredData);
-  
-  const id = data.sprintNumber!== null ? data.sprintNumber:localStorage.getItem("sprintID")?.toString() as unknown as number;
+
+  const id = data.sprintNumber !== null ? data.sprintNumber : localStorage.getItem("sprintID")?.toString() as unknown as number;
   return (
     <Modal
-    closable={true}
+      centered={true}
+      closable={true}
       visible={visible}
       title="Edit Sprint"
       okText="Save"
@@ -48,7 +49,7 @@ export const CustomUpdateSprintPopup: React.FC<CollectionCreateFormProps> = ({
           .then((values: Values) => {
             form.resetFields();
             console.log(values);
-            onCreate({...values,backlogItems:temp} );
+            onCreate({ ...values, backlogItems: temp });
           })
           .catch((info: any) => {
             console.error('Validate Failed:', info);
@@ -61,7 +62,7 @@ export const CustomUpdateSprintPopup: React.FC<CollectionCreateFormProps> = ({
         name="form_in_modal"
         initialValues={{ modifier: 'public' }}
       >
-       <FormItemLabel prefixCls="name" label="Goal" required={true} />
+        <FormItemLabel prefixCls="name" label="Goal" required={true} />
         <Form.Item
           initialValue={data.goal}
           name="goal"
@@ -72,7 +73,6 @@ export const CustomUpdateSprintPopup: React.FC<CollectionCreateFormProps> = ({
             maxLength={105}
           />
         </Form.Item>
-
         <FormItemLabel prefixCls="name" label="Backlog Items" required={true} />
         <Form.List name="backlogItems" initialValue={filteredData}>
           {(fields) => (
@@ -82,16 +82,15 @@ export const CustomUpdateSprintPopup: React.FC<CollectionCreateFormProps> = ({
                   <Checkbox key={key} checked={temp[key].sprintNumber === id}
                     onClick={() => {
                       const temp2 = _.cloneDeep(temp);
-                      temp2[key].sprintNumber = (temp[key].sprintNumber!==id) ? id : -1;
-                      form.setFieldsValue({"backlogItems": temp2 });
+                      temp2[key].sprintNumber = (temp[key].sprintNumber !== id) ? id : -1;
+                      form.setFieldsValue({ "backlogItems": temp2 });
                       setTemp(temp2);
-                    }}>{filteredData[key].name +(filteredData[key].isInSprint?" from Sprint "+ filteredData[key].sprintNumber:"")}</Checkbox>
+                    }}>{filteredData[key].name + (filteredData[key].isInSprint ? " from Sprint " + filteredData[key].sprintNumber : "")}</Checkbox>
                 </Form.Item >
               ))}
             </>
           )}
         </Form.List>
-
       </Form>
     </Modal>
   );
