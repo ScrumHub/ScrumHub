@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { Modal, Form, Space, Typography, Checkbox } from 'antd';
+import { Modal, Form, Space, Typography, Checkbox, Input } from 'antd';
 import { IProductBacklogItem, ISprint } from '../../appstate/stateInterfaces';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import TextArea from 'antd/lib/input/TextArea';
 import _ from 'lodash';
 import Title from 'antd/lib/typography/Title';
+import { formItemLayoutWithOutLabel } from '../utility/commonInitValues';
 
 interface Values {
-  title: string;
-  description: string;
-  modifier: string;
+  goal: string;
+  backlogItems: IProductBacklogItem[];
 }
 
 interface CollectionCreateFormProps {
@@ -29,12 +29,14 @@ export const CustomUpdateSprintPopup: React.FC<CollectionCreateFormProps> = ({
 }) => {
   //TO DO
   //DELETE after backend is fixed
-  pbiData = pbiData.filter((item)=>item.estimated !== false && item.id !== 0);
   const [form] = Form.useForm();
-  const [temp, setTemp] = useState(pbiData);
+  const filteredData = pbiData.filter((item)=>item.estimated !== false && item.id !== 0);
+  const [temp, setTemp] = useState(filteredData);
+  
   const id = data.sprintNumber!== null ? data.sprintNumber:localStorage.getItem("sprintID")?.toString() as unknown as number;
   return (
     <Modal
+    closable={true}
       visible={visible}
       title="Edit Sprint"
       okText="Save"
@@ -45,7 +47,8 @@ export const CustomUpdateSprintPopup: React.FC<CollectionCreateFormProps> = ({
           .validateFields()
           .then((values: Values) => {
             form.resetFields();
-            onCreate(values);
+            console.log(values);
+            onCreate({...values,backlogItems:temp} );
           })
           .catch((info: any) => {
             console.error('Validate Failed:', info);
@@ -58,12 +61,11 @@ export const CustomUpdateSprintPopup: React.FC<CollectionCreateFormProps> = ({
         name="form_in_modal"
         initialValues={{ modifier: 'public' }}
       >
-
+       <FormItemLabel prefixCls="name" label="Goal" required={true} />
         <Form.Item
           initialValue={data.goal}
           name="goal"
           labelAlign="left"
-          label={<Title style={{marginTop:"10%"}} level={4}>{"Goal"}</Title>}
           rules={[{ required: true, message: 'Please input the goal of this sprint!' }]}
         >
           <TextArea
@@ -71,29 +73,20 @@ export const CustomUpdateSprintPopup: React.FC<CollectionCreateFormProps> = ({
           />
         </Form.Item>
 
-        <FormItemLabel
-        labelAlign="left"
-        label={<Title style={{marginTop:"10%"}} level={4}>{"Backlog Items"}</Title>} prefixCls="backlogItems" required={true} />
-        <></>
-        <Form.List name="backlogItems" initialValue={pbiData}>
+        <FormItemLabel prefixCls="name" label="Backlog Items" required={true} />
+        <Form.List name="backlogItems" initialValue={filteredData}>
           {(fields) => (
             <>
               {fields.map(({ key, name }) => (
-                <Space key={key} style={{ display: 'flex', margin:0}} align="baseline">
-                  <Checkbox checked={form.getFieldValue("backlogItems")[key].sprintNumber === id}
+                <Form.Item key={key} name={key} style={{ marginBottom: "4px" }}>
+                  <Checkbox key={key} checked={temp[key].sprintNumber === id}
                     onClick={() => {
                       const temp2 = _.cloneDeep(temp);
-                      temp2[key].sprintNumber = (temp2[key].sprintNumber === id) ? null : id;
+                      temp2[key].sprintNumber = (temp[key].sprintNumber!==id) ? id : -1;
+                      form.setFieldsValue({"backlogItems": temp2 });
                       setTemp(temp2);
-                      form.setFieldsValue({ "backlogItems": temp2 });
-                    }} />
-                  <Form.Item
-                    name={key}
-                  //rules={[{ required: key<1?true:false, message: 'Please input at least one acceptance criteria!' }]}
-                  >
-                    <Typography>{pbiData[key].name +(pbiData[key].isInSprint?" from Sprint "+ pbiData[key].sprintNumber:"")}</Typography>
-                  </Form.Item>
-                </Space>
+                    }}>{filteredData[key].name +(filteredData[key].isInSprint?" from Sprint "+ filteredData[key].sprintNumber:"")}</Checkbox>
+                </Form.Item >
               ))}
             </>
           )}

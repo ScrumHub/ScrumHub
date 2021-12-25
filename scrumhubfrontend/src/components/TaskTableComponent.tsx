@@ -1,11 +1,29 @@
 import { Table } from "antd";
+import { useEffect, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { IProductBacklogItem, ITask } from "../appstate/stateInterfaces";
+import { IPerson, IProductBacklogItem, ITask } from "../appstate/stateInterfaces";
+import { useIsMounted } from "./utility/commonFunctions";
 import { initRowIds } from "./utility/commonInitValues";
 import { IRowIds } from "./utility/commonInterfaces";
 
 export default function TaskTableComponent(props: any) {
+  const isMounted = useIsMounted();
+  const [data, setData] = useState(props.item.tasks);
+  const [updated, setUpdated] = useState(true);
+  if (!isMounted()){console.warn("task table is unmounted")};
+  //console.log(updated);
+  console.log(props.peopleFilter);
+  useEffect(() => {
+    //console.log(isMounted()+"/"+initialRefresh);
+    if ( isMounted() && props.peopleFilter.length > 0) {
+        //console.log(props.item.tasks.filter((item:ITask)=>props.peopleFilter.includes(item.assigness.length>0?item.assigness[0].login:"")));
+        setData(props.item.tasks.filter((item:ITask)=>{return(item.assigness.map((person:IPerson)=>{return(props.peopleFilter.includes(person.login))}).filter(x=>x!==false).length > 0)}));
+        props.updateKeys(props.item.id);
+        //setUpdated(false);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.peopleFilter]);
 return(
 <DndProvider backend={HTML5Backend} key={"task"+props.item.id}>
         <Table
@@ -15,7 +33,7 @@ return(
           rowKey={(record: ITask) => record.id}
           columns={props.taskColumns}
           components={props.taskComponents}
-          dataSource={props.item.tasks}
+          dataSource={data}
           pagination={false}
           /*onRow={(record) => {
             return {

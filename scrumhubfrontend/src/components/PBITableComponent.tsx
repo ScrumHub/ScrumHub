@@ -1,11 +1,24 @@
 import { Table } from "antd";
+import { Key, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { IProductBacklogItem } from "../appstate/stateInterfaces";
+import { useIsMounted } from "./utility/commonFunctions";
 import { initRowIds } from "./utility/commonInitValues";
 import { IRowIds } from "./utility/commonInterfaces";
 
 export default function PBITableComponent(props: any) {
+  const isMounted = useIsMounted();
+  const [expandedRows, setExpandedRows] = useState([] as number[]);
+  if (!isMounted()){console.error("pbi"+isMounted())};
+  const updateKeys = (key:number) => {
+    if(isMounted() && !expandedRows.includes(key)){
+    console.log("key"+key);
+    const keys = expandedRows && expandedRows.length >0 ? expandedRows.concat([key]):[key] as number[];
+    setExpandedRows(keys);
+    }
+};
+
 return(
 <DndProvider backend={HTML5Backend} key={"pbi"+props.item.sprintNumber}>
         <Table
@@ -16,8 +29,11 @@ return(
           columns={props.pbiColumns}
           rowKey={(record: IProductBacklogItem) => record.id}
           expandable={{
-            expandedRowRender: props.TaskTableforPBI,
-            defaultExpandAllRows: false, rowExpandable: record => record.tasks && record.tasks.length > 0,
+            expandedRowRender:record => props.TaskTableforPBI(record, updateKeys(record.id)),
+            defaultExpandAllRows: props.peopleFilter && props.peopleFilter.length > 0, rowExpandable: record => record.tasks && record.tasks.length > 0,
+
+
+            
           }}
           components={props.nestedcomponents}
           dataSource={props.item.backlogItems}//:item.backlogItems.filter((item:IProductBacklogItem)=>{item.name.startsWith(filterPBI.nameFilter as string)})}

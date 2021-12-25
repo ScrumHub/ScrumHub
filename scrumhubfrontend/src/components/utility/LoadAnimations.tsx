@@ -42,19 +42,18 @@ export function MenuWithPeople(props: any) {
     const [nameList, setList] = useState([] as string[]);
 
     const handleList = (item: IPerson) => {
-        if (!nameList || nameList.length < 1) { setList([item.login]); }
+        if (!nameList || nameList.length < 1) { setList([item.login]); props.itemSelected([item.login]);}
         else {
             const list = nameList.includes(item.login) ? nameList.filter((name: string) => name !== item.login) : nameList.concat(item.login);
-            console.log(list);
             setList(list);
+            props.itemSelected(list);
         }
-        console.log(nameList);
 
     };
 
 return (<Menu className="peopleMenu">{ppl.map((item: IPerson) => {
     return (
-        <MenuItem key={item.login} onClick={() => { console.log(item); handleList(item); }}>
+        <MenuItem key={item.login} onClick={() => { handleList(item);}}>
             <Space>
                 <Avatar src={`${item.avatarLink}`} ></Avatar>
                 {" "}

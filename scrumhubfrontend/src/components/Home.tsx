@@ -107,24 +107,7 @@ export default function Home() {
 
   function redirectToProject(props: IRepository) {
     localStorage.setItem("ownerName", props.name);
-    try {
-      store.dispatch(
-        Actions.fetchPBIsThunk({
-          ownerName: props.name,
-          token: token,
-          filters: {
-            ...filters,
-            pageSize: config.defaultFilters.pbiSize
-          }
-        }) //filters
-      );
-    } catch (err) {
-      console.error("Failed to add the repos: ", err);
-      localStorage.setItem("ownerName", "");
-    } finally {
-      navigate(`/${props.name.split("/")[0]}/${props.name.split("/")[1]}`, { replace: true });
-    }
-
+    navigate(`/${props.name.split("/")[0]}/${props.name.split("/")[1]}`, { replace: true });
   };
 
   if (!isLoggedIn) {

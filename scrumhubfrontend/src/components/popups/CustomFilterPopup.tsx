@@ -29,6 +29,7 @@ export const CustomFilterPopup: React.FC<CollectionCreateFormProps> = ({
   const [isSprintOpen, setIsSprintOpen] = useState(false);
   return (
     <Modal
+    closable={true}
       visible={visible}
       title="Filter Backlog Items"
       okText="Save"

@@ -1,9 +1,10 @@
 import React from 'react';
 import { Button, Modal, Form, Input, InputNumber, Space, Slider, Tag, Select, Popconfirm, message } from 'antd';
 import { IAddPBI } from '../../appstate/stateInterfaces';
-import { MinusCircleOutlined, PlusOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { MinusCircleOutlined, PlusCircleOutlined, PlusOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import { backlogColors, backlogPriorities } from '../utility/BodyRowsAndColumns';
+import { formItemLayoutWithOutLabel } from '../utility/commonInitValues';
 const { Option } = Select;
 
 
@@ -29,15 +30,9 @@ export const CustomEditPopup: React.FC<CollectionCreateFormProps> = ({
   onDelete
 }) => {
   const [form] = Form.useForm();
-
-  const formItemLayoutWithOutLabel = {
-    wrapperCol: {
-      xs: { offset: 0 },
-      sm: { offset: 0 },
-    },
-  };
   return (
     <Modal
+    style={{marginTop:"-2vh"}}
       visible={visible}
       title="Edit Backlog Item"
       closable={true}
@@ -113,7 +108,7 @@ export const CustomEditPopup: React.FC<CollectionCreateFormProps> = ({
                 </Form.Item>
               ))}
               <Form.Item>
-                <Button style={{ marginTop: "20px" }} type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                <Button style={{ marginTop: "20px", float:"left"}} type="link" onClick={() => add()} block icon={<PlusCircleOutlined />}>
                   Add criterion
                 </Button>
               </Form.Item>

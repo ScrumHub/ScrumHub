@@ -37,9 +37,10 @@ export const CustomAddSprintPopup: React.FC<CollectionCreateFormProps> = ({
   const [temp, setTemp] = useState(pbiData);
   return (
     <Modal
-    style={{marginTop:"-8vh"}}
+    closable={true}
+    style={{marginTop:"-2vh"}}
       visible={visible}
-      title="Add Sprint"
+      title="Create Sprint"
       okText="Save"
       cancelText="Cancel"
       onCancel={onCancel}

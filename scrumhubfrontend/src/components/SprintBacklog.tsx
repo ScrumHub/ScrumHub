@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Button, Divider, PageHeader, Radio, Table, Typography, } from 'antd';
+import { Button, Divider, PageHeader, Radio, Space, Table, Typography, } from 'antd';
 import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
 import { IAddPBI, IFilters, IProductBacklogItem, IProductBacklogList, ISprint, IUpdateIdSprint, State } from '../appstate/stateInterfaces';
@@ -111,9 +111,9 @@ export default function SprintBacklog() {
       setInitialRefresh(true);
     }
   }
-  const handleUpdatePBI = (pbi: ISprint) => {
+  const handleUpdateSprint = (sprint: ISprint) => {
     setIsUpdateModalVisible(false);
-     const ids = pbi.backlogItems.map((value: IProductBacklogItem) => 
+     const ids = sprint.backlogItems.map((value: IProductBacklogItem) => 
     {  return((value.sprintNumber === Number(sprintID) ? value.id.toString():"")) }).filter((x) => x !== "");
     try {
       store.dispatch(
@@ -121,7 +121,7 @@ export default function SprintBacklog() {
           token: token as string,
           ownerName: ownerName,
           sprintNumber: Number(sprintID),
-          sprint: {"goal":pbi.goal,"pbIs":ids} as IUpdateIdSprint
+          sprint: {"goal":sprint.goal,"pbIs":ids} as IUpdateIdSprint
         }) //filters
       );
     } catch (err) {
@@ -270,28 +270,12 @@ export default function SprintBacklog() {
     return <Navigate to="/login" />;
   }
   return (
-    <div>
-      <PageHeader
-        ghost={false}
-        title={"Sprint " + (sprintPage !== null ? sprintPage.sprintNumber : "")}
-        subTitle={sprintPage !== null ? sprintPage.goal : ""}
-        extra={[
-          <Button key="1" type="link" onClick={()=>{handleUpdate();fetchMore();setIsUpdateModalVisible(true);}}> Update </Button>,
-        ]}
-        style={{ marginBottom: "4vh" }}
-      >
-      </PageHeader>
+    <div style={{ marginLeft: "2%", marginRight: "2%", marginTop: 0, marginBottom: "1%" }}>
+      <Space>
+      <Typography>{sprintPage !== null ? sprintPage.goal : ""}</Typography>
+      <Button key="1" type="link" onClick={()=>{handleUpdate();fetchMore();setIsUpdateModalVisible(true);}}> Edit Sprint </Button>,    
+      </Space>
       <Divider />
-      <Radio.Group
-        style={{ marginBottom: "4vh" }}
-        onChange={({ target: { value } }) => {
-          setSelectionType(value);
-        }}
-        value={selectionType}
-      >
-        <Radio value="pbi">PBI View</Radio>
-        <Radio value="tasks">Tasks View</Radio>
-      </Radio.Group>
 
       <Table
         loading={refreshRequired || initialRefresh}
@@ -356,7 +340,7 @@ export default function SprintBacklog() {
           onCreate={function (values: any): void { handleEstimatePBI(values) }}
           onCancel={() => { setIsEstimateModalVisible(false); }} />}
           {isUpdateModalVisible && !loading && <CustomUpdateSprintPopup data={sprintPage as ISprint} pbiData={tempPBIPage.list as IProductBacklogItem[]} visible={isUpdateModalVisible}
-          onCreate={function (values: any): void { handleUpdatePBI(values) }}
+          onCreate={function (values: any): void { handleUpdateSprint(values) }}
           onCancel={() => { setIsUpdateModalVisible(false); }} />}
       </span>
     </div>
