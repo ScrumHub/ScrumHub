@@ -1,7 +1,5 @@
 import { Table } from "antd";
 import { useEffect, useState } from "react";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import { IProductBacklogItem, ISprint } from "../appstate/stateInterfaces";
 import { useIsMounted } from "./utility/commonFunctions";
 import { initRowIds } from "./utility/commonInitValues";

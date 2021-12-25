@@ -1,9 +1,9 @@
-import React, { useState, useRef, useContext, useEffect, useCallback } from 'react';
-import { Button, Table, Input, Tag, message, Dropdown, Badge } from 'antd';
+import React, { useState, useRef, useContext, useEffect } from 'react';
+import { Button, Tag, message, Dropdown, Badge } from 'antd';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import * as Actions from '../appstate/actions';
-import { IAddPBI, IAssignPBI, ICheckedAssignPBI, ICheckedProductBacklogItem, IFilters, initPBIFilter, IPBIFilter, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, ISprint, ISprintList, ITask, IUpdateIdSprint, State } from '../appstate/stateInterfaces';
+import { IAddPBI, IAssignPBI, ICheckedAssignPBI, ICheckedProductBacklogItem, IFilters, initPBIFilter, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, ISprint, ISprintList, ITask, IUpdateIdSprint, State } from '../appstate/stateInterfaces';
 import 'antd/dist/antd.css';
 import './BacklogTable.css';
 import { store } from '../appstate/store';
@@ -16,15 +16,16 @@ import { EstimatePBIPopup } from './popups/EstimatePBIPopup';
 import { UpdateSprintPopup } from './popups/UpdateSprintPopup';
 import { AddTaskPopup } from './popups/AddTaskPopup';
 import { CustomAssignTaskPopup } from './popups/CustomAssignTaskPopup';
-import { initIDs, initModalVals, initRowIds } from './utility/commonInitValues';
+import { initModalVals } from './utility/commonInitValues';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
-import { useIsMounted, validate, validatePBIDrag, validateTaskDrag, } from './utility/commonFunctions';
-import { taskAssigneeCol, taskStatusCol, taskGhLinkCol, taskNameCol, pbiProgressCol, backlogColors, backlogPriorities, pbiProgressTagCol, pbiProgressCol2 } from './utility/BodyRowsAndColumns';
+import { useIsMounted, validatePBIDrag, validateTaskDrag, } from './utility/commonFunctions';
+import { taskStatusCol, taskGhLinkCol, taskNameCol, pbiProgressCol, backlogColors, backlogPriorities, pbiProgressCol2 } from './utility/BodyRowsAndColumns';
 import TaskTableComponent from './TaskTableComponent';
 import PBITableComponent from './PBITableComponent';
-import { MenuWithPeople, MenuWithPeopleSave } from './utility/LoadAnimations';
-import { ArrowDownOutlined, DownOutlined, EditOutlined, UserOutlined } from '@ant-design/icons';
+import { MenuWithPeopleSave } from './utility/LoadAnimations';
+import { DownOutlined, EditOutlined } from '@ant-design/icons';
 import SprintTableComponent from './SprintTableComponent';
+import { assignPersonToTask } from '../appstate/fetching';
 
 export const type = 'DraggableBodyRow';
 
@@ -41,8 +42,6 @@ export const BacklogTableWithSprints: React.FC<any> = (props:any) => {
   const refreshRequired = useSelector((appState: State) => appState.productRequireRefresh as boolean);
   const sprintRefreshRequired = useSelector((appState: State) => appState.sprintRequireRefresh as boolean);
   const [initialRefresh, setInitialRefresh] = useState(true);
-  const [filterPBI, setFiltersPBI] = useState<IPBIFilter>(initPBIFilter);
-  const [IDs, setIDs] = useState<IFilters>(initIDs);
   const [selectedPBI, setSelectedPBI] = useState({} as IProductBacklogItem);
   const [selectedSprint, setSelectedSprint] = useState({} as ISprint);
   const [selectedTask, setSelectedTask] = useState({} as ITask);
@@ -244,6 +243,29 @@ export const BacklogTableWithSprints: React.FC<any> = (props:any) => {
       }
     }
   }
+  const assignPerson = (person: string, taskId: number, taskPeople:IPerson[]) => {
+    const names = taskPeople.filter((item:IPerson)=>item.login !== person);
+    try {
+      store.dispatch(
+        names.length > 0 || taskPeople.length < 1?Actions.assignPersonToTaskThunk({
+          token: token,
+          ownerName: ownerName,
+          login: person,
+          taskId: taskId,
+        }):Actions.unassignPersonToTaskThunk({
+          token: token,
+          ownerName: ownerName,
+          login: person,
+          taskId: taskId,
+        }) //filters
+      );
+    } catch (err) { console.error("Failed to add the pbis: ", err); }
+    finally {
+      if (isMounted()) {
+        setInitialRefresh(true);
+      }
+    }
+  }
 
   const DraggableBodyRow = ({ index: index_row, bodyType, record, className, style, ...restProps }: BodyRowProps) => {
     const ref = useRef();
@@ -301,11 +323,11 @@ export const BacklogTableWithSprints: React.FC<any> = (props:any) => {
     {
       key: "isAssignedToPBI",
       title: "Assignees",
-      width:"20%",
+      width:"15%",
       render: (record: ITask) => {return(
         <Dropdown.Button style={{cursor:"pointer"}} placement='bottomCenter' type="text" 
-        overlay={<MenuWithPeopleSave itemSelected={function (items: IPerson[]): void { console.log(items); }} visible={true} people={people}/>}
-          buttonsRender={([leftButton, rightButton]) => [
+        overlay={<MenuWithPeopleSave itemSelected={function (person: string): void { assignPerson(person, record.id, record.assigness) }} visible={true} people={people} taskPeople={record.assigness}/>}
+          buttonsRender={() => [
                      <></>,     React.cloneElement(<span>
                 <Badge size='small'
                   status={
@@ -364,9 +386,12 @@ export const BacklogTableWithSprints: React.FC<any> = (props:any) => {
     )
   };
   const pbiColumns = [
-    {title: 'Name',  width:"40%",align: "left" as const,  key: 'name', render: (item: IProductBacklogItem) => { return (<div className={item.id===0 ?'':'link-button'} onClick={() => { if(item.id!==0){setSelectedPBI(item); setIsModal({ ...isModal, editPBI: true });} }}>{item.name}</div>) },},
+    {title: 'Name',  width:"35%",align: "left" as const,  key: 'name', render: (item: IProductBacklogItem) => { return (<div className={item.id===0 ?'':'link-button'} onClick={() => { if(item.id!==0){setSelectedPBI(item); setIsModal({ ...isModal, editPBI: true });} }}>{item.name}</div>) },},
+    
+    pbiProgressCol,
+    pbiProgressCol2,
     {
-      title: 'Priority', align: "center" as const, width:"20%", key: 'priority',
+      title: 'Priority', align: "center" as const, width:"15%", key: 'priority',
       render: (item: IProductBacklogItem) => item.id !== 0 ?
         <Tag style={{cursor:"pointer"}} color={backlogColors[item.priority%3]}>{backlogPriorities[item.priority%3]}</Tag>
         : <></>
@@ -375,16 +400,13 @@ export const BacklogTableWithSprints: React.FC<any> = (props:any) => {
     {
       title: 'Story Points', width:"20%", key: 'operation', align: "center" as const, render: (item: IProductBacklogItem) => {
         return (item.id !== 0 ?<Tag style={{cursor:"pointer"}} color={item.estimated ?(item.expectedTimeInHours>10?"red":"green"):"purple"} onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, estimatePBI: true }); }}>
-          {item.estimated?(item.expectedTimeInHours+" SP "):"Not esimated "}{<EditOutlined/>}
-        {/*<Progress size='small' width={30} type="circle" percent={100} status={item.expectedTimeInHours>10?'exception':'normal'} format={()=>item.expectedTimeInHours}>{/*<Statistic  title={"Story Points"} value={item.expectedTimeInHours}></Statistic></Progress>*/}
+          {item.estimated?(item.expectedTimeInHours+" SP "):"Not estimated "}{<EditOutlined/>}
         </Tag>:<></>
        )
       }
     },
-    pbiProgressCol,
-    pbiProgressCol2,
     {
-      title: '', align: "right" as const, width:"10%", key: 'actions', render: (item: IProductBacklogItem) => {
+      title: '', align: "right" as const, width:"15%", key: 'actions', render: (item: IProductBacklogItem) => {
         return ({
           children: <span style={{ alignItems: "flex-end" }}>
             <Button size='small' type="link" onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, addTask: true }); }} >

@@ -1,118 +1,7 @@
-import { Badge, InputNumber, Progress, Space, Statistic, Tag } from "antd";
-import { any } from "joi";
-import { useEffect, useRef } from "react";
-import { useDrop, useDrag } from "react-dnd";
-import { render } from "react-dom";
+import { Badge, Progress, Tag } from "antd";
 import { IProductBacklogItem, ITask } from "../../appstate/stateInterfaces";
-import { type } from "../BacklogTable";
-import { BodyRowProps } from "./commonInterfaces";
 import "../Home.css";
 import { HomeOutlined } from "@ant-design/icons";
-
-//rows
-export const NonDraggableBodyRow = ({
-  index:index_row,
-  className,
-  style,
-  ...restProps
-}: BodyRowProps) => {
-  const ref = useRef();
-  //console.log(ref);
-  const [{ isOver, dropClassName }, drop] = useDrop({
-    accept: type,
-    collect: (monitor) => {
-      const index = monitor.getItem() || ({} as number);
-      if (index === index_row) {
-        return {};
-      }
-      return {
-        isOver: monitor.isOver(),
-        dropClassName:
-          (index as number) < index_row
-            ? " drop-over-downward"
-            : " drop-over-upward",
-      };
-    },
-    drop: (item: any) => {
-      //console.log(item);
-      if (item.index && typeof item.index != "undefined") {
-        //console.log("move backlog item");
-        //moveRow(item.index, index_row);
-      }
-    },
-  });
-  const [, drag] = useDrag({
-    type,
-    item: { index: index_row },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  });
-  drop(ref);
-  return (
-    <tr
-      ref={ref as any}
-      className={`${className}${isOver ? dropClassName : ""}`}
-      style={{ marginTop: "20px", marginBottom: "20px", ...style }}
-      {...restProps}
-    />
-  );
-};
-
-export const DraggableBodyRowNested = ({
-  index:index_row,
-  className,
-  style,
-  ...restProps
-}: BodyRowProps) => {
-  const ref = useRef();
-  //console.log(ref);
-  const [{ isOver, dropClassName }, drop] = useDrop({
-    accept: type,
-    collect: (monitor) => {
-      const index = monitor.getItem() || ({} as number);
-      if (index === index_row) {
-        return {};
-      }
-      return {
-        isOver: monitor.isOver(),
-        dropClassName:
-          (index as number) < index_row
-            ? " drop-over-downward"
-            : " drop-over-upward",
-      };
-    },
-    drop: (item: any) => {
-      //console.log(item);
-      if (item.index && typeof item.index != "undefined") {
-        //console.log("move backlog item");
-        //moveRow(item.index, index_row);
-      }
-    },
-  });
-  const [, drag] = useDrag({
-    type,
-    item: { index: index_row },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  });
-  drop(drag(ref));
-
-  return (
-    <tr
-      ref={ref as any}
-      className={`${className}${isOver ? dropClassName : ""}`}
-      style={{
-        cursor: "move",
-        marginTop: "20px",
-        marginBottom: "20px",
-        ...style,
-      }}
-      {...restProps}
-    />
-  );
-};
 
 export const backlogPriorities = ["Could", "Should", "Must"];
 export const backlogColors = ["green", "blue", "red"];
@@ -122,14 +11,14 @@ export const taskNameCol = {
   title: "Name",
   align: "left" as const,
   dataIndex: "name",
-  width:"40%",
+  width:"60%",
   key: "name",
 };
 export const taskStatusCol = {
   title: "Status",
   key: "finished",
   dataIndex: "finished",
-  width:"20%",
+  width:"15%",
   align: "center" as const,
   render: (val: boolean) => (
     <span>
@@ -164,13 +53,11 @@ export const taskGhLinkCol = {
   title: "Related Link",
   dataIndex: "link",
   key: "link",
-  width:"20%",
-  align: "center" as const,
+  width:"10%",
+  align: "right" as const,
   render: (text: string) => <a href={text}>{"See on GitHub"}</a>,
 };
 
-//sprint columns
-//export const pbiNameCol = {title: 'Name',  align: "left" as const, colSpan: 2, dataIndex: 'name', key: 'name', render: (text: string) => { return ({ children: text, props: { colSpan: 2 } }) },};
 export const pbiPriorityCol = {
   title: 'Priority', align: "center" as const, colSpan: 1, key: 'priority',
   render: (item: IProductBacklogItem) => item.id !== 0 ?
@@ -179,20 +66,20 @@ export const pbiPriorityCol = {
 
 };
 export const pbiProgressCol ={
-  title: 'Progress', width:"10%", key: 'operation', align: "center" as const, render: (item: IProductBacklogItem) => {
+  title: 'Progress', width:"20%", key: 'operation', align: "center" as const, render: (item: IProductBacklogItem) => {
     return (<span><Progress  width={25} size='small' type="line" showInfo={false} percent={item.tasks && item.tasks.length > 0 ? (item.tasks.filter((item: ITask) => item.finished).length / item.tasks.length):100}
      /*format={percent => `${item.tasks?item.tasks.filter((item: ITask) => item.finished).length:0}`}*/ ></Progress></span>
     )
   }
 };
 export const pbiProgressCol2 ={
-  title: 'Tasks To Do', width:"10%", key: 'tasks', align: "center" as const, render: (item: IProductBacklogItem) => {
+  title: 'Tasks To Do', width:"15%", key: 'tasks', align: "center" as const, render: (item: IProductBacklogItem) => {
     return (
     <Progress width={25} percent={100}  size='small' type="dashboard" status={`${item.tasks && item.tasks.length > 0 ? (item.tasks.filter((item: ITask) => item.finished).length / item.tasks.length) !== 0 ? "success" : "exception" : "success"}`}
      format={() => `${item.tasks ? item.tasks.length:0}`} />)
   }
 };
-//status={`${item.tasks && item.tasks.length > 0 ? (item.tasks.filter((item: ITask) => item.finished).length / item.tasks.length) !== 0 ? "normal" : "exception" : "normal"}`} 
+
 export const pbiProgressTagCol ={
   title: 'Tasks Done', width:"20%", key: 'operation', align: "center" as const, render: (item: IProductBacklogItem) => {
     return (<Tag style={{cursor:"pointer"}} color={item.estimated ?(item.expectedTimeInHours>10?"red":"green"):"purple"}>

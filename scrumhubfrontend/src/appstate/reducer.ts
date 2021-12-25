@@ -700,26 +700,17 @@ export const reducer = createReducer(initState, {
   newState.loading = false;
   const tasks = payload.payload.response as ITaskList;
   const pbisList = [unassignedPBI] as IProductBacklogItem[];
-  //console.log(payload.payload.response);
-  //console.log(newState.pbiPage.list);
-  //console.log(tasks);
-  //console.log(`${newState.pbiPage}|${newState.pbiPage.list}|${newState.pbiPage.list.length>0}|${tasks}|${tasks.list.length>0}`);
   if (tasks && tasks.list.length>0) {
-    //console.log("tasks to add");
-    //console.log(tasks.list);
     if(newState.pbiPage && newState.pbiPage.list && (newState.pbiPage.list.length<1 || newState.pbiPage.list[0].id !==0)){
-      //console.log("added empty");
       newState.pbiPage.list = pbisList.concat(newState.pbiPage.list);//empty pbi that holds unassigned tasks
     }
     newState.pbiPage.list = newState.pbiPage.list.map((item:IProductBacklogItem)=>{
       if(item.id === 0 && !tasks.list[0].isAssignedToPBI){
-        //console.log("added null");
         return {...item, tasks:tasks.list};
       }
       if(item.id === tasks.list[0].pbiId){
         return {...item, tasks:tasks.list};
       }
-      //console.log(item.tasks);
       return item;
     })
   }
@@ -845,6 +836,134 @@ export const reducer = createReducer(initState, {
   return newState;
 },
 [Actions.assignTaskToPBIThunk.rejected.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<undefined, undefined>>
+) => {
+  let newState = _.cloneDeep(state);
+  let errorResponse = payload.payload;
+  newState.loading = false;
+  newState.error = {
+    hasError: true,
+    errorCode: errorResponse ? errorResponse.code : -1,
+    erorMessage: errorResponse ? (errorResponse.response as IError).Message : "",
+  };
+  return newState;
+},
+[Actions.assignPersonToTaskThunk.pending.toString()]: (
+  state: State,
+  payload: PayloadAction<undefined>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = true;
+  return newState;
+},
+[Actions.assignPersonToTaskThunk.fulfilled.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<ITask, number>>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = false;
+  newState.error = initError;
+  const task = payload.payload.response as ITask; 
+  if (newState.pbiPage && newState.pbiPage.list.length >0 &&newState.pbiPage.list.filter((item:IProductBacklogItem)=>item.id===task.pbiId).length>0 ) {
+    newState.pbiPage.list = newState.pbiPage.list.map((item:IProductBacklogItem)=>{ 
+      if(item.id === task.pbiId && item.tasks){
+        item.tasks =  item.tasks.map((t:ITask)=>{
+          if(item.id === task.pbiId){
+            return task;
+          }
+          return t;
+          });
+        }
+          return item;
+        });
+  }
+    else if(newState.sprintPage && newState.sprintPage.list.length >0 ) {
+      newState.sprintPage.list = newState.sprintPage.list.map((sprint:ISprint)=>{
+        sprint.backlogItems = sprint.backlogItems.map((item:IProductBacklogItem)=>{
+          if(item.id === task.pbiId && item.tasks){
+          item.tasks =  item.tasks.map((t:ITask)=>{
+            if(item.id === task.pbiId){
+              return task;
+            }
+            return t;
+            });
+          }
+            return item;
+          });
+          return sprint;
+        });
+      }
+
+  
+  //newState.productRequireRefresh = true;
+  return newState;
+},
+[Actions.assignPersonToTaskThunk.rejected.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<undefined, undefined>>
+) => {
+  let newState = _.cloneDeep(state);
+  let errorResponse = payload.payload;
+  newState.loading = false;
+  newState.error = {
+    hasError: true,
+    errorCode: errorResponse ? errorResponse.code : -1,
+    erorMessage: errorResponse ? (errorResponse.response as IError).Message : "",
+  };
+  return newState;
+},
+[Actions.unassignPersonToTaskThunk.pending.toString()]: (
+  state: State,
+  payload: PayloadAction<undefined>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = true;
+  return newState;
+},
+[Actions.unassignPersonToTaskThunk.fulfilled.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<ITask, number>>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = false;
+  newState.error = initError;
+  const task = payload.payload.response as ITask; 
+  if (newState.pbiPage && newState.pbiPage.list.length >0 &&newState.pbiPage.list.filter((item:IProductBacklogItem)=>item.id===task.pbiId).length>0 ) {
+    newState.pbiPage.list = newState.pbiPage.list.map((item:IProductBacklogItem)=>{ 
+      if(item.id === task.pbiId && item.tasks){
+        item.tasks =  item.tasks.map((t:ITask)=>{
+          if(item.id === task.pbiId){
+            return task;
+          }
+          return t;
+          });
+        }
+          return item;
+        });
+  }
+    else if(newState.sprintPage && newState.sprintPage.list.length >0 ) {
+      newState.sprintPage.list = newState.sprintPage.list.map((sprint:ISprint)=>{
+        sprint.backlogItems = sprint.backlogItems.map((item:IProductBacklogItem)=>{
+          if(item.id === task.pbiId && item.tasks){
+          item.tasks =  item.tasks.map((t:ITask)=>{
+            if(item.id === task.pbiId){
+              return task;
+            }
+            return t;
+            });
+          }
+            return item;
+          });
+          return sprint;
+        });
+      }
+
+  
+  //newState.productRequireRefresh = true;
+  return newState;
+},
+[Actions.unassignPersonToTaskThunk.rejected.toString()]: (
   state: State,
   payload: PayloadAction<RequestResponse<undefined, undefined>>
 ) => {

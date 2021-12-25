@@ -70,31 +70,36 @@ export function MenuWithPeople(props: any) {
 
 export function MenuWithPeopleSave(props: any) {
     const ppl = props.people && props.people.list && props.people.list.length > 0 ? props.people.list : [] as IPerson[];
-    const [nameList, setList] = useState([] as string[]);
+    const [nameList, setList] = useState(props.taskPeople.map((item:IPerson)=>{return(item.login)}));
 
     const handleList = (item: IPerson) => {
-        if (!nameList || nameList.length < 1) { setList([item.login]); props.itemSelected([item.login]); }
+        if (!nameList || nameList.length < 1) { setList([item.login]); props.itemSelected(item.login); }
         else {
             const list = nameList.includes(item.login) ? nameList.filter((name: string) => name !== item.login) : nameList.concat(item.login);
             setList(list);
-            props.itemSelected(list);
+            props.itemSelected(item.login);
         }
 
     };
 
-    return (<Menu className="peopleMenu">{ppl.map((item: IPerson) => {
+    return (<div><Menu className="peopleMenu">{ppl.map((item: IPerson) => {
         return (
             <MenuItem key={item.login} onClick={() => { handleList(item); }}>
-                <Space>
+                <Space style={{ width: "14vw" }}>
                     <Avatar src={`${item.avatarLink}`} ></Avatar>
                     {" "}
-                    <div style={{ minWidth: "10vw" }} >{" " + item.login as string}</div>
+                    <div style={{ width: "8vw" }} >{" " + item.login as string}</div>
                     {nameList && nameList.length > 0 && nameList.includes(item.login) ? <CheckOutlined /> : <></>}
                 </Space>
             </MenuItem>);
     })
-    }
-    {<Button type="primary">OK</Button>}
-    </Menu >);
+    }{/*}
+    <Space style={{ display: 'flex', marginTop:"10%",marginBottom:"5%",flexWrap: 'nowrap', alignItems:"center", flexDirection:"row",
+     alignContent:"center", justifyContent:"center"}}>{<Button size="middle" style={{ display: 'flex'}} type="default">Cancel</Button>}{" "}
+{<Button size="middle" style={{ display: 'flex'}} type="primary">Save</Button>}</Space>*/}
+    
+    
+    </Menu >
+    </div>);
 }
 
