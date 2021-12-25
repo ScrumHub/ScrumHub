@@ -7,37 +7,20 @@ import { useIsMounted } from "./utility/commonFunctions";
 import { initRowIds } from "./utility/commonInitValues";
 
 export default function SprintTableComponent(props: any) {
-  const [mount, setMount] = useState(false);
-  const [data, setData] = useState([] as ISprint[]);
-  //console.log(data);
-  //console.log(props.nameFilter);
+  const [data, setData] = useState(props.data);
   const isMounted = useIsMounted();
   if (!isMounted()){console.error("sprint"+isMounted())};
   useEffect(() => {
-    if (isMounted() && !mount) {
-       console.log(props.data);
-       console.log(props.data.at(0).backlogItems.filter((item:IProductBacklogItem)=>item.name.includes(props.nameFilter)));
+    if (!props.loading) {
         setData(props.data && props.data.length > 0 && props.nameFilter && props.nameFilter !== '' ? ([{...props.data.at(0), backlogItems:
           props.data.at(0).backlogItems.filter((item:IProductBacklogItem)=>item.name.toLowerCase().includes(props.nameFilter))}] as ISprint[]):props.data as ISprint[]);
-        setMount(true);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isMounted]);
+  }, [props.loading, props.nameFilter, props.data,isMounted]);
 
-  useEffect(() => {
-    if (mount) {
-       console.log(props.data);
-       console.log(props.data.at(0).backlogItems.filter((item:IProductBacklogItem)=>item.name.includes(props.nameFilter)));
-        setData(props.data && props.data.length > 0 && props.nameFilter && props.nameFilter !== '' ? ([{...props.data.at(0), backlogItems:
-          props.data.at(0).backlogItems.filter((item:IProductBacklogItem)=>item.name.toLowerCase().includes(props.nameFilter))}] as ISprint[]):props.data as ISprint[]);
-        setMount(true);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.nameFilter]);
 return(
-  //<DndProvider backend={HTML5Backend} key={"sprint" + props.data.sprintNumber}>
   <>
-  {mount && <Table
+  {<Table
                 style={{ transform:"scale(0.96)", marginBottom: "0.25%", height: "auto" }}
                 scroll={{ x: 800 }}
                 size="small"
@@ -62,5 +45,4 @@ return(
                   }) as any;
                 }}
               />}</>);
-           // </DndProvider>);
 }

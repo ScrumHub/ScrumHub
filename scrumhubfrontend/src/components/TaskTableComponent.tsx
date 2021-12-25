@@ -1,27 +1,22 @@
 import { Table } from "antd";
 import { useEffect, useState } from "react";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { IPerson, IProductBacklogItem, ITask } from "../appstate/stateInterfaces";
+import { IPerson, ITask } from "../appstate/stateInterfaces";
 import { useIsMounted } from "./utility/commonFunctions";
-import { initRowIds } from "./utility/commonInitValues";
 import { IRowIds } from "./utility/commonInterfaces";
 
 export default function TaskTableComponent(props: any) {
   const isMounted = useIsMounted();
-  const [data, setData] = useState(props.item.tasks);
-  if (!isMounted()){console.warn("task table is unmounted")};
+  const [data, setData] = useState([] as ITask[]);
+  const [mount, setMount] = useState(false);
   useEffect(() => {
-    if ( isMounted() && props.peopleFilter.length > 0) {
-        //console.log(props.item.tasks.filter((item:ITask)=>props.peopleFilter.includes(item.assigness.length>0?item.assigness[0].login:"")));
-        setData(props.item.tasks.filter((item:ITask)=>{return(item.assigness.map((person:IPerson)=>{return(props.peopleFilter.includes(person.login))}).filter(x=>x!==false).length > 0)}));
-        //setUpdated(false);
+    if (!props.loading && isMounted()) {
+      setData(props.data && props.data.length > 0 && props.peopleFilter && props.peopleFilter.length > 0 ? props.item.tasks.filter((item:ITask)=>{return(item.assigness.map((person:IPerson)=>{return(props.peopleFilter.includes(person.login))}).filter(x=>x!==false).length > 0)})
+      :props.item.tasks);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.peopleFilter]);
-return(
-//<DndProvider backend={HTML5Backend} key={"task"+props.item.id}>
-        <Table
+  }, [props.loading, props.peopleFilter, props.data,isMounted]);
+return(<>
+  {<Table
           size="small"
           style={{marginTop:"0.25%", marginBottom:"0.25%"}}
           showHeader={false}
@@ -36,6 +31,5 @@ return(
             record,
             bodyType
           }) as any;}}
-        />);
-     // </DndProvider>);
+          />}</>);
 }

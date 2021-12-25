@@ -1,7 +1,4 @@
 import { Table } from "antd";
-import { Key, useEffect, useState } from "react";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import { IProductBacklogItem } from "../appstate/stateInterfaces";
 import { useIsMounted } from "./utility/commonFunctions";
 import { initRowIds } from "./utility/commonInitValues";
@@ -23,7 +20,7 @@ export default function PBITableComponent(props: any) {
 return(
 //<DndProvider backend={HTML5Backend} key={"pbi"+props.item.sprintNumber}>
         <Table
-         style={{ borderSpacing: "separate",marginTop:"0.25%" }}
+         style={{ borderSpacing: "separate" }}
          size="small"
          loading={props.loading}
           showHeader={false}
