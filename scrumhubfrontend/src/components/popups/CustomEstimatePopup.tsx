@@ -17,14 +17,15 @@ interface CollectionCreateFormProps {
 
 export const CustomEstimatePopup: React.FC<CollectionCreateFormProps> = ({
   data,
-visible,
+  visible,
   onCreate,
   onCancel,
 }) => {
   const [form] = Form.useForm();
   return (
     <Modal
-    closable={true}
+      centered={true}
+      closable={true}
       visible={visible}
       title="Estimate Backlog Item"
       okText="Save"
@@ -49,14 +50,14 @@ visible,
         initialValues={{ modifier: 'public' }}
       >
         <Form.Item
-        initialValue={data.expectedTimeInHours}
+          initialValue={data.expectedTimeInHours}
           name="expectedTimeInHours"
           label="Estimated Story Points"
           rules={[{ required: true, message: 'Please input the story points estimation in hours of the new backlog item!' }]}
         >
           <InputNumber type="number" min={0} />
         </Form.Item>
-    
+
       </Form>
     </Modal>
   );

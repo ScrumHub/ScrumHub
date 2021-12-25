@@ -25,12 +25,9 @@
   #components-table-demo-drag-sorting tr.drop-over-upward td {
     border-top: 1px dashed ;
   }
-  td.ant-table-cell{
-    
-  }
-  
   .ant-table table {
     border-radius: 30px;
+    border-collapse: separate;
     
   }
   .ant-table-tbody {

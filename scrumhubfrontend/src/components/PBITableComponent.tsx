@@ -9,30 +9,21 @@ import { IRowIds } from "./utility/commonInterfaces";
 
 export default function PBITableComponent(props: any) {
   const isMounted = useIsMounted();
-  const [expandedRows, setExpandedRows] = useState([] as number[]);
   if (!isMounted()){console.error("pbi"+isMounted())};
-  const updateKeys = (key:number) => {
-    if(isMounted() && !expandedRows.includes(key)){
-    console.log("key"+key);
-    const keys = expandedRows && expandedRows.length >0 ? expandedRows.concat([key]):[key] as number[];
-    setExpandedRows(keys);
-    }
-};
 
 return(
 <DndProvider backend={HTML5Backend} key={"pbi"+props.item.sprintNumber}>
         <Table
-         style={{ borderSpacing: "separate" }}
-          size="small"
-          showHeader={false}
+         style={{ borderSpacing: "separate", }}
+         size="small"
+          showHeader={true}
           scroll={{ x: 800 }}
           columns={props.pbiColumns}
           rowKey={(record: IProductBacklogItem) => record.id}
           expandable={{
-            expandedRowRender:record => props.TaskTableforPBI(record, updateKeys(record.id)),
-            defaultExpandAllRows: props.peopleFilter && props.peopleFilter.length > 0, rowExpandable: record => record.tasks && record.tasks.length > 0,
-
-
+            expandedRowRender: props.TaskTableforPBI,
+            defaultExpandAllRows: props.peopleFilter && props.peopleFilter.length > 0, 
+            rowExpandable: record => record.tasks && record.tasks.length > 0,
             
           }}
           components={props.nestedcomponents}

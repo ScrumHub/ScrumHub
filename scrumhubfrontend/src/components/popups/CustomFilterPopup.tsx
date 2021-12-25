@@ -29,7 +29,8 @@ export const CustomFilterPopup: React.FC<CollectionCreateFormProps> = ({
   const [isSprintOpen, setIsSprintOpen] = useState(false);
   return (
     <Modal
-    closable={true}
+      centered={true}
+      closable={true}
       visible={visible}
       title="Filter Backlog Items"
       okText="Save"
@@ -62,7 +63,7 @@ export const CustomFilterPopup: React.FC<CollectionCreateFormProps> = ({
           <Input />
         </Form.Item>
         <Form.Item hidden={!isNameOpen}>
-          <Button type="primary" onClick={() => { form.setFieldsValue({ "nameFilter": null });setIsNameOpen(false)}} block icon={<MinusCircleOutlined />}>
+          <Button type="primary" onClick={() => { form.setFieldsValue({ "nameFilter": null }); setIsNameOpen(false) }} block icon={<MinusCircleOutlined />}>
             Do Not Filter By Name
           </Button>
         </Form.Item>
@@ -78,15 +79,15 @@ export const CustomFilterPopup: React.FC<CollectionCreateFormProps> = ({
           hidden={!isFinishedOpen}
           valuePropName="checked"
         >
-          <Switch/>
+          <Switch />
         </Form.Item>
         <Form.Item hidden={!isFinishedOpen} >
-          <Button type="primary" onClick={() => { form.setFieldsValue({ "finished": null }); setIsFinishedOpen(false);}} block icon={<MinusCircleOutlined />}>
+          <Button type="primary" onClick={() => { form.setFieldsValue({ "finished": null }); setIsFinishedOpen(false); }} block icon={<MinusCircleOutlined />}>
             Do Not Filter By Finished Status
           </Button>
         </Form.Item>
         <Form.Item hidden={isFinishedOpen} >
-          <Button type="dashed" onClick={() => {form.setFieldsValue({"finished": false }); setIsFinishedOpen(true);}} block icon={<PlusOutlined />}>
+          <Button type="dashed" onClick={() => { form.setFieldsValue({ "finished": false }); setIsFinishedOpen(true); }} block icon={<PlusOutlined />}>
             Filter By Finished Status
           </Button>
         </Form.Item>
@@ -99,12 +100,12 @@ export const CustomFilterPopup: React.FC<CollectionCreateFormProps> = ({
         >  <Switch />
         </Form.Item>
         <Form.Item hidden={!isEstimatedOpen}>
-          <Button type="primary" onClick={() =>{form.setFieldsValue({ "estimated": null }); setIsEstimatedOpen(false);}} block icon={<MinusCircleOutlined />}>
+          <Button type="primary" onClick={() => { form.setFieldsValue({ "estimated": null }); setIsEstimatedOpen(false); }} block icon={<MinusCircleOutlined />}>
             Do Not Filter By Estimated Status
           </Button>
         </Form.Item>
         <Form.Item hidden={isEstimatedOpen}>
-          <Button type="dashed" onClick={() => {form.setFieldsValue({ "estimated": false }); setIsEstimatedOpen(true);}} block icon={<PlusOutlined />}>
+          <Button type="dashed" onClick={() => { form.setFieldsValue({ "estimated": false }); setIsEstimatedOpen(true); }} block icon={<PlusOutlined />}>
             Filter By Estimated Status
           </Button>
         </Form.Item>
@@ -118,12 +119,12 @@ export const CustomFilterPopup: React.FC<CollectionCreateFormProps> = ({
           <Switch />
         </Form.Item>
         <Form.Item hidden={!isSprintOpen}>
-          <Button type="primary" onClick={() => {form.setFieldsValue({ "isSprintOpen": null }); setIsSprintOpen(false);}} block icon={<MinusCircleOutlined />}>
+          <Button type="primary" onClick={() => { form.setFieldsValue({ "isSprintOpen": null }); setIsSprintOpen(false); }} block icon={<MinusCircleOutlined />}>
             Do Not Filter By Sprint Status
           </Button>
         </Form.Item>
         <Form.Item hidden={isSprintOpen}>
-          <Button type="dashed" onClick={() => {form.setFieldsValue({ "isSprintOpen": false }); setIsSprintOpen(true);}} block icon={<PlusOutlined />}>
+          <Button type="dashed" onClick={() => { form.setFieldsValue({ "isSprintOpen": false }); setIsSprintOpen(true); }} block icon={<PlusOutlined />}>
             Filter By Sprint Status
           </Button>
         </Form.Item>

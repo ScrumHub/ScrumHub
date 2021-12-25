@@ -19,7 +19,6 @@ export default function TaskTableComponent(props: any) {
     if ( isMounted() && props.peopleFilter.length > 0) {
         //console.log(props.item.tasks.filter((item:ITask)=>props.peopleFilter.includes(item.assigness.length>0?item.assigness[0].login:"")));
         setData(props.item.tasks.filter((item:ITask)=>{return(item.assigness.map((person:IPerson)=>{return(props.peopleFilter.includes(person.login))}).filter(x=>x!==false).length > 0)}));
-        props.updateKeys(props.item.id);
         //setUpdated(false);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps

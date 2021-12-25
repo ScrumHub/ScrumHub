@@ -122,12 +122,14 @@ export const taskNameCol = {
   title: "Name",
   align: "left" as const,
   dataIndex: "name",
+  width:"40%",
   key: "name",
 };
 export const taskFinishCol = {
   title: "Finished",
   key: "finished",
   dataIndex: "finished",
+  width:"20%",
   align: "center" as const,
   render: (val: boolean) => (
     <span>
@@ -140,6 +142,7 @@ export const taskAssigneeCol =
 {
   key: "isAssignedToPBI",
   title: "Assigned",
+  width:"20%",
   render: (record: ITask) => (
     <span>
       <Badge size='small'
@@ -161,6 +164,7 @@ export const taskGhLinkCol = {
   title: "Related Link",
   dataIndex: "link",
   key: "link",
+  width:"20%",
   align: "right" as const,
   render: (text: string) => <a href={text}>{"See on GitHub"}</a>,
 };
@@ -175,7 +179,7 @@ export const pbiPriorityCol = {
 
 };
 export const pbiProgressCol ={
-  title: 'Tasks Done', colSpan: 1, key: 'operation', align: "center" as const, render: (item: IProductBacklogItem) => {
+  title: 'Tasks Done', width:"20%", key: 'operation', align: "center" as const, render: (item: IProductBacklogItem) => {
     return (<span><Progress size='small'  width={25} type="circle" status={`${item.tasks && item.tasks.length > 0 ? (item.tasks.filter((item: ITask) => item.finished).length / item.tasks.length) !== 0 ? "normal" : "exception" : "normal"}`} 
     percent={100} format={percent => `${item.tasks && item.tasks.length > 0 ? item.tasks.filter((item: ITask) => item.finished).length : 0}/${item.tasks && item.tasks.length > 0 ? item.tasks.length as number : 0}`}></Progress></span>)
   }

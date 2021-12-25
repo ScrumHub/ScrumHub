@@ -10,7 +10,7 @@ import { AuthContext } from '../App';
 import { IFilters, IProductBacklogList, ISprint, IProductBacklogItem, initSprint, State, ISprintList } from '../appstate/stateInterfaces';
 import { store } from '../appstate/store';
 import config from '../configuration/config';
-import { CustomAddSprintPopup } from './popups/CustomAddSprintPopup';
+import { AddSprintPopup } from './popups/AddSprintPopup';
 const { Meta } = Card;
 
 
@@ -228,7 +228,7 @@ export default function SprintList() {
           }
           </Row>
         </InfiniteScroll>}
-        {isAddModalVisible && !loading && <CustomAddSprintPopup error={error.erorMessage} data={initSprint} pbiData={tempPBIPage.list as IProductBacklogItem[]} visible={isAddModalVisible}
+        {isAddModalVisible && !loading && <AddSprintPopup error={error.erorMessage} data={initSprint} pbiData={tempPBIPage.list as IProductBacklogItem[]} visible={isAddModalVisible}
           onCreate={function (values: any): void { handleSprintAdd(values) }}
           onCancel={() => { setIsAddModalVisible(false); }} />}
     </section >
