@@ -1,34 +1,36 @@
 .ant-table-tbody > tr > td {
-  border-bottom: 0px !important;
+  border-bottom: 1px solid #f0f0f0;
   transition: background 0.3s;
 }
   .ant-table table {
-    border-radius: 30px;
+    border-radius: 1px;
+    margin:0;
+    padding:0;
     border-collapse: separate;
     
   }
   .ant-table-tbody {
     border-collapse: collapse;
-    border-radius: 30px;
+    border-radius: 1px;
     border-color:#f0f2f5;
 
   }
 
   .ant-table-tbody > tr  {
     border-collapse: collapse;
-    border-radius: 30px;
+    border-radius: 1px;
     border-color: #f0f2f5;
   }
 
   .ant-table-cell > ant-table-cell-row-hover > td  {
     border-collapse: collapse;
-    border-radius: 30px;
+    border-radius: 1px;
     border-color: #f0f2f5;
   }
   
   .ant-table-tbody > tr > expanded-row:hover > td {
     border-collapse: collapse;
-    border-radius: 30px;
+    border-radius: 1px;
     background:"none";
     background-color:#f0f2f5;
   }

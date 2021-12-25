@@ -583,11 +583,11 @@ export const BacklogTableWithSprints: React.FC<any> = (props:any) => {
   if (!state.isLoggedIn) { return <Navigate to="/login" />; }
   return (<>
   <DndProvider backend={HTML5Backend} key={"pbi"}>
-  {pbiPage && pbiPage.list && !fetchPBIs && !fetched && <SprintTableComponent nameFilter={props.nameFilter} loading={!pbiPage || !pbiPage.list || fetchPBIs || fetched} data={[{ sprintNumber: 0, goal: "Product Backlog", backlogItems: pbiPage.list } as ISprint] as ISprint[]}
-    components={nestedcomponents} columns={sprintColumns} PBITableforSprint={PBITableforSprint} />}
+  <SprintTableComponent nameFilter={props.nameFilter} loading={!pbiPage || !pbiPage.list || fetchPBIs || fetched || refreshRequired || initialRefresh} data={[{ sprintNumber: 0, goal: "Product Backlog", backlogItems: pbiPage.list } as ISprint] as ISprint[]}
+    components={nestedcomponents} columns={sprintColumns} PBITableforSprint={PBITableforSprint} />
       {sprintPage.list.map((sprint) => {
           return (
-            <SprintTableComponent nameFilter={props.nameFilter} key={sprint.sprintNumber} loading={!sprintPage || !sprintPage.list || sprintRefreshRequired || fetchSprints || fetchSprintsPBI} 
+            <SprintTableComponent nameFilter={props.nameFilter} key={sprint.sprintNumber} loading={!sprintPage || !sprintPage.list || sprintRefreshRequired || fetchSprints || fetchSprintsPBI || initialRefresh} 
             data={[sprint] as ISprint[]} components={nestedcomponents} columns={sprintColumns} PBITableforSprint={PBITableforSprint}/>)})
       }
       {isModal.editPBI && selectedPBI && selectedPBI.id && <EditPBIPopup data={selectedPBI as IAddPBI} visible={isModal.editPBI}
