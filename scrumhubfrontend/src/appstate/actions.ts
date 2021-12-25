@@ -375,7 +375,6 @@ export const addTaskThunk = createAsyncThunk<
   const response: RequestResponse<ITask, number> =
     await Fetching.addTask(item.token, item.ownerName, item.pbiId,item.name);
   if (response.code !== 200) {
-    console.log("rejected");
     return rejectWithValue(
       response as RequestResponse<ITask, number>
     );
