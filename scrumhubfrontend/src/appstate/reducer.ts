@@ -881,9 +881,9 @@ export const reducer = createReducer(initState, {
     else if(newState.sprintPage && newState.sprintPage.list.length >0 ) {
       newState.sprintPage.list = newState.sprintPage.list.map((sprint:ISprint)=>{
         sprint.backlogItems = sprint.backlogItems.map((item:IProductBacklogItem)=>{
-          if(item.id === task.pbiId && item.tasks){
+          if(item.id === task.pbiId && item.tasks && item.tasks.length>0){
           item.tasks =  item.tasks.map((t:ITask)=>{
-            if(item.id === task.pbiId){
+            if(t.id === task.id){
               return task;
             }
             return t;
@@ -933,7 +933,7 @@ export const reducer = createReducer(initState, {
     newState.pbiPage.list = newState.pbiPage.list.map((item:IProductBacklogItem)=>{ 
       if(item.id === task.pbiId && item.tasks){
         item.tasks =  item.tasks.map((t:ITask)=>{
-          if(item.id === task.pbiId){
+          if(t.id === task.id){
             return task;
           }
           return t;
@@ -947,7 +947,7 @@ export const reducer = createReducer(initState, {
         sprint.backlogItems = sprint.backlogItems.map((item:IProductBacklogItem)=>{
           if(item.id === task.pbiId && item.tasks){
           item.tasks =  item.tasks.map((t:ITask)=>{
-            if(item.id === task.pbiId){
+            if(t.id === task.id){
               return task;
             }
             return t;
