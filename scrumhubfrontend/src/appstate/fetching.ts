@@ -3,6 +3,7 @@ import config from "../configuration/config";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import axios, { AxiosResponse } from "axios";
 import { IAddPBI, IFilters, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, ITaskNamed, IUpdateIdSprint } from "./stateInterfaces";
+import { getHeader } from "./stateUtilities";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function getResponse<T, K>(
@@ -107,20 +108,20 @@ export function fetchPBIs(ownerName: any, token: string, filters: IFilters
 }
 
 export function fetchPeople(ownerName: string, token: string
-  ): Promise<RequestResponse<IProductBacklogList, number>> {
-    return getResponse(
-      axios.get(
-        `https://${config.backend.ip}:${config.backend.port}/api/People/${ownerName}`,
-        {
-          headers: {
-            'authToken': token,
-            'Accept': "application/json",
-            'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
-          },
-        }
-      )
-    );
-  }
+): Promise<RequestResponse<IProductBacklogList, number>> {
+  return getResponse(
+    axios.get(
+      `https://${config.backend.ip}:${config.backend.port}/api/People/${ownerName}`,
+      {
+        headers: {
+          'authToken': token,
+          'Accept': "application/json",
+          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
+        },
+      }
+    )
+  );
+}
 
 export function finishPBI(ownerName: string, token: string, pbild: number
 ): Promise<RequestResponse<IProductBacklogItem, number>> {
@@ -356,20 +357,20 @@ export function addTasksToPBI(token: string, ownerName: string, pbiId: number,
 }
 
 export function addTasksToSprint(token: string, ownerName: string, pbiId: number,
-  ): Promise<RequestResponse<ITaskList, number>> {
-    return getResponse(
-      axios.get(
-        `https://${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/PBI/${pbiId}`,
-        {
-          headers: {
-            'authToken': token,
-            'Accept': "application/json",
-            'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
-          },
-        }
-      )
-    );
-  }
+): Promise<RequestResponse<ITaskList, number>> {
+  return getResponse(
+    axios.get(
+      `https://${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/PBI/${pbiId}`,
+      {
+        headers: {
+          'authToken': token,
+          'Accept': "application/json",
+          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
+        },
+      }
+    )
+  );
+}
 
 export function addTask(token: string, ownerName: string, pbiId: number, name: string,
 ): Promise<RequestResponse<ITask, number>> {
@@ -392,46 +393,81 @@ export function addTask(token: string, ownerName: string, pbiId: number, name: s
 }
 
 export function getPBINames(ownerName: any, token: string, filters: IFilters
-  ): Promise<RequestResponse<IProductBacklogList[], number>> {
-    const filtersString =
-      filters === undefined
-        ? ""
-        : Object.keys(filters)
-          .map((filterName) => {
-            const value = String(filters[filterName]).trim();
-            return value && value !== "null" && value !== "undefined" ? `${filterName}=${value}` : "";
-          })
-          .filter((x) => x !== "")
-          .join("&");
-    return getResponse(
-      axios.get(
-        `https://${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}?${filtersString}`,
-        {
-          headers: {
-            'authToken': token,
-            'Accept': "application/json",
-            'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
-          },
-        }
-      )
-    );
-  }
+): Promise<RequestResponse<IProductBacklogList[], number>> {
+  const filtersString =
+    filters === undefined
+      ? ""
+      : Object.keys(filters)
+        .map((filterName) => {
+          const value = String(filters[filterName]).trim();
+          return value && value !== "null" && value !== "undefined" ? `${filterName}=${value}` : "";
+        })
+        .filter((x) => x !== "")
+        .join("&");
+  return getResponse(
+    axios.get(
+      `https://${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}?${filtersString}`,
+      {
+        headers: {
+          'authToken': token,
+          'Accept': "application/json",
+          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
+        },
+      }
+    )
+  );
+}
 
-  export function assignTask(token: string, ownerName: string, pbiId: number, taskId: number
-    ): Promise<RequestResponse<ITask, number>> {
-      return getResponse(
-        axios.patch(
-          `https://${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/${taskId}/assignpbi`,
-          {
-            "index": pbiId === null ? 0 : pbiId
-          },
-          {
-            headers: {
-              'authToken': token,
-              'Accept': "application/json",
-              'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
-            },
-          }
-        )
-      );
-    }
+export function assignTaskToPBI(token: string, ownerName: string, pbiId: number, taskId: number
+): Promise<RequestResponse<ITask, number>> {
+  return getResponse(
+    axios.patch(
+      `https://${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/${taskId}/assignpbi`,
+      {"index": pbiId === null ? 0 : pbiId},
+      {
+        headers: {
+          'authToken': token,
+          'Accept': "application/json",
+          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
+        },
+      }
+    )
+  );
+}
+export function assignPersonToTask(token: string, ownerName: string, login: string, taskId: number
+): Promise<RequestResponse<ITask, number>> {
+  return getResponse(
+    axios.patch(
+      `https://${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/${taskId}/assignperson`,
+      {
+        "login": login
+      },
+      {
+        headers: {
+          'authToken': token,
+          'Accept': "application/json",
+          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
+        },
+      }
+    )
+  );
+}
+
+export function unassignPersonToTask(token: string, ownerName: string, login: string, taskId: number
+): Promise<RequestResponse<ITask, number>> {
+  return getResponse(
+    axios.patch(
+      `https://${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/${taskId}/unassignperson`,
+      {
+        "login": login
+      },
+      {
+        headers: {
+          'authToken': token,
+          'Accept': "application/json",
+          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
+        },
+      }
+    )
+  );
+}

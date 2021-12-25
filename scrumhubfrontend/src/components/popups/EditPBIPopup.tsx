@@ -74,6 +74,7 @@ export const EditPBIPopup: React.FC<CollectionCreateFormProps> = ({
         <Form.Item
           initialValue={data.name}
           name="name"
+          key="name"
           rules={[{ required: true, message: 'Please input the name of the new backlog item!' }]}
         >
           <Input />
@@ -82,6 +83,7 @@ export const EditPBIPopup: React.FC<CollectionCreateFormProps> = ({
         <Form.Item
           initialValue={data.priority}
           name="priority"
+          key="priority"
           rules={[{ required: true, message: 'Please input the priority of the new backlog item!' }]}
         >
           <Select defaultValue={data.priority}>

@@ -76,7 +76,7 @@ export default function Project() {
   
     }
   };
-  const onSearch = (value: string) => { setFiltersPBI({ ...filterPBI, nameFilter: value }); };
+  const onSearch = (value: string) => { setFiltersPBI({ ...filterPBI, nameFilter: value.toLowerCase() }); };
 console.log(filterPBI.nameFilter);
   if (!state.isLoggedIn) { return <Navigate to="/login" />; }
   return (

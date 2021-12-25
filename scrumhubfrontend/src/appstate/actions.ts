@@ -405,11 +405,11 @@ export const getPBINamesThunk = createAsyncThunk<
   return response as RequestResponse<IProductBacklogList, number>;
 });
 
-export const assignTaskThunk = createAsyncThunk<
+export const assignTaskToPBIThunk = createAsyncThunk<
   RequestResponse<ITask, number>,
   { token: string, ownerName: string; pbiId:number; taskId:number},
   { rejectValue: RequestResponse<ITask, number> }
->("assignTask", async (
+>("assignTaskToPBI", async (
   item: {
     token: string;
     ownerName: string;
@@ -418,7 +418,51 @@ export const assignTaskThunk = createAsyncThunk<
   },
   { rejectWithValue }) => {
   const response: RequestResponse<ITask, number> =
-    await Fetching.assignTask(item.token, item.ownerName, item.pbiId,item.taskId);
+    await Fetching.assignTaskToPBI(item.token, item.ownerName, item.pbiId,item.taskId);
+  if (response.code !== 200) {
+    return rejectWithValue(
+      response as RequestResponse<ITask, number>
+    );
+  }
+  return response as RequestResponse<ITask, number>;
+});
+
+export const assignPersonToTaskThunk = createAsyncThunk<
+  RequestResponse<ITask, number>,
+  { token: string, ownerName: string; login:string; taskId:number},
+  { rejectValue: RequestResponse<ITask, number> }
+>("assignPersonToTask", async (
+  item: {
+    token: string;
+    ownerName: string;
+    login:string;
+    taskId:number;
+  },
+  { rejectWithValue }) => {
+  const response: RequestResponse<ITask, number> =
+    await Fetching.assignPersonToTask(item.token, item.ownerName, item.login,item.taskId);
+  if (response.code !== 200) {
+    return rejectWithValue(
+      response as RequestResponse<ITask, number>
+    );
+  }
+  return response as RequestResponse<ITask, number>;
+});
+
+export const unassignPersonToTaskThunk = createAsyncThunk<
+  RequestResponse<ITask, number>,
+  { token: string, ownerName: string; login:string; taskId:number},
+  { rejectValue: RequestResponse<ITask, number> }
+>("unassignPersonToTask", async (
+  item: {
+    token: string;
+    ownerName: string;
+    login:string;
+    taskId:number;
+  },
+  { rejectWithValue }) => {
+  const response: RequestResponse<ITask, number> =
+    await Fetching.unassignPersonToTask(item.token, item.ownerName, item.login,item.taskId);
   if (response.code !== 200) {
     return rejectWithValue(
       response as RequestResponse<ITask, number>

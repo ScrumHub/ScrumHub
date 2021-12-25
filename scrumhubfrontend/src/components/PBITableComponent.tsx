@@ -10,9 +10,8 @@ import { IRowIds } from "./utility/commonInterfaces";
 export default function PBITableComponent(props: any) {
   const isMounted = useIsMounted();
   if (!isMounted()){console.error("pbi"+isMounted())};
-  const [data, setData] = useState(props.item.backlogItems);
-  if (!isMounted()){console.warn("task table is unmounted")};
-  useEffect(() => {
+  //const [data, setData] = useState(props.item.backlogItems);
+  /*useEffect(() => {
     if ( isMounted() && props.nameFilter.length > 0) {
         //console.log(props.item.tasks.filter((item:ITask)=>props.peopleFilter.includes(item.assigness.length>0?item.assigness[0].login:"")));
         setData(props.item.backlogItems.filter((item:IProductBacklogItem)=>item.name.includes(props.nameFilter)));         
@@ -20,12 +19,13 @@ export default function PBITableComponent(props: any) {
         //setUpdated(false);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.nameFilter]);
+  }, [props.nameFilter]);*/
 return(
-<DndProvider backend={HTML5Backend} key={"pbi"+props.item.sprintNumber}>
+//<DndProvider backend={HTML5Backend} key={"pbi"+props.item.sprintNumber}>
         <Table
          style={{ borderSpacing: "separate",marginTop:"0.25%" }}
          size="small"
+         loading={props.loading}
           showHeader={false}
           scroll={{ x: 800 }}
           columns={props.pbiColumns}
@@ -37,13 +37,13 @@ return(
             
           }}
           components={props.nestedcomponents}
-          dataSource={data}//:item.backlogItems.filter((item:IProductBacklogItem)=>{item.name.startsWith(filterPBI.nameFilter as string)})}
+          dataSource={props.item.backlogItems}//:item.backlogItems.filter((item:IProductBacklogItem)=>{item.name.startsWith(filterPBI.nameFilter as string)})}
           pagination={false}
           onRow={(row, id) => {const index = row.id; const record = {...initRowIds, sprintNumber:props.item.sprintNumber,pbiID: row.id,} as IRowIds;  const bodyType="IProductBacklogItem"; return({
             index,
             record,
             bodyType
           }) as any;}}          
-        />
-      </DndProvider>);
+        />);
+      //</DndProvider>);
 }
