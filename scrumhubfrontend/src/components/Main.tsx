@@ -1,8 +1,8 @@
-import { Avatar, Layout, Menu } from 'antd';
+import { Alert, Avatar, Breadcrumb, Layout, Menu, PageHeader } from 'antd';
 import { useLocation, useNavigate } from 'react-router';
 import { useContext } from 'react';
 import 'antd/dist/antd.css';
-import { FileOutlined, GithubOutlined, ProjectOutlined } from '@ant-design/icons';
+import { DatabaseOutlined, GithubOutlined, ProjectOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import AppRouter from '../Approuter';
 import { AuthContext } from '../App';
@@ -15,10 +15,13 @@ import * as Actions from '../appstate/actions';
 import './Main.css';
 import { useSelector } from 'react-redux';
 import { State } from '../appstate/stateInterfaces';
+import { routes } from './utility/BodyRowsAndColumns';
 const { Header, Footer, Content, Sider } = Layout;
 const { SubMenu } = Menu;
 
-
+function ItemRender(route: any, params: any[], routes: any[], paths: any[]) {
+  return (<span key={route.path}>{(route.icon?route.icon:"")}{" "+route.breadcrumbName}</span>)
+}
 
 function Main(props: any) {
   const { state, dispatch: unAuth } = useContext(AuthContext);
@@ -28,6 +31,7 @@ function Main(props: any) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const token = cookies[config.token];
   const location = useLocation();
+  const error = useSelector((appState: State) => appState.error);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const navigate = useNavigate();
@@ -35,9 +39,9 @@ function Main(props: any) {
   const [data, setData] = useState({ errorMessage: "", isLoading: false });
   const [logout, setLogout] = useState(false);
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") : "";
-  const currentUser = useSelector(
-    (appState: State) => appState.currentUser
-  );
+  const currentUser = useSelector((appState: State) => appState.currentUser);
+  const people = useSelector((appState: State) => appState.people);
+  const sprintID = localStorage.getItem("sprintID") ? localStorage.getItem("sprintID") as string : "";
   useEffect(() => {
     if (logout) {
       var cookies = document.cookie.split(";");
@@ -58,25 +62,19 @@ function Main(props: any) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [logout]);
-
-
   const handleLogout = () => {
     setLogout(true);
   }
-
   const handleProjects = () => {
     store.dispatch(Actions.clearProject());
     localStorage.removeItem("ownerName");
     localStorage.removeItem("sprintID");
     if (location.pathname === "/") {
-      console.log(location);
       store.dispatch(clearReposList());
     }
     navigate("/", { replace: true });
   }
-
   const [selectedSiderKey, setSelectedSiderKey] = useState('2');
-
   const handleSprints = () => {
     if (ownerName && ownerName !== "") {
       store.dispatch(clearState());
@@ -86,14 +84,20 @@ function Main(props: any) {
   }
   const handlePBacklog = () => {
     if (ownerName && ownerName !== "") {
-      store.dispatch(clearState());
-      setSelectedSiderKey('2');
-      navigate(`/${ownerName.split("/")[0]}/${ownerName.split("/")[1]}`, { replace: true });
+      const newPath = `/${ownerName.split("/")[0]}/${ownerName.split("/")[1]}`;
+      if (location.pathname !== newPath) {
+        localStorage.removeItem("sprintID");
+        store.dispatch(clearState());
+        store.dispatch(Actions.clearProject());
+        setSelectedSiderKey('2');
+        navigate(newPath, { replace: true });
+      }
     }
   }
+  
 
   useEffect(() => {
-    if(ownerName!==""){
+    if (ownerName !== "") {
       try {
         store.dispatch(
           Actions.fetchPeopleThunk({
@@ -104,7 +108,7 @@ function Main(props: any) {
       } catch (err) {
         console.error("Failed to fetch the pbis: ", err);
       }
-    
+
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ownerName]);
 
@@ -115,15 +119,15 @@ function Main(props: any) {
         <Header hidden={!isLoggedIn} className="clearfix" style={{ position: 'fixed', zIndex: 1, padding: 0, height: "5vh", lineHeight: "5vh", width: "100%", backgroundColor: "#f0f0f0" }}>
           <Menu mode="horizontal" theme="light"
             className="mainMenu" >
-              
-            {currentUser!==null &&
-            <SubMenu style={{float:"unset"}} key="0" title={currentUser?.login as string} icon={
-                <Avatar style={{ transform:"scale(0.8)", marginBottom:"0.4vh"}} size="small" src={`${currentUser?.avatarLink}`} ></Avatar>}>
-              <Menu.Item key="4">
-              <a href={"https://github.com/" + currentUser?.login}>See on Github</a>
-              </Menu.Item>
-              
-            </SubMenu>}
+
+            {currentUser !== null &&
+              <SubMenu style={{ float: "unset" }} key="0" title={currentUser?.login as string} icon={
+                <Avatar style={{ transform: "scale(0.8)", marginBottom: "0.4vh" }} size="small" src={`${currentUser?.avatarLink}`} ></Avatar>}>
+                <Menu.Item key="4">
+                  <a href={"https://github.com/" + currentUser?.login}>See on Github</a>
+                </Menu.Item>
+
+              </SubMenu>}
             <Menu.Item className='mainMenuItem' key="proj" onClick={() => handleProjects()}><span style={{ maxHeight: "1vh" }}>Projects</span></Menu.Item>
             <Menu.Item className='mainMenuItem' key="logout" onClick={() => handleLogout()} >Logout</Menu.Item>
           </Menu>
@@ -138,12 +142,18 @@ function Main(props: any) {
               >
                 <Menu.Item key="1" icon={<ProjectOutlined />}>
                   <span>Project Details</span></Menu.Item>
-                <Menu.Item key="2" onClick={() => handlePBacklog()} icon={<FileOutlined />}>
+                <Menu.Item key="2" onClick={() => handlePBacklog()} icon={<DatabaseOutlined />}>
                   <span>Product Backlog</span></Menu.Item>
               </Menu>
             </Sider>
             <Content style={ownerName === "" ? {} : { padding: '0 50px' }}>
               <div style={{ minHeight: "90vh", margin: 0 }}>
+                {error.hasError && <Alert type="error" message={error.erorMessage} banner closable />}
+                {ownerName !== "" && <PageHeader style={{ marginTop: "5vh", paddingLeft: "2%", marginBottom: 0, paddingBottom: 0 }}
+                  title={<div style={{ fontWeight: "bold", paddingTop: 0, marginTop: 0 }}>{sprintID && sprintID !== "0"?"Sprint "+sprintID:"Product Backlog"}</div>}
+                  breadcrumb={<Breadcrumb style={{ marginTop: 0 }} itemRender={ItemRender} routes={routes(ownerName, sprintID, location)} />}
+                >
+                </PageHeader>}
                 <AppRouter />
               </div>
               <Footer hidden={!isLoggedIn} style={{ margin: 0, lineHeight: "5vh !important", padding: 0, textAlign: 'center', height: "5vh", verticalAlign: "bottom" }}>

@@ -1,3 +1,4 @@
+import { HomeOutlined } from "@ant-design/icons";
 import { IFilters } from "../../appstate/stateInterfaces";
 import { IModals, IRowIds } from "./commonInterfaces";
 
@@ -24,3 +25,9 @@ export const initIDs: IFilters = {
     sprintNumber: -2
   }
 
+  export const formItemLayoutWithOutLabel = {
+    wrapperCol: {
+      xs: { offset: 0 },
+      sm: { offset: 0 },
+    },
+  };

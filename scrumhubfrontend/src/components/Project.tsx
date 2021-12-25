@@ -16,9 +16,7 @@ import { CustomAddSprintPopup } from './popups/CustomAddSprintPopup';
 import { useIsMounted } from './utility/commonFunctions';
 const { Search } = Input;
 
-function ItemRender(route: any, params: any[], routes: any[], paths: any[]) {
-  return (<span key={route.breadcrumbName + route.path}>{route.breadcrumbName}</span>)
-}
+
 
 export default function Project() {
   const { state } = useContext(AuthContext);
@@ -27,31 +25,15 @@ export default function Project() {
   const pbiPage = useSelector((appState: State) => appState.pbiPage as IProductBacklogList);
   const [filterPBI, setFiltersPBI] = useState<IFilters>({ nameFilter: "", peopleFilter: [] });
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : "";
-  const error = useSelector((appState: State) => appState.error);
   const currentUser = useSelector((appState: State) => appState.currentUser);
   const people = useSelector((appState: State) => appState.people as IPeopleList);
   const [isAddPBI, setIsAddPBI] = useState(false);
   const [isAddSprint, setIsAddSprint] = useState(false);
   const [isHiddene, setIsHideden] = useState(false);
+  const error = useSelector((appState: State) => appState.error);
   const isMounted = useIsMounted();
 
-  const routes = [
-    {
-      path: "",
-      key: 0,
-      breadcrumbName: window.location.href.split("/")[3],
-    },
-    {
-      path: "Projects",
-      key: 1,
-      breadcrumbName: "Projects",
-    },
-    {
-      path: "path",
-      key: 2,
-      breadcrumbName: window.location.href.split("/")[4].concat(" Project"),
-    },
-  ];
+  
 
   const addPBI = (pbi: IAddPBI) => {
     //check if all elements of acceptanceCriteria array are defined
@@ -90,11 +72,10 @@ export default function Project() {
       }
     }
   };
-  const updatePplFilter = (item: IPerson) => {
+  const updatePplFilter = (items: IPerson[]) => {
+    console.log(items);
     if(isMounted()){
-    //filterPBI.peopleFilter.includes(item.login) ? 
-    //setFiltersPBI({...filterPBI, peopleFilter:filterPBI.peopleFilter.filter((name:string)=>name ===item.login)}):
-    //setFiltersPBI({...filterPBI, peopleFilter:filterPBI.peopleFilter.concat(item.login)});
+    setFiltersPBI({...filterPBI, peopleFilter:items});
   
     }
   };
@@ -103,13 +84,8 @@ console.log(filterPBI.peopleFilter);
   if (!state.isLoggedIn) { return <Navigate to="/login" />; }
   return (
     <>
-      <div style={{ marginTop: "5vh", marginBottom: "1%" }}>
-        {error.hasError && <Alert type="error" message={error.erorMessage} banner closable />}
-        <PageHeader style={{ paddingLeft: "2%", marginBottom: 0, paddingBottom: 0 }}
-          title={<div style={{ fontWeight: "bold", paddingTop: 0, marginTop: 0 }}>{"Product Backlog"}</div>}
-          breadcrumb={<Breadcrumb style={{ marginTop: 0 }} itemRender={ItemRender} routes={routes} />}
-        >
-        </PageHeader>
+      <div style={{marginBottom: "1%" }}>
+        
         <Space direction="horizontal"
           style={{ marginLeft: "2%", marginRight: "2%", marginTop: 0, marginBottom: "1%" }}>
           <Button onClick={() => { Actions.clearPBIsList(); setIsAddSprint(true); }}>{"Create Sprint"}</Button>
@@ -128,7 +104,7 @@ console.log(filterPBI.peopleFilter);
             //}        <Avatar icon={<UserOutlined />}/>
             //trigger={['click']}
             style={{ color: "#1890ff" }}
-            overlay={<MenuWithPeople itemSelected={function (item: IPerson): void { updatePplFilter(item); }} visible={true} people={people}/>}
+            overlay={<MenuWithPeople itemSelected={function (items: IPerson[]): void { updatePplFilter(items); }} visible={true} people={people}/>}
             buttonsRender={([leftButton, rightButton]) => [
               <Button className="peopleButton" style={{ cursor: "default" }} onClick={e => e.preventDefault()}><div className="ant-dropdown-link" onClick={e => e.preventDefault()}>
 
@@ -145,7 +121,7 @@ console.log(filterPBI.peopleFilter);
           </span>}
         </Space>
 
-        <BacklogTableWithSprints />
+        <BacklogTableWithSprints peopleFilter={filterPBI.peopleFilter}/>
         {isAddSprint && !loading && <CustomAddSprintPopup error={error.erorMessage} data={initSprint} visible={isAddSprint}
           onCreate={function (values: any): void { addSprint(values); }}
           onCancel={() => { setIsAddSprint(false); }} pbiData={pbiPage.list} />}

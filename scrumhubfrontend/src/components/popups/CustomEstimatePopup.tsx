@@ -24,6 +24,7 @@ visible,
   const [form] = Form.useForm();
   return (
     <Modal
+    closable={true}
       visible={visible}
       title="Estimate Backlog Item"
       okText="Save"

@@ -32,6 +32,7 @@ export const CustomAssignTaskPopup: React.FC<CollectionCreateFormProps> = ({
   const [temp, setTemp] = useState(pbiData);
   return (
     <Modal
+    closable={true}
       visible={visible}
       title="Assign Task To Backlog Item"
       okText="Save"

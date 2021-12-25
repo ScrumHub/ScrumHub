@@ -63,6 +63,7 @@ export default function Login(props:any) {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, auth, data, proxy_url]);
+
   useEffect(() => {
   if (state.isLoggedIn)
   {

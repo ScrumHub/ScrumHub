@@ -7,6 +7,7 @@ import { IProductBacklogItem, ITask } from "../../appstate/stateInterfaces";
 import { type } from "../BacklogTable";
 import { BodyRowProps } from "./commonInterfaces";
 import "../Home.css";
+import { HomeOutlined } from "@ant-design/icons";
 
 //rows
 export const NonDraggableBodyRow = ({
@@ -175,8 +176,35 @@ export const pbiPriorityCol = {
 };
 export const pbiProgressCol ={
   title: 'Tasks Done', colSpan: 1, key: 'operation', align: "center" as const, render: (item: IProductBacklogItem) => {
-    return (<span><Progress size='small' width={30} type="circle" status={`${item.tasks && item.tasks.length > 0 ? (item.tasks.filter((item: ITask) => item.finished).length / item.tasks.length) !== 0 ? "normal" : "exception" : "normal"}`} percent={item.tasks && item.tasks.length > 0 ?
-      (item.tasks.filter((item: ITask) => item.finished).length / item.tasks.length)
-      : 100} format={percent => `${item.tasks && item.tasks.length > 0 ? item.tasks.filter((item: ITask) => item.finished).length : 0}/${item.tasks && item.tasks.length > 0 ? item.tasks.length as number : 0}`}></Progress></span>)
+    return (<span><Progress size='small'  width={25} type="circle" status={`${item.tasks && item.tasks.length > 0 ? (item.tasks.filter((item: ITask) => item.finished).length / item.tasks.length) !== 0 ? "normal" : "exception" : "normal"}`} 
+    percent={100} format={percent => `${item.tasks && item.tasks.length > 0 ? item.tasks.filter((item: ITask) => item.finished).length : 0}/${item.tasks && item.tasks.length > 0 ? item.tasks.length as number : 0}`}></Progress></span>)
   }
 };
+
+export const routes = (ownerName: string|null, sprintID: string, location:any) => 
+[
+  {path: "/",
+  key: 0,
+  breadcrumbName: "Projects",
+  icon: <HomeOutlined/>,},
+  {
+    path: location.pathname,
+    key: 1,
+    breadcrumbName: (location.pathname as string).slice(1).replaceAll("/", " / "),
+  }];
+
+
+/*(ownerName && ownerName!==null ?
+  (sprintID && sprintID!=="0" ?:[
+      {path: "/",
+      key: 0,
+      breadcrumbName: "Projects",
+      icon: <HomeOutlined/>},
+    {
+      path: location.pathname,
+      key: 1,
+      breadcrumbName: "?"+ownerName.replaceAll("/", " / "),
+    },]):[{path: "/",
+    key: 0,
+    breadcrumbName: "Projects",
+    icon: <HomeOutlined/>},]*/
