@@ -87,7 +87,7 @@ console.log(filterPBI.nameFilter);
           style={{ marginLeft: "2%", marginRight: "2%", marginTop: 0, marginBottom: "1%" }}>
           <Button onClick={() => { setIsAddSprint(true); }}>{"Create Sprint"}</Button>
           <Button onClick={() => { setIsAddPBI(true);}}>{"Add Product Backlog Item"}</Button>
-          <Search placeholder="input backlog item name" onSearch={onSearch} enterButton />
+          <Search placeholder="Input backlog item name" onSearch={onSearch} enterButton />
 
         </Space>
         <Divider type="vertical" />

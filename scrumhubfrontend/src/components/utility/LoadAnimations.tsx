@@ -3,7 +3,7 @@ import 'antd/dist/antd.css';
 import { Avatar, Button, Menu, Popover, Skeleton, Space } from "antd";
 import MenuItem from "antd/lib/menu/MenuItem";
 import { useState } from "react";
-import {  IPerson } from "../../appstate/stateInterfaces";
+import { IPerson } from "../../appstate/stateInterfaces";
 import "../Home.css";
 
 export default function SkeletonList(props: any) {
@@ -42,7 +42,7 @@ export function MenuWithPeople(props: any) {
     const [nameList, setList] = useState([] as string[]);
 
     const handleList = (item: IPerson) => {
-        if (!nameList || nameList.length < 1) { setList([item.login]); props.itemSelected([item.login]);}
+        if (!nameList || nameList.length < 1) { setList([item.login]); props.itemSelected([item.login]); }
         else {
             const list = nameList.includes(item.login) ? nameList.filter((name: string) => name !== item.login) : nameList.concat(item.login);
             setList(list);
@@ -51,28 +51,50 @@ export function MenuWithPeople(props: any) {
 
     };
 
-return (<Menu className="peopleMenu">{ppl.map((item: IPerson) => {
-    return (
-        <MenuItem key={item.login} onClick={() => { handleList(item);}}>
-            <Space>
-                <Avatar src={`${item.avatarLink}`} ></Avatar>
-                {" "}
-                <div style={{ minWidth: "10vw" }} >{" " + item.login as string}</div>
+    return (<Menu className="peopleMenu">{ppl.map((item: IPerson) => {
+        return (
+            <MenuItem key={item.login} onClick={() => { handleList(item); }}>
+                <Space>
+                    <Avatar src={`${item.avatarLink}`} ></Avatar>
+                    {" "}
+                    <div style={{ minWidth: "10vw" }} >{" " + item.login as string}</div>
 
 
-                {nameList && nameList.length > 0 && nameList.includes(item.login) ? <CheckOutlined /> : <></>}
-            </Space>
+                    {nameList && nameList.length > 0 && nameList.includes(item.login) ? <CheckOutlined /> : <></>}
+                </Space>
 
-        </MenuItem>);
-})
-}</Menu >);
+            </MenuItem>);
+    })
+    }</Menu >);
 }
 
-/*<Avatar.Group>
-  <Avatar src="https://joeschmoe.io/api/v1/random" />
-  <Avatar style={{ backgroundColor: '#f56a00' }}>K</Avatar>
-  <Tooltip title="Ant User" placement="top">
-    <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
-  </Tooltip>
-  <Avatar style={{ backgroundColor: '#1890ff' }} icon={<AntDesignOutlined />} />
-</Avatar.Group>*/
+export function MenuWithPeopleSave(props: any) {
+    const ppl = props.people && props.people.list && props.people.list.length > 0 ? props.people.list : [] as IPerson[];
+    const [nameList, setList] = useState([] as string[]);
+
+    const handleList = (item: IPerson) => {
+        if (!nameList || nameList.length < 1) { setList([item.login]); props.itemSelected([item.login]); }
+        else {
+            const list = nameList.includes(item.login) ? nameList.filter((name: string) => name !== item.login) : nameList.concat(item.login);
+            setList(list);
+            props.itemSelected(list);
+        }
+
+    };
+
+    return (<Menu className="peopleMenu">{ppl.map((item: IPerson) => {
+        return (
+            <MenuItem key={item.login} onClick={() => { handleList(item); }}>
+                <Space>
+                    <Avatar src={`${item.avatarLink}`} ></Avatar>
+                    {" "}
+                    <div style={{ minWidth: "10vw" }} >{" " + item.login as string}</div>
+                    {nameList && nameList.length > 0 && nameList.includes(item.login) ? <CheckOutlined /> : <></>}
+                </Space>
+            </MenuItem>);
+    })
+    }
+    {<Button type="primary">OK</Button>}
+    </Menu >);
+}
+

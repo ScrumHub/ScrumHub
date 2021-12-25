@@ -1,9 +1,9 @@
 import React from 'react';
-import { Button, Modal, Form, Input, Select, Popconfirm, message } from 'antd';
+import { Button, Modal, Form, Input, Select, Popconfirm, message, Radio, Tag } from 'antd';
 import { IAddPBI } from '../../appstate/stateInterfaces';
 import { MinusCircleOutlined, PlusCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
-import { backlogPriorities } from '../utility/BodyRowsAndColumns';
+import { backlogColors, backlogPriorities } from '../utility/BodyRowsAndColumns';
 import { formItemLayoutWithOutLabel } from '../utility/commonInitValues';
 const { Option } = Select;
 
@@ -86,11 +86,11 @@ export const EditPBIPopup: React.FC<CollectionCreateFormProps> = ({
           key="priority"
           rules={[{ required: true, message: 'Please input the priority of the new backlog item!' }]}
         >
-          <Select defaultValue={data.priority}>
-            {backlogPriorities.map((item: string, key: number) => {
-              return <Option key={key} value={key}  >{item}</Option>
+          <Radio.Group value={data.priority} onChange={(e)=>{ form.setFieldsValue({"priority":e.target.value});}}>
+          {backlogPriorities.map((item: string, key: number) => {
+              return <Radio  key={"key"+key} value={key}><Tag key={"tag"+key} color={backlogColors[key]}>{item}</Tag></Radio>
             })}
-          </Select>
+            </Radio.Group>
 
         </Form.Item>
         <FormItemLabel prefixCls="acceptanceCriteria" label="Acceptance Criteria" required={true} />
@@ -103,7 +103,7 @@ export const EditPBIPopup: React.FC<CollectionCreateFormProps> = ({
                     noStyle
                     key={key}
                     name={key}
-                    rules={[{ required: key < 1 ? true : false, whitespace: true, message: 'Please input at least one acceptance criteria!' }]}
+                    rules={[{ required: form.getFieldValue("acceptanceCriteria").length < 2  ? true : false, whitespace: true, message: 'Please input at least one acceptance criteria!' }]}
                   >
                     <Input style={{ width: "95%" }} placeholder={`Input New Cirterion`} />
                   </Form.Item>
@@ -111,7 +111,7 @@ export const EditPBIPopup: React.FC<CollectionCreateFormProps> = ({
                 </Form.Item>
               ))}
               <Form.Item>
-                <Button style={{ marginTop: "20px", float: "left" }} type="link" onClick={() => add()} block icon={<PlusCircleOutlined />}>
+              <Button style={{ marginTop: "20px", float: "left", }} type="dashed" onClick={() => add()} block icon={<PlusCircleOutlined />}>
                   Add criterion
                 </Button>
               </Form.Item>

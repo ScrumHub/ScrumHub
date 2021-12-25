@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 import { CheckOutlined, StopOutlined } from '@ant-design/icons';
 import { store } from '../appstate/store';
 import { EditPBIPopup } from './popups/EditPBIPopup';
-import { CustomEstimatePopup } from './popups/CustomEstimatePopup';
+import { EstimatePBIPopup } from './popups/EstimatePBIPopup';
 import "./SprintBacklog.css";
 import { UpdateSprintPopup } from './popups/UpdateSprintPopup';
 import { UpdateSprintPBIsPopup } from './popups/UpdateSprintPBIsPopup';
@@ -337,7 +337,7 @@ export default function SprintBacklog() {
         {isEditModalVisible && selectedPBI && <EditPBIPopup data={selectedPBI as IAddPBI} visible={isEditModalVisible}
           onCreate={function (values: any): void { handleEditPBI(values) }} onDelete={handleDelete}
           onCancel={() => { setIsEditModalVisible(false); }} />}
-        {isEstimateModalVisible && selectedPBI && <CustomEstimatePopup data={selectedPBI as IProductBacklogItem} visible={isEstimateModalVisible}
+        {isEstimateModalVisible && selectedPBI && <EstimatePBIPopup data={selectedPBI as IProductBacklogItem} visible={isEstimateModalVisible}
           onCreate={function (values: any): void { handleEstimatePBI(values) }}
           onCancel={() => { setIsEstimateModalVisible(false); }} />}
           {isUpdateModalVisible && !loading && <UpdateSprintPBIsPopup data={sprintPage as ISprint} pbiData={tempPBIPage.list as IProductBacklogItem[]} visible={isUpdateModalVisible}
