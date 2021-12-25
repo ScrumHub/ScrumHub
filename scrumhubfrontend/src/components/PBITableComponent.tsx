@@ -23,7 +23,7 @@ return(
          style={{ borderSpacing: "separate" }}
          size="small"
          loading={props.loading}
-          showHeader={false}
+          showHeader={true}
           scroll={{ x: 800 }}
           columns={props.pbiColumns}
           rowKey={(record: IProductBacklogItem) => record.id}

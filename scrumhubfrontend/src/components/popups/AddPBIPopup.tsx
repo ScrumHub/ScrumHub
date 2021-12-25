@@ -1,15 +1,14 @@
 import React from 'react';
-import { Button, Modal, Form, Input, Select } from 'antd';
+import { Button, Modal, Form, Input, Select, Radio, Tag } from 'antd';
 import { IAddPBI } from '../../appstate/stateInterfaces';
 import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
-import { backlogPriorities } from '../utility/BodyRowsAndColumns';
+import { backlogColors, backlogPriorities } from '../utility/BodyRowsAndColumns';
 import { formItemLayoutWithOutLabel } from '../utility/commonInitValues';
-const { Option } = Select;
 interface Values {
-  title: string;
-  description: string;
-  modifier: string;
+  name: string;
+  priority: number;
+  acceptanceCriteria: string[];
 }
 
 interface CollectionCreateFormProps {
@@ -26,6 +25,7 @@ export const AddPBIPopup: React.FC<CollectionCreateFormProps> = ({
   onCancel,
 }) => {
   const [form] = Form.useForm();
+  const [value, setValue] = React.useState(0);
   return (
     <Modal
       destroyOnClose={true}
@@ -59,7 +59,7 @@ export const AddPBIPopup: React.FC<CollectionCreateFormProps> = ({
           name="name"
           rules={[{ required: true, message: 'Please input the name of the new backlog item!' }]}
         >
-          <Input />
+          <Input placeholder='Product Backlog Name'/>
         </Form.Item>
         <FormItemLabel prefixCls="priority" label="Priority" required={true} />
         <Form.Item
@@ -67,12 +67,11 @@ export const AddPBIPopup: React.FC<CollectionCreateFormProps> = ({
           name="priority"
           rules={[{ required: true, message: 'Please input the priority of the new backlog item!' }]}
         >
-          <Select defaultValue={""}>
-            {backlogPriorities.map((item: string, key: number) => {
-              return <Option key={key} value={key}  >{item}</Option>
+          <Radio.Group value={value} onChange={(e)=>{ setValue(e.target.value);form.setFieldsValue({"priority":e.target.value});}}>
+          {backlogPriorities.map((item: string, key: number) => {
+              return <Radio key={"key"+key} value={key}><Tag key={"tag"+key} color={backlogColors[key]}>{item}</Tag></Radio>
             })}
-          </Select>
-
+            </Radio.Group>
         </Form.Item>
         <FormItemLabel prefixCls="acceptanceCriteria" label="Acceptance Criteria" required={true} />
         <Form.List name="acceptanceCriteria" initialValue={[""]}>
@@ -84,15 +83,15 @@ export const AddPBIPopup: React.FC<CollectionCreateFormProps> = ({
                     noStyle
                     key={key}
                     name={key}
-                    rules={[{ required: key < 1 ? true : false, whitespace: true, message: 'Please input at least one acceptance criteria!' }]}
+                    rules={[{ required: form.getFieldValue("acceptanceCriteria").length < 2 ? true : false, whitespace: true, message: 'Please input at least one acceptance criteria!' }]}
                   >
-                    <Input style={{ width: "95%" }} placeholder={`Input New Cirterion`} />
+                    <Input style={{ width: "95%" }} placeholder={`New Cirterion`} />
                   </Form.Item>
                   <MinusCircleOutlined style={{ width: "5%" }} className="dynamic-delete-button" onClick={() => remove(name)} />
                 </Form.Item>
               ))}
               <Form.Item>
-                <Button style={{ marginTop: "20px", float: "left" }} type="link" onClick={() => add()} block icon={<PlusCircleOutlined />}>
+                <Button style={{ marginTop: "20px", float: "left", }} type="dashed" onClick={() => add()} block icon={<PlusCircleOutlined />}>
                   Add criterion
                 </Button>
               </Form.Item>

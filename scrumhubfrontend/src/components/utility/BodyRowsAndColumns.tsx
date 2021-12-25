@@ -1,4 +1,4 @@
-import { Badge, InputNumber, Progress, Statistic, Tag } from "antd";
+import { Badge, InputNumber, Progress, Space, Statistic, Tag } from "antd";
 import { any } from "joi";
 import { useEffect, useRef } from "react";
 import { useDrop, useDrag } from "react-dnd";
@@ -125,8 +125,8 @@ export const taskNameCol = {
   width:"40%",
   key: "name",
 };
-export const taskFinishCol = {
-  title: "Finished",
+export const taskStatusCol = {
+  title: "Status",
   key: "finished",
   dataIndex: "finished",
   width:"20%",
@@ -179,9 +179,24 @@ export const pbiPriorityCol = {
 
 };
 export const pbiProgressCol ={
+  title: 'Progress', width:"10%", key: 'operation', align: "center" as const, render: (item: IProductBacklogItem) => {
+    return (<span><Progress  width={25} size='small' type="line" showInfo={false} percent={item.tasks && item.tasks.length > 0 ? (item.tasks.filter((item: ITask) => item.finished).length / item.tasks.length):100}
+     /*format={percent => `${item.tasks?item.tasks.filter((item: ITask) => item.finished).length:0}`}*/ ></Progress></span>
+    )
+  }
+};
+export const pbiProgressCol2 ={
+  title: 'Tasks To Do', width:"10%", key: 'tasks', align: "center" as const, render: (item: IProductBacklogItem) => {
+    return (
+    <Progress width={25} percent={100}  size='small' type="dashboard" status={`${item.tasks && item.tasks.length > 0 ? (item.tasks.filter((item: ITask) => item.finished).length / item.tasks.length) !== 0 ? "success" : "exception" : "success"}`}
+     format={() => `${item.tasks ? item.tasks.length:0}`} />)
+  }
+};
+//status={`${item.tasks && item.tasks.length > 0 ? (item.tasks.filter((item: ITask) => item.finished).length / item.tasks.length) !== 0 ? "normal" : "exception" : "normal"}`} 
+export const pbiProgressTagCol ={
   title: 'Tasks Done', width:"20%", key: 'operation', align: "center" as const, render: (item: IProductBacklogItem) => {
-    return (<span><Progress size='small'  width={25} type="circle" status={`${item.tasks && item.tasks.length > 0 ? (item.tasks.filter((item: ITask) => item.finished).length / item.tasks.length) !== 0 ? "normal" : "exception" : "normal"}`} 
-    percent={100} format={percent => `${item.tasks && item.tasks.length > 0 ? item.tasks.filter((item: ITask) => item.finished).length : 0}/${item.tasks && item.tasks.length > 0 ? item.tasks.length as number : 0}`}></Progress></span>)
+    return (<Tag style={{cursor:"pointer"}} color={item.estimated ?(item.expectedTimeInHours>10?"red":"green"):"purple"}>
+    {(item.tasks && item.tasks.length > 0 ?(item.tasks.filter((item: ITask) => item.finished).length+"/"+item.tasks.length):"0/0")+" Tasks Done"}</Tag>)
   }
 };
 

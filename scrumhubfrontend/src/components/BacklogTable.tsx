@@ -12,17 +12,17 @@ import { useSelector } from 'react-redux';
 import config from '../configuration/config';
 import { Navigate, useNavigate } from 'react-router';
 import { EditPBIPopup } from './popups/EditPBIPopup';
-import { CustomEstimatePopup } from './popups/CustomEstimatePopup';
+import { EstimatePBIPopup } from './popups/EstimatePBIPopup';
 import { UpdateSprintPopup } from './popups/UpdateSprintPopup';
 import { AddTaskPopup } from './popups/AddTaskPopup';
 import { CustomAssignTaskPopup } from './popups/CustomAssignTaskPopup';
 import { initIDs, initModalVals, initRowIds } from './utility/commonInitValues';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
 import { useIsMounted, validate, validatePBIDrag, validateTaskDrag, } from './utility/commonFunctions';
-import { taskAssigneeCol, taskFinishCol, taskGhLinkCol, taskNameCol, pbiProgressCol, backlogColors, backlogPriorities } from './utility/BodyRowsAndColumns';
+import { taskAssigneeCol, taskStatusCol, taskGhLinkCol, taskNameCol, pbiProgressCol, backlogColors, backlogPriorities, pbiProgressTagCol, pbiProgressCol2 } from './utility/BodyRowsAndColumns';
 import TaskTableComponent from './TaskTableComponent';
 import PBITableComponent from './PBITableComponent';
-import { MenuWithPeople } from './utility/LoadAnimations';
+import { MenuWithPeople, MenuWithPeopleSave } from './utility/LoadAnimations';
 import { ArrowDownOutlined, DownOutlined, EditOutlined, UserOutlined } from '@ant-design/icons';
 import SprintTableComponent from './SprintTableComponent';
 
@@ -297,14 +297,14 @@ export const BacklogTableWithSprints: React.FC<any> = (props:any) => {
   };
   const taskColumns = [
     taskNameCol,
-    taskFinishCol,
+    taskStatusCol,
     {
       key: "isAssignedToPBI",
-      title: "Assigned",
+      title: "Assignees",
       width:"20%",
       render: (record: ITask) => {return(
-        <Dropdown.Button placement='bottomCenter' type="text" 
-        overlay={<MenuWithPeople itemSelected={function (items: IPerson[]): void { console.log(items); }} visible={true} people={people}/>}
+        <Dropdown.Button style={{cursor:"pointer"}} placement='bottomCenter' type="text" 
+        overlay={<MenuWithPeopleSave itemSelected={function (items: IPerson[]): void { console.log(items); }} visible={true} people={people}/>}
           buttonsRender={([leftButton, rightButton]) => [
                      <></>,     React.cloneElement(<span>
                 <Badge size='small'
@@ -318,7 +318,7 @@ export const BacklogTableWithSprints: React.FC<any> = (props:any) => {
                 {typeof record.assigness !== "undefined" && record.assigness.length > 0
                   ? (record.assigness.at(0).login as string)+" "
                   : "Not Assigned "}
-                  <EditOutlined/>
+                  <DownOutlined/>
               </span>),
             ]} >
         </Dropdown.Button>)
@@ -326,14 +326,14 @@ export const BacklogTableWithSprints: React.FC<any> = (props:any) => {
       align: "center" as const,
     },
     taskGhLinkCol,
-    {
-      title: 'Action', width:"10%",dataIndex: "", align: "right" as const, key: 'operation', render: (record: ITask) => {
+    /*{
+      title: '', width:"10%",dataIndex: "", align: "right" as const, key: 'operation', render: (record: ITask) => {
         return (<Button size='small' type="link" onClick={() => { setSelectedTask(record); setIsModal({ ...isModal, assgnTask: true }); }} >
           {"Finish Task"}
         </Button>)
       }
     },
-    /*
+    
     {
       title: 'Assign', colSpan: 1, align: "right" as const, key: 'operation', render: (record: ITask) => {
         return (<Select
@@ -374,14 +374,15 @@ export const BacklogTableWithSprints: React.FC<any> = (props:any) => {
     },
     {
       title: 'Story Points', width:"20%", key: 'operation', align: "center" as const, render: (item: IProductBacklogItem) => {
-        return (item.id !== 0 ?<Tag style={{cursor:"pointer"}} color={item.expectedTimeInHours>10?"red":"green"} onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, estimatePBI: true }); }}>
-          {item.expectedTimeInHours+" Story Point"+(item.expectedTimeInHours!==1?"s":"")}
+        return (item.id !== 0 ?<Tag style={{cursor:"pointer"}} color={item.estimated ?(item.expectedTimeInHours>10?"red":"green"):"purple"} onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, estimatePBI: true }); }}>
+          {item.estimated?(item.expectedTimeInHours+" SP "):"Not esimated "}{<EditOutlined/>}
         {/*<Progress size='small' width={30} type="circle" percent={100} status={item.expectedTimeInHours>10?'exception':'normal'} format={()=>item.expectedTimeInHours}>{/*<Statistic  title={"Story Points"} value={item.expectedTimeInHours}></Statistic></Progress>*/}
         </Tag>:<></>
        )
       }
     },
     pbiProgressCol,
+    pbiProgressCol2,
     {
       title: '', align: "right" as const, width:"10%", key: 'actions', render: (item: IProductBacklogItem) => {
         return ({
@@ -593,7 +594,7 @@ export const BacklogTableWithSprints: React.FC<any> = (props:any) => {
       {isModal.editPBI && selectedPBI && selectedPBI.id && <EditPBIPopup data={selectedPBI as IAddPBI} visible={isModal.editPBI}
         onCreate={function (values: any): void { editPBI(values) }} onDelete={() => {deletePBI(selectedPBI)}}
         onCancel={() => { setIsModal({ ...isModal, editPBI: false }); }} />}
-      {isModal.estimatePBI && selectedPBI && selectedPBI.id && <CustomEstimatePopup data={selectedPBI as IProductBacklogItem} visible={isModal.estimatePBI}
+      {isModal.estimatePBI && selectedPBI && selectedPBI.id && <EstimatePBIPopup data={selectedPBI as IProductBacklogItem} visible={isModal.estimatePBI}
         onCreate={function (values: any): void { estimatePBI(values) }}
         onCancel={() => { setIsModal({ ...isModal, estimatePBI: false }); }} />}
       {isModal.addTask && <AddTaskPopup data={{ name: "" } as IFilters} visible={isModal.addTask}
