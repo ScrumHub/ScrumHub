@@ -80,7 +80,7 @@ export const AddSprintPopup: React.FC<CollectionCreateFormProps> = ({
           {(fields) => (
             <>
               {fields.map(({ key, name }) => (
-                  <Form.Item name={key} style={{ marginBottom: "4px" }}>
+                  <Form.Item key={key} name={key} style={{ marginBottom: "4px" }}>
                     <Checkbox checked={temp[key].isInSprint === true}
                       onClick={() => {
                         const temp2 = _.cloneDeep(temp);

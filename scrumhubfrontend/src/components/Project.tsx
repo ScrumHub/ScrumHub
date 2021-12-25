@@ -76,8 +76,8 @@ export default function Project() {
   
     }
   };
-  const onSearch = (value: any) => console.log(value);
-console.log(filterPBI.peopleFilter);
+  const onSearch = (value: string) => { setFiltersPBI({ ...filterPBI, nameFilter: value }); };
+console.log(filterPBI.nameFilter);
   if (!state.isLoggedIn) { return <Navigate to="/login" />; }
   return (
     <>
@@ -93,13 +93,8 @@ console.log(filterPBI.peopleFilter);
         <Divider type="vertical" />
         <Space direction="horizontal"
           style={{ /*float:"right",*/marginLeft: "2%", marginRight: "2%", marginTop: 0, marginBottom: "1%", alignItems: "flex-end" }}>
-
           <Dropdown.Button
             placement="bottomCenter"
-            //filterOption={(input:string, option) =>
-            // option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            //}        <Avatar icon={<UserOutlined />}/>
-            //trigger={['click']}
             style={{ color: "#1890ff" }}
             overlay={<MenuWithPeople itemSelected={function (items: IPerson[]): void { updatePplFilter(items); }} visible={true} people={people}/>}
             buttonsRender={([leftButton, rightButton]) => [
@@ -118,7 +113,7 @@ console.log(filterPBI.peopleFilter);
           </span>}
         </Space>
 
-        <BacklogTableWithSprints peopleFilter={filterPBI.peopleFilter}/>
+        <BacklogTableWithSprints peopleFilter={filterPBI.peopleFilter} nameFilter={filterPBI.nameFilter}/>
         {isAddSprint &&  <AddSprintPopup error={error.erorMessage} data={initSprint} visible={isAddSprint}
           onCreate={function (values: any): void { addSprint(values); }}
           onCancel={() => { setIsAddSprint(false); }} pbiData={pbiPage.list} />}

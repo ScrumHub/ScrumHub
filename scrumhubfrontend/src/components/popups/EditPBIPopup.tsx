@@ -99,6 +99,7 @@ export const EditPBIPopup: React.FC<CollectionCreateFormProps> = ({
                 <Form.Item {...formItemLayoutWithOutLabel} style={{ marginBottom: "4px" }}>
                   <Form.Item
                     noStyle
+                    key={key}
                     name={key}
                     rules={[{ required: key < 1 ? true : false, whitespace: true, message: 'Please input at least one acceptance criteria!' }]}
                   >

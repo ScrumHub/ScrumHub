@@ -24,6 +24,7 @@ import TaskTableComponent from './TaskTableComponent';
 import PBITableComponent from './PBITableComponent';
 import { MenuWithPeople } from './utility/LoadAnimations';
 import { ArrowDownOutlined, DownOutlined, EditOutlined, UserOutlined } from '@ant-design/icons';
+import SprintTableComponent from './SprintTableComponent';
 
 export const type = 'DraggableBodyRow';
 
@@ -283,7 +284,7 @@ export const BacklogTableWithSprints: React.FC<any> = (props:any) => {
       <tr
         ref={ref as any}
         className={`${className}${isOver ? dropClassName : ''}`}
-        style={{ cursor: index_row !== 0 && bodyType !== "ISprint" && index_row !== undefined ?"move":"default", borderRadius: "0 10px 10px 0", ...style }}
+        style={{ cursor: index_row !== 0 && bodyType !== "ISprint" && index_row !== undefined ?"move":"default", ...style }}
         {...restProps}
       />
     );
@@ -317,10 +318,7 @@ export const BacklogTableWithSprints: React.FC<any> = (props:any) => {
                 {typeof record.assigness !== "undefined" && record.assigness.length > 0
                   ? (record.assigness.at(0).login as string)+" "
                   : "Not Assigned "}
-                  <EditOutlined style={{color:`${typeof record.assigness !== "undefined" &&
-                      record.assigness.length > 0
-                      ? "green"
-                      : "red"}`}}/>
+                  <EditOutlined/>
               </span>),
             ]} >
         </Dropdown.Button>)
@@ -398,7 +396,7 @@ export const BacklogTableWithSprints: React.FC<any> = (props:any) => {
   ];
   const PBITableforSprint: React.FC<ISprint> = (item: ISprint) => {
     return (
-      <PBITableComponent TaskTableforPBI={TaskTableforPBI} peopleFilter={props.peopleFilter} item={item} pbiColumns={pbiColumns} nestedcomponents={nestedcomponents} />
+      <PBITableComponent TaskTableforPBI={TaskTableforPBI} nameFilter={props.nameFilter} peopleFilter={props.peopleFilter} item={item} pbiColumns={pbiColumns} nestedcomponents={nestedcomponents} />
     )
   };
   if (!isMounted()){console.log(isMounted())};
@@ -582,67 +580,14 @@ export const BacklogTableWithSprints: React.FC<any> = (props:any) => {
       },
     }
   ];
-
   if (!state.isLoggedIn) { return <Navigate to="/login" />; }
-
-  return (
-    <>
-        <DndProvider backend={HTML5Backend} key={"sprint"}>
-          <Table
-            style={{ borderSpacing: "separate", transform:"scale(0.96)", marginTop: "1px", marginBottom: "3px", height: "auto" }}
-            scroll={{ x: 800 }}
-            size="small"
-            loading={!pbiPage || !pbiPage.list || fetchPBIs || fetched}
-            showHeader={false}
-            pagination={false}
-            components={nestedcomponents}
-            dataSource={([{ sprintNumber: 0, goal: "Product Backlog", backlogItems: pbiPage.list } as ISprint] as ISprint[])}
-            columns={sprintColumns}
-            rowKey={(record: ISprint) => record.sprintNumber}
-            expandable={{
-              expandedRowRender: PBITableforSprint, defaultExpandAllRows: false,
-              rowExpandable: record => record.backlogItems && record.backlogItems.length > 0, defaultExpandedRowKeys: [0, 1]
-            }}
-            onRow={(row) => {
-              const index = row.sprintNumber; const record = { ...initRowIds, sprintNumber: row.sprintNumber }; const bodyType = "ISprint"; return ({
-                index,
-                record,
-                bodyType
-              }) as any;
-            }}
-          />
-        </DndProvider>      
-      {
-        sprintPage.list.map((sprint) => {
+  return (<>
+    <SprintTableComponent loading={!pbiPage || !pbiPage.list || fetchPBIs || fetched} data={([{ sprintNumber: 0, goal: "Product Backlog", backlogItems: pbiPage.list } as ISprint] as ISprint[])}
+    components={nestedcomponents} columns={sprintColumns} PBITableforSprint={PBITableforSprint} />
+      {sprintPage.list.map((sprint) => {
           return (
-            <DndProvider backend={HTML5Backend} key={"sprint" + sprint.sprintNumber}>
-              <Table
-                style={{  borderSpacing: "separate",transform:"scale(0.96)", marginBottom: "3px", height: "auto" }}
-                scroll={{ x: 800 }}
-                size="small"
-                loading={!sprintPage || !sprintPage.list || sprintRefreshRequired || fetchSprints || fetchSprintsPBI}
-                showHeader={false}
-                pagination={false}
-                dataSource={[sprint]}
-                columns={sprintColumns}
-                components={nestedcomponents}
-                rowKey={(record: ISprint) => record.sprintNumber}
-                expandable={{
-                  expandedRowRender: PBITableforSprint, defaultExpandAllRows: false,
-                  rowExpandable: record => record.backlogItems && record.backlogItems.length > 0, 
-                  defaultExpandedRowKeys: [0, 1]
-                }}
-                onRow={(row) => {
-                  const index = row.sprintNumber; const record = { ...initRowIds, sprintNumber: row.sprintNumber }; const bodyType = "ISprint"; return ({
-                    index,
-                    record,
-                    bodyType
-                  }) as any;
-                }}
-              />
-            </DndProvider>)
-        })
-
+            <SprintTableComponent key={sprint.sprintNumber} loading={!sprintPage || !sprintPage.list || sprintRefreshRequired || fetchSprints || fetchSprintsPBI} 
+            data={[sprint]} components={nestedcomponents} columns={sprintColumns} PBITableforSprint={PBITableforSprint}/>)})
       }
       {isModal.editPBI && selectedPBI && selectedPBI.id && <EditPBIPopup data={selectedPBI as IAddPBI} visible={isModal.editPBI}
         onCreate={function (values: any): void { editPBI(values) }} onDelete={() => {deletePBI(selectedPBI)}}

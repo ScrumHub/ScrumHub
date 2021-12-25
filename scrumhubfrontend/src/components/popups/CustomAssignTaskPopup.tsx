@@ -74,6 +74,7 @@ export const CustomAssignTaskPopup: React.FC<CollectionCreateFormProps> = ({
                     }} />
                   <Form.Item
                     name={key}
+                    key={key}
                   >
                     <Typography>{pbiData[key].name}</Typography>
                   </Form.Item>

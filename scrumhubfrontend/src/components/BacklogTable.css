@@ -1,30 +1,7 @@
-/* table */
- /*.expand-sprints {
-    margin-top: "20px";
-      margin-bottom: "20px";
-  }*//*
-  .ant-table-expanded-row .draggable {
-    cursor: move;
-    cursor: grab;
-    cursor: -moz-grab;
-    cursor: -webkit-grab;
-    font-size: 1.2rem;
-    transform: rotate(90deg);
-  }
-
-  .gu-mirror {
-    background-color: rgba(16, 142, 233, 0.15);
-    cursor: grabbing;
-    cursor: -moz-grabbing;
-    cursor: -webkit-grabbing;
-  }*/
-  #components-table-demo-drag-sorting tr.drop-over-downward td {
-    border-bottom: 1px dashed ;
-  }
-  
-  #components-table-demo-drag-sorting tr.drop-over-upward td {
-    border-top: 1px dashed ;
-  }
+.ant-table-tbody > tr > td {
+  border-bottom: 0px !important;
+  transition: background 0.3s;
+}
   .ant-table table {
     border-radius: 30px;
     border-collapse: separate;
@@ -65,16 +42,3 @@
     align-self: center;
     text-align: center;
   }
- /*
-.expand-bitems {
-}
-  /* row data 
-  ant-table-tbody  {
-    background-color: violet;
-    /*height: 5px;
-    padding: 4px;
-  }
-  ant-table-tbody > tr > ant-table-row > ant-table-row-level-0 {
-      margin-top: "2vh";
-      margin-bottom: "2vh";
-  }*/
