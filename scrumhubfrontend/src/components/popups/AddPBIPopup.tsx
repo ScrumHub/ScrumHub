@@ -21,15 +21,15 @@ interface CollectionCreateFormProps {
 
 export const AddPBIPopup: React.FC<CollectionCreateFormProps> = ({
   data,
-visible,
+  visible,
   onCreate,
   onCancel,
 }) => {
   const [form] = Form.useForm();
   return (
     <Modal
-     destroyOnClose={true}
-     closable={true}
+      destroyOnClose={true}
+      closable={true}
       visible={true}
       title="Add Product Backlog Item"
       okText="Save"
@@ -53,15 +53,17 @@ visible,
         name="form_in_modal"
         initialValues={{ modifier: 'public' }}
       >
-        <FormItemLabel prefixCls="name" label="Name" required={true}/>
+        <FormItemLabel prefixCls="name" label="Name" required={true} />
         <Form.Item
+          key="name"
           name="name"
           rules={[{ required: true, message: 'Please input the name of the new backlog item!' }]}
         >
           <Input />
         </Form.Item>
-        <FormItemLabel prefixCls="priority" label="Priority" required={true}/>
+        <FormItemLabel prefixCls="priority" label="Priority" required={true} />
         <Form.Item
+          key="priority"
           name="priority"
           rules={[{ required: true, message: 'Please input the priority of the new backlog item!' }]}
         >
@@ -72,14 +74,15 @@ visible,
           </Select>
 
         </Form.Item>
-        <FormItemLabel prefixCls="acceptanceCriteria" label="Acceptance Criteria" required={true}/>
+        <FormItemLabel prefixCls="acceptanceCriteria" label="Acceptance Criteria" required={true} />
         <Form.List name="acceptanceCriteria" initialValue={[""]}>
-        {(fields, { add, remove }) => (
+          {(fields, { add, remove }) => (
             <>
               {fields.map(({ key, name }) => (
                 <Form.Item {...formItemLayoutWithOutLabel} style={{ marginBottom: "4px" }}>
                   <Form.Item
                     noStyle
+                    key={key}
                     name={key}
                     rules={[{ required: key < 1 ? true : false, whitespace: true, message: 'Please input at least one acceptance criteria!' }]}
                   >
@@ -97,7 +100,7 @@ visible,
           )}
         </Form.List>
 
-     
+
       </Form>
     </Modal>
   );

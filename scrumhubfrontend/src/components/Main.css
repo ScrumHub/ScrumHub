@@ -26,6 +26,9 @@
 .ant-menu-vertical.ant-menu-sub, .ant-menu-vertical-left.ant-menu-sub, .ant-menu-vertical-right.ant-menu-sub {
    min-width: 0;
 }
+.pageHeader{
+  margin-top: 5vh; padding-left: 2%; margin-bottom: 0; padding-bottom: 0
+}
 
 /*style={{
     breakAfter:"auto",

@@ -140,18 +140,18 @@ function Main(props: any) {
                 style={{ position: "fixed", width: isCollapsed ? 40 : 200 }}
                 defaultSelectedKeys={[selectedSiderKey]}
               >
-                <Menu.Item key="1" icon={<ProjectOutlined />}>
+                {/*<Menu.Item key="1" icon={<ProjectOutlined />}>
                   <span>Project Details</span></Menu.Item>
-                <Menu.Item key="2" onClick={() => handlePBacklog()} icon={<DatabaseOutlined />}>
+                */}<Menu.Item key="2" onClick={() => handlePBacklog()} icon={<DatabaseOutlined />}>
                   <span>Product Backlog</span></Menu.Item>
               </Menu>
             </Sider>
             <Content style={ownerName === "" ? {} : { padding: '0 50px' }}>
               <div style={{ minHeight: "90vh", margin: 0 }}>
                 {error.hasError && <Alert type="error" message={error.erorMessage} banner closable />}
-                {ownerName !== "" && <PageHeader style={{ marginTop: "5vh", paddingLeft: "2%", marginBottom: 0, paddingBottom: 0 }}
-                  title={<div style={{ fontWeight: "bold", paddingTop: 0, marginTop: 0 }}>{sprintID && sprintID !== "0"?"Sprint "+sprintID:"Product Backlog"}</div>}
-                  breadcrumb={<Breadcrumb style={{ marginTop: 0 }} itemRender={ItemRender} routes={routes(ownerName, sprintID, location)} />}
+                {ownerName !== "" && <PageHeader className="pageHeader"
+                  title={<div style={{ fontWeight: "bold", lineHeight:1.25, paddingTop: 0, marginTop: 0 }}>{sprintID && sprintID !== "0"?"Sprint "+sprintID:"Product Backlog"}</div>}
+                  breadcrumb={<Breadcrumb style={{ marginTop: 0, marginBottom:0 }} itemRender={ItemRender} routes={routes(ownerName, sprintID, location)} />}
                 >
                 </PageHeader>}
                 <AppRouter />
