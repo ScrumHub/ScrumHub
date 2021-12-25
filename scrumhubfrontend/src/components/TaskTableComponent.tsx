@@ -20,7 +20,7 @@ export default function TaskTableComponent(props: any) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.peopleFilter]);
 return(
-<DndProvider backend={HTML5Backend} key={"task"+props.item.id}>
+//<DndProvider backend={HTML5Backend} key={"task"+props.item.id}>
         <Table
           size="small"
           style={{marginTop:"0.25%", marginBottom:"0.25%"}}
@@ -36,6 +36,6 @@ return(
             record,
             bodyType
           }) as any;}}
-        />
-      </DndProvider>);
+        />);
+     // </DndProvider>);
 }

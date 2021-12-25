@@ -826,7 +826,7 @@ export const reducer = createReducer(initState, {
   };
   return newState;
 },
-[Actions.assignTaskThunk.pending.toString()]: (
+[Actions.assignTaskToPBIThunk.pending.toString()]: (
   state: State,
   payload: PayloadAction<undefined>
 ) => {
@@ -834,7 +834,7 @@ export const reducer = createReducer(initState, {
   newState.loading = true;
   return newState;
 },
-[Actions.assignTaskThunk.fulfilled.toString()]: (
+[Actions.assignTaskToPBIThunk.fulfilled.toString()]: (
   state: State,
   payload: PayloadAction<RequestResponse<ITaskList, number>>
 ) => {
@@ -844,7 +844,7 @@ export const reducer = createReducer(initState, {
   //newState.productRequireRefresh = true;
   return newState;
 },
-[Actions.assignTaskThunk.rejected.toString()]: (
+[Actions.assignTaskToPBIThunk.rejected.toString()]: (
   state: State,
   payload: PayloadAction<RequestResponse<undefined, undefined>>
 ) => {

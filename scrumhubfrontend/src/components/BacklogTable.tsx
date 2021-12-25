@@ -79,7 +79,7 @@ export const BacklogTableWithSprints: React.FC<any> = (props:any) => {
     setIsModal({ ...isModal, assgnTask: false });
     try {
       store.dispatch(
-        Actions.assignTaskThunk({
+        Actions.assignTaskToPBIThunk({
           token: token,
           ownerName: ownerName,
           pbiId: ids.length > 1 ? 0 : ids[0],
@@ -230,7 +230,7 @@ export const BacklogTableWithSprints: React.FC<any> = (props:any) => {
   const updateTask = (pbiId: number, taskId: number) => {
     try {
       store.dispatch(
-        Actions.assignTaskThunk({
+        Actions.assignTaskToPBIThunk({
           token: token,
           ownerName: ownerName,
           pbiId: pbiId,
@@ -582,12 +582,13 @@ export const BacklogTableWithSprints: React.FC<any> = (props:any) => {
   ];
   if (!state.isLoggedIn) { return <Navigate to="/login" />; }
   return (<>
-    <SprintTableComponent loading={!pbiPage || !pbiPage.list || fetchPBIs || fetched} data={([{ sprintNumber: 0, goal: "Product Backlog", backlogItems: pbiPage.list } as ISprint] as ISprint[])}
-    components={nestedcomponents} columns={sprintColumns} PBITableforSprint={PBITableforSprint} />
+  <DndProvider backend={HTML5Backend} key={"pbi"}>
+  {pbiPage && pbiPage.list && !fetchPBIs && !fetched && <SprintTableComponent nameFilter={props.nameFilter} loading={!pbiPage || !pbiPage.list || fetchPBIs || fetched} data={[{ sprintNumber: 0, goal: "Product Backlog", backlogItems: pbiPage.list } as ISprint] as ISprint[]}
+    components={nestedcomponents} columns={sprintColumns} PBITableforSprint={PBITableforSprint} />}
       {sprintPage.list.map((sprint) => {
           return (
-            <SprintTableComponent key={sprint.sprintNumber} loading={!sprintPage || !sprintPage.list || sprintRefreshRequired || fetchSprints || fetchSprintsPBI} 
-            data={[sprint]} components={nestedcomponents} columns={sprintColumns} PBITableforSprint={PBITableforSprint}/>)})
+            <SprintTableComponent nameFilter={props.nameFilter} key={sprint.sprintNumber} loading={!sprintPage || !sprintPage.list || sprintRefreshRequired || fetchSprints || fetchSprintsPBI} 
+            data={[sprint] as ISprint[]} components={nestedcomponents} columns={sprintColumns} PBITableforSprint={PBITableforSprint}/>)})
       }
       {isModal.editPBI && selectedPBI && selectedPBI.id && <EditPBIPopup data={selectedPBI as IAddPBI} visible={isModal.editPBI}
         onCreate={function (values: any): void { editPBI(values) }} onDelete={() => {deletePBI(selectedPBI)}}
@@ -604,6 +605,7 @@ export const BacklogTableWithSprints: React.FC<any> = (props:any) => {
       {isModal.assgnTask && pbiPage && <CustomAssignTaskPopup error={error.erorMessage} pbiData={pbiPage.list as IAssignPBI[] as ICheckedAssignPBI[]} visible={isModal.assgnTask}
         onCreate={function (values: any): void { assignTask(values) }}
         onCancel={() => { setIsModal({ ...isModal, assgnTask: false }); }} />}
+        </DndProvider>
     </>
   );
 };

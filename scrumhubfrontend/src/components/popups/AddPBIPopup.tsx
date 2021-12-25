@@ -79,7 +79,7 @@ export const AddPBIPopup: React.FC<CollectionCreateFormProps> = ({
           {(fields, { add, remove }) => (
             <>
               {fields.map(({ key, name }) => (
-                <Form.Item {...formItemLayoutWithOutLabel} style={{ marginBottom: "4px" }}>
+                <Form.Item {...formItemLayoutWithOutLabel} key={"key"+key} style={{ marginBottom: "4px" }}>
                   <Form.Item
                     noStyle
                     key={key}
