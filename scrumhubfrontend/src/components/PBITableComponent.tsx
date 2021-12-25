@@ -7,18 +7,7 @@ import { IRowIds } from "./utility/commonInterfaces";
 export default function PBITableComponent(props: any) {
   const isMounted = useIsMounted();
   if (!isMounted()){console.error("pbi"+isMounted())};
-  //const [data, setData] = useState(props.item.backlogItems);
-  /*useEffect(() => {
-    if ( isMounted() && props.nameFilter.length > 0) {
-        //console.log(props.item.tasks.filter((item:ITask)=>props.peopleFilter.includes(item.assigness.length>0?item.assigness[0].login:"")));
-        setData(props.item.backlogItems.filter((item:IProductBacklogItem)=>item.name.includes(props.nameFilter)));         
-          //((item:ITask)=>{return(item.assigness.map((person:IPerson)=>{return(props.peopleFilter.includes(person.login))}).filter(x=>x!==false).length > 0)}));
-        //setUpdated(false);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.nameFilter]);*/
 return(
-//<DndProvider backend={HTML5Backend} key={"pbi"+props.item.sprintNumber}>
         <Table
          style={{ borderSpacing: "separate" }}
          size="small"
@@ -42,5 +31,4 @@ return(
             bodyType
           }) as any;}}          
         />);
-      //</DndProvider>);
 }

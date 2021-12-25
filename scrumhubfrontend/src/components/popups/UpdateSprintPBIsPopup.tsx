@@ -48,7 +48,6 @@ export const UpdateSprintPBIsPopup: React.FC<CollectionCreateFormProps> = ({
           .validateFields()
           .then((values: Values) => {
             form.resetFields();
-            console.log(values);
             onCreate({ ...values, backlogItems: temp });
           })
           .catch((info: any) => {

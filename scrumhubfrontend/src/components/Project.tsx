@@ -70,14 +70,12 @@ export default function Project() {
     }
   };
   const updatePplFilter = (items: IPerson[]) => {
-    console.log(items);
     if(isMounted()){
     setFiltersPBI({...filterPBI, peopleFilter:items});
   
     }
   };
   const onSearch = (value: string) => { setFiltersPBI({ ...filterPBI, nameFilter: value.toLowerCase() }); };
-console.log(filterPBI.nameFilter);
   if (!state.isLoggedIn) { return <Navigate to="/login" />; }
   return (
     <>

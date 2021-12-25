@@ -93,12 +93,7 @@ export function MenuWithPeopleSave(props: any) {
                 </Space>
             </MenuItem>);
     })
-    }{/*}
-    <Space style={{ display: 'flex', marginTop:"10%",marginBottom:"5%",flexWrap: 'nowrap', alignItems:"center", flexDirection:"row",
-     alignContent:"center", justifyContent:"center"}}>{<Button size="middle" style={{ display: 'flex'}} type="default">Cancel</Button>}{" "}
-{<Button size="middle" style={{ display: 'flex'}} type="primary">Save</Button>}</Space>*/}
-    
-    
+    }
     </Menu >
     </div>);
 }
