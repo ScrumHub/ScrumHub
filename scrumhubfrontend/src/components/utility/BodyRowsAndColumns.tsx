@@ -165,7 +165,7 @@ export const taskGhLinkCol = {
   dataIndex: "link",
   key: "link",
   width:"20%",
-  align: "right" as const,
+  align: "center" as const,
   render: (text: string) => <a href={text}>{"See on GitHub"}</a>,
 };
 

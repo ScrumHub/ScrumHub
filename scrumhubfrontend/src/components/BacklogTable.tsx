@@ -1,9 +1,9 @@
 import React, { useState, useRef, useContext, useEffect, useCallback } from 'react';
-import { Button, Table, Input, Tag, message } from 'antd';
+import { Button, Table, Input, Tag, message, Dropdown, Badge } from 'antd';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import * as Actions from '../appstate/actions';
-import { IAddPBI, IAssignPBI, ICheckedAssignPBI, ICheckedProductBacklogItem, IFilters, initPBIFilter, IPBIFilter, IPeopleList, IProductBacklogItem, IProductBacklogList, ISprint, ISprintList, ITask, IUpdateIdSprint, State } from '../appstate/stateInterfaces';
+import { IAddPBI, IAssignPBI, ICheckedAssignPBI, ICheckedProductBacklogItem, IFilters, initPBIFilter, IPBIFilter, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, ISprint, ISprintList, ITask, IUpdateIdSprint, State } from '../appstate/stateInterfaces';
 import 'antd/dist/antd.css';
 import './BacklogTable.css';
 import { store } from '../appstate/store';
@@ -22,6 +22,8 @@ import { useIsMounted, validate, validatePBIDrag, validateTaskDrag, } from './ut
 import { taskAssigneeCol, taskFinishCol, taskGhLinkCol, taskNameCol, pbiProgressCol, backlogColors, backlogPriorities } from './utility/BodyRowsAndColumns';
 import TaskTableComponent from './TaskTableComponent';
 import PBITableComponent from './PBITableComponent';
+import { MenuWithPeople } from './utility/LoadAnimations';
+import { ArrowDownOutlined, DownOutlined, EditOutlined, UserOutlined } from '@ant-design/icons';
 
 export const type = 'DraggableBodyRow';
 
@@ -295,7 +297,36 @@ export const BacklogTableWithSprints: React.FC<any> = (props:any) => {
   const taskColumns = [
     taskNameCol,
     taskFinishCol,
-    taskAssigneeCol,
+    {
+      key: "isAssignedToPBI",
+      title: "Assigned",
+      width:"20%",
+      render: (record: ITask) => {return(
+        <Dropdown.Button placement='bottomCenter' type="text" 
+        overlay={<MenuWithPeople itemSelected={function (items: IPerson[]): void { console.log(items); }} visible={true} people={people}/>}
+          buttonsRender={([leftButton, rightButton]) => [
+                     <></>,     React.cloneElement(<span>
+                <Badge size='small'
+                  status={
+                    typeof record.assigness !== "undefined" &&
+                      record.assigness.length > 0
+                      ? "success"
+                      : "error"
+                  }
+                />
+                {typeof record.assigness !== "undefined" && record.assigness.length > 0
+                  ? (record.assigness.at(0).login as string)+" "
+                  : "Not Assigned "}
+                  <EditOutlined style={{color:`${typeof record.assigness !== "undefined" &&
+                      record.assigness.length > 0
+                      ? "green"
+                      : "red"}`}}/>
+              </span>),
+            ]} >
+        </Dropdown.Button>)
+      },
+      align: "center" as const,
+    },
     taskGhLinkCol,
     {
       title: 'Action', width:"10%",dataIndex: "", align: "right" as const, key: 'operation', render: (record: ITask) => {
