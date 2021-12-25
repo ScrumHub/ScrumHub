@@ -2,7 +2,7 @@ import { Alert, Avatar, Breadcrumb, Layout, Menu, PageHeader } from 'antd';
 import { useLocation, useNavigate } from 'react-router';
 import { useContext } from 'react';
 import 'antd/dist/antd.css';
-import { DatabaseOutlined, GithubOutlined, ProjectOutlined } from '@ant-design/icons';
+import { DatabaseOutlined, GithubOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import AppRouter from '../Approuter';
 import { AuthContext } from '../App';
@@ -75,13 +75,6 @@ function Main(props: any) {
     navigate("/", { replace: true });
   }
   const [selectedSiderKey, setSelectedSiderKey] = useState('2');
-  const handleSprints = () => {
-    if (ownerName && ownerName !== "") {
-      store.dispatch(clearState());
-      setSelectedSiderKey('1');
-      navigate(`/${ownerName.split("/")[0]}/${ownerName.split("/")[1]}/sprints`, { replace: true });
-    }
-  }
   const handlePBacklog = () => {
     if (ownerName && ownerName !== "") {
       const newPath = `/${ownerName.split("/")[0]}/${ownerName.split("/")[1]}`;
@@ -119,11 +112,10 @@ function Main(props: any) {
         <Header hidden={!isLoggedIn} className="clearfix" style={{ position: 'fixed', zIndex: 1, padding: 0, height: "5vh", lineHeight: "5vh", width: "100%", backgroundColor: "#f0f0f0" }}>
           <Menu mode="horizontal" theme="light"
             className="mainMenu" >
-
             {currentUser !== null &&
-              <SubMenu style={{ float: "unset" }} key="0" title={currentUser?.login as string} icon={
+              <SubMenu style={{ float: "unset" }} key="SubMenu0" title={currentUser?.login as string} icon={
                 <Avatar style={{ transform: "scale(0.8)", marginBottom: "0.4vh" }} size="small" src={`${currentUser?.avatarLink}`} ></Avatar>}>
-                <Menu.Item key="4">
+                <Menu.Item key="SubMenu4">
                   <a href={"https://github.com/" + currentUser?.login}>See on Github</a>
                 </Menu.Item>
 
@@ -142,7 +134,7 @@ function Main(props: any) {
               >
                 {/*<Menu.Item key="1" icon={<ProjectOutlined />}>
                   <span>Project Details</span></Menu.Item>
-                */}<Menu.Item key="2" onClick={() => handlePBacklog()} icon={<DatabaseOutlined />}>
+                */}<Menu.Item key="ProductBacklog" onClick={() => handlePBacklog()} icon={<DatabaseOutlined />}>
                   <span>Product Backlog</span></Menu.Item>
               </Menu>
             </Sider>

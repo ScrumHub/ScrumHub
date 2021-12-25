@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Modal, Form, InputNumber, Space, Typography, Checkbox } from 'antd';
+import { Modal, Form, InputNumber, Typography, Checkbox } from 'antd';
 import { IProductBacklogItem, ISprint } from '../../appstate/stateInterfaces';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import TextArea from 'antd/lib/input/TextArea';

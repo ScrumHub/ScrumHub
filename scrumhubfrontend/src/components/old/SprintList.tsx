@@ -1,16 +1,16 @@
 import { useContext, useEffect, useState } from 'react';
 import { Button, Card, Divider, PageHeader, Row } from 'antd';
 import 'antd/dist/antd.css';
-import * as Actions from "../appstate/actions";
+import * as Actions from "../../appstate/actions";
 import { Navigate, useNavigate } from 'react-router';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useSelector } from 'react-redux';
 import { LoadingOutlined } from '@ant-design/icons';
-import { AuthContext } from '../App';
-import { IFilters, IProductBacklogList, ISprint, IProductBacklogItem, initSprint, State, ISprintList } from '../appstate/stateInterfaces';
-import { store } from '../appstate/store';
-import config from '../configuration/config';
-import { AddSprintPopup } from './popups/AddSprintPopup';
+import { AuthContext } from '../../App';
+import { IFilters, IProductBacklogList, ISprint, IProductBacklogItem, initSprint, State, ISprintList } from '../../appstate/stateInterfaces';
+import { store } from '../../appstate/store';
+import config from '../../configuration/config';
+import { AddSprintPopup } from '../popups/AddSprintPopup';
 const { Meta } = Card;
 
 

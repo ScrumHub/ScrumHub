@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Modal, Form, InputNumber, Space, Typography, Checkbox } from 'antd';
-import { IAssignPBI, ICheckedAssignPBI, IProductBacklogItem, ISprint } from '../../appstate/stateInterfaces';
+import { Modal, Form, Space, Typography, Checkbox } from 'antd';
+import { ICheckedAssignPBI } from '../../appstate/stateInterfaces';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
-import TextArea from 'antd/lib/input/TextArea';
 import _ from 'lodash';
 import Title from 'antd/lib/typography/Title';
 

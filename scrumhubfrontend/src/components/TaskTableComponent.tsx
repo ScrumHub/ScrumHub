@@ -7,7 +7,6 @@ import { IRowIds } from "./utility/commonInterfaces";
 export default function TaskTableComponent(props: any) {
   const isMounted = useIsMounted();
   const [data, setData] = useState([] as ITask[]);
-  const [mount, setMount] = useState(false);
   useEffect(() => {
     if (!props.loading && isMounted()) {
       setData(props.data && props.data.length > 0 && props.peopleFilter && props.peopleFilter.length > 0 ? props.item.tasks.filter((item:ITask)=>{return(item.assigness.map((person:IPerson)=>{return(props.peopleFilter.includes(person.login))}).filter(x=>x!==false).length > 0)})

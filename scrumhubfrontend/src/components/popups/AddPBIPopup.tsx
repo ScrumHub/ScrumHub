@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Modal, Form, Input, Select, Radio, Tag } from 'antd';
+import { Button, Modal, Form, Input, Radio, Tag } from 'antd';
 import { IAddPBI } from '../../appstate/stateInterfaces';
 import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';

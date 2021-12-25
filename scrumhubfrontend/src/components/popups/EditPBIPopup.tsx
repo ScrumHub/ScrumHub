@@ -1,12 +1,10 @@
 import React from 'react';
-import { Button, Modal, Form, Input, Select, Popconfirm, message, Radio, Tag } from 'antd';
+import { Button, Modal, Form, Input, Popconfirm, message, Radio, Tag } from 'antd';
 import { IAddPBI } from '../../appstate/stateInterfaces';
 import { MinusCircleOutlined, PlusCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import { backlogColors, backlogPriorities } from '../utility/BodyRowsAndColumns';
 import { formItemLayoutWithOutLabel } from '../utility/commonInitValues';
-const { Option } = Select;
-
 
 interface Values {
   title: string;
@@ -45,11 +43,11 @@ export const EditPBIPopup: React.FC<CollectionCreateFormProps> = ({
           okText="Yes"
           cancelText="No"
           icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-        ><Button key="1">
+        ><Button key="DeleteInEditPopup">
             {"Delete"}</Button>
         </Popconfirm>,
-        <Button key="2" onClick={onCancel}>Cancel</Button>,
-        <Button key="3" type="primary" onClick={() => {
+        <Button key="CancelInEditPopup" onClick={onCancel}>Cancel</Button>,
+        <Button key="SaveInEditPopup" type="primary" onClick={() => {
           form
             .validateFields()
             .then((values: Values) => {
@@ -98,7 +96,7 @@ export const EditPBIPopup: React.FC<CollectionCreateFormProps> = ({
           {(fields, { add, remove }) => (
             <>
               {fields.map(({ key, name }) => (
-                <Form.Item {...formItemLayoutWithOutLabel} style={{ marginBottom: "4px" }}>
+                <Form.Item {...formItemLayoutWithOutLabel} key={"key"+key} style={{ marginBottom: "4px" }}>
                   <Form.Item
                     noStyle
                     key={key}
@@ -110,7 +108,7 @@ export const EditPBIPopup: React.FC<CollectionCreateFormProps> = ({
                   <MinusCircleOutlined style={{ width: "5%" }} className="dynamic-delete-button" onClick={() => remove(name)} />
                 </Form.Item>
               ))}
-              <Form.Item>
+              <Form.Item key="add_criterion">
               <Button style={{ marginTop: "20px", float: "left", }} type="dashed" onClick={() => add()} block icon={<PlusCircleOutlined />}>
                   Add criterion
                 </Button>
