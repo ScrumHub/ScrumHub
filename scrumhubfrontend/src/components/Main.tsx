@@ -140,7 +140,7 @@ function Main(props: any) {
             </Sider>
             <Content style={ownerName === "" ? {} : { padding: '0 50px' }}>
               <div style={{ minHeight: "90vh", margin: 0 }}>
-                {error.hasError && <Alert type="error" message={error.erorMessage} banner closable />}
+               
                 {ownerName !== "" && <PageHeader className="pageHeader"
                   title={<div style={{ fontWeight: "bold", lineHeight:1.25, paddingTop: 0, marginTop: 0 }}>{sprintID && sprintID !== "0"?"Sprint "+sprintID:"Product Backlog"}</div>}
                   breadcrumb={<Breadcrumb style={{ marginTop: 0, marginBottom:0 }} itemRender={ItemRender} routes={routes(ownerName, sprintID, location)} />}

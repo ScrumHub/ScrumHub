@@ -275,6 +275,7 @@ export const reducer = createReducer(initState, {
 ) => {
   let newState = _.cloneDeep(state);
   let errorResponse = payload.payload;
+  console.log(errorResponse);
   newState.loading = false;
   newState.error = {
     hasError: true,
@@ -524,6 +525,7 @@ export const reducer = createReducer(initState, {
 ) => {
   let newState = _.cloneDeep(state);
   newState.openSprint = payload.payload.response as ISprint;
+  console.log(newState.openSprint);
   newState.loading = false;
   newState.sprintRequireRefresh = false;
   newState.error = initError;

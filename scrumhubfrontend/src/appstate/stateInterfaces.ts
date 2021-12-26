@@ -18,6 +18,7 @@ export interface IError {
   Message: string;
   metadata: any;
   successful: boolean;
+  title?:string;
 }
 
 export interface IMessCodeError {
