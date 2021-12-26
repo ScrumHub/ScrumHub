@@ -46,7 +46,6 @@ export const BacklogTableWithSprints: React.FC<any> = (props: any) => {
   const [fetchSprintsPBI, setFetchSprintsPBI] = useState(false);
   const [fetchPBIs, setFetchPBIs] = useState(false);
   const [fetched, setFetched] = useState(false);
-  const [isError, setIsError] = useState(false);
   const isMounted = useIsMounted();
   const navigate = useNavigate();
 
@@ -144,24 +143,18 @@ export const BacklogTableWithSprints: React.FC<any> = (props: any) => {
     }
   };
   const updatePBI = (pbiId: number, oldSprintId: number, newSprintId: number) => {
-    try {
       if (oldSprintId !== 0) {
         const oldSprint = sprintPage.list.find((i: ISprint) => i.sprintNumber === oldSprintId);
         const oldPbis = oldSprint?.backlogItems.map((i: IProductBacklogItem) => { return ((i.id !== pbiId ? i.id.toString() : "")) }).filter((x: string) => x !== "");
-        store.dispatch(Actions.updateOneSprintThunk({ token: token, ownerName: ownerName, sprintNumber: oldSprintId, sprint: { pbIs: oldPbis as string[], goal: oldSprint?.goal as string } }));
+        store.dispatch(Actions.updateOneSprintThunk({ token: token, ownerName: ownerName, sprintNumber: oldSprintId, sprint: { pbIs: oldPbis as string[], goal: oldSprint?.goal as string } }))
+        .then((response)=>{if (response.payload && response.payload?.code=== 200 && newSprintId === 0 && isMounted()){setInitialRefresh(true)}});
       }
-      if (newSprintId !== 0) {
+        if (newSprintId !== 0) {
         const newSprint = sprintPage.list.find((i: ISprint) => i.sprintNumber === newSprintId);
         const newPbis = newSprint?.backlogItems.map((i: IProductBacklogItem) => { return (i.id.toString()) }).concat([pbiId.toString()]);
-        store.dispatch(Actions.updateOneSprintThunk({ token: token, ownerName: ownerName, sprintNumber: newSprintId, sprint: { pbIs: newPbis as string[], goal: newSprint?.goal as string } }));
+        store.dispatch(Actions.updateOneSprintThunk({ token: token, ownerName: ownerName, sprintNumber: newSprintId, sprint: { pbIs: newPbis as string[], goal: newSprint?.goal as string } }))
+        .then((response)=>{if (response.payload && response.payload?.code=== 200 && isMounted()){setInitialRefresh(true)}});
       }
-    }
-    catch { console.error(error.erorMessage); }
-    finally {
-      if (isMounted()) {
-        setInitialRefresh(true);
-      }
-    }
   }
   const updateTask = (pbiId: number, taskId: number) => {
     try {
@@ -293,7 +286,7 @@ export const BacklogTableWithSprints: React.FC<any> = (props: any) => {
             inSprint: false
           }
         })
-        ).catch((error)=>{console.error("Failed to fetch the pbis: ", error);return({});}).then(()=>setFetched(true));;
+        ).catch((error)=>{console.error("Failed to fetch the pbis: ", error);return({});}).then(()=>setFetched(true));
     }else{setFetched(true);}
   } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pbiPage]);
