@@ -30,9 +30,6 @@ namespace ScrumHubBackend.CQRS.Sprints
             if (request == null || request.AuthToken == null)
                 throw new BadHttpRequestException("Missing token");
 
-            if(request.Number <= 0)
-                throw new BadHttpRequestException("Sprint number should be greater than 0");
-
             var gitHubClient = _gitHubClientFactory.Create(request.AuthToken);
 
             var repository = gitHubClient.Repository.Get(request.RepositoryOwner, request.RepositoryName).Result;
@@ -47,11 +44,6 @@ namespace ScrumHubBackend.CQRS.Sprints
 
             var sprintsForRepository = dbRepository.GetSprintsForRepository(_dbContext);
             var pbisForRepository = dbRepository.GetPBIsForRepository(_dbContext);
-
-            if (sprintsForRepository?.Any(sprint => sprint.SprintNumber == request.Number) ?? false)
-            {
-                throw new BadHttpRequestException("Sprint with given number already exists");
-            }
 
             var repositoryPBIs = dbRepository.GetPBIsForRepository(_dbContext);
 
@@ -76,7 +68,7 @@ namespace ScrumHubBackend.CQRS.Sprints
                 throw new BadHttpRequestException("Cannot create sprint from already assigned PBI");
             }
 
-            var dbSprint = new DatabaseModel.Sprint(request.Number, request.Goal ?? String.Empty, dbRepository.Id);
+            var dbSprint = new DatabaseModel.Sprint(request.Goal ?? String.Empty, request.Title ?? String.Empty, request.FinishDate, dbRepository.Id, _dbContext);
 
             _dbContext.Update(dbRepository);
             _dbContext.Add(dbSprint);

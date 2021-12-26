@@ -34,8 +34,13 @@ namespace ScrumHubBackend.CQRS.Sprints
         public List<long>? PBIs { get; set; }
 
         /// <summary>
-        /// Number of the sprint
+        /// Finish date of the sprint
         /// </summary>
-        public long Number { get; set; } = 1;
+        public DateTime FinishDate { get; set; }
+
+        /// <summary>
+        /// Title of the sprint
+        /// </summary>
+        public string? Title { get; set; }
     }
 }

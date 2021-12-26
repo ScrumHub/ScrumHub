@@ -53,6 +53,8 @@ namespace ScrumHubBackend.CQRS.Sprints
             }
 
             dbSprint.Goal = request.Goal ?? String.Empty;
+            dbSprint.Title = request.Title ?? String.Empty;
+            dbSprint.FinishDate = request.FinishDate;
 
             var pbisForSprint = dbSprint.GetPBIsForSprint(pbisForRepository);
 

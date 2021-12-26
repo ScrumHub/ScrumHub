@@ -16,24 +16,14 @@
         public List<long> PBIs { get; set; } = new List<long>();
 
         /// <summary>
-        /// Number of the sprint
+        /// Title of the sprint
         /// </summary>
-        public long Number { get; set; }
-    }
-
-    /// <summary>
-    /// Represents update to single sprint
-    /// </summary>
-    public class SprintUpdateF
-    {
-        /// <summary>
-        /// Goal of the sprint
-        /// </summary>
-        public string Goal { get; set; } = String.Empty;
+        public string Title { get; set; } = String.Empty;
 
         /// <summary>
-        /// Ids of PBIs in the sprint
+        /// Finish date of the sprint
         /// </summary>
-        public List<long> PBIs { get; set; } = new List<long>();
+        public DateTime FinishDate { get; set; }
     }
+
 }
