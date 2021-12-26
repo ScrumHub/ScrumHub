@@ -71,9 +71,10 @@ export const fetchPBIsThunk = createAsyncThunk<
     await Fetching.fetchPBIs(item.ownerName, item.token, item.filters);
   if (response.code !== 200) {
     return rejectWithValue(
-      response as RequestResponse<IProductBacklogList, number>
+      response as RequestResponse<undefined, undefined>
     );
   }
+
   return response as RequestResponse<IProductBacklogList, number>;
 });
 

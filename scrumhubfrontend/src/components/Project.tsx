@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { Avatar, Button, Divider, Dropdown, Input, Space, } from 'antd';
+import { Alert, Avatar, Button, Divider, Dropdown, Input, Space, } from 'antd';
 import 'antd/dist/antd.css';
 import { IAddPBI, IFilters, initAddPBI, initSprint, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, ISprint, State } from '../appstate/stateInterfaces';
 import { AuthContext } from '../App';
@@ -16,8 +16,6 @@ import { AddSprintPopup } from './popups/AddSprintPopup';
 import { useIsMounted } from './utility/commonFunctions';
 const { Search } = Input;
 
-
-
 export default function Project() {
   const { state } = useContext(AuthContext);
   const { token } = state;
@@ -31,8 +29,6 @@ export default function Project() {
   const [isAddSprint, setIsAddSprint] = useState(false);
   const error = useSelector((appState: State) => appState.error);
   const isMounted = useIsMounted();
-
-  
 
   const addPBI = (pbi: IAddPBI) => {
     //check if all elements of acceptanceCriteria array are defined
@@ -80,7 +76,7 @@ export default function Project() {
   return (
     <>
       <div style={{marginBottom: "1%" }}>
-        
+      {error.hasError && <Alert type="error" message={error.erorMessage} banner closable />}
         <Space direction="horizontal"
           style={{ marginLeft: "2%", marginRight: "2%", marginTop: 0, marginBottom: "1%" }}>
           <Button onClick={() => { setIsAddSprint(true); }}>{"Create Sprint"}</Button>

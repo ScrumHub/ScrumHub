@@ -188,9 +188,7 @@ export const BacklogTableWithSprints: React.FC<any> = (props: any) => {
       collect: monitor => {
         const index = monitor.getItem() || {} as number;
         if (index === index_row) { return {}; }
-        return {
-          isOver: monitor.isOver(),
-          dropClassName: index as number < index_row ? ' drop-over-downward' : ' drop-over-upward',
+        return {isOver: monitor.isOver(),dropClassName: index as number < index_row ? ' drop-over-downward' : ' drop-over-upward',
         };
       },
       drop: (item: any) => {
@@ -274,22 +272,19 @@ export const BacklogTableWithSprints: React.FC<any> = (props: any) => {
   }, [initialRefresh, isMounted]);
   useEffect(() => {
     if (refreshRequired && ownerName && ownerName !== "") {
-      try {
         store.dispatch(Actions.fetchPBIsThunk({
           ownerName: ownerName, token: token,
           filters: {
             ...initPBIFilter,
             inSprint: false
           }
-        }));
-      } catch (err) { console.error("Failed to fetch the pbis: ", err); }
-      finally { setFetchPBIs(true); }
+        })).catch((error)=>{console.error("Failed to fetch the pbis: ", error);return({});}).then(()=>setFetchPBIs(true));
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshRequired]);
   useEffect(() => {
     if (fetchPBIs && ownerName && ownerName !== "" && pbiPage && pbiPage.pageCount !== null) {
       setFetchPBIs(false);
-      try {
+      if(pbiPage.pageCount > 1){
         store.dispatch(Actions.fetchPBIsThunk({
           ownerName: ownerName, token: token,
           filters: {
@@ -298,10 +293,9 @@ export const BacklogTableWithSprints: React.FC<any> = (props: any) => {
             inSprint: false
           }
         })
-        );
-      } catch (err) { console.error("Failed to fetch the pbis: ", err); }
-      finally { setFetched(true); }
-    } // eslint-disable-next-line react-hooks/exhaustive-deps
+        ).catch((error)=>{console.error("Failed to fetch the pbis: ", error);return({});}).then(()=>setFetched(true));;
+    }else{setFetched(true);}
+  } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pbiPage]);
   useEffect(() => {
     if (!refreshRequired && fetched && typeof (pbiPage) !== "undefined" && typeof (pbiPage.list) !== "undefined") {
