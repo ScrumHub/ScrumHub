@@ -1,4 +1,3 @@
-import { HomeOutlined } from "@ant-design/icons";
 import { IFilters } from "../../appstate/stateInterfaces";
 import { IModals, IRowIds } from "./commonInterfaces";
 

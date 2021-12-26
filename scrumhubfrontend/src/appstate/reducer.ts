@@ -2,7 +2,7 @@ import * as Actions from "./actions";
 import { createReducer, PayloadAction } from "@reduxjs/toolkit";
 import { RequestResponse } from "./response";
 import config from "../configuration/config";
-import { IAssignPBI, IError, IMessCodeError, initError, initState, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, ITaskNamed, State, unassignedPBI } from "./stateInterfaces";
+import { IAssignPBI, IError, IMessCodeError, initError, initState, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, State, unassignedPBI } from "./stateInterfaces";
 var _ = require('lodash');
 
 export const reducer = createReducer(initState, {
@@ -59,9 +59,7 @@ export const reducer = createReducer(initState, {
   return newState;
 },//REPOS
 [Actions.fetchRepositoriesThunk.pending.toString()]: (
-  state: State,
-  payload: PayloadAction<undefined>
-) => {
+  state: State) => {
   let newState = _.cloneDeep(state);
   newState.loading = true;
   return newState;
@@ -113,17 +111,13 @@ export const reducer = createReducer(initState, {
   return newState;
 },
 [Actions.addRepositoryThunk.pending.toString()]: (
-  state: State,
-  payload: PayloadAction<undefined>
-) => {
+  state: State) => {
   let newState = _.cloneDeep(state);
   newState.loading = true;
   return newState;
 },
 [Actions.addRepositoryThunk.fulfilled.toString()]: (
-  state: State,
-  payload: PayloadAction<RequestResponse<IRepository, number>>
-) => {
+  state: State) => {
   let newState = _.cloneDeep(state);
   newState.loading = false;
   newState.reposRequireRefresh = true;
@@ -147,17 +141,13 @@ export const reducer = createReducer(initState, {
   return newState;
 },//PBIS
 [Actions.finishPBIThunk.pending.toString()]: (
-  state: State,
-  payload: PayloadAction<undefined>
-) => {
+  state: State) => {
   let newState = _.cloneDeep(state);
   newState.loading = true;
   return newState;
 },
 [Actions.finishPBIThunk.fulfilled.toString()]: (
-  state: State,
-  payload: PayloadAction<RequestResponse<IProductBacklogItem, number>>
-) => {
+  state: State) => {
   let newState = _.cloneDeep(state);
   newState.loading = false;
   newState.pbiPage = [];
@@ -180,17 +170,13 @@ export const reducer = createReducer(initState, {
   return newState;
 },
 [Actions.addPBIThunk.pending.toString()]: (
-  state: State,
-  payload: PayloadAction<undefined>
-) => {
+  state: State) => {
   let newState = _.cloneDeep(state);
   newState.loading = true;
   return newState;
 },
 [Actions.addPBIThunk.fulfilled.toString()]: (
-  state: State,
-  payload: PayloadAction<RequestResponse<IProductBacklogItem, number>>
-) => {
+  state: State) => {
   let newState = _.cloneDeep(state);
   newState.loading = false;
   newState.pbiPage = [];
@@ -214,17 +200,13 @@ export const reducer = createReducer(initState, {
   return newState;
 },
 [Actions.deletePBIThunk.pending.toString()]: (
-  state: State,
-  payload: PayloadAction<undefined>
-) => {
+  state: State) => {
   let newState = _.cloneDeep(state);
   newState.loading = true;
   return newState;
 },
 [Actions.deletePBIThunk.fulfilled.toString()]: (
-  state: State,
-  payload: PayloadAction<RequestResponse<number, number>>
-) => {
+  state: State) => {
   let newState = _.cloneDeep(state);
   newState.loading = false;
   newState.pbiPage = [];
@@ -248,9 +230,7 @@ export const reducer = createReducer(initState, {
   return newState;
 },
 [Actions.fetchPBIsThunk.pending.toString()]: (
-  state: State,
-  payload: PayloadAction<undefined>
-) => {
+  state: State) => {
   let newState = _.cloneDeep(state);
   newState.loading = true;
   return newState;
@@ -275,7 +255,6 @@ export const reducer = createReducer(initState, {
 ) => {
   let newState = _.cloneDeep(state);
   let errorResponse = payload.payload;
-  console.log(errorResponse);
   newState.loading = false;
   newState.error = {
     hasError: true,
@@ -285,9 +264,7 @@ export const reducer = createReducer(initState, {
   return newState;
 },
 [Actions.fetchPeopleThunk.pending.toString()]: (
-  state: State,
-  payload: PayloadAction<undefined>
-) => {
+  state: State) => {
   let newState = _.cloneDeep(state);
   newState.loading = true;
   return newState;
@@ -319,9 +296,7 @@ export const reducer = createReducer(initState, {
   return newState;
 },
 [Actions.getPBINamesThunk.pending.toString()]: (
-  state: State,
-  payload: PayloadAction<undefined>
-) => {
+  state: State) => {
   let newState = _.cloneDeep(state);
   newState.loading = true;
   return newState;
@@ -351,17 +326,13 @@ export const reducer = createReducer(initState, {
   return newState;
 },
 [Actions.estimatePBIThunk.pending.toString()]: (
-  state: State,
-  payload: PayloadAction<undefined>
-) => {
+  state: State) => {
   let newState = _.cloneDeep(state);
   newState.loading = true;
   return newState;
 },
 [Actions.estimatePBIThunk.fulfilled.toString()]: (
-  state: State,
-  payload: PayloadAction<RequestResponse<IProductBacklogItem, number>>
-) => {
+  state: State) => {
   let newState = _.cloneDeep(state);
   newState.loading = false;
   newState.pbiPage = [];
@@ -386,17 +357,13 @@ export const reducer = createReducer(initState, {
   return newState;
 },
 [Actions.editPBIThunk.pending.toString()]: (
-  state: State,
-  payload: PayloadAction<undefined>
-) => {
+  state: State) => {
   let newState = _.cloneDeep(state);
   newState.loading = true;
   return newState;
 },
 [Actions.editPBIThunk.fulfilled.toString()]: (
-  state: State,
-  payload: PayloadAction<RequestResponse<IProductBacklogItem, number>>
-) => {
+  state: State) => {
   let newState = _.cloneDeep(state);
   newState.loading = false;
   newState.pbiPage = [];
@@ -420,9 +387,7 @@ export const reducer = createReducer(initState, {
   return newState;
 },//SPRINTS
 [Actions.fetchSprintsThunk.pending.toString()]: (
-  state: State,
-  payload: PayloadAction<undefined>
-) => {
+  state: State) => {
   let newState = _.cloneDeep(state);
   newState.loading = true;
   return newState;
@@ -479,9 +444,7 @@ export const reducer = createReducer(initState, {
   return newState;
 },
 [Actions.fetchOneSprintThunk.pending.toString()]: (
-  state: State,
-  payload: PayloadAction<undefined>
-) => {
+  state: State) => {
   let newState = _.cloneDeep(state);
   newState.loading = true;
   return newState;
@@ -512,9 +475,7 @@ export const reducer = createReducer(initState, {
   return newState;
 },
 [Actions.updateOneSprintThunk.pending.toString()]: (
-  state: State,
-  payload: PayloadAction<undefined>
-) => {
+  state: State) => {
   let newState = _.cloneDeep(state);
   newState.loading = true;
   return newState;
@@ -546,17 +507,13 @@ export const reducer = createReducer(initState, {
   return newState;
 },
 [Actions.addSprintThunk.pending.toString()]: (
-  state: State,
-  payload: PayloadAction<undefined>
-) => {
+  state: State) => {
   let newState = _.cloneDeep(state);
   newState.loading = true;
   return newState;
 },
 [Actions.addSprintThunk.fulfilled.toString()]: (
-  state: State,
-  payload: PayloadAction<RequestResponse<ISprint, number>>
-) => {
+  state: State) => {
   let newState = _.cloneDeep(state);
   newState.loading = false;
   newState.sprintRequireRefresh = true;
@@ -579,9 +536,7 @@ export const reducer = createReducer(initState, {
 },
 //TASKS
 [Actions.fetchTasksThunk.pending.toString()]: (
-  state: State,
-  payload: PayloadAction<undefined>
-) => {
+  state: State) => {
   let newState = _.cloneDeep(state);
   newState.loading = true;
   return newState;
@@ -637,9 +592,7 @@ export const reducer = createReducer(initState, {
   return newState;
 },
 [Actions.fetchPBITasksThunk.pending.toString()]: (
-  state: State,
-  payload: PayloadAction<undefined>
-) => {
+  state: State) => {
   let newState = _.cloneDeep(state);
   newState.loading = true;
   return newState;
@@ -651,17 +604,7 @@ export const reducer = createReducer(initState, {
   let newState = _.cloneDeep(state);
   newState.loading = false;
   // if page filter not specified - set to default
-  const pageNumber = _.get(
-    payload,
-    ["meta", "arg", "filters", "pageNumber"],
-    config.defaultFilters.page
-  );
   // if size filter not specified - set pageSize to default
-  const pageSize = _.get(
-    payload,
-    ["meta", "arg", "filters", "pageSize"],
-    config.defaultFilters.size
-  );
   const tasks = payload.payload.response as ITaskList;
   if (newState.tasks !== null && tasks.list) {
     newState.tasks = tasks.list;
@@ -687,9 +630,7 @@ export const reducer = createReducer(initState, {
   return newState;
 },
 [Actions.addTasksToPBIThunk.pending.toString()]: (
-  state: State,
-  payload: PayloadAction<undefined>
-) => {
+  state: State) => {
   let newState = _.cloneDeep(state);
   newState.loading = true;
   return newState;
@@ -737,9 +678,7 @@ export const reducer = createReducer(initState, {
   return newState;
 },
 [Actions.addTasksToSprintThunk.pending.toString()]: (
-  state: State,
-  payload: PayloadAction<undefined>
-) => {
+  state: State) => {
   let newState = _.cloneDeep(state);
   newState.loading = true;
   return newState;
@@ -788,17 +727,13 @@ export const reducer = createReducer(initState, {
   return newState;
 },
 [Actions.addTaskThunk.pending.toString()]: (
-  state: State,
-  payload: PayloadAction<undefined>
-) => {
+  state: State) => {
   let newState = _.cloneDeep(state);
   newState.loading = true;
   return newState;
 },
 [Actions.addTaskThunk.fulfilled.toString()]: (
-  state: State,
-  payload: PayloadAction<RequestResponse<ITaskList, number>>
-) => {
+  state: State) => {
   let newState = _.cloneDeep(state);
   newState.loading = false;
   newState.productRequireRefresh = true;
@@ -820,17 +755,13 @@ export const reducer = createReducer(initState, {
   return newState;
 },
 [Actions.assignTaskToPBIThunk.pending.toString()]: (
-  state: State,
-  payload: PayloadAction<undefined>
-) => {
+  state: State) => {
   let newState = _.cloneDeep(state);
   newState.loading = true;
   return newState;
 },
 [Actions.assignTaskToPBIThunk.fulfilled.toString()]: (
-  state: State,
-  payload: PayloadAction<RequestResponse<ITaskList, number>>
-) => {
+  state: State) => {
   let newState = _.cloneDeep(state);
   newState.loading = false;
   newState.error = initError;
@@ -852,9 +783,7 @@ export const reducer = createReducer(initState, {
   return newState;
 },
 [Actions.assignPersonToTaskThunk.pending.toString()]: (
-  state: State,
-  payload: PayloadAction<undefined>
-) => {
+  state: State) => {
   let newState = _.cloneDeep(state);
   newState.loading = true;
   return newState;
@@ -916,9 +845,7 @@ export const reducer = createReducer(initState, {
   return newState;
 },
 [Actions.unassignPersonToTaskThunk.pending.toString()]: (
-  state: State,
-  payload: PayloadAction<undefined>
-) => {
+  state: State) => {
   let newState = _.cloneDeep(state);
   newState.loading = true;
   return newState;

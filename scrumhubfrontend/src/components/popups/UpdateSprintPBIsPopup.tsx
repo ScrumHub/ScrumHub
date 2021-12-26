@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { Modal, Form, Space, Typography, Checkbox, Input } from 'antd';
+import { Modal, Form, Checkbox } from 'antd';
 import { IProductBacklogItem, ISprint } from '../../appstate/stateInterfaces';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import TextArea from 'antd/lib/input/TextArea';
 import _ from 'lodash';
-import Title from 'antd/lib/typography/Title';
-import { formItemLayoutWithOutLabel } from '../utility/commonInitValues';
 
 interface Values {
   goal: string;
