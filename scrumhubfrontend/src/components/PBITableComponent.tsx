@@ -25,7 +25,7 @@ return(
           components={props.nestedcomponents}
           dataSource={props.item.backlogItems}//:item.backlogItems.filter((item:IProductBacklogItem)=>{item.name.startsWith(filterPBI.nameFilter as string)})}
           pagination={false}
-          onRow={(row, id) => {const index = row.id; const record = {...initRowIds, sprintNumber:props.item.sprintNumber,pbiID: row.id,} as IRowIds;  const bodyType="IProductBacklogItem"; return({
+          onRow={(row, id) => {const index = row.id; const record = {...initRowIds, sprintNumber:props.item.sprintNumber,pbiID: row.id,estimated:row.estimated} as IRowIds;  const bodyType="IProductBacklogItem"; return({
             index,
             record,
             bodyType

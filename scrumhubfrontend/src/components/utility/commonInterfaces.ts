@@ -30,4 +30,5 @@ import { IProductBacklogItem, ISprint, ITask } from "../../appstate/stateInterfa
     pbiID:number;
     taskID:number;
     sprintNumber:number;
+    estimated:boolean;
   }

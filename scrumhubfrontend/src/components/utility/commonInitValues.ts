@@ -22,7 +22,8 @@ export const initIDs: IFilters = {
   export const initRowIds : IRowIds ={
     pbiID: -2,
     taskID: -2,
-    sprintNumber: -2
+    sprintNumber: -2,
+    estimated:true
   }
 
   export const formItemLayoutWithOutLabel = {
