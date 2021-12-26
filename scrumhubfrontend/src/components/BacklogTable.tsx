@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
-import { Button, Tag, message, Dropdown, Badge } from 'antd';
+import { Button, Tag, message, Dropdown, Badge, Tooltip } from 'antd';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import * as Actions from '../appstate/actions';
@@ -48,6 +48,7 @@ export const BacklogTableWithSprints: React.FC<any> = (props: any) => {
   const [fetched, setFetched] = useState(false);
   const isMounted = useIsMounted();
   const navigate = useNavigate();
+  message.config({maxCount: 1});
 
   const addTaskToPBI = (input: IFilters) => {
     setIsModal({ ...isModal, addTask: false });
@@ -181,12 +182,16 @@ export const BacklogTableWithSprints: React.FC<any> = (props: any) => {
       collect: monitor => {
         const index = monitor.getItem() || {} as number;
         if (index === index_row) { return {}; }
-        return {isOver: monitor.isOver(),dropClassName: index as number < index_row ? ' drop-over-downward' : ' drop-over-upward',
+        return {isOver: monitor.isOver(),
+          dropClassName: index as number < index_row ? ' drop-over-downward' : ' drop-over-upward',
         };
       },
       drop: (item: any) => {
         if (typeof (index_row) !== "undefined" && isMounted()) {
-          if (item.bodyType === "IProductBacklogItem" && validatePBIDrag(item.index, item.record.sprintNumber, record.sprintNumber)) {
+          if(!item.record.estimated){
+            message.info("Cannot assign not estimated pbi",5);
+          }
+          else if (item.bodyType === "IProductBacklogItem" && validatePBIDrag(item.index, item.record.sprintNumber, record.sprintNumber)) {
             updatePBI(item.index, item.record.sprintNumber, record.sprintNumber);
           }
           else if (item.bodyType === "ITask" && validateTaskDrag(record.pbiID, item.index, item.record.pbiID)) {
@@ -195,20 +200,21 @@ export const BacklogTableWithSprints: React.FC<any> = (props: any) => {
         }
       },
     });
+    const isDraggable = index_row !== 0 && bodyType !== "ISprint" && index_row !== undefined;
     const [, drag] = useDrag({
       type,
       item: { index: index_row, bodyType: bodyType, record: record as IRowIds },
       collect: monitor => ({
-        isDragging: monitor.isDragging(),
+        isDragging: monitor.isDragging(),   
       }),
-      canDrag: index_row !== 0 && bodyType !== "ISprint" && index_row !== undefined
+      canDrag: isDraggable
     });
     drop(drag(ref));
     return (
       <tr
         ref={ref as any}
         className={`${className}${isOver ? dropClassName : ''}`}
-        style={{ cursor: index_row !== 0 && bodyType !== "ISprint" && index_row !== undefined ? "move" : "default", ...style }}
+        style={{ cursor: isDraggable ? "move" : "no-drop", ...style }}
         {...restProps}
       />
     );
@@ -356,7 +362,6 @@ export const BacklogTableWithSprints: React.FC<any> = (props: any) => {
     }];
   if (!state.isLoggedIn) { return <Navigate to="/login" />; }
   return (<>
-    <DndProvider backend={HTML5Backend} key={"pbi"}>
       <SprintTableComponent nameFilter={props.nameFilter} loading={!pbiPage || !pbiPage.list || fetchPBIs || fetched || refreshRequired || initialRefresh} data={[{ sprintNumber: 0, goal: "Product Backlog", backlogItems: pbiPage.list } as ISprint] as ISprint[]}
         components={nestedcomponents} columns={sprintColumns} PBITableforSprint={PBITableforSprint} />
       {sprintPage.list.map((sprint) => {
@@ -374,7 +379,6 @@ export const BacklogTableWithSprints: React.FC<any> = (props: any) => {
         onCancel={() => { setIsModal({ ...isModal, updateSprint: false }); }} />}
       {isModal.assgnTask && pbiPage && <CustomAssignTaskPopup error={error.erorMessage} pbiData={pbiPage.list as IAssignPBI[] as ICheckedAssignPBI[]} visible={isModal.assgnTask}
         onCreate={function (values: any): void { assignTask(values) }} onCancel={() => { setIsModal({ ...isModal, assgnTask: false }); }} />}
-    </DndProvider>
   </>
   );
 };

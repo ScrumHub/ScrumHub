@@ -2,6 +2,7 @@ import { Table } from "antd";
 import { useEffect, useState } from "react";
 import { IPerson, ITask } from "../appstate/stateInterfaces";
 import { useIsMounted } from "./utility/commonFunctions";
+import { initRowIds } from "./utility/commonInitValues";
 import { IRowIds } from "./utility/commonInterfaces";
 
 export default function TaskTableComponent(props: any) {
@@ -26,7 +27,7 @@ return(<>
           components={props.taskComponents}
           dataSource={data}
           pagination={false}
-          onRow={(row, id) => {const index = row.id; const record = {sprintNumber:props.item.sprintNumber,pbiID: row.pbiId ? row.pbiId:0,taskID: row.id} as IRowIds;const bodyType="ITask"; return({
+          onRow={(row, id) => {const index = row.id; const record = {...initRowIds,sprintNumber:props.item.sprintNumber,pbiID: row.pbiId ? row.pbiId:0,taskID: row.id,} as IRowIds;const bodyType="ITask"; return({
             index,
             record,
             bodyType

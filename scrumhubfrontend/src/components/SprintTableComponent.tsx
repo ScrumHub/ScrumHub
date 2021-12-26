@@ -1,5 +1,7 @@
 import { Table } from "antd";
 import { useEffect, useState } from "react";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import { IProductBacklogItem, ISprint } from "../appstate/stateInterfaces";
 import { useIsMounted } from "./utility/commonFunctions";
 import { initRowIds } from "./utility/commonInitValues";
@@ -7,17 +9,17 @@ import { initRowIds } from "./utility/commonInitValues";
 export default function SprintTableComponent(props: any) {
   const [data, setData] = useState(props.data);
   const isMounted = useIsMounted();
-  if (!isMounted()){console.error("sprint"+isMounted())};
   useEffect(() => {
     if (!props.loading) {
         setData(props.data && props.data.length > 0 && props.nameFilter && props.nameFilter !== '' ? ([{...props.data.at(0), backlogItems:
           props.data.at(0).backlogItems.filter((item:IProductBacklogItem)=>item.name.toLowerCase().includes(props.nameFilter))}] as ISprint[]):props.data as ISprint[]);
-    }
+          if (!isMounted()){console.error("sprint"+isMounted())};
+        }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.loading, props.nameFilter, props.data,isMounted]);
 
 return(
-  <>
+  <DndProvider backend={HTML5Backend} key={"key"+props.data?props.data[0].sprintNumber:0}>
   {<Table
                 style={{ transform:"scale(0.96)", marginBottom: "0.25%", height: "auto" }}
                 scroll={{ x: 800 }}
@@ -42,5 +44,5 @@ return(
                     bodyType
                   }) as any;
                 }}
-              />}</>);
+              />}</DndProvider>);
 }
