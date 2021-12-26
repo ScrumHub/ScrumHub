@@ -1,4 +1,4 @@
-import { IFilters, ISprint } from "../../appstate/stateInterfaces"
+import { ISprint } from "../../appstate/stateInterfaces"
 import { useCallback, useEffect, useRef } from "react";
 
 export function useIsMounted() {

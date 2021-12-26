@@ -1,7 +1,6 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
-import { Button, Tag, message, Dropdown, Badge, Tooltip } from 'antd';
-import { DndProvider, useDrag, useDrop } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import { Button, Tag, message, Dropdown, Badge } from 'antd';
+import { useDrag, useDrop } from 'react-dnd';
 import * as Actions from '../appstate/actions';
 import { IAddPBI, IAssignPBI, ICheckedAssignPBI, ICheckedProductBacklogItem, IFilters, initPBIFilter, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, ISprint, ISprintList, ITask, IUpdateIdSprint, State } from '../appstate/stateInterfaces';
 import 'antd/dist/antd.css';
@@ -261,7 +260,8 @@ export const BacklogTableWithSprints: React.FC<any> = (props: any) => {
         })
       }
     },];
-  const PBITableforSprint: React.FC<ISprint> = (item: ISprint) => { return (<PBITableComponent TaskTableforPBI={TaskTableforPBI} nameFilter={props.nameFilter} peopleFilter={props.peopleFilter} item={item} pbiColumns={pbiColumns} nestedcomponents={nestedcomponents} />) };
+  const PBITableforSprint: React.FC<ISprint> = (item: ISprint) => { return (<PBITableComponent TaskTableforPBI={TaskTableforPBI} nameFilter={props.nameFilter} peopleFilter={props.peopleFilter} 
+    item={item} pbiColumns={pbiColumns} nestedcomponents={nestedcomponents} />) };
   useEffect(() => {
     if (initialRefresh && isMounted()) {
       store.dispatch(Actions.clearPBIsList());
@@ -362,10 +362,10 @@ export const BacklogTableWithSprints: React.FC<any> = (props: any) => {
     }];
   if (!state.isLoggedIn) { return <Navigate to="/login" />; }
   return (<>
-      <SprintTableComponent nameFilter={props.nameFilter} loading={!pbiPage || !pbiPage.list || fetchPBIs || fetched || refreshRequired || initialRefresh} data={[{ sprintNumber: 0, goal: "Product Backlog", backlogItems: pbiPage.list } as ISprint] as ISprint[]}
+      <SprintTableComponent nameFilter={props.nameFilter} peopleFilter={props.peopleFilter} loading={!pbiPage || !pbiPage.list || fetchPBIs || fetched || refreshRequired || initialRefresh} data={[{ sprintNumber: 0, goal: "Product Backlog", backlogItems: pbiPage.list } as ISprint] as ISprint[]}
         components={nestedcomponents} columns={sprintColumns} PBITableforSprint={PBITableforSprint} />
       {sprintPage.list.map((sprint) => {
-        return (<SprintTableComponent nameFilter={props.nameFilter} key={sprint.sprintNumber} loading={!sprintPage || !sprintPage.list || sprintRefreshRequired || fetchSprints || fetchSprintsPBI || initialRefresh}
+        return (<SprintTableComponent nameFilter={props.nameFilter} peopleFilter={props.peopleFilter} key={sprint.sprintNumber} loading={!sprintPage || !sprintPage.list || sprintRefreshRequired || fetchSprints || fetchSprintsPBI || initialRefresh}
           data={[sprint] as ISprint[]} components={nestedcomponents} columns={sprintColumns} PBITableforSprint={PBITableforSprint} />)
       })}
       {isModal.editPBI && selectedPBI && selectedPBI.id && <EditPBIPopup data={selectedPBI as IAddPBI} visible={isModal.editPBI}

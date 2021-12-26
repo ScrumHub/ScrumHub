@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { Alert, Avatar, Button, Divider, Dropdown, Input, message, Space, } from 'antd';
+import { Avatar, Button, Divider, Dropdown, Input, Space, } from 'antd';
 import 'antd/dist/antd.css';
 import { IAddPBI, IFilters, initAddPBI, initSprint, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, ISprint, State } from '../appstate/stateInterfaces';
 import { AuthContext } from '../App';
@@ -19,7 +19,6 @@ const { Search } = Input;
 export default function Project() {
   const { state } = useContext(AuthContext);
   const { token } = state;
-  const loading = useSelector((appState: State) => appState.loading as boolean);
   const pbiPage = useSelector((appState: State) => appState.pbiPage as IProductBacklogList);
   const [filterPBI, setFiltersPBI] = useState<IFilters>({ nameFilter: "", peopleFilter: [] });
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : "";

@@ -1,4 +1,3 @@
-import { IProductBacklogItem, ISprint, ITask } from "../../appstate/stateInterfaces";
 
   export interface BodyRowProps {
     index: any;
