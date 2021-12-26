@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { Alert, Avatar, Button, Divider, Dropdown, Input, Space, } from 'antd';
+import { Alert, Avatar, Button, Divider, Dropdown, Input, message, Space, } from 'antd';
 import 'antd/dist/antd.css';
 import { IAddPBI, IFilters, initAddPBI, initSprint, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, ISprint, State } from '../appstate/stateInterfaces';
 import { AuthContext } from '../App';
@@ -76,7 +76,6 @@ export default function Project() {
   return (
     <>
       <div style={{marginBottom: "1%" }}>
-      {error.hasError && <Alert type="error" message={error.erorMessage} banner closable />}
         <Space direction="horizontal"
           style={{ marginLeft: "2%", marginRight: "2%", marginTop: 0, marginBottom: "1%" }}>
           <Button onClick={() => { setIsAddSprint(true); }}>{"Create Sprint"}</Button>
