@@ -23,10 +23,15 @@ namespace ScrumHubBackend.DatabaseModel
         public long GitHubId { get; set; } = 0;
 
         /// <summary>
-        /// Full name of GirHub repository
+        /// Full name of GitHub repository
         /// </summary>
         [Required]
         public string FullName { get; set; } = String.Empty;
+
+        /// <summary>
+        /// Last Sprint number
+        /// </summary>
+        public int LastSprintNumber { get; set; } = 0;
 
         /// <summary>
         /// Constructor

@@ -37,5 +37,15 @@ namespace ScrumHubBackend.CQRS.Sprints
         /// Number of the sprint
         /// </summary>
         public long Number { get; set; } = 1;
+
+        /// <summary>
+        /// Finish date of the sprint
+        /// </summary>
+        public DateTime FinishDate { get; set; }
+
+        /// <summary>
+        /// Title of the sprint
+        /// </summary>
+        public string? Title { get; set; }
     }
 }
