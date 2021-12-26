@@ -276,7 +276,6 @@ export default function SprintBacklog() {
       <Typography>{sprintPage !== null ? sprintPage.goal : ""}</Typography>
       <Button key="1" type="link" onClick={()=>{handleUpdate();fetchMore();setIsUpdateModalVisible(true);}}> Edit Sprint </Button>,    
       </Space>
-      <Divider />
 
       <Table
         loading={refreshRequired || initialRefresh}
@@ -320,7 +319,6 @@ export default function SprintBacklog() {
         columns={columns}
         dataSource={(sprintPage && sprintPage.backlogItems) ? sprintPage.backlogItems : []}
       />
-      <Divider />
       <span style={{ width: "100%", margin: "auto", display: "inline-block", justifyContent: "center" }}>
         <Button disabled={prevselectedRowKeys.length < 1} onClick={handleDelete} type="primary" style={{ marginRight: 16 }}>
           Delete

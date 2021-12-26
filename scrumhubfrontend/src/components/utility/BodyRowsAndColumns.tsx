@@ -67,7 +67,7 @@ export const pbiPriorityCol = {
 };
 export const pbiProgressCol ={
   title: 'Progress', width:"20%", key: 'operation', align: "center" as const, render: (item: IProductBacklogItem) => {
-    return (<span><Progress  width={25} size='small' type="line" showInfo={false} percent={item.tasks && item.tasks.length > 0 ? (item.tasks.filter((item: ITask) => item.finished).length / item.tasks.length):100}
+    return (item.id===0?<span></span>:<span><Progress  width={25} size='small' type="line" showInfo={false} percent={item.tasks && item.tasks.length > 0 ? (item.tasks.filter((item: ITask) => item.finished).length / item.tasks.length):100}
      /*format={percent => `${item.tasks?item.tasks.filter((item: ITask) => item.finished).length:0}`}*/ ></Progress></span>
     )
   }

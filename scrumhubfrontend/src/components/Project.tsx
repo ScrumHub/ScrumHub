@@ -74,17 +74,16 @@ export default function Project() {
   if (!state.isLoggedIn) { return <Navigate to="/login" />; }
   return (
     <>
-      <div style={{marginBottom: "1%" }}>
+      <div  style={{marginTop:"0.25%",marginBottom: "1%" }}>
         <Space direction="horizontal"
-          style={{ marginLeft: "2%", marginRight: "2%", marginTop: 0, marginBottom: "1%" }}>
-          <Button onClick={() => { setIsAddSprint(true); }}>{"Create Sprint"}</Button>
+          style={{ transform: "scale(0.96)",paddingLeft:"1%", marginTop: 0, marginBottom: "0.25%" }}>
+          <Button  onClick={() => { setIsAddSprint(true); }}>{"Create Sprint"}</Button>
           <Button onClick={() => { setIsAddPBI(true);}}>{"Add Product Backlog Item"}</Button>
           <Search placeholder="Input backlog item name" onSearch={onSearch} enterButton />
-
         </Space>
         <Divider type="vertical" />
         <Space direction="horizontal"
-          style={{ /*float:"right",*/marginLeft: "2%", marginRight: "2%", marginTop: 0, marginBottom: "1%", alignItems: "flex-end" }}>
+          style={{ /*float:"right",*/transform: "scale(0.96)", marginTop: 0, marginBottom: "0.25%", alignItems: "flex-end" }}>
           <Dropdown.Button
             placement="bottomCenter"
             style={{ color: "#1890ff" }}

@@ -147,13 +147,13 @@ export const BacklogTableWithSprints: React.FC<any> = (props: any) => {
         const oldSprint = sprintPage.list.find((i: ISprint) => i.sprintNumber === oldSprintId);
         const oldPbis = oldSprint?.backlogItems.map((i: IProductBacklogItem) => { return ((i.id !== pbiId ? i.id.toString() : "")) }).filter((x: string) => x !== "");
         store.dispatch(Actions.updateOneSprintThunk({ token: token, ownerName: ownerName, sprintNumber: oldSprintId, sprint: { pbIs: oldPbis as string[], goal: oldSprint?.goal as string } }))
-        .then((response)=>{if (response.payload && response.payload?.code=== 200 && newSprintId === 0 && isMounted()){setInitialRefresh(true)}});
+        .then((response)=>{if (response.payload && response.payload?.code=== 200 && newSprintId === 0){setInitialRefresh(true)}});
       }
         if (newSprintId !== 0) {
         const newSprint = sprintPage.list.find((i: ISprint) => i.sprintNumber === newSprintId);
         const newPbis = newSprint?.backlogItems.map((i: IProductBacklogItem) => { return (i.id.toString()) }).concat([pbiId.toString()]);
         store.dispatch(Actions.updateOneSprintThunk({ token: token, ownerName: ownerName, sprintNumber: newSprintId, sprint: { pbIs: newPbis as string[], goal: newSprint?.goal as string } }))
-        .then((response)=>{if (response.payload && response.payload?.code=== 200 && isMounted()){setInitialRefresh(true)}});
+        .then((response)=>{if (response.payload && response.payload?.code=== 200){setInitialRefresh(true)}});
       }
   }
   const updateTask = (pbiId: number, taskId: number) => {
@@ -186,7 +186,7 @@ export const BacklogTableWithSprints: React.FC<any> = (props: any) => {
         };
       },
       drop: (item: any) => {
-        if (typeof (index_row) !== "undefined" && isMounted()) {
+        if (typeof (index_row) !== "undefined") {
           if(!item.record.estimated){
             message.info("Cannot assign not estimated pbi",5);
           }
@@ -213,7 +213,7 @@ export const BacklogTableWithSprints: React.FC<any> = (props: any) => {
       <tr
         ref={ref as any}
         className={`${className}${isOver ? dropClassName : ''}`}
-        style={{ cursor: isDraggable ? "move" : "no-drop", ...style }}
+        style={{ cursor: isDraggable ? "move" : "default", ...style }}
         {...restProps}
       />
     );
@@ -242,7 +242,10 @@ export const BacklogTableWithSprints: React.FC<any> = (props: any) => {
     { title: 'Name', width: "35%", align: "left" as const, key: 'name', render: (item: IProductBacklogItem) => { return (<div className={item.id === 0 ? '' : 'link-button'} onClick={() => { if (item.id !== 0) { setSelectedPBI(item); setIsModal({ ...isModal, editPBI: true }); } }}>{item.name}</div>) }, },
     pbiProgressCol, pbiProgressCol2,
     {
-      title: 'Priority', align: "center" as const, width: "15%", key: 'priority',
+      title: 'Priority', sorter: {
+        compare: (a:IProductBacklogItem, b:IProductBacklogItem) => a.priority - b.priority,
+        multiple: 1,
+      },align: "center" as const, width: "15%", key: 'priority',
       render: (item: IProductBacklogItem) => item.id !== 0 ? <Tag style={{ cursor: "pointer" }} color={backlogColors[item.priority % 3]}>{backlogPriorities[item.priority % 3]}</Tag> : <></>
     },
     {
@@ -361,7 +364,7 @@ export const BacklogTableWithSprints: React.FC<any> = (props: any) => {
       },
     }];
   if (!state.isLoggedIn) { return <Navigate to="/login" />; }
-  return (<>
+  return (<div className='backlogScroll'>
       <SprintTableComponent nameFilter={props.nameFilter} peopleFilter={props.peopleFilter} loading={!pbiPage || !pbiPage.list || fetchPBIs || fetched || refreshRequired || initialRefresh} data={[{ sprintNumber: 0, goal: "Product Backlog", backlogItems: pbiPage.list } as ISprint] as ISprint[]}
         components={nestedcomponents} columns={sprintColumns} PBITableforSprint={PBITableforSprint} />
       {sprintPage.list.map((sprint) => {
@@ -379,7 +382,7 @@ export const BacklogTableWithSprints: React.FC<any> = (props: any) => {
         onCancel={() => { setIsModal({ ...isModal, updateSprint: false }); }} />}
       {isModal.assgnTask && pbiPage && <CustomAssignTaskPopup error={error.erorMessage} pbiData={pbiPage.list as IAssignPBI[] as ICheckedAssignPBI[]} visible={isModal.assgnTask}
         onCreate={function (values: any): void { assignTask(values) }} onCancel={() => { setIsModal({ ...isModal, assgnTask: false }); }} />}
-  </>
+  </div>
   );
 };
 

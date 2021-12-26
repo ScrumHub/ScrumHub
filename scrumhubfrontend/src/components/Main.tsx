@@ -146,8 +146,8 @@ function Main(props: any) {
               <div style={{ minHeight: "90vh", margin: 0 }}>
               
                 {ownerName !== "" && <PageHeader className="pageHeader"
-                  title={<div style={{ fontWeight: "bold", lineHeight:1.25, paddingTop: 0, marginTop: 0 }}>{sprintID && sprintID !== "0"?"Sprint "+sprintID:"Product Backlog"}</div>}
-                  breadcrumb={<Breadcrumb style={{ marginTop: 0, marginBottom:0 }} itemRender={ItemRender} routes={routes(ownerName, sprintID, location)} />}
+                  title={<div style={{ fontWeight: "bold", lineHeight:1.25, paddingTop: 0, marginTop: 0,}}>{sprintID && sprintID !== "0"?"Sprint "+sprintID:"Product Backlog"}</div>}
+                  breadcrumb={<Breadcrumb style={{ marginTop: 0, marginBottom:0, }} itemRender={ItemRender} routes={routes(ownerName, sprintID, location)} />}
                 >
                 </PageHeader>}
                 <AppRouter />

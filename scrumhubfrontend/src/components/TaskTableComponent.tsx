@@ -29,7 +29,6 @@ export default function TaskTableComponent(props: any) {
   return (<>
     {<Table
       size="small"
-      style={{ marginTop: "0.25%", marginBottom: "0.25%" }}
       showHeader={false}
       scroll={{ x: 800 }}
       //loading={loading}
