@@ -4,6 +4,7 @@ import { IPerson, IProductBacklogItem, ITask } from "../appstate/stateInterfaces
 import { useIsMounted } from "./utility/commonFunctions";
 import { initRowIds } from "./utility/commonInitValues";
 import { IRowIds } from "./utility/commonInterfaces";
+import "./BacklogTable.css"
 
 export default function PBITableComponent(props: any) {
   const isMounted = useIsMounted();
@@ -32,11 +33,11 @@ export default function PBITableComponent(props: any) {
   }, [props.peopleFilter, props.item]);
   return (
     <Table
-      style={{ borderSpacing: "separate" }}
+      style={{ borderSpacing: "separate", }}
       size="small"
       loading={loading}
       showHeader={true}
-      scroll={{ x: 800 }}
+      scroll={{x:800,scrollToFirstRowOnChange:true }}
       columns={props.pbiColumns}
       rowKey={(record: IProductBacklogItem) => record.id}
       expandable={{

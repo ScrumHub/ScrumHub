@@ -29,6 +29,9 @@
 .pageHeader{
   margin-top: 5vh; padding-left: 2%; margin-bottom: 0; padding-bottom: 0
 }
+.ant-breadcrumb + .ant-page-header-heading {
+  margin-top: 0px !important;
+}
 
 /*style={{
     breakAfter:"auto",

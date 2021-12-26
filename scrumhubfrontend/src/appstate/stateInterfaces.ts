@@ -161,7 +161,7 @@ export const unassignedPBI: IProductBacklogItem = {
   sprintNumber: 0,
   isInSprint: false,
   timeSpentInHours: 0,
-  priority: 0,
+  priority: -1,
   acceptanceCriteria: [""],
   tasks: [],
 };

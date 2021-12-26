@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { Modal, Form, InputNumber, Slider, Progress, Skeleton, List } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Modal, Form, InputNumber, Slider, Progress, Skeleton, List, Spin } from 'antd';
 import { IProductBacklogItem, ITask } from '../../appstate/stateInterfaces';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
-import { NumberOutlined } from '@ant-design/icons';
-import InfiniteScroll from 'react-infinite-scroll-component';
+import { MoreOutlined, NumberOutlined } from '@ant-design/icons';
+import VirtualList from 'rc-virtual-list';
+import "../BacklogTable.css";
 
 interface Values {
   expectedTimeInHours: number
@@ -23,6 +24,16 @@ export const EstimatePBIPopup: React.FC<CollectionCreateFormProps> = ({
   onCancel,
 }) => {
   const [form] = Form.useForm();
+  const [slicedData, setSlicedData] = useState([] as string[]);
+  console.log(slicedData);
+  useEffect(() => {
+    if(slicedData.length < 1){
+      setSlicedData(data.acceptanceCriteria.slice(0,2));
+    }
+    else{
+      setSlicedData(data.acceptanceCriteria.slice(0,slicedData.length+2));
+    }
+  }, []);
   const [value, setValue] = useState(data.expectedTimeInHours);
   const marks = {
     0: 0,
@@ -82,59 +93,58 @@ export const EstimatePBIPopup: React.FC<CollectionCreateFormProps> = ({
         <Form.Item
           name="progress"
           key="progress"
-          style={{ width: "92%"}}
+          style={{ width: "80%" }}
         >  <>
-        
-        <Progress percent={data.tasks && data.tasks.length > 0 ? (100*data.tasks.filter((item: ITask) => !item.assigness || item.assigness.length <1).length / data.tasks.length) : 100}
-              format={percent => `${data.tasks && data.tasks.length > 0 ? data.tasks.filter((item: ITask) => !item.assigness || item.assigness.length <1).length:0} Assigned`} ></Progress>
-        <Progress percent={data.tasks && data.tasks.length > 0 ? (100*data.tasks.filter((item: ITask) => item.finished).length / data.tasks.length) : 100}
-              format={percent => `${data.tasks && data.tasks.length > 0 ? data.tasks.filter((item: ITask) => item.finished).length:0} To Do`} ></Progress>            
-            <Progress percent={data.tasks && data.tasks.length > 0 ? (100*data.tasks.filter((item: ITask) => !item.finished).length / data.tasks.length) : 100}
-              format={percent => `${data.tasks && data.tasks.length > 0 ? data.tasks.filter((item: ITask) => !item.finished).length:0} Done`} ></Progress>
-        </>,
-      </Form.Item>
-      <FormItemLabel prefixCls="acceptanceCriteria" label="Acceptance Criteria" required={true} />
-        <Form.Item name="acceptanceCriteria" key="acceptanceCriteria" initialValue={data.acceptanceCriteria}>
-            <InfiniteScroll
-            next={()=>{}}
-        dataLength={data.acceptanceCriteria.length}
-        hasMore={false}
-        loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
-        scrollableTarget="scrollableDiv"
-      >
-        <List
-          dataSource={data.acceptanceCriteria}
-          renderItem={(item, id) => (
-            <List.Item key={id}>
-              <List.Item.Meta
-                avatar={<span><NumberOutlined></NumberOutlined>{" "}{id}</span>}
-                title={item}
-              />
-            </List.Item>
-          )}
-        />
-      </InfiniteScroll>
+
+            <Progress percent={data.tasks && data.tasks.length > 0 ? (100 * data.tasks.filter((item: ITask) => !item.assigness || item.assigness.length < 1).length / data.tasks.length) : 100}
+              format={percent => `${data.tasks && data.tasks.length > 0 ? data.tasks.filter((item: ITask) => !item.assigness || item.assigness.length < 1).length : 0} Assigned`} ></Progress>
+            <br />
+            <Progress percent={data.tasks && data.tasks.length > 0 ? (100 * data.tasks.filter((item: ITask) => item.finished).length / data.tasks.length) : 100}
+              format={percent => `${data.tasks && data.tasks.length > 0 ? data.tasks.filter((item: ITask) => item.finished).length : 0} To Do`} ></Progress>
+            <Progress percent={data.tasks && data.tasks.length > 0 ? (100 * data.tasks.filter((item: ITask) => !item.finished).length / data.tasks.length) : 100}
+              format={percent => `${data.tasks && data.tasks.length > 0 ? data.tasks.filter((item: ITask) => !item.finished).length : 0} Done`} ></Progress>
+          </>
         </Form.Item>
-      <FormItemLabel prefixCls="expectedTimeInHours" label="Estimate Story Points" required={true} />
-      <Form.Item
-        initialValue={data.expectedTimeInHours}
-        name="expectedTimeInHours"
-        key="expectedTimeInHours"
-        style={{ width: "100%", display: "flex" }}
-        rules={[{ required: true, message: 'Please input the story points estimation in hours of the new backlog item!' }]}
-      >
-        {/*<InputNumber type="number" min={0} />*/}
-        <InputNumber
-          min={0}
-          max={999}
-          type="number"
-          value={value}
-          onChange={(e) => { setValue(e); form.setFieldsValue({ "expectedTimeInHours": e }) }}
-        />
-      </Form.Item>
+        <FormItemLabel prefixCls="acceptanceCriteria" label="Acceptance Criteria" required={true} />
+        <Form.Item name="acceptanceCriteria" key="acceptanceCriteria" initialValue={data.acceptanceCriteria}>
+        <List>
+      <VirtualList
+        data={slicedData}
+        height={70}
+        itemHeight={42}
+        itemKey="email"
+        onScroll={(e: any )=>{if (e.target.scrollHeight-e.target.scrollTop > 0){setSlicedData(data.acceptanceCriteria.slice(0,slicedData.length+2))}}}
+      >{(item, key) => (
+                  <List.Item key={key}>
+                    <List.Item.Meta
+                      avatar={<span><NumberOutlined></NumberOutlined>{" "}{key}</span>}
+                      title={item}
+                    />
+                  </List.Item>
+                )}
+            </VirtualList>
+            </List>
+        </Form.Item>
+        <FormItemLabel prefixCls="expectedTimeInHours" label="Estimate Story Points" required={true} />
+        <Form.Item
+          initialValue={data.expectedTimeInHours}
+          name="expectedTimeInHours"
+          key="expectedTimeInHours"
+          style={{ width: "100%", display: "flex" }}
+          rules={[{ required: true, message: 'Please input the story points estimation in hours of the new backlog item!' }]}
+        >
+          {/*<InputNumber type="number" min={0} />*/}
+          <InputNumber
+            min={0}
+            max={999}
+            type="number"
+            value={value}
+            onChange={(e) => { setValue(e); form.setFieldsValue({ "expectedTimeInHours": e }) }}
+          />
+        </Form.Item>
 
 
-    </Form>
+      </Form>
     </Modal >
   );
 };

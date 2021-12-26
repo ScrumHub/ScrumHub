@@ -105,11 +105,11 @@ export const EditPBIPopup: React.FC<CollectionCreateFormProps> = ({
                   >
                     <Input style={{ width: "95%" }} placeholder={`Input New Cirterion`} />
                   </Form.Item>
-                  <MinusCircleOutlined style={{ width: "5%" }} className="dynamic-delete-button" onClick={() => remove(name)} />
+                  <MinusCircleOutlined style={{ width: "5%", alignSelf:"flex-end"}} className="dynamic-delete-button" onClick={() => remove(name)} />
                 </Form.Item>
               ))}
               <Form.Item key="add_criterion">
-              <Button style={{ marginTop: "20px", float: "left", }} type="dashed" onClick={() => add()} block icon={<PlusCircleOutlined />}>
+              <Button style={{ marginTop: "20px",width: "95%"  }} type="dashed" onClick={() => add()} block icon={<PlusCircleOutlined />}>
                   Add criterion
                 </Button>
               </Form.Item>
