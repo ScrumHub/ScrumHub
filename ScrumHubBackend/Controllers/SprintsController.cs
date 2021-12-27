@@ -174,13 +174,14 @@ namespace ScrumHubBackend.Controllers
         /// <param name="repositoryOwner">Owner of the repository</param>
         /// <param name="repositoryName">Name of the repository</param>
         /// <param name="sprintNumber">Id of the PBI</param>
-        /// <param name="failed">True if sprint failed, false if it was successful</param>
+        /// <param name="failed">True if sprint failed, false (default) if it was successful</param>
         [HttpPut("{repositoryOwner}/{repositoryName}/{sprintNumber}/finish")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Sprint), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.Unauthorized)]
         [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.Conflict)]
         public async Task<IActionResult> FinishSprint(
             [FromHeader] string authToken,
             [FromRoute] string repositoryOwner,
