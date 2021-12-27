@@ -6,23 +6,8 @@ namespace ScrumHubBackend.CQRS.PBI
     /// <summary>
     /// Command adding PBI to ScrumHub
     /// </summary>
-    public class AddPBICommand : IRequest<BacklogItem>
+    public class AddPBICommand : CommonInRepositoryRequest<BacklogItem>
     {
-        /// <summary>
-        /// Github authorization token
-        /// </summary>
-        public string? AuthToken { get; set; }
-
-        /// <summary>
-        /// Owner of the repository
-        /// </summary>
-        public string? RepositoryOwner { get; set; }
-
-        /// <summary>
-        /// Name of the repository
-        /// </summary>
-        public string? RepositoryName { get; set; }
-
         /// <summary>
         /// Name of the PBI
         /// </summary>
