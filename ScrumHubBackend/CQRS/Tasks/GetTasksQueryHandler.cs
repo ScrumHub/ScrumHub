@@ -56,15 +56,20 @@ namespace ScrumHubBackend.CQRS.Tasks
 
             _gitHubResynchronization.ResynchronizeIssues(repository, issues, _dbContext);
 
-            return Task.FromResult(PaginateTasks(issues ?? new List<Octokit.Issue>(), request.PageNumber, request.PageSize));
+            return Task.FromResult(PaginateTasks(issues ?? new List<Octokit.Issue>(), request.PageNumber, request.PageSize, request.OnePage));
         }
 
         /// <summary>
         /// Paginates sprints and transforms them to model repositories
         /// </summary>
-        public virtual PaginatedList<SHTask> PaginateTasks(IEnumerable<Octokit.Issue> issues, int pageNumber, int pageSize)
+        public virtual PaginatedList<SHTask> PaginateTasks(IEnumerable<Octokit.Issue> issues, int pageNumber, int pageSize, bool? onePage)
         {
             var sortedIssues = issues.OrderByDescending(iss => iss.UpdatedAt);
+            if(onePage.HasValue && onePage.Value)
+            {
+                pageNumber = 1;
+                pageSize = sortedIssues.Count();
+            }
             int startIndex = pageSize * (pageNumber - 1);
             int endIndex = Math.Min(startIndex + pageSize, sortedIssues.Count());
             var paginatedIssues = sortedIssues.Take(new Range(startIndex, endIndex));

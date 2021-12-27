@@ -36,6 +36,7 @@ namespace ScrumHubBackend.Controllers
         /// <param name="pageNumber">Page to get, default = 1</param>
         /// <param name="pageSize">Size of page, default = 10</param>
         /// <param name="completed">Filter for only completed or only not completed sprints</param>
+        /// <param name="onePage">True if want to fetch everything as one page, false/skipped otherwise</param>
         [HttpGet("{repositoryOwner}/{repositoryName}")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(PaginatedList<Sprint>), (int)HttpStatusCode.OK)]
@@ -48,7 +49,8 @@ namespace ScrumHubBackend.Controllers
             [FromRoute] string repositoryName,
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10,
-            [FromQuery] bool? completed = null
+            [FromQuery] bool? completed = null,
+            [FromQuery] bool? onePage = null
             )
         {
             var query = new GetSprintsQuery
@@ -58,7 +60,8 @@ namespace ScrumHubBackend.Controllers
                 RepositoryName = repositoryName,
                 PageNumber = pageNumber,
                 PageSize = pageSize,
-                CompletedFilter = completed
+                CompletedFilter = completed,
+                OnePage = onePage
             };
 
             var result = await _mediator.Send(query);

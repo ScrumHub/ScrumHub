@@ -45,17 +45,22 @@ namespace ScrumHubBackend.CQRS.Sprints
 
             var sprintsForRepository = dbRepository.GetSprintsForRepository(_dbContext);
 
-            var result = FilterAndPaginateSprints(request, sprintsForRepository ?? new List<DatabaseModel.Sprint>(), request.PageNumber, request.PageSize, request.CompletedFilter);
+            var result = FilterAndPaginateSprints(request, sprintsForRepository ?? new List<DatabaseModel.Sprint>(), request.PageNumber, request.PageSize, request.CompletedFilter, request.OnePage);
             return Task.FromResult(result);
         }
 
         /// <summary>
         /// Paginates sprints and transforms them to model repositories
         /// </summary>
-        public virtual PaginatedList<Sprint> FilterAndPaginateSprints(ICommonInRepositoryRequest request, IEnumerable<DatabaseModel.Sprint> sprints, int pageNumber, int pageSize, bool? completedFilter)
+        public virtual PaginatedList<Sprint> FilterAndPaginateSprints(ICommonInRepositoryRequest request, IEnumerable<DatabaseModel.Sprint> sprints, int pageNumber, int pageSize, bool? completedFilter, bool? onePage)
         {
             var filteredSprints = sprints.Where(sprint => completedFilter == null || (sprint.Status != Common.SprintStatus.NotFinished) == completedFilter.Value);
             var sortedSprints = filteredSprints.OrderBy(sprint => sprint.SprintNumber);
+            if (onePage.HasValue && onePage.Value)
+            {
+                pageNumber = 1;
+                pageSize = sortedSprints.Count();
+            }
             int startIndex = pageSize * (pageNumber - 1);
             int endIndex = Math.Min(startIndex + pageSize, sortedSprints.Count());
             var paginatedSprints = sortedSprints.Take(new Range(startIndex, endIndex));
