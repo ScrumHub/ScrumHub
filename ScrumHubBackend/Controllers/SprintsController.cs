@@ -107,7 +107,7 @@ namespace ScrumHubBackend.Controllers
         [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.Unauthorized)]
         [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> AddBacklogItem(
+        public async Task<IActionResult> AddSprint(
             [FromHeader] string authToken,
             [FromRoute] string repositoryOwner,
             [FromRoute] string repositoryName,
@@ -143,7 +143,7 @@ namespace ScrumHubBackend.Controllers
         [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.Unauthorized)]
         [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> UpdateBacklogItem(
+        public async Task<IActionResult> UpdateSprint(
             [FromHeader] string authToken,
             [FromRoute] string repositoryOwner,
             [FromRoute] string repositoryName,
@@ -164,6 +164,41 @@ namespace ScrumHubBackend.Controllers
             };
 
             var result = await _mediator.Send(query);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Finish sprint (requires admin permissions in repository)
+        /// </summary>
+        /// <param name="authToken">Authorization token of user</param>
+        /// <param name="repositoryOwner">Owner of the repository</param>
+        /// <param name="repositoryName">Name of the repository</param>
+        /// <param name="sprintNumber">Id of the PBI</param>
+        /// <param name="failed">True if sprint failed, false if it was successful</param>
+        [HttpPut("{repositoryOwner}/{repositoryName}/{sprintNumber}/finish")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Sprint), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> FinishSprint(
+            [FromHeader] string authToken,
+            [FromRoute] string repositoryOwner,
+            [FromRoute] string repositoryName,
+            [FromRoute] int sprintNumber,
+            [FromQuery] bool failed
+            )
+        {
+            var command = new FinishSprintCommand
+            {
+                AuthToken = authToken,
+                RepositoryOwner = repositoryOwner,
+                RepositoryName = repositoryName,
+                SprintNumber = sprintNumber,
+                IsFailure = failed
+            };
+
+            var result = await _mediator.Send(command);
             return Ok(result);
         }
     }
