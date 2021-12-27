@@ -1,5 +1,4 @@
 ﻿using ScrumHubBackend.CommunicationModel;
-using ScrumHubBackend.CommunicationModel.Common;
 
 namespace ScrumHubBackend.CQRS.Tasks
 {
