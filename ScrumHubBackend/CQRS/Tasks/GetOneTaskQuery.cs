@@ -6,23 +6,8 @@ namespace ScrumHubBackend.CQRS.Tasks
     /// <summary>
     /// Query for getting one task
     /// </summary>
-    public class GetOneTaskQuery : IRequest<SHTask>
+    public class GetOneTaskQuery : CommonInRepositoryRequest<SHTask>
     {
-        /// <summary>
-        /// Github authorization token
-        /// </summary>
-        public string? AuthToken { get; set; }
-
-        /// <summary>
-        /// Owner of the repository
-        /// </summary>
-        public string? RepositoryOwner { get; set; }
-
-        /// <summary>
-        /// Name of the repository
-        /// </summary>
-        public string? RepositoryName { get; set; }
-
         /// <summary>
         /// Id of the task
         /// </summary>

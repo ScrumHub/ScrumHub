@@ -7,23 +7,8 @@ namespace ScrumHubBackend.CQRS.PBI
     /// <summary>
     /// Query for getting all PBIs from repository
     /// </summary>
-    public class GetPBIsQuery : IRequest<PaginatedList<BacklogItem>>
+    public class GetPBIsQuery : CommonInRepositoryRequest<PaginatedList<BacklogItem>>
     {
-        /// <summary>
-        /// Github authorization token
-        /// </summary>
-        public string? AuthToken { get; set; }
-
-        /// <summary>
-        /// Owner of the repository
-        /// </summary>
-        public string? RepositoryOwner { get; set; }
-
-        /// <summary>
-        /// Name of the repository
-        /// </summary>
-        public string? RepositoryName { get; set; }
-
         /// <summary>
         /// Page number
         /// </summary>

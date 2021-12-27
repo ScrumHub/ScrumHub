@@ -7,23 +7,8 @@ namespace ScrumHubBackend.CQRS.Sprints
     /// <summary>
     /// Query getting list of sprints
     /// </summary>
-    public class GetSprintsQuery : IRequest<PaginatedList<Sprint>>
+    public class GetSprintsQuery : CommonInRepositoryRequest<PaginatedList<Sprint>>
     {
-        /// <summary>
-        /// Github authorization token
-        /// </summary>
-        public string? AuthToken { get; set; }
-
-        /// <summary>
-        /// Owner of the repository
-        /// </summary>
-        public string? RepositoryOwner { get; set; }
-
-        /// <summary>
-        /// Name of the repository
-        /// </summary>
-        public string? RepositoryName { get; set; }
-
         /// <summary>
         /// Page number
         /// </summary>

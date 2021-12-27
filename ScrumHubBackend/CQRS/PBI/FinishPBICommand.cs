@@ -6,23 +6,8 @@ namespace ScrumHubBackend.CQRS.PBI
     /// <summary>
     /// Command for finishing one PBI
     /// </summary>
-    public class FinishPBICommand : IRequest<BacklogItem>
-    {
-        /// <summary>
-        /// Github authorization token
-        /// </summary>
-        public string? AuthToken { get; set; }
-
-        /// <summary>
-        /// Owner of the repository
-        /// </summary>
-        public string? RepositoryOwner { get; set; }
-
-        /// <summary>
-        /// Name of the repository
-        /// </summary>
-        public string? RepositoryName { get; set; }
-
+    public class FinishPBICommand : CommonInRepositoryRequest<BacklogItem>
+    { 
         /// <summary>
         /// Id of the PBI
         /// </summary>

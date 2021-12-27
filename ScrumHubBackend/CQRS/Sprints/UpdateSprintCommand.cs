@@ -6,23 +6,8 @@ namespace ScrumHubBackend.CQRS.Sprints
     /// <summary>
     /// Command updating one sprint
     /// </summary>
-    public class UpdateSprintCommand : IRequest<Sprint>
+    public class UpdateSprintCommand : CommonInRepositoryRequest<Sprint>
     {
-        /// <summary>
-        /// Github authorization token
-        /// </summary>
-        public string? AuthToken { get; set; }
-
-        /// <summary>
-        /// Owner of the repository
-        /// </summary>
-        public string? RepositoryOwner { get; set; }
-
-        /// <summary>
-        /// Name of the repository
-        /// </summary>
-        public string? RepositoryName { get; set; }
-
         /// <summary>
         /// Goal of the sprint
         /// </summary>

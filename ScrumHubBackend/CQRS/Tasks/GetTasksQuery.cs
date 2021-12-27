@@ -7,23 +7,8 @@ namespace ScrumHubBackend.CQRS.Tasks
     /// <summary>
     /// Get all the tasks from repository
     /// </summary>
-    public class GetTasksQuery : IRequest<PaginatedList<SHTask>>
+    public class GetTasksQuery : CommonInRepositoryRequest<PaginatedList<SHTask>>
     {
-        /// <summary>
-        /// Github authorization token
-        /// </summary>
-        public string? AuthToken { get; set; }
-
-        /// <summary>
-        /// Owner of the repository
-        /// </summary>
-        public string? RepositoryOwner { get; set; }
-
-        /// <summary>
-        /// Name of the repository
-        /// </summary>
-        public string? RepositoryName { get; set; }
-
         /// <summary>
         /// Page number
         /// </summary>
