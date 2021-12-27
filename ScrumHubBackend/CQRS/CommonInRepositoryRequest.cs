@@ -3,23 +3,38 @@
 namespace ScrumHubBackend.CQRS
 {
     /// <summary>
-    /// Common part of all requests that are executed inside repository
+    /// Interface for common part of the request
     /// </summary>
-    public abstract class CommonInRepositoryRequest<T> : IRequest<T>
+    public interface ICommonInRepositoryRequest
     {
         /// <summary>
         /// Github authorization token
         /// </summary>
-        public string? AuthToken { get; set; }
+        string? AuthToken { get; set; }
 
         /// <summary>
         /// Owner of the repository
         /// </summary>
-        public string? RepositoryOwner { get; set; }
+        string? RepositoryOwner { get; set; }
 
         /// <summary>
         /// Name of the repository
         /// </summary>
+        string? RepositoryName { get; set; }
+    }
+
+    /// <summary>
+    /// Common part of all requests that are executed inside repository
+    /// </summary>
+    public abstract class CommonInRepositoryRequest<T> : IRequest<T>, ICommonInRepositoryRequest
+    {
+        /// <inheritdoc/>
+        public string? AuthToken { get; set; }
+
+        /// <inheritdoc/>
+        public string? RepositoryOwner { get; set; }
+
+        /// <inheritdoc/>
         public string? RepositoryName { get; set; }
     }
 }
