@@ -7,5 +7,9 @@ namespace ScrumHubBackend.CQRS.Sprints
     /// </summary>
     public class GetSprintsQuery : CommonInRepositoryGetListQuery<Sprint>
     {
+        /// <summary>
+        /// Filter for completed sprints
+        /// </summary>
+        public bool? CompletedFilter { get; set; }
     }
 }

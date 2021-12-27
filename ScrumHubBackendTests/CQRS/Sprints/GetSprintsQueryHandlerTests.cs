@@ -58,10 +58,10 @@ namespace ScrumHubBackendTests.CQRS.Sprints
 
             var handler = new GetSprintsQueryHandler(loggerMock.Object, gitHubClientFactoryMock.Object, dbContextMock.Object, mediatorMock.Object);
 
-            var res1 = handler.FilterAndPaginateSprints(query, sprintsData, 1, 3);
-            var res2 = handler.FilterAndPaginateSprints(query, sprintsData, 2, 3);
-            var res3 = handler.FilterAndPaginateSprints(query, sprintsData, 3, 3);
-            var res4 = handler.FilterAndPaginateSprints(query, sprintsData, 4, 3);
+            var res1 = handler.FilterAndPaginateSprints(query, sprintsData, 1, 3, null);
+            var res2 = handler.FilterAndPaginateSprints(query, sprintsData, 2, 3, null);
+            var res3 = handler.FilterAndPaginateSprints(query, sprintsData, 3, 3, null);
+            var res4 = handler.FilterAndPaginateSprints(query, sprintsData, 4, 3, null);
 
             Assert.Equal(3, res1.RealSize);
             Assert.Equal(3, res2.RealSize);
