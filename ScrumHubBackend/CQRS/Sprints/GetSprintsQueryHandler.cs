@@ -14,15 +14,17 @@ namespace ScrumHubBackend.CQRS.Sprints
         private readonly ILogger<GetSprintsQueryHandler> _logger;
         private readonly IGitHubClientFactory _gitHubClientFactory;
         private readonly DatabaseContext _dbContext;
+        private readonly IMediator _mediator;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public GetSprintsQueryHandler(ILogger<GetSprintsQueryHandler> logger, IGitHubClientFactory clientFactory, DatabaseContext dbContext)
+        public GetSprintsQueryHandler(ILogger<GetSprintsQueryHandler> logger, IGitHubClientFactory clientFactory, DatabaseContext dbContext, IMediator mediator)
         {
             _logger = logger ?? throw new ArgumentException(null, nameof(logger));
             _dbContext = dbContext ?? throw new ArgumentException(null, nameof(dbContext));
             _gitHubClientFactory = clientFactory ?? throw new ArgumentException(null, nameof(clientFactory));
+            _mediator = mediator ?? throw new ArgumentException(null, nameof(mediator));
         }
 
         /// <inheritdoc/>
@@ -43,19 +45,19 @@ namespace ScrumHubBackend.CQRS.Sprints
 
             var sprintsForRepository = dbRepository.GetSprintsForRepository(_dbContext);
 
-            return Task.FromResult(FilterAndPaginateSprints(sprintsForRepository ?? new List<DatabaseModel.Sprint>(), request.PageNumber, request.PageSize));
+            return Task.FromResult(FilterAndPaginateSprints(request, sprintsForRepository ?? new List<DatabaseModel.Sprint>(), request.PageNumber, request.PageSize));
         }
 
         /// <summary>
         /// Paginates sprints and transforms them to model repositories
         /// </summary>
-        public virtual PaginatedList<Sprint> FilterAndPaginateSprints(IEnumerable<DatabaseModel.Sprint> sprints, int pageNumber, int pageSize)
+        public virtual PaginatedList<Sprint> FilterAndPaginateSprints(ICommonInRepositoryRequest request, IEnumerable<DatabaseModel.Sprint> sprints, int pageNumber, int pageSize)
         {
             var sortedSprints = sprints.OrderBy(sprint => sprint.SprintNumber);
             int startIndex = pageSize * (pageNumber - 1);
             int endIndex = Math.Min(startIndex + pageSize, sortedSprints.Count());
             var paginatedSprints = sortedSprints.Take(new Range(startIndex, endIndex));
-            var transformedSprints = paginatedSprints.Select(sprint => new Sprint(sprint, _dbContext));
+            var transformedSprints = paginatedSprints.Select(sprint => new Sprint(sprint, request, _dbContext, _mediator));
 
             int pagesCount = (int)Math.Ceiling(sortedSprints.Count() / (double)pageSize);
             return new PaginatedList<Sprint>(transformedSprints, pageNumber, pageSize, pagesCount);

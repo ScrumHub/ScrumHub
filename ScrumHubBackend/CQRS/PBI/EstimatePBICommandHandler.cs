@@ -13,15 +13,17 @@ namespace ScrumHubBackend.CQRS.PBI
         private readonly ILogger<EstimatePBICommandHandler> _logger;
         private readonly IGitHubClientFactory _gitHubClientFactory;
         private readonly DatabaseContext _dbContext;
+        private readonly IMediator _mediator;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public EstimatePBICommandHandler(ILogger<EstimatePBICommandHandler> logger, IGitHubClientFactory clientFactory, DatabaseContext dbContext)
+        public EstimatePBICommandHandler(ILogger<EstimatePBICommandHandler> logger, IGitHubClientFactory clientFactory, DatabaseContext dbContext, IMediator mediator)
         {
             _logger = logger ?? throw new ArgumentException(null, nameof(logger));
             _dbContext = dbContext ?? throw new ArgumentException(null, nameof(dbContext));
             _gitHubClientFactory = clientFactory ?? throw new ArgumentException(null, nameof(clientFactory));
+            _mediator = mediator ?? throw new ArgumentException(null, nameof(mediator));
         }
 
         /// <inheritdoc/>
@@ -52,7 +54,7 @@ namespace ScrumHubBackend.CQRS.PBI
             _dbContext.Update(pbi);
             _dbContext.SaveChanges();
 
-            return Task.FromResult(new BacklogItem(pbi.Id, _dbContext));
+            return Task.FromResult(new BacklogItem(pbi.Id, request, _dbContext, _mediator));
         }
     }
 }

@@ -1,4 +1,8 @@
-﻿namespace ScrumHubBackend.CommunicationModel
+﻿using MediatR;
+using ScrumHubBackend.CQRS;
+using ScrumHubBackend.CQRS.Tasks;
+
+namespace ScrumHubBackend.CommunicationModel
 {
     /// <summary>
     /// Represents PBI 
@@ -56,6 +60,11 @@
         public IList<string>? AcceptanceCriteria { get; set; } = new List<string>();
 
         /// <summary>
+        /// List of tasks for PBI
+        /// </summary>
+        public IList<SHTask>? Tasks { get; set; } = new List<SHTask>();
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public BacklogItem() { }
@@ -63,14 +72,14 @@
         /// <summary>
         /// Constructor
         /// </summary>
-        public BacklogItem(long dbId, DatabaseContext dbContext) : this(dbContext.BacklogItems?.Find(dbId), dbContext)
+        public BacklogItem(long dbId, ICommonInRepositoryRequest originalRequst, DatabaseContext dbContext, IMediator mediator) : this(dbContext.BacklogItems?.Find(dbId), originalRequst, dbContext, mediator)
         {
         }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public BacklogItem(DatabaseModel.BacklogItem? dbPBI, DatabaseContext dbContext)
+        public BacklogItem(DatabaseModel.BacklogItem? dbPBI, ICommonInRepositoryRequest originalRequst, DatabaseContext dbContext, IMediator mediator)
         {
             Id = dbPBI?.Id ?? 0;
             Name = dbPBI?.Name ?? String.Empty;
@@ -82,6 +91,16 @@
             AcceptanceCriteria = dbPBI?.GetAcceptanceCriteriaForPBI(dbContext).Select(ac => ac.Text).ToList();
 
             SprintNumber = dbPBI?.SprintId ?? null;
+
+            var tasksQuery = new GetTasksForPBIQuery()
+            {
+                AuthToken = originalRequst.AuthToken,
+                RepositoryOwner = originalRequst.RepositoryOwner,
+                RepositoryName = originalRequst.RepositoryName,
+                PBIId = Id
+            };
+
+            Tasks = mediator.Send(tasksQuery).Result.List.ToList();
         }
     }
 }

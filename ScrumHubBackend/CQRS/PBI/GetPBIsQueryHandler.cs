@@ -14,15 +14,17 @@ namespace ScrumHubBackend.CQRS.PBI
         private readonly ILogger<GetPBIsQueryHandler> _logger;
         private readonly IGitHubClientFactory _gitHubClientFactory;
         private readonly DatabaseContext _dbContext;
+        private readonly IMediator _mediator;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public GetPBIsQueryHandler(ILogger<GetPBIsQueryHandler> logger, IGitHubClientFactory clientFactory, DatabaseContext dbContext)
+        public GetPBIsQueryHandler(ILogger<GetPBIsQueryHandler> logger, IGitHubClientFactory clientFactory, DatabaseContext dbContext, IMediator mediator)
         {
             _logger = logger ?? throw new ArgumentException(null, nameof(logger));
             _dbContext = dbContext ?? throw new ArgumentException(null, nameof(dbContext));
             _gitHubClientFactory = clientFactory ?? throw new ArgumentException(null, nameof(clientFactory));
+            _mediator = mediator ?? throw new ArgumentException(null, nameof(mediator));
         }
 
         /// <inheritdoc/>
@@ -41,7 +43,7 @@ namespace ScrumHubBackend.CQRS.PBI
             if (dbRepository == null)
                 throw new NotFoundException("Repository not found in ScrumHub");
 
-            var paginatedPBIs = FilterAndPaginatePBIs(_dbContext.BacklogItems?.Where(pbi => pbi.RepositoryId == dbRepository.Id).ToList() ?? new List<DatabaseModel.BacklogItem>(), request.PageNumber, request.PageSize, request.NameFilter, request.FinishedFilter, request.EstimatedFilter, request.InSprintFilter);
+            var paginatedPBIs = FilterAndPaginatePBIs(request, _dbContext.BacklogItems?.Where(pbi => pbi.RepositoryId == dbRepository.Id).ToList() ?? new List<DatabaseModel.BacklogItem>(), request.PageNumber, request.PageSize, request.NameFilter, request.FinishedFilter, request.EstimatedFilter, request.InSprintFilter);
 
             return Task.FromResult(paginatedPBIs);
         }
@@ -49,7 +51,7 @@ namespace ScrumHubBackend.CQRS.PBI
         /// <summary>
         /// Filters and paginates PBIs and transforms them to model repositories
         /// </summary>
-        public virtual PaginatedList<BacklogItem> FilterAndPaginatePBIs(IEnumerable<DatabaseModel.BacklogItem> PBIs, int pageNumber, int pageSize, string? nameFilter, bool? finishedFilter, bool? estimatedFilter, bool? inSprintFilter)
+        public virtual PaginatedList<BacklogItem> FilterAndPaginatePBIs(ICommonInRepositoryRequest request, IEnumerable<DatabaseModel.BacklogItem> PBIs, int pageNumber, int pageSize, string? nameFilter, bool? finishedFilter, bool? estimatedFilter, bool? inSprintFilter)
         {
             var filteredPBIsName = PBIs.Where(pbi => pbi.Name.ToLower().Contains(nameFilter?.ToLower() ?? ""));
             var filteredPBIsFinished = filteredPBIsName.Where(pbi => finishedFilter == null || pbi.Finished == finishedFilter);
@@ -59,7 +61,7 @@ namespace ScrumHubBackend.CQRS.PBI
             int startIndex = pageSize * (pageNumber - 1);
             int endIndex = Math.Min(startIndex + pageSize, sortedPBIs.Count());
             var paginatedPBIs = sortedPBIs.Take(new Range(startIndex, endIndex));
-            var transformedPBIs = paginatedPBIs.Select(pbi => new BacklogItem(pbi.Id, _dbContext));
+            var transformedPBIs = paginatedPBIs.Select(pbi => new BacklogItem(pbi.Id, request, _dbContext, _mediator));
 
             int pagesCount = (int)Math.Ceiling(sortedPBIs.Count() / (double)pageSize);
             return new PaginatedList<BacklogItem>(transformedPBIs, pageNumber, pageSize, pagesCount);
