@@ -13,15 +13,17 @@ namespace ScrumHubBackend.CQRS.PBI
         private readonly ILogger<GetOnePBIQueryHandler> _logger;
         private readonly IGitHubClientFactory _gitHubClientFactory;
         private readonly DatabaseContext _dbContext;
+        private readonly IMediator _mediator;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public GetOnePBIQueryHandler(ILogger<GetOnePBIQueryHandler> logger, IGitHubClientFactory clientFactory, DatabaseContext dbContext)
+        public GetOnePBIQueryHandler(ILogger<GetOnePBIQueryHandler> logger, IGitHubClientFactory clientFactory, DatabaseContext dbContext, IMediator mediator)
         {
             _logger = logger ?? throw new ArgumentException(null, nameof(logger));
             _dbContext = dbContext ?? throw new ArgumentException(null, nameof(dbContext));
             _gitHubClientFactory = clientFactory ?? throw new ArgumentException(null, nameof(clientFactory));
+            _mediator = mediator ?? throw new ArgumentException(null, nameof(mediator));
         }
 
         /// <inheritdoc/>
@@ -45,7 +47,7 @@ namespace ScrumHubBackend.CQRS.PBI
             if (pbi == null || pbi?.RepositoryId != dbRepository.Id)
                 throw new NotFoundException("Backlog item not found in ScrumHub");
 
-            return Task.FromResult(new BacklogItem(pbi.Id, _dbContext));
+            return Task.FromResult(new BacklogItem(pbi.Id, request, _dbContext, _mediator));
         }
     }
 }

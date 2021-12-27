@@ -1,13 +1,17 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using MediatR;
+using Microsoft.Extensions.Logging;
 using Moq;
 using ScrumHubBackend;
+using ScrumHubBackend.CommunicationModel.Common;
 using ScrumHubBackend.CQRS.Sprints;
+using ScrumHubBackend.CQRS.Tasks;
 using ScrumHubBackend.DatabaseModel;
 using ScrumHubBackend.GitHubClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -33,13 +37,31 @@ namespace ScrumHubBackendTests.CQRS.Sprints
             var loggerMock = new Mock<ILogger<GetSprintsQueryHandler>>();
             var gitHubClientFactoryMock = new Mock<IGitHubClientFactory>();
             var dbContextMock = new Mock<DatabaseContext>();
+            var mediatorMock = new Mock<IMediator>();
+            mediatorMock.Setup(
+                m => m.Send(It.IsAny<GetTasksForPBIQuery>(), It.IsAny<CancellationToken>())
+                ).Returns(
+                    Task.FromResult(
+                        new PaginatedList<ScrumHubBackend.CommunicationModel.SHTask>(
+                            new List<ScrumHubBackend.CommunicationModel.SHTask>(),
+                            1,
+                            0,
+                            1
+                        )
+                    )
+                );
 
-            var handler = new GetSprintsQueryHandler(loggerMock.Object, gitHubClientFactoryMock.Object, dbContextMock.Object);
+            var query = new GetSprintsQuery()
+            {
 
-            var res1 = handler.FilterAndPaginateSprints(sprintsData, 1, 3);
-            var res2 = handler.FilterAndPaginateSprints(sprintsData, 2, 3);
-            var res3 = handler.FilterAndPaginateSprints(sprintsData, 3, 3);
-            var res4 = handler.FilterAndPaginateSprints(sprintsData, 4, 3);
+            };
+
+            var handler = new GetSprintsQueryHandler(loggerMock.Object, gitHubClientFactoryMock.Object, dbContextMock.Object, mediatorMock.Object);
+
+            var res1 = handler.FilterAndPaginateSprints(query, sprintsData, 1, 3);
+            var res2 = handler.FilterAndPaginateSprints(query, sprintsData, 2, 3);
+            var res3 = handler.FilterAndPaginateSprints(query, sprintsData, 3, 3);
+            var res4 = handler.FilterAndPaginateSprints(query, sprintsData, 4, 3);
 
             Assert.Equal(3, res1.RealSize);
             Assert.Equal(3, res2.RealSize);

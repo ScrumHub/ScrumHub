@@ -14,15 +14,17 @@ namespace ScrumHubBackend.CQRS.PBI
         private readonly ILogger<UpdatePBICommandHandler> _logger;
         private readonly IGitHubClientFactory _gitHubClientFactory;
         private readonly DatabaseContext _dbContext;
+        private readonly IMediator _mediator;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public UpdatePBICommandHandler(ILogger<UpdatePBICommandHandler> logger, IGitHubClientFactory clientFactory, DatabaseContext dbContext)
+        public UpdatePBICommandHandler(ILogger<UpdatePBICommandHandler> logger, IGitHubClientFactory clientFactory, DatabaseContext dbContext, IMediator mediator)
         {
             _logger = logger ?? throw new ArgumentException(null, nameof(logger));
             _dbContext = dbContext ?? throw new ArgumentException(null, nameof(dbContext));
             _gitHubClientFactory = clientFactory ?? throw new ArgumentException(null, nameof(clientFactory));
+            _mediator = mediator ?? throw new ArgumentException(null, nameof(mediator));
         }
 
         /// <inheritdoc/>
@@ -56,7 +58,7 @@ namespace ScrumHubBackend.CQRS.PBI
 
             pbi.UpdateAcceptanceCriteria(request.AcceptanceCriteria ?? new List<string>(), _dbContext);
 
-            return Task.FromResult(new CommunicationModel.BacklogItem(pbi.Id, _dbContext));
+            return Task.FromResult(new CommunicationModel.BacklogItem(pbi.Id, request, _dbContext, _mediator));
         }
     }
 }

@@ -13,15 +13,17 @@ namespace ScrumHubBackend.CQRS.Sprints
         private readonly ILogger<GetOneSprintQueryHandler> _logger;
         private readonly IGitHubClientFactory _gitHubClientFactory;
         private readonly DatabaseContext _dbContext;
+        private readonly IMediator _mediator;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public GetOneSprintQueryHandler(ILogger<GetOneSprintQueryHandler> logger, IGitHubClientFactory clientFactory, DatabaseContext dbContext)
+        public GetOneSprintQueryHandler(ILogger<GetOneSprintQueryHandler> logger, IGitHubClientFactory clientFactory, DatabaseContext dbContext, IMediator mediator)
         {
             _logger = logger ?? throw new ArgumentException(null, nameof(logger));
             _dbContext = dbContext ?? throw new ArgumentException(null, nameof(dbContext));
             _gitHubClientFactory = clientFactory ?? throw new ArgumentException(null, nameof(clientFactory));
+            _mediator = mediator ?? throw new ArgumentException(null, nameof(mediator));
         }
 
         /// <inheritdoc/>
@@ -46,7 +48,7 @@ namespace ScrumHubBackend.CQRS.Sprints
             if(dbSprint == null)
                 throw new NotFoundException("Sprint not fount in the repository");
 
-            return Task.FromResult(new Sprint(dbSprint, _dbContext));
+            return Task.FromResult(new Sprint(dbSprint, request, _dbContext, _mediator));
         }
     }
 }

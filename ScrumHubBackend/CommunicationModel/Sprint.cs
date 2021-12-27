@@ -1,4 +1,7 @@
-﻿namespace ScrumHubBackend.CommunicationModel
+﻿using MediatR;
+using ScrumHubBackend.CQRS;
+
+namespace ScrumHubBackend.CommunicationModel
 {
     /// <summary>
     /// Represents a sprint
@@ -43,14 +46,14 @@
         /// <summary>
         /// Constructor
         /// </summary>
-        public Sprint(DatabaseModel.Sprint dbSprint, DatabaseContext dbContext)
+        public Sprint(DatabaseModel.Sprint dbSprint, ICommonInRepositoryRequest originalRequest, DatabaseContext dbContext, IMediator mediator)
         {
             SprintNumber = dbSprint.SprintNumber;
             Goal = dbSprint.Goal;
             FinishDate = dbSprint.FinishDate.ToString("yyyy-MM-dd 'UTC'");
             Title = dbSprint.Title;
             var relatedDbBacklogItem = dbContext.BacklogItems?.Where(pbi => pbi.SprintId == dbSprint.SprintNumber && pbi.RepositoryId == dbSprint.RepositoryId).ToList();
-            BacklogItems = relatedDbBacklogItem?.Select(pbi => new BacklogItem(pbi, dbContext)).ToList() ?? new List<BacklogItem>();
+            BacklogItems = relatedDbBacklogItem?.Select(pbi => new BacklogItem(pbi, originalRequest, dbContext, mediator)).ToList() ?? new List<BacklogItem>();
             IsCurrent = dbContext.Sprints?
                 .Where(
                     sprint => sprint.RepositoryId == dbSprint.RepositoryId &&
