@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ScrumHubBackend.Common;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ScrumHubBackend.DatabaseModel
@@ -43,12 +44,17 @@ namespace ScrumHubBackend.DatabaseModel
         public DateTime FinishDate { get; set; } = DateTime.MinValue;
 
         /// <summary>
+        /// Status of the sprint
+        /// </summary>
+        public SprintStatus Status { get; set; } = SprintStatus.NotFinished;
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public Sprint() { }
 
         /// <summary>
-        /// Constructor
+        /// Constructor, modifies repository
         /// </summary>
         public Sprint(string goal, string title, DateTime finishDate, long repositoryId, DatabaseContext dbContext)
         {
@@ -56,7 +62,9 @@ namespace ScrumHubBackend.DatabaseModel
             FinishDate = finishDate;
             Goal = goal;
             RepositoryId = repositoryId;
+            Status = SprintStatus.NotFinished;
 
+            // Updating repository with new number
             var dbRepository = dbContext.Find<Repository>(repositoryId);
             dbRepository.LastSprintNumber += 1;
             SprintNumber = dbRepository.LastSprintNumber;

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using ScrumHubBackend.Common;
 using ScrumHubBackend.CQRS;
 
 namespace ScrumHubBackend.CommunicationModel
@@ -39,6 +40,16 @@ namespace ScrumHubBackend.CommunicationModel
         public bool IsCurrent { get; set; } = false;
 
         /// <summary>
+        /// Status of the sprint
+        /// </summary>
+        public SprintStatus Status { get; set; } = SprintStatus.NotFinished;
+
+        /// <summary>
+        /// Flag if sprint is completed
+        /// </summary>
+        public bool IsCompleted { get => Status != SprintStatus.NotFinished; }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public Sprint() { }
@@ -52,6 +63,8 @@ namespace ScrumHubBackend.CommunicationModel
             Goal = dbSprint.Goal;
             FinishDate = dbSprint.FinishDate.ToString("yyyy-MM-dd 'UTC'");
             Title = dbSprint.Title;
+            Status = dbSprint.Status;
+
             var relatedDbBacklogItem = dbContext.BacklogItems?.Where(pbi => pbi.SprintId == dbSprint.SprintNumber && pbi.RepositoryId == dbSprint.RepositoryId).ToList();
             BacklogItems = relatedDbBacklogItem?.Select(pbi => new BacklogItem(pbi, originalRequest, dbContext, mediator)).ToList() ?? new List<BacklogItem>();
             IsCurrent = dbContext.Sprints?
