@@ -54,7 +54,7 @@ export default function SprintTableComponent(props: any) {
     <DndProvider backend={HTML5Backend} key={"dnd" + props.data && props.data.length > 0 ? props.data[0].sprintNumber : 0}>
       {<Table
         key={props.data && props.data.length > 0 ? props.data.at(0).sprintNumber : "table0"}
-        style={{ transform: "scale(0.96)", marginBottom: "0.25%", height: "auto" }}
+        style={{ transform: "scale(0.96)", height: "auto" }}
         scroll={{ x: 800 }}
         size="small"
         loading={props.loading}
