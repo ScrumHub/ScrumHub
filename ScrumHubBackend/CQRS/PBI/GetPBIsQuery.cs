@@ -1,24 +1,12 @@
-﻿using MediatR;
-using ScrumHubBackend.CommunicationModel;
-using ScrumHubBackend.CommunicationModel.Common;
+﻿using ScrumHubBackend.CommunicationModel;
 
 namespace ScrumHubBackend.CQRS.PBI
 {
     /// <summary>
     /// Query for getting all PBIs from repository
     /// </summary>
-    public class GetPBIsQuery : CommonInRepositoryRequest<PaginatedList<BacklogItem>>
+    public class GetPBIsQuery : CommonInRepositoryGetListQuery<BacklogItem>
     {
-        /// <summary>
-        /// Page number
-        /// </summary>
-        public int PageNumber { get; set; }
-
-        /// <summary>
-        /// Page size
-        /// </summary>
-        public int PageSize { get; set; }
-
         /// <summary>
         /// Filter for name of type "Contains"
         /// </summary>

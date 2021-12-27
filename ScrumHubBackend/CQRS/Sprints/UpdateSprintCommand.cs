@@ -1,5 +1,4 @@
-﻿using MediatR;
-using ScrumHubBackend.CommunicationModel;
+﻿using ScrumHubBackend.CommunicationModel;
 
 namespace ScrumHubBackend.CQRS.Sprints
 {
