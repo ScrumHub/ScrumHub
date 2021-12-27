@@ -35,6 +35,7 @@ namespace ScrumHubBackend.Controllers
         /// <param name="repositoryName">Name of the repository</param>
         /// <param name="pageNumber">Page to get, default = 1</param>
         /// <param name="pageSize">Size of page, default = 10</param>
+        /// <param name="onePage">True if want to fetch everything as one page, false/skipped otherwise</param>
         [HttpGet("{repositoryOwner}/{repositoryName}")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(PaginatedList<SHTask>), (int)HttpStatusCode.OK)]
@@ -46,7 +47,8 @@ namespace ScrumHubBackend.Controllers
             [FromRoute] string repositoryOwner,
             [FromRoute] string repositoryName,
             [FromQuery] int pageNumber = 1,
-            [FromQuery] int pageSize = 10
+            [FromQuery] int pageSize = 10,
+            [FromQuery] bool? onePage = null
             )
         {
             var query = new GetTasksQuery
@@ -56,6 +58,7 @@ namespace ScrumHubBackend.Controllers
                 RepositoryName = repositoryName,
                 PageNumber = pageNumber,
                 PageSize = pageSize,
+                OnePage = onePage
             };
 
             var result = await _mediator.Send(query);

@@ -16,5 +16,10 @@ namespace ScrumHubBackend.CQRS
         /// Page size
         /// </summary>
         public int PageSize { get; set; }
+
+        /// <summary>
+        /// True to get everything as one page
+        /// </summary>
+        public bool? OnePage { get; set; }
     }
 }
