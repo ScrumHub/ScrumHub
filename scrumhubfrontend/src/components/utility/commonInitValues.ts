@@ -5,8 +5,6 @@ export const initIDs: IFilters = {
     oldSprintId: -1, newSprintId: -1, pbiId: -1, dropped: false
   };
 
-  export const fixedType = 'NonDraggableBodyRow';
-
   export const initModalVals : IModals = {
     addTask: false,
     assgnTask: false,

@@ -12,7 +12,6 @@ import { store } from '../appstate/store';
 import { EditPBIPopup } from './popups/EditPBIPopup';
 import { EstimatePBIPopup } from './popups/EstimatePBIPopup';
 import "./SprintBacklog.css";
-import { UpdateSprintPopup } from './popups/UpdateSprintPopup';
 import { UpdateSprintPBIsPopup } from './popups/UpdateSprintPBIsPopup';
 
 const columns = [

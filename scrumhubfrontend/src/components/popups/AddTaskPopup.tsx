@@ -1,8 +1,7 @@
 import React from 'react';
-import { Button, Modal, Form, Input, InputNumber, Space } from 'antd';
-import { IFilters } from '../../appstate/stateInterfaces';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
+import { Form, Input, Modal } from 'antd';
+import { IFilters } from '../../appstate/stateInterfaces';
 
 interface Values {
   title: string;
