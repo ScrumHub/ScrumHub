@@ -50,6 +50,9 @@ namespace ScrumHubBackend.CQRS.Sprints
             if (dbSprint == null)
                 throw new NotFoundException("Sprint not fount in the repository");
 
+            if (dbSprint.Status != Common.SprintStatus.NotFinished)
+                throw new ConflictException("Sprint already finished");
+
             dbSprint.Status = request.IsFailure ? Common.SprintStatus.Failed : Common.SprintStatus.Successful;
 
             _dbContext.Update(dbSprint);
