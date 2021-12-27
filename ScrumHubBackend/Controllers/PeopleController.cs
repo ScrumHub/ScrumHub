@@ -27,6 +27,26 @@ namespace ScrumHubBackend.Controllers
         }
 
         /// <summary>
+        /// Get current user
+        /// </summary>
+        /// <param name="authToken">Authorization token of user</param>
+        [HttpGet("current")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Person), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.Unauthorized)]
+        public async Task<IActionResult> GetCurrentUser([FromHeader] string authToken)
+        {
+            var query = new GetCurrentPersonQuery
+            {
+                AuthToken = authToken
+            };
+
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        } 
+
+        /// <summary>
         /// Gets users for given repository (requires read permissions in repository)
         /// </summary>
         /// <param name="authToken">Authorization token of user</param>
@@ -38,7 +58,7 @@ namespace ScrumHubBackend.Controllers
         [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.Unauthorized)]
         [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> GetBacklogItems(
+        public async Task<IActionResult> GetPeopleInRepository(
             [FromHeader] string authToken,
             [FromRoute] string repositoryOwner,
             [FromRoute] string repositoryName
