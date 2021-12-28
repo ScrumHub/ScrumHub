@@ -111,19 +111,20 @@ export const reducer = createReducer(initState, {
   return newState;
 },
 [Actions.addRepositoryThunk.pending.toString()]: (
-  state: State) => {
+  state: State,
+  payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
   let newState = _.cloneDeep(state);
   newState.loading = true;
   return newState;
 },
 [Actions.addRepositoryThunk.fulfilled.toString()]: (
-  state: State) => {
+  state: State,
+  payload: PayloadAction<RequestResponse<IRepository, number>>) => {
   let newState = _.cloneDeep(state);
   newState.loading = false;
-  newState.reposRequireRefresh = true;
-  newState.repositories = [];
-  newState.pages = 1;
-  newState.reposLastPage = false;
+  const repo = payload.payload.response as IRepository;
+  //console.log(repo);
+  newState.repositories[newState.repositories.findIndex((el:IRepository) => el.gitHubId === repo.gitHubId)] = repo;
   return newState;
 },
 [Actions.addRepositoryThunk.rejected.toString()]: (
