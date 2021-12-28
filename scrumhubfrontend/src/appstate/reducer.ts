@@ -70,7 +70,6 @@ export const reducer = createReducer(initState, {
   payload: PayloadAction<RequestResponse<IRepositoryList, number>>
 ) => {
   let newState = _.cloneDeep(state);
-  newState.loading = false;
   // if page filter not specified - set to default
   const pageNumber = _.get(
     payload,
@@ -95,6 +94,7 @@ export const reducer = createReducer(initState, {
   // if response is shorter than default size - it means end is reached.
   newState.reposLastPage = repos.list.length < pageSize;
   newState.reposRequireRefresh = false;
+  newState.loading = false;
   return newState;
 },
 [Actions.fetchRepositoriesThunk.rejected.toString()]: (
@@ -506,10 +506,42 @@ export const reducer = createReducer(initState, {
   newState.openSprint = payload.payload.response as ISprint;
   const objIndex = newState.sprintPage.list.findIndex((s:ISprint)=>s.sprintNumber===newState.openSprint.sprintNumber);
   newState.sprintPage.list[objIndex] = newState.openSprint;
-  newState.error = initError;
+  newState.loading = false;
   return newState;
 },
 [Actions.updateOneSprintThunk.rejected.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<undefined, undefined>>
+) => {
+  let newState = _.cloneDeep(state);
+  let errorResponse = payload.payload;
+  newState.loading = false;
+  newState.error = {
+    hasError: true,
+    errorCode: errorResponse ? errorResponse.code : -1,
+    erorMessage: errorResponse ? (errorResponse.response as IMessCodeError).Message : "",
+  };
+  return newState;
+},
+[Actions.completeOneSprintThunk.pending.toString()]: (
+  state: State) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = true;
+  return newState;
+},
+[Actions.completeOneSprintThunk.fulfilled.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<ISprint, number>>
+) => {
+  let newState = _.cloneDeep(state);
+  console.log(payload.payload.response);
+  newState.openSprint = payload.payload.response as ISprint;
+  const objIndex = newState.sprintPage.list.findIndex((s:ISprint)=>s.sprintNumber===newState.openSprint.sprintNumber);
+  (newState.sprintPage.list[objIndex] as ISprint).isCompleted = newState.openSprint;
+  newState.loading = false;
+  return newState;
+},
+[Actions.completeOneSprintThunk.rejected.toString()]: (
   state: State,
   payload: PayloadAction<RequestResponse<undefined, undefined>>
 ) => {

@@ -2,7 +2,7 @@ import React, { useState, useRef, useContext, useEffect } from 'react';
 import { Button, Tag, message, Dropdown, Badge } from 'antd';
 import { useDrag, useDrop } from 'react-dnd';
 import * as Actions from '../appstate/actions';
-import { IAddPBI, IAssignPBI, ICheckedAssignPBI, ICheckedProductBacklogItem, IFilters, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, ISprint, ISprintList, ITask, State } from '../appstate/stateInterfaces';
+import { IAddPBI, ICheckedProductBacklogItem, IFilters, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, ISprint, ISprintList, ITask, State } from '../appstate/stateInterfaces';
 import 'antd/dist/antd.css';
 import moment from 'moment';
 import './ProductBacklog.css';
@@ -14,10 +14,9 @@ import { EditPBIPopup } from './popups/EditPBIPopup';
 import { EstimatePBIPopup } from './popups/EstimatePBIPopup';
 import { UpdateSprintPopup } from './popups/UpdateSprintPopup';
 import { AddTaskPopup } from './popups/AddTaskPopup';
-import { CustomAssignTaskPopup } from './popups/CustomAssignTaskPopup';
 import { initModalVals } from './utility/commonInitValues';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
-import { dateFormat, useIsMounted, validatePBIDrag, validateTaskDrag, } from './utility/commonFunctions';
+import { dateFormat, useIsMounted, canDropPBI, canDropTask, } from './utility/commonFunctions';
 import { taskStatusCol, taskGhLinkCol, taskNameCol, pbiProgressCol, backlogColors, backlogPriorities, pbiProgressCol2 } from './utility/BodyRowsAndColumns';
 import TaskTableComponent from './BacklogTaskTableComponent';
 import PBITableComponent from './BacklogPBITableComponent';
@@ -25,6 +24,7 @@ import { MenuWithPeopleSave } from './utility/LoadAnimations';
 import { CalendarOutlined, DownOutlined, EditOutlined } from '@ant-design/icons';
 import SprintTableComponent from './BacklogSprintTableComponent';
 import { initPBIFilter } from '../appstate/initStateValues';
+import { CompleteSprintPopup } from './popups/CompleteSprint';
 export const type = 'DraggableBodyRow';
 
 export const ProductBacklog: React.FC<any> = (props: any) => {
@@ -141,10 +141,18 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
       console.error("Failed to update the pbis: ", err);
     }
     finally {
-      if (isMounted()) {
         setSelectedSprint({} as ISprint);
-      }
     }
+  };
+  const completeSprint = (value: boolean) => {
+    setIsModal({ ...isModal, updateSprint: false });
+    const sprintID = selectedSprint.sprintNumber;
+      store.dispatch(Actions.completeOneSprintThunk({
+        token: token,
+        ownerName: ownerName,
+        sprintNumber: Number(sprintID),
+        isFailure: value
+      })).then((response)=>{setSelectedSprint({} as ISprint);});
   };
   const updatePBI = (pbiId: number, oldSprintId: number, newSprintId: number) => {
     if (oldSprintId !== 0) {
@@ -209,10 +217,10 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
           if (!item.record.estimated) {
             message.info("Cannot assign not estimated pbi", 5);
           }
-          else if (item.bodyType === "IProductBacklogItem" && validatePBIDrag(item.index, item.record.sprintNumber, record.sprintNumber)) {
+          else if (item.bodyType === "IProductBacklogItem" && canDropPBI(item.index, item.record.sprintNumber, record.sprintNumber)) {
             updatePBI(item.index, item.record.sprintNumber, record.sprintNumber);
           }
-          else if (item.bodyType === "ITask" && validateTaskDrag(record.pbiID, item.index, item.record.pbiID)) {
+          else if (item.bodyType === "ITask" && canDropTask(record.pbiID, item.index, item.record.pbiID)) {
             updateTask(record.pbiID, item.index);
           }
           else if (item.bodyType === "ITask" && record.pbiID === -2 && record.sprintNumber === 0 && item.index !== -2 && item.record.pbiID !== -2) {
@@ -280,8 +288,8 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
         compare: (a: IProductBacklogItem, b: IProductBacklogItem) => a.priority - b.priority,
         multiple: 1,
       }, width: "20%", key: 'storyPoints', align: "center" as const, render: (item: IProductBacklogItem) => {
-        return (item.id !== 0 ? <Tag style={{ cursor: "pointer" }} color={item.estimated ? (item.expectedTimeInHours > 10 ? "red" : "green") : "purple"} onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, estimatePBI: true }); }}>
-          {item.estimated ? (item.expectedTimeInHours + " SP ") : "Not estimated "}{<EditOutlined />}</Tag> : <></>)
+        return (item.id !== 0 && <Tag style={{ cursor: "pointer" }} color={item.estimated ? (item.expectedTimeInHours > 10 ? "red" : "green") : "purple"} onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, estimatePBI: true }); }}>
+          {item.estimated ? (item.expectedTimeInHours + " SP ") : "Not estimated "}{<EditOutlined />}</Tag>)
       }
     },
     {
@@ -341,16 +349,24 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
       render: (date: string) =>date ?  <span><CalendarOutlined></CalendarOutlined>{" "+dateFormat(date as unknown as Date)}</span> : ""
     },
     {
-      title: 'Goal', width: "60%", align: "center" as const, dataIndex: 'goal', key: 'sprintTitle',
+      title: 'Goal', width: "50%", align: "center" as const, dataIndex: 'goal', key: 'sprintTitle',
     },
-
+    {
+      key: "isCompleted", title: "completed", width: "15%",
+      render: (record: ISprint) => {
+        return (record.sprintNumber !==0 &&(record.isCompleted?<Tag color={record.status === "Failed" ?"red":"green"}><span>
+        {record.status.replace("Not","Not ").replace("In", "In ")}</span></Tag>: <Tag style={{cursor:"pointer"}} onClick={()=>{setSelectedSprint(record); setIsModal({ ...isModal, completeSprint: true });}} color="geekblue"><span>
+          {record.status.replace("Not","Not ").replace("In", "In ")} <EditOutlined/></span></Tag>))},
+      align: "center" as const,
+    },
     {
       title: 'Action', width: "10%", align: "right" as const, key: 'action', render: (record: ISprint) => {
         return (record.sprintNumber !== 0 ? <Button key={"action" + record.sprintNumber} size='small' type="link" onClick={() => { setSelectedSprint(record); setIsModal({ ...isModal, updateSprint: true }); }} >
           {"Update"}</Button> : <></>)
       },
     }];
-  if (!state.isLoggedIn) { return <Navigate to="/login" />; }
+    console.log(loading);
+    console.log(selectedSprint);
   return (<div className='backlogScroll'>
     <SprintTableComponent nameFilter={props.nameFilter} key={0} keys={0} peopleFilter={props.peopleFilter} loading={refreshRequired || initialRefresh} data={[{
       goal: "",finishDate: "",isCurrent: false,status: "",isCompleted: false, sprintNumber: 0,title: "Product Backlog", backlogItems: pbiPage.list
@@ -369,8 +385,8 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
       onCreate={function (values: any): void { addTaskToPBI(values); }} onCancel={() => { setIsModal({ ...isModal, addTask: false }); }} />}
     {isModal.updateSprint && !loading && <UpdateSprintPopup data={selectedSprint} visible={isModal.updateSprint} onCreate={function (values: any): void { updateSprint(values) }}
       onCancel={() => { setIsModal({ ...isModal, updateSprint: false }); }} />}
-    {isModal.assgnTask && pbiPage && <CustomAssignTaskPopup error={error.erorMessage} pbiData={pbiPage.list as IAssignPBI[] as ICheckedAssignPBI[]} visible={isModal.assgnTask}
-      onCreate={function (values: any): void { assignTask(values) }} onCancel={() => { setIsModal({ ...isModal, assgnTask: false }); }} />}
+      {isModal.completeSprint && !loading && <CompleteSprintPopup data={selectedSprint} visible={isModal.completeSprint} onComplete={function (value: boolean): void {completeSprint(value) }}
+      onCancel={() => { setIsModal({ ...isModal, completeSprint: false }); }} />}
   </div>
   );
 };

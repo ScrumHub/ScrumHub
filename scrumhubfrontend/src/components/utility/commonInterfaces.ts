@@ -18,6 +18,7 @@
     addTask: boolean,
     assgnTask: boolean,
     assgnPpl: boolean,
+    completeSprint:boolean,
     //addSprint: boolean,
     updateSprint: boolean,
     //addPBI: boolean,

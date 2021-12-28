@@ -27,9 +27,8 @@ function Main(props: any) {
   const { state, dispatch: unAuth } = useContext(AuthContext);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [cookies, setCookie, removeCookie] = useCookies();
-  const { isLoggedIn } = state;
+  const { isLoggedIn, token } = state;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const token = cookies[config.token];
   const location = useLocation();
   const error = useSelector((appState: State) => appState.error);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -41,7 +40,7 @@ function Main(props: any) {
   const currentUser = useSelector((appState: State) => appState.currentUser);
   const sprintID = localStorage.getItem("sprintID") ? localStorage.getItem("sprintID") as string : "";
   useEffect(() => {
-    if (logout) {
+    if (logout || (!isLoggedIn)) {
       var cookies = document.cookie.split(";");
       for (var i = 0; i < cookies.length; i++) {
         var cookie = cookies[i];
@@ -49,16 +48,18 @@ function Main(props: any) {
         var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
         document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
       }
-      //clearing local storage
       store.dispatch(clearState());
       removeCookie("token", { path: "/" });
       unAuth({
         type: "LOGOUT"
       });
       setLogout(false);
+      if (!isLoggedIn) {
+        navigate("/login",{replace:true});
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [logout]);
+  }, [logout, isLoggedIn]);
   const handleLogout = () => {
     setLogout(true);
   }
@@ -87,6 +88,7 @@ function Main(props: any) {
   useEffect(() => {
     if (error.hasError && error.erorMessage !== "") {
       message.error(error.erorMessage, 2);
+      store.dispatch(Actions.clearError());
     }
   }, [error]);
 
@@ -99,15 +101,17 @@ function Main(props: any) {
       );
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUser]);
+  }, [currentUser, state.isLoggedIn]);
 
-  if (!state.isLoggedIn) { setLogout(true); }
+  console.log(state.isLoggedIn);
+  console.log(logout);
+  console.log(cookies["token"]);
 
   const [isCollapsed, setIsCollapsed] = useState(true);
   return (
     <section className="container">
       <Layout style={{ height: "100vh" }}>
-        <Header hidden={!isLoggedIn} className="clearfix" style={{ position: 'fixed', zIndex: 1, padding: 0, height: "5vh", lineHeight: "5vh", width: "100%", backgroundColor: "#f0f0f0" }}>
+        <Header hidden={!isLoggedIn ||currentUser === null } className="clearfix" style={{ position: 'fixed', zIndex: 1, padding: 0, height: "5vh", lineHeight: "5vh", width: "100%", backgroundColor: "#f0f0f0" }}>
           <Menu mode="horizontal" theme="light"
             className="mainMenu" >
             {currentUser !== null &&

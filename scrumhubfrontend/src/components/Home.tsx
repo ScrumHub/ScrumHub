@@ -103,9 +103,6 @@ export default function Home() {
     navigate(`/${props.name.split("/")[0]}/${props.name.split("/")[1]}`, { replace: true });
   };
 
-  if (!isLoggedIn) {
-    return <Navigate to="/login" />;
-  }
   return (
     <section className="container">
       <InfiniteScroll
@@ -134,7 +131,7 @@ export default function Home() {
           </section>);
         })
         }
-        <SkeletonList loading={loading} number={repos.length < 1?5:1} />
+        <SkeletonList loading={loading  || refreshRequired} number={repos.length < 1?5:1} />
       </div>
     </InfiniteScroll>
     </section >

@@ -270,6 +270,28 @@ export const updateOneSprintThunk = createAsyncThunk<
   return response as RequestResponse<ISprint, number>;
 });
 
+export const completeOneSprintThunk = createAsyncThunk<
+  RequestResponse<ISprint, number>,
+  { token: string, ownerName: string; sprintNumber:number; isFailure:boolean},
+  { rejectValue: RequestResponse<ISprint, number> }
+>("completeOneSprint", async (
+  item: {
+    token: string;
+    ownerName: string;
+    sprintNumber:number;
+    isFailure:boolean;
+  },
+  { rejectWithValue }) => {
+  const response: RequestResponse<ISprint, number> =
+    await Fetching.completeOneSprint(item.token, item.ownerName, item.sprintNumber,item.isFailure);
+  if (response.code !== 200) {
+    return rejectWithValue(
+      response as RequestResponse<ISprint, number>
+    );
+  }
+  return response as RequestResponse<ISprint, number>;
+});
+
 export const addSprintThunk = createAsyncThunk<
   RequestResponse<ISprint, number>,
   { token: string, ownerName: string; sprint:ISprint|any; },

@@ -1,13 +1,11 @@
 import { Table } from "antd";
 import { IProductBacklogItem } from "../appstate/stateInterfaces";
-import { useIsMounted, validatePeopleFilter } from "./utility/commonFunctions";
+import { useIsMounted, isPeopleFilterValid } from "./utility/commonFunctions";
 import { initRowIds } from "./utility/commonInitValues";
 import { IRowIds } from "./utility/commonInterfaces";
 import "./ProductBacklog.css"
 
 export default function PBITableComponent(props: any) {
-  const isMounted = useIsMounted();
-  if (!isMounted()) { console.error("pbi" + isMounted()) };
   return (
     <Table
       style={{ borderSpacing: "separate", }}
@@ -18,7 +16,7 @@ export default function PBITableComponent(props: any) {
       rowKey={(record: IProductBacklogItem) => record.id}
       expandable={{
         expandedRowRender: props.TaskTableforPBI,
-        defaultExpandAllRows: validatePeopleFilter(props.peopleFilter),
+        defaultExpandAllRows: isPeopleFilterValid(props.peopleFilter),
         rowExpandable: record => record.tasks && record.tasks.length > 0,
 
       }}

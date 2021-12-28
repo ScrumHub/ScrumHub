@@ -3,7 +3,7 @@ import { IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IReposi
 import config from "../configuration/config";
 import * as Fetching from "./fetching";
 import { RequestResponse } from "./response";
-import { initAddPBI } from "./initStateValues";
+import { initAddPBI, initSprint } from "./initStateValues";
 
 jest.mock("axios");
 
@@ -82,5 +82,17 @@ test("fetching the repositories with a wrong token results in an error", async (
   test("fetching current user with a wrong token results in an error", async () => {
     const data: RequestResponse<IPerson, undefined> =
       await Fetching.getCurrentUser(config.token);
+    expect(data).toEqual(errorObject);
+  });
+
+  test("updating one sprint with a wrong token results in an error", async () => {
+    const data: RequestResponse<ISprint, undefined> =
+      await Fetching.updateOneSprint(config.token, "", 0,initSprint);
+    expect(data).toEqual(errorObject);
+  });
+
+  test("completing one sprint with a wrong token results in an error", async () => {
+    const data: RequestResponse<ISprint, undefined> =
+      await Fetching.completeOneSprint(config.token, "", 0,true);
     expect(data).toEqual(errorObject);
   });

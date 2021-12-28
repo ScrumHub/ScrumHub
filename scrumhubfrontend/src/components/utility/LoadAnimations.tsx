@@ -5,7 +5,7 @@ import MenuItem from "antd/lib/menu/MenuItem";
 import { useState } from "react";
 import { IPerson } from "../../appstate/stateInterfaces";
 import "../Home.css";
-import { validateNameFilter } from "./commonFunctions";
+import { isNameFilterValid } from "./commonFunctions";
 import { useEffect } from "react";
 
 export default function SkeletonList(props: any) {
@@ -52,7 +52,7 @@ export function MenuWithPeople(props: any) {
     const ppl = props.people && props.people.list && props.people.list.length > 0 ? props.people.list : [] as IPerson[];
     const [nameList, setList] = useState([] as string[]);
 
-    const inputFilter = validateNameFilter(props.inputFilter) ? props.inputFilter : "";
+    const inputFilter = isNameFilterValid(props.inputFilter) ? props.inputFilter : "";
     const handleList = (item: IPerson) => {
         if (!nameList || nameList.length < 1) { setList([item.login]); props.itemSelected([item.login]); }
         else {
@@ -69,7 +69,7 @@ export function MenuWithPeople(props: any) {
     },[props.peopleFilter]);
     console.log(nameList);
 
-    return (validateNameFilter(props.inputFilter) && <Menu className="peopleMenu">{ppl.map((item: IPerson) => {
+    return (isNameFilterValid(props.inputFilter) && <Menu className="peopleMenu">{ppl.map((item: IPerson) => {
         return ((item.login.startsWith(inputFilter) || nameList.includes(item.login)) &&
             <MenuItem key={item.login} onClick={() => { handleList(item); }}>
                 <Space>
@@ -90,7 +90,7 @@ export function MenuWithSorting(props: any) {
     const ppl = props.people && props.people.list && props.people.list.length > 0 ? props.people.list : [] as IPerson[];
     const [nameList, setList] = useState([] as string[]);
 
-    const inputFilter = validateNameFilter(props.inputFilter) ? props.inputFilter : "";
+    const inputFilter = isNameFilterValid(props.inputFilter) ? props.inputFilter : "";
     const handleList = (item: IPerson) => {
         if (!nameList || nameList.length < 1) { setList([item.login]); props.itemSelected([item.login]); }
         else {
@@ -107,7 +107,7 @@ export function MenuWithSorting(props: any) {
     },[props.peopleFilter]);
     console.log(nameList);
 
-    return (validateNameFilter(props.inputFilter) && <Menu className="peopleMenu">{ppl.map((item: IPerson) => {
+    return (isNameFilterValid(props.inputFilter) && <Menu className="peopleMenu">{ppl.map((item: IPerson) => {
         return ((item.login.startsWith(inputFilter) || nameList.includes(item.login)) &&
             <MenuItem key={item.login} onClick={() => { handleList(item); }}>
                 <Space>

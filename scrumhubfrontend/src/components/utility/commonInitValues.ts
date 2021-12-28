@@ -11,7 +11,7 @@ export const initIDs: IFilters = {
     addTask: false,
     assgnTask: false,
     assgnPpl: false,
-    //addSprint: false,
+    completeSprint: false,
     updateSprint: false,
     //addPBI: false,
     editPBI: false,

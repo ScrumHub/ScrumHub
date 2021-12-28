@@ -13,19 +13,27 @@ export function useIsMounted() {
   return isMounted;
 }
 
-export const validatePBIDrag = (pbiId: number, oldSprintId: number, newSprintId: number) => {
+export const canDropPBI = (pbiId: number, oldSprintId: number, newSprintId: number) => {
   return (oldSprintId !== -2 && newSprintId !== null && newSprintId !== -2 && pbiId !== -2 && newSprintId !== oldSprintId);
 }
-export const validateTaskDrag = (pbiId: number, taskId:number,oldPbiId: number) => {
+export const canDropTask = (pbiId: number, taskId:number,oldPbiId: number) => {
   return (pbiId !== -2 && pbiId !== null && taskId !== -2 && taskId !== null && oldPbiId !== pbiId );
 }
 
-export const validateNameFilter = (nameFilter:any) => {
+export const isNameFilterValid = (nameFilter:any) => {
   return nameFilter && nameFilter !== "";
 }
 
-export const validatePeopleFilter = (peopleFilter:string[]) => {
+export const isPeopleFilterValid = (peopleFilter:string[]) => {
   return peopleFilter && peopleFilter.length >0;
+}
+
+export const isArrayValid = (peopleFilter:any[]) => {
+  return peopleFilter && peopleFilter.length >0;
+}
+
+export const validateString = (val:string) => {
+  return val && val !== ""? val:"";
 }
 
 export function disabledDate(current:any) {
@@ -38,13 +46,13 @@ export function dateFormat(date: Date) {
 }
 
 export function getDate(date:string){
-  const temp = date.split("-");
-  return date && temp.length > 1 ? temp[0]+"/"+temp[1]+"/"+temp[2].slice(0,2).trim():"";
+  const temp = date ? date.split("-"):"";
+  return date && temp.length > 2 ? temp[0]+"/"+temp[1]+"/"+temp[2].slice(0,2).trim():temp;
 }
 
 export function saveDate(date:string){
-  const temp = date.split("-");
-  return date && temp.length > 1 ? temp[0]+"-"+temp[1]+"-"+temp[2].slice(0,2).trim():"";
+  const temp = date ? date.split("-"):"";
+  return date && temp.length > 2 ? temp[0]+"-"+temp[1]+"-"+temp[2].slice(0,2).trim():temp;
 }
 
 

@@ -216,6 +216,16 @@ export function updateOneSprint(token: string, ownerName: string, sprintNumber: 
   );
 }
 
+export function completeOneSprint(token: string, ownerName: string, sprintNumber: number, isFailure: boolean
+  ): Promise<RequestResponse<ISprint, number>> {
+    return getResponse(
+      axios.put(
+        `https://${config.backend.ip}:${config.backend.port}/api/Sprints/${ownerName}/${sprintNumber}?finish=${isFailure}`,
+         {},{ headers: getHeader(token, config) }
+      )
+    );
+  }
+
 export function addSprint(token: string, ownerName: string, sprint: any
 ): Promise<RequestResponse<ISprint, number>> {
   return getResponse(

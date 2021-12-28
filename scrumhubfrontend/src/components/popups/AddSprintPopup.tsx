@@ -71,7 +71,7 @@ export const AddSprintPopup: React.FC<CollectionCreateFormProps> = ({
           name="title"
           rules={[{ required: true, message: 'Please input the title of this sprint!' }]}
         >
-          <Input required={true}
+          <Input required={true} autoComplete="on"
           />
         </Form.Item>
         <FormItemLabel prefixCls="goal" label="Goal" required={true} />
@@ -86,7 +86,7 @@ export const AddSprintPopup: React.FC<CollectionCreateFormProps> = ({
         </Form.Item>
 
         {filteredData && filteredData.length>0 && <FormItemLabel prefixCls="backlogItems" label="Backlog Items" required={true} />}
-        <Form.List name="backlogItems" initialValue={filteredData}>
+        {filteredData && filteredData.length>0 && <Form.List name="backlogItems" initialValue={filteredData}>
           {(fields) => (
             <>
               {fields.map(({ key, name }) => (
@@ -102,7 +102,7 @@ export const AddSprintPopup: React.FC<CollectionCreateFormProps> = ({
               ))}
             </>
           )}
-        </Form.List>
+        </Form.List>}
 
       </Form>
     </Modal>

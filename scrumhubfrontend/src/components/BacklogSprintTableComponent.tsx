@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { IPerson, IProductBacklogItem, ISprint, ITask } from "../appstate/stateInterfaces";
-import { useIsMounted, validateNameFilter, validatePeopleFilter } from "./utility/commonFunctions";
+import { useIsMounted, isNameFilterValid, isPeopleFilterValid } from "./utility/commonFunctions";
 import { initRowIds } from "./utility/commonInitValues";
 
 export default function SprintTableComponent(props: any) {
@@ -29,8 +29,8 @@ export default function SprintTableComponent(props: any) {
   };
   useEffect(() => {
     if (!props.loading) {
-      const isNameFilter = validateNameFilter(props.nameFilter);
-      const isPeopleFilter = validatePeopleFilter(props.peopleFilter);
+      const isNameFilter = isNameFilterValid(props.nameFilter);
+      const isPeopleFilter = isPeopleFilterValid(props.peopleFilter);
       setExpanded(isNameFilter);
       const filteredData = props.data && props.data.length > 0 && (isNameFilter || isPeopleFilter) ?
         ([{
@@ -67,7 +67,7 @@ export default function SprintTableComponent(props: any) {
       else if (!isNameFilter) {
         setExpandedRowKeys([0, 1]);
       }
-      if (!isMounted()) { console.error("sprint" + isMounted()) };
+      if (!isMounted()) { console.log("sprint" + isMounted()) };
       setReload(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
