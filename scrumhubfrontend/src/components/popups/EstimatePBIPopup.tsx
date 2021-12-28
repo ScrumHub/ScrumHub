@@ -24,6 +24,7 @@ export const EstimatePBIPopup: React.FC<CollectionCreateFormProps> = ({
   onCancel,
 }) => {
   const [form] = Form.useForm();
+  console.log(data);
   const [slicedData, setSlicedData] = useState([] as string[]);
   console.log(slicedData);
   useEffect(() => {
@@ -73,37 +74,19 @@ export const EstimatePBIPopup: React.FC<CollectionCreateFormProps> = ({
         name="form_in_modal"
         initialValues={{ modifier: 'public' }}
       >
-        <FormItemLabel prefixCls="fibonacci" label="Initial Fibonacci Story Points" required={true} />
-        <Form.Item
-          initialValue={data.expectedTimeInHours}
-          name="fibonacci"
-          key="fibonacci"
-          style={{ width: "100%", display: "flex" }}
-        >
-          <Slider
-            marks={marks}
-            min={0}
-            max={13}
-            onChange={(e) => { setValue(e); form.setFieldsValue({ "expectedTimeInHours": e }) }}
-            value={(typeof value) === 'number' ? value : 0}
-
-          />
-        </Form.Item>
         <FormItemLabel prefixCls="progress" label="Tasks Progress" required={true} />
         <Form.Item
           name="progress"
           key="progress"
-          style={{ width: "80%" }}
-        >  <>
+        >  <div style={{width:"45vw", overflow:"hidden"}}>
 
-            <Progress percent={data.tasks && data.tasks.length > 0 ? (100 * data.tasks.filter((item: ITask) => !item.assigness || item.assigness.length < 1).length / data.tasks.length) : 100}
-              format={percent => `${data.tasks && data.tasks.length > 0 ? data.tasks.filter((item: ITask) => !item.assigness || item.assigness.length < 1).length : 0} Assigned`} ></Progress>
-            <br />
-            <Progress percent={data.tasks && data.tasks.length > 0 ? (100 * data.tasks.filter((item: ITask) => item.finished).length / data.tasks.length) : 100}
-              format={percent => `${data.tasks && data.tasks.length > 0 ? data.tasks.filter((item: ITask) => item.finished).length : 0} To Do`} ></Progress>
-            <Progress percent={data.tasks && data.tasks.length > 0 ? (100 * data.tasks.filter((item: ITask) => !item.finished).length / data.tasks.length) : 100}
-              format={percent => `${data.tasks && data.tasks.length > 0 ? data.tasks.filter((item: ITask) => !item.finished).length : 0} Done`} ></Progress>
-          </>
+            <Progress style={{width:"45vw"}} key={"progress_todo"} percent={data.tasks && data.tasks.length > 0 ? (100 * data.tasks.filter((item: ITask) => !item.finished).length / data.tasks.length) : 100}
+              format={percent => `${data.tasks && data.tasks.length > 0 ? 100*data.tasks.filter((item: ITask) => !item.finished).length/data.tasks.length: 100}% To Do`} ></Progress>
+            <Progress style={{width:"45vw"}} key={"progress_assgn"} percent={data.tasks && data.tasks.length > 0 ? (100 * data.tasks.filter((item: ITask) => item.assigness && item.assigness.length > 0).length / data.tasks.length) : 100}
+              ></Progress>
+            <Progress style={{width:"45vw"}} key={"progress_done"} percent={data.tasks && data.tasks.length > 0 ? (100 * data.tasks.filter((item: ITask) => item.finished).length / data.tasks.length) : 100}
+               ></Progress>
+          </div>
         </Form.Item>
         <FormItemLabel prefixCls="acceptanceCriteria" label="Acceptance Criteria" required={true} />
         <Form.Item name="acceptanceCriteria" key="acceptanceCriteria" initialValue={data.acceptanceCriteria}>
@@ -124,6 +107,22 @@ export const EstimatePBIPopup: React.FC<CollectionCreateFormProps> = ({
                 )}
             </VirtualList>
             </List>
+        </Form.Item>
+        <FormItemLabel prefixCls="fibonacci" label="Initial Fibonacci Story Points" required={true} />
+        <Form.Item
+          initialValue={data.expectedTimeInHours}
+          name="fibonacci"
+          key="fibonacci"
+          style={{ width: "90%", display: "flex" }}
+        >
+          <Slider
+            marks={marks}
+            min={0}
+            max={13}
+            onChange={(e) => { setValue(e); form.setFieldsValue({ "expectedTimeInHours": e }) }}
+            value={(typeof value) === 'number' ? value : 0}
+
+          />
         </Form.Item>
         <FormItemLabel prefixCls="expectedTimeInHours" label="Estimate Story Points" required={true} />
         <Form.Item
