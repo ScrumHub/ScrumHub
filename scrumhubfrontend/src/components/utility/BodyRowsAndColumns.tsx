@@ -66,14 +66,20 @@ export const pbiPriorityCol = {
 
 };
 export const pbiProgressCol ={
-  title: 'Progress', width:"20%", key: 'progressBar', align: "center" as const, render: (item: IProductBacklogItem) => {
+  title: 'Progress', sorter: {
+    compare: (a: IProductBacklogItem, b: IProductBacklogItem) => a.priority - b.priority,
+    multiple: 1,
+  },width:"20%", key: 'progressBar', align: "center" as const, render: (item: IProductBacklogItem) => {
     return (item.id===0?<span></span>:<span><Progress  width={25} size='small' type="line" showInfo={false} percent={item.tasks && item.tasks.length > 0 ? 100*(item.tasks.filter((item: ITask) => item.finished).length / item.tasks.length):100}
      /*format={percent => `${item.tasks?item.tasks.filter((item: ITask) => item.finished).length:0}`}*/ ></Progress></span>
     )
   }
 };
 export const pbiProgressCol2 ={
-  title: 'Tasks To Do', width:"15%", key: 'tasks', align: "center" as const, render: (item: IProductBacklogItem) => {
+  title: 'Tasks To Do', sorter: {
+    compare: (a: IProductBacklogItem, b: IProductBacklogItem) => a.priority - b.priority,
+    multiple: 1,
+  },width:"15%", key: 'tasks', align: "center" as const, render: (item: IProductBacklogItem) => {
     return (
     <Progress width={25} percent={100}  size='small' type="dashboard" status={`${item.tasks && item.tasks.length > 0 ? (item.tasks.filter((item: ITask) => item.finished).length / item.tasks.length) !== 0 ? "success" : "exception" : "success"}`}
      format={() => `${item.tasks ? item.tasks.length:0}`} />)

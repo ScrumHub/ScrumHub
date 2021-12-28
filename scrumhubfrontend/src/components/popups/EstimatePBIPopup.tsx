@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Form, InputNumber, Slider, Progress, Skeleton, List, Spin } from 'antd';
-import { IProductBacklogItem, ITask } from '../../appstate/stateInterfaces';
+import { IFilters, IProductBacklogItem, ITask } from '../../appstate/stateInterfaces';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
-import { MoreOutlined, NumberOutlined } from '@ant-design/icons';
+import { NumberOutlined } from '@ant-design/icons';
 import VirtualList from 'rc-virtual-list';
 import "../ProductBacklog.css";
 
@@ -24,26 +24,25 @@ export const EstimatePBIPopup: React.FC<CollectionCreateFormProps> = ({
   onCancel,
 }) => {
   const [form] = Form.useForm();
-  const [slicedData, setSlicedData] = useState([] as string[]);
-  console.log(slicedData);
+  const [slicedData, setSlicedData] = useState([] as IFilters[]);
   useEffect(() => {
     if(slicedData.length < 1){
-      setSlicedData(data.acceptanceCriteria.slice(0,2));
+      setSlicedData(data.acceptanceCriteria.slice(0,2).map((data, key)=>{return{"key":key, "acceptanceCriteria":data}}));
     }
     else{
-      setSlicedData(data.acceptanceCriteria.slice(0,slicedData.length+2));
+      setSlicedData(data.acceptanceCriteria.slice(0,slicedData.length+2).map((data, key)=>{return{"key":key, "acceptanceCriteria":data}}));
     }
   }, []);
   const [value, setValue] = useState(data.expectedTimeInHours);
   const marks = {
     0: 0,
-    0.5: 0.5,
     1: 1,
     2: 2,
     3: 3,
     5: 5,
     8: 8,
     13: 13,
+    20:20
   };
   return (
     <Modal
@@ -60,7 +59,7 @@ export const EstimatePBIPopup: React.FC<CollectionCreateFormProps> = ({
           .validateFields()
           .then((values: Values) => {
             form.resetFields();
-            onCreate(values);
+            onCreate({expectedTimeInHours:value});
           })
           .catch((info: any) => {
             console.error('Validate Failed:', info);
@@ -73,27 +72,12 @@ export const EstimatePBIPopup: React.FC<CollectionCreateFormProps> = ({
         name="form_in_modal"
         initialValues={{ modifier: 'public' }}
       >
-        <FormItemLabel prefixCls="fibonacci" label="Initial Fibonacci Story Points" required={true} />
-        <Form.Item
-          initialValue={data.expectedTimeInHours}
-          name="fibonacci"
-          key="fibonacci"
-          style={{ width: "100%", display: "flex" }}
-        >
-          <Slider
-            marks={marks}
-            min={0}
-            max={13}
-            onChange={(e) => { setValue(e); form.setFieldsValue({ "expectedTimeInHours": e }) }}
-            value={(typeof value) === 'number' ? value : 0}
-
-          />
-        </Form.Item>
+       
         <FormItemLabel prefixCls="progress" label="Tasks Progress" required={true} />
         <Form.Item
           name="progress"
           key="progress"
-          style={{ width: "80%" }}
+          style={{ width: "87%" }}
         >  <>
 
             <Progress percent={data.tasks && data.tasks.length > 0 ? (100 * data.tasks.filter((item: ITask) => !item.assigness || item.assigness.length < 1).length / data.tasks.length) : 100}
@@ -106,24 +90,41 @@ export const EstimatePBIPopup: React.FC<CollectionCreateFormProps> = ({
           </>
         </Form.Item>
         <FormItemLabel prefixCls="acceptanceCriteria" label="Acceptance Criteria" required={true} />
-        <Form.Item name="acceptanceCriteria" key="acceptanceCriteria" initialValue={data.acceptanceCriteria}>
+        <Form.Item key="acceptanceCriteria" initialValue={data.acceptanceCriteria}>
         <List>
       <VirtualList
         data={slicedData}
+        key="virtual_list"
         height={70}
         itemHeight={42}
-        itemKey="email"
-        onScroll={(e: any )=>{if (e.target.scrollHeight-e.target.scrollTop > 0){setSlicedData(data.acceptanceCriteria.slice(0,slicedData.length+2))}}}
-      >{(item, key) => (
-                  <List.Item key={key}>
+        itemKey="acceptanceCriteria"
+        onScroll={(e: any )=>{if (e.target.scrollHeight-e.target.scrollTop > 0){setSlicedData(data.acceptanceCriteria.slice(0,slicedData.length+2).map((data, key)=>{return{"key":key, "acceptanceCriteria":data}}))}}}
+      >{item => (
+                  <List.Item key={item.key}>
                     <List.Item.Meta
-                      avatar={<span><NumberOutlined></NumberOutlined>{" "}{key}</span>}
-                      title={item}
+                      avatar={<span><NumberOutlined></NumberOutlined>{" "}{item.key}</span>}
+                      title={item.acceptanceCriteria}
                     />
                   </List.Item>
                 )}
             </VirtualList>
             </List>
+        </Form.Item>
+        <FormItemLabel prefixCls="fibonacci" label="Fibonacci Story Points Values" required={true} />
+        <Form.Item
+          initialValue={data.expectedTimeInHours}
+          name="fibonacci"
+          key="fibonacci"
+          style={{ width: "80%", display: "flex" }}
+        >
+          <Slider
+            marks={marks}
+            min={0}
+            max={20}
+            onChange={(e) => { setValue(e); form.setFieldsValue({ "expectedTimeInHours": e }) }}
+            value={(typeof value) === 'number' ? value : 0}
+
+          />
         </Form.Item>
         <FormItemLabel prefixCls="expectedTimeInHours" label="Estimate Story Points" required={true} />
         <Form.Item

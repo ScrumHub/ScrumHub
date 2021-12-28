@@ -2,7 +2,7 @@ import type { APIResponse, RequestResponse } from "./response";
 import config from "../configuration/config";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import axios, { AxiosResponse } from "axios";
-import { IAddPBI, IFilters, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, IUpdateIdSprint } from "./stateInterfaces";
+import { IAddPBI, IFilters, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList } from "./stateInterfaces";
 import { getHeader, getHeaderAcceptAll, getHeaderWithContent } from "./stateUtilities";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -208,7 +208,6 @@ export function fetchOneSprint(token: string, ownerName: string, sprintNumber: n
 
 export function updateOneSprint(token: string, ownerName: string, sprintNumber: number, sprint: any
 ): Promise<RequestResponse<ISprint, number>> {
-  console.log(sprint);
   return getResponse(
     axios.put(
       `https://${config.backend.ip}:${config.backend.port}/api/Sprints/${ownerName}/${sprintNumber}`,
@@ -219,7 +218,6 @@ export function updateOneSprint(token: string, ownerName: string, sprintNumber: 
 
 export function addSprint(token: string, ownerName: string, sprint: any
 ): Promise<RequestResponse<ISprint, number>> {
-  console.log(sprint);
   return getResponse(
     axios.post(
       `https://${config.backend.ip}:${config.backend.port}/api/Sprints/${ownerName}`,

@@ -3,13 +3,13 @@ import { useEffect, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { IPerson, IProductBacklogItem, ISprint, ITask } from "../appstate/stateInterfaces";
-import { useIsMounted, uuid, validateNameFilter, validatePeopleFilter } from "./utility/commonFunctions";
+import { useIsMounted, validateNameFilter, validatePeopleFilter } from "./utility/commonFunctions";
 import { initRowIds } from "./utility/commonInitValues";
 
 export default function SprintTableComponent(props: any) {
   const [data, setData] = useState(props.data as ISprint[]);
   const [expand, setExpanded] = useState(false);
-  const [reload, setReload] = useState(false);
+  const [reload, setReload] = useState(true);
   const isMounted = useIsMounted();
   const [expandedRowKeys, setExpandedRowKeys] = useState([0, 1]);
   const updateExpandedRowKeys = (record: ISprint) => {
@@ -29,7 +29,6 @@ export default function SprintTableComponent(props: any) {
   };
   useEffect(() => {
     if (!props.loading) {
-      setReload(true);
       const isNameFilter = validateNameFilter(props.nameFilter);
       const isPeopleFilter = validatePeopleFilter(props.peopleFilter);
       setExpanded(isNameFilter);

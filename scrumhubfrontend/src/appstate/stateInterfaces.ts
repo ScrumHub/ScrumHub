@@ -1,5 +1,4 @@
-import moment, { Moment } from "moment";
-import config from "../configuration/config"
+import  { Moment } from "moment";
 
 export type Error = {
   hasError: boolean;
@@ -37,24 +36,6 @@ export interface ITask {
   link: string;
 }
 
-export const initTask: ITask = {
-  id: 0,
-  name: "",
-  finished: false,
-  pbiId: 0,
-  isAssignedToPBI: false,
-  link: "",
-  assigness: [],
-};
-
-// export const initTask2: ITask = {
-//   id: 1,
-//   name: "",
-//   finished: false,
-//   pbiId:1,
-//   isAssignedToPBI:false,
-//   link:"",
-// };
 
 export interface ITaskNamed {
   id: number;
@@ -66,16 +47,6 @@ export interface ITaskNamed {
   link: string;
 }
 
-export const initTaskNamed: ITaskNamed = {
-  id: 0,
-  name: "",
-  finished: false,
-  pbiId: 0,
-  pbiName: "",
-  isAssignedtoPBI: false,
-  link: "",
-};
-
 export interface ITaskList {
   pageNumber: number;
   pageCount: number;
@@ -83,15 +54,6 @@ export interface ITaskList {
   realSize: number;
   list: ITask[];
 }
-
-export const initTaskList: ITaskList = {
-  pageNumber: 1,
-  pageCount: 1,
-  pageSize: 5,
-  realSize: 5,
-  list: [],
-};
-
 
 export interface IProductBacklogItem {
   id: number;
@@ -107,10 +69,6 @@ export interface IProductBacklogItem {
   tasks: ITask[]
 }
 
-//export const backlogPriorities = ["Could", "Should", "Must"];
-//export const backlogColors = ["green", "blue", "red"];
-
-
 export interface ICheckedProductBacklogItem {
   checked: boolean;
   id: number;
@@ -125,60 +83,11 @@ export interface ICheckedProductBacklogItem {
   acceptanceCriteria: string[];
   tasks: ITask[]
 }
-
-export const initProductBacklogItem: IProductBacklogItem = {
-  id: 0,
-  name: "Item",
-  finished: false,
-  expectedTimeInHours: 2,
-  estimated: true,
-  sprintNumber: 0,
-  isInSprint: false,
-  timeSpentInHours: 0,
-  priority: 0,
-  acceptanceCriteria: ["criteria", "criteria2"],
-  tasks: [initTask],
-};
-export const init2ProductBacklogItem: IProductBacklogItem = {
-  id: 1,
-  name: "Second",
-  finished: false,
-  expectedTimeInHours: 2,
-  estimated: true,
-  sprintNumber: 0,
-  isInSprint: false,
-  timeSpentInHours: 0,
-  priority: 0,
-  acceptanceCriteria: ["criteria", "criteria2"],
-  tasks: [],
-};
-
-export const unassignedPBI: IProductBacklogItem = {
-  id: 0,
-  name: "Unassigned Tasks",
-  finished: false,
-  expectedTimeInHours: 2,
-  estimated: true,
-  sprintNumber: 0,
-  isInSprint: false,
-  timeSpentInHours: 0,
-  priority: -1,
-  acceptanceCriteria: [""],
-  tasks: [],
-};
-
 export interface IAddPBI {
   name: string;
   priority: number;
   acceptanceCriteria: string[];
 }
-
-export const initAddPBI: IAddPBI = {
-  name: "Item",
-  priority: 0,
-  acceptanceCriteria: ["criteria", "criteria2"],
-};
-
 export interface IAssignPBI {
   name: string;
   id: number;
@@ -191,13 +100,6 @@ export interface ICheckedAssignPBI extends IAssignPBI {
   
   checked: boolean;
 }
-
-export const initAssignPBI: IAssignPBI = {
-  name: "",
-  id: 0,
-  isInSprint:false
-};
-
 export interface IPBIFilter {
   pageNumber: number;
   pageSize: number;
@@ -207,20 +109,6 @@ export interface IPBIFilter {
   inSprint?: boolean;
 }
 
-export const initPBIFilter: IPBIFilter = {
-  pageNumber: config.defaultFilters.page,
-  pageSize: config.defaultFilters.pbiSize,
-  nameFilter: "",
-};
-
-
-export const initSprintFilter: IFilters = {
-  pageNumber: config.defaultFilters.page,
-  pageSize: config.defaultFilters.sprintSize,
-  nameFilter: "",
-};
-
-
 export interface IProductBacklogList {
   pageNumber: number;
   pageCount: number;
@@ -228,14 +116,6 @@ export interface IProductBacklogList {
   realSize: number;
   list: IProductBacklogItem[];
 }
-
-export const initProductBacklogList: IProductBacklogList = {
-  pageNumber: 1,
-  pageCount: 1,
-  pageSize: 10,
-  realSize: 10,
-  list: [],
-};
 
 export interface ISprint {
   sprintNumber: number;
@@ -247,29 +127,6 @@ export interface ISprint {
   status: string;
   isCompleted: boolean;
 }
-
-export const initSprint: ISprint = {
-  sprintNumber: 1,
-  title:"",
-  goal: "",
-  backlogItems: [initProductBacklogItem],
-  finishDate: "",
-  isCurrent: false,
-  status: "New",
-  isCompleted: false,
-}
-
-export const initSprint2: ISprint = {
-  sprintNumber: 2,
-  goal: "",
-  backlogItems: [],
-  finishDate: "",
-  isCurrent: false,
-  status: "New",
-  isCompleted: false,
-  title: ""
-}
-
 export interface IUpdateIdSprint {
   goal: string;
   pbIs: string[];
@@ -277,12 +134,6 @@ export interface IUpdateIdSprint {
   title:string;
 }
 
-export const initUpdateSprint: IUpdateIdSprint = {
-  goal: "Goal 1",
-  pbIs: [],
-  finishDate: moment(),
-  title:""
-}
 
 export interface ISprintList {
   pageNumber: 1,
@@ -292,13 +143,6 @@ export interface ISprintList {
   list: ISprint[];
 }
 
-export const initSprintList: ISprintList = {
-  pageNumber: 1,
-  pageCount: 1,
-  pageSize: 10,
-  realSize: 10,
-  list: [],
-};
 
 export interface IRepository {
   name: string;
@@ -312,18 +156,6 @@ export interface IRepository {
   sprints: ISprint[] | any;
 }
 
-export const initRepository: IRepository = {
-  name: "Repo",
-  gitHubId: 0,
-  hasAdminRights: true,
-  alreadyInScrumHub: true,
-  backlogItems: [initProductBacklogItem],
-  sprints: [initSprint],
-  description: "",
-  dateOfLastActivity: null,
-  typeOfLastActivity: ""
-}
-
 export interface IPerson {
   avatarLink:string;
   gitHubId: number;
@@ -332,13 +164,6 @@ export interface IPerson {
   name: string|null;
 }
 
-export const initPeople: IPerson = {
-  name: "string",
-  login: "string",
-  gitHubId: 0,
-  avatarLink: "string",
-  isCurrentUser: true
-}
 
 
 export interface IPeopleList {
@@ -349,14 +174,6 @@ export interface IPeopleList {
   list: IPerson[];
 }
 
-export const initPeopleList: IPeopleList =
-{
-  pageNumber: 0,
-  pageCount: 0,
-  pageSize: 0,
-  realSize: 0,
-  list: []
-}
 export type BodyRowTypes = ISprint | IProductBacklogItem | ITask;
 export interface IRepositoryList {
   pageNumber: number;
@@ -364,14 +181,6 @@ export interface IRepositoryList {
   pageSize: number;
   realSize: number;
   list: IRepository[];
-}
-
-export const initRepositoryList: IRepositoryList = {
-  pageNumber: 1,
-  pageCount: 1,
-  pageSize: 10,
-  realSize: 0,
-  list: [],
 }
 
 export type State = {
@@ -399,38 +208,4 @@ export type State = {
   namedPBI: IAssignPBI[];
   people: IPeopleList;
   currentUser: IPerson|null;
-};
-
-export const initError = {
-  hasError: false,
-  errorCode: 0,
-  erorMessage: "",
-
-}
-
-export const initState: State = {
-  loading: false,
-  error: initError,
-  pbiPage: initProductBacklogList,
-  sprintPage: initSprintList,
-  taskPage: initTaskList,
-  redirect: null,
-  pages: 1,
-  repositories: [],
-  openSprint: null,
-  openRepository: null,
-  reposLastPage: false,
-  reposRequireRefresh: false,
-  productLastPage: false,
-  productRequireRefresh: false,
-  sprintLastPage: false,
-  sprintRequireRefresh: false,
-  taskLastPage: false,
-  taskRequireRefresh: false,
-  tasks: [],
-  namedPBI: [],
-  repoId: -1,
-  ownerName: "",
-  people: initPeopleList,
-  currentUser:null
 };

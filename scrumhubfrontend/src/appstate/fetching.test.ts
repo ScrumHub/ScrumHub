@@ -1,8 +1,9 @@
 import expect from "expect"; // You can use any testing library
-import { initAddPBI, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList } from "./stateInterfaces";
+import { IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList } from "./stateInterfaces";
 import config from "../configuration/config";
 import * as Fetching from "./fetching";
 import { RequestResponse } from "./response";
+import { initAddPBI } from "./initStateValues";
 
 jest.mock("axios");
 

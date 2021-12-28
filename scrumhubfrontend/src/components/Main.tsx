@@ -32,7 +32,6 @@ function Main(props: any) {
   const token = cookies[config.token];
   const location = useLocation();
   const error = useSelector((appState: State) => appState.error);
-  const [initialRefresh, setInitialRefresh]=useState(true);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const navigate = useNavigate();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -102,21 +101,7 @@ function Main(props: any) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
 
-  useEffect(() => {
-    if (state.isLoggedIn &&(ownerName !== "" || initialRefresh)) {
-      setInitialRefresh(false);
-      try {
-        store.dispatch(
-          Actions.fetchPeopleThunk({
-            ownerName: ownerName as string,
-            token: token,
-          })
-        );
-      } catch (err) {
-        console.error("Failed to fetch people: ", err);
-      }
-    } // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ownerName, initialRefresh]);
+  if (!state.isLoggedIn) { setLogout(true); }
 
   const [isCollapsed, setIsCollapsed] = useState(true);
   return (

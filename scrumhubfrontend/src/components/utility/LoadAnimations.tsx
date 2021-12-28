@@ -5,7 +5,8 @@ import MenuItem from "antd/lib/menu/MenuItem";
 import { useState } from "react";
 import { IPerson } from "../../appstate/stateInterfaces";
 import "../Home.css";
-import { validateNameFilter, validatePeopleFilter } from "./commonFunctions";
+import { validateNameFilter } from "./commonFunctions";
+import { useEffect } from "react";
 
 export default function SkeletonList(props: any) {
     const number = props.number ? props.number : 0;
@@ -50,18 +51,61 @@ export const updateStringList = (items: string[], item:string) => {
 export function MenuWithPeople(props: any) {
     const ppl = props.people && props.people.list && props.people.list.length > 0 ? props.people.list : [] as IPerson[];
     const [nameList, setList] = useState([] as string[]);
+
     const inputFilter = validateNameFilter(props.inputFilter) ? props.inputFilter : "";
-    console.log(nameList);
     const handleList = (item: IPerson) => {
         if (!nameList || nameList.length < 1) { setList([item.login]); props.itemSelected([item.login]); }
         else {
             const list = nameList.includes(item.login) ? nameList.filter((name: string) => name !== item.login) : nameList.concat(item.login);
-            console.log(list);
             setList(list);
             props.itemSelected(list);
         }
 
     };
+    useEffect(() => {
+        console.log(props.peopleFilter);
+      setList(props.peopleFilter);
+
+    },[props.peopleFilter]);
+    console.log(nameList);
+
+    return (validateNameFilter(props.inputFilter) && <Menu className="peopleMenu">{ppl.map((item: IPerson) => {
+        return ((item.login.startsWith(inputFilter) || nameList.includes(item.login)) &&
+            <MenuItem key={item.login} onClick={() => { handleList(item); }}>
+                <Space>
+                    <Avatar src={`${item.avatarLink}`} ></Avatar>
+                    {" "}
+                    <div style={{ minWidth: "10vw" }} >{" " + item.login as string}</div>
+
+
+                    {nameList && nameList.length > 0 && nameList.includes(item.login) ? <CheckOutlined /> : <></>}
+                </Space>
+
+            </MenuItem>);
+    })
+    }</Menu >);
+}
+
+export function MenuWithSorting(props: any) {
+    const ppl = props.people && props.people.list && props.people.list.length > 0 ? props.people.list : [] as IPerson[];
+    const [nameList, setList] = useState([] as string[]);
+
+    const inputFilter = validateNameFilter(props.inputFilter) ? props.inputFilter : "";
+    const handleList = (item: IPerson) => {
+        if (!nameList || nameList.length < 1) { setList([item.login]); props.itemSelected([item.login]); }
+        else {
+            const list = nameList.includes(item.login) ? nameList.filter((name: string) => name !== item.login) : nameList.concat(item.login);
+            setList(list);
+            props.itemSelected(list);
+        }
+
+    };
+    useEffect(() => {
+        console.log(props.peopleFilter);
+      setList(props.peopleFilter);
+
+    },[props.peopleFilter]);
+    console.log(nameList);
 
     return (validateNameFilter(props.inputFilter) && <Menu className="peopleMenu">{ppl.map((item: IPerson) => {
         return ((item.login.startsWith(inputFilter) || nameList.includes(item.login)) &&

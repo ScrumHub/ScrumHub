@@ -2,7 +2,8 @@ import * as Actions from "./actions";
 import { createReducer, PayloadAction } from "@reduxjs/toolkit";
 import { RequestResponse } from "./response";
 import config from "../configuration/config";
-import { IAssignPBI, IError, IMessCodeError, initError, initState, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, State, unassignedPBI } from "./stateInterfaces";
+import { IAssignPBI, IError, IMessCodeError,  IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, State } from "./stateInterfaces";
+import { initState, initError, unassignedPBI } from "./initStateValues";
 var _ = require('lodash');
 
 export const reducer = createReducer(initState, {
@@ -353,19 +354,28 @@ export const reducer = createReducer(initState, {
   return newState;
 },
 [Actions.estimatePBIThunk.pending.toString()]: (
-  state: State) => {
+  state: State,
+  payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
   let newState = _.cloneDeep(state);
   newState.loading = true;
   return newState;
 },
 [Actions.estimatePBIThunk.fulfilled.toString()]: (
-  state: State) => {
+  state: State,
+  payload: PayloadAction<RequestResponse<IProductBacklogItem, number>>) => {
   let newState = _.cloneDeep(state);
   newState.loading = false;
-  newState.pbiPage = [];
-  //newState.productRequireRefresh = true;
-  newState.error = initError;
-  newState.pages = 1;
+  const pbi = payload.payload.response as IProductBacklogItem;
+  if(pbi.isInSprint)
+  {
+    const index = newState.sprintPage.list.findIndex((sprint:ISprint)=>sprint.sprintNumber===pbi.sprintNumber);
+    const pbiIndex = newState.sprintPage.list[index].backlogItems.findIndex((pb:IProductBacklogItem)=>pb.id===pbi.id);
+    newState.sprintPage[index].backlogItems[pbiIndex] = pbi;
+  }
+  else{
+    const index = newState.pbiPage.list.findIndex((pb:IProductBacklogItem)=>pb.id===pbi.id);
+    newState.pbiPage.list[index] = pbi;
+  }
   newState.error = initError;
   return newState;
 },
@@ -425,32 +435,13 @@ export const reducer = createReducer(initState, {
 ) => {
   let newState = _.cloneDeep(state);
   newState.loading = false;
-  // if page filter not specified - set to default
-  const pageNumber = _.get(
-    payload,
-    ["meta", "arg", "filters", "pageNumber"],
-    config.defaultFilters.page
-  );
-  // if size filter not specified - set pageSize to default
   const pageSize = _.get(
     payload,
     ["meta", "arg", "filters", "pageSize"],
     config.defaultFilters.size
   );
   const sprints = payload.payload.response as ISprintList;
-  //console.log(sprints);
-  /*if (newState.sprintPage !== null && pageNumber !== 1) {
-    newState.sprintPage.pageSize = sprints.pageSize;
-    newState.sprintPage.pageNumber = sprints.pageNumber;
-    newState.sprintPage.pageCount = sprints.pageCount<0 ?1:sprints.pageCount;
-    newState.sprintPage.realSize = sprints.realSize;
-    newState.sprintPage.list = newState.sprintPage.list
-      .concat(sprints.list)
-      .slice(0, (pageNumber + 1) * pageSize);
-  } else {*/
     newState.sprintPage = sprints;
-  //}
-  // if response is shorter than default size - it means end is reached.
   newState.sprintLastPage = sprints.list.length < pageSize;
   newState.sprintRequireRefresh = false;
   newState.error = initError;
@@ -513,10 +504,8 @@ export const reducer = createReducer(initState, {
 ) => {
   let newState = _.cloneDeep(state);
   newState.openSprint = payload.payload.response as ISprint;
-  console.log(newState.openSprint);
-  console.log(newState.openSprint);
-  newState.loading = false;
-  newState.sprintRequireRefresh = false;
+  const objIndex = newState.sprintPage.list.findIndex((s:ISprint)=>s.sprintNumber===newState.openSprint.sprintNumber);
+  newState.sprintPage.list[objIndex] = newState.openSprint;
   newState.error = initError;
   return newState;
 },
@@ -716,15 +705,11 @@ export const reducer = createReducer(initState, {
   let newState = _.cloneDeep(state);
   newState.loading = false;
   const tasks = payload.payload.response as ITaskList;
-  //console.log(tasks);
-  //console.log(newState.sprintPage);
   if (newState.sprintPage && newState.sprintPage.list.length >0 && tasks && tasks.list.length>0) {
 
     newState.sprintPage.list = newState.sprintPage.list.map((sprint:ISprint)=>{
       sprint.backlogItems = sprint.backlogItems.map((item:IProductBacklogItem)=>{
       if(item.id === tasks.list[0].pbiId){
-        ///const temp = tasks.list as ITask[];
-        //console.log(temp.length>1 ?temp[1].assigness:"");
         return {...item, tasks:tasks.list};
       }
       return item;

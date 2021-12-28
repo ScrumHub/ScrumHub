@@ -99,11 +99,11 @@ export const EditPBIPopup: React.FC<CollectionCreateFormProps> = ({
                 <Form.Item {...formItemLayoutWithOutLabel} key={"key"+key} style={{ marginBottom: "4px" }}>
                   <Form.Item
                     noStyle
-                    key={key}
+                    key={"inner"+key}
                     name={key}
                     rules={[{ required: form.getFieldValue("acceptanceCriteria").length < 2  ? true : false, whitespace: true, message: 'Please input at least one acceptance criteria!' }]}
                   >
-                    <Input style={{ width: "95%" }} placeholder={`Input New Cirterion`} />
+                    <Input key={"input"+key} style={{ width: "95%" }} placeholder={`Input New Cirterion`} />
                   </Form.Item>
                   <MinusCircleOutlined style={{ width: "5%", alignSelf:"flex-end"}} className="dynamic-delete-button" onClick={() => remove(name)} />
                 </Form.Item>
