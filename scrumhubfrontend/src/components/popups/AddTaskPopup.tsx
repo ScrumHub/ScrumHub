@@ -1,6 +1,8 @@
 import React from 'react';
-import { Modal, Form, InputNumber } from 'antd';
-import { IProductBacklogItem } from '../../appstate/stateInterfaces';
+import { Button, Modal, Form, Input, InputNumber, Space } from 'antd';
+import { IFilters } from '../../appstate/stateInterfaces';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import FormItemLabel from 'antd/lib/form/FormItemLabel';
 
 interface Values {
   title: string;
@@ -9,23 +11,25 @@ interface Values {
 }
 
 interface CollectionCreateFormProps {
-  data: IProductBacklogItem;
+  data: IFilters;
   visible: boolean;
   onCreate: (values: Values) => void;
   onCancel: () => void;
 }
 
-export const CustomEstimatePopup: React.FC<CollectionCreateFormProps> = ({
+export const AddTaskPopup: React.FC<CollectionCreateFormProps> = ({
   data,
-visible,
+  visible,
   onCreate,
   onCancel,
 }) => {
   const [form] = Form.useForm();
   return (
     <Modal
+      centered={true}
+      closable={true}
       visible={visible}
-      title="Estimate Backlog Item"
+      title="Add New Task"
       okText="Save"
       cancelText="Cancel"
       onCancel={onCancel}
@@ -47,15 +51,13 @@ visible,
         name="form_in_modal"
         initialValues={{ modifier: 'public' }}
       >
+        <FormItemLabel prefixCls="name" label="Name" required={true} />
         <Form.Item
-        initialValue={data.expectedTimeInHours}
-          name="expectedTimeInHours"
-          label="Estimated Story Points"
-          rules={[{ required: true, message: 'Please input the story points estimation in hours of the new backlog item!' }]}
+          name="name"
+          rules={[{ required: true, message: 'Please input the name of the new task!' }]}
         >
-          <InputNumber type="number" min={0} />
+          <Input />
         </Form.Item>
-    
       </Form>
     </Modal>
   );

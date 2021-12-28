@@ -1,18 +1,19 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Button, Divider, PageHeader, Radio, Table, Typography, } from 'antd';
+import { Button, Divider, PageHeader, Radio, Space, Table, Typography, } from 'antd';
 import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
-import { IAddPBI, IFilters, IProductBacklogItem, IProductBacklogList, ISprint, IUpdateIdSprint, IUpdateSprint, State } from '../appstate/stateInterfaces';
+import { IAddPBI, IFilters, IProductBacklogItem, IProductBacklogList, ISprint, IUpdateIdSprint, State } from '../appstate/stateInterfaces';
 import { AuthContext } from '../App';
 import { Navigate } from 'react-router';
 import config from '../configuration/config';
 import { useSelector } from 'react-redux';
 import { CheckOutlined, StopOutlined } from '@ant-design/icons';
 import { store } from '../appstate/store';
-import { CustomEditPopup } from './popups/CustomEditPopup';
-import { CustomEstimatePopup } from './popups/CustomEstimatePopup';
+import { EditPBIPopup } from './popups/EditPBIPopup';
+import { EstimatePBIPopup } from './popups/EstimatePBIPopup';
 import "./SprintBacklog.css";
-import { CustomUpdateSprintPopup } from './popups/CustomUpdateSprintPopup';
+import { UpdateSprintPopup } from './popups/UpdateSprintPopup';
+import { UpdateSprintPBIsPopup } from './popups/UpdateSprintPBIsPopup';
 
 const columns = [
   {
@@ -111,9 +112,9 @@ export default function SprintBacklog() {
       setInitialRefresh(true);
     }
   }
-  const handleUpdatePBI = (pbi: IUpdateSprint) => {
+  const handleUpdateSprint = (sprint: ISprint) => {
     setIsUpdateModalVisible(false);
-     const ids = pbi.backlogItems.map((value: IProductBacklogItem) => 
+     const ids = sprint.backlogItems.map((value: IProductBacklogItem) => 
     {  return((value.sprintNumber === Number(sprintID) ? value.id.toString():"")) }).filter((x) => x !== "");
     try {
       store.dispatch(
@@ -121,7 +122,7 @@ export default function SprintBacklog() {
           token: token as string,
           ownerName: ownerName,
           sprintNumber: Number(sprintID),
-          sprint: {"goal":pbi.goal,"pbIs":ids} as IUpdateIdSprint
+          sprint: {"goal":sprint.goal,"pbIs":ids} as IUpdateIdSprint
         }) //filters
       );
     } catch (err) {
@@ -270,32 +271,16 @@ export default function SprintBacklog() {
     return <Navigate to="/login" />;
   }
   return (
-    <div>
-      <PageHeader
-        ghost={false}
-        title={"Sprint " + (sprintPage !== null ? sprintPage.sprintNumber : "")}
-        subTitle={sprintPage !== null ? sprintPage.goal : ""}
-        extra={[
-          <Button key="1" type="link" onClick={()=>{handleUpdate();fetchMore();setIsUpdateModalVisible(true);}}> Update </Button>,
-        ]}
-        style={{ marginBottom: "4vh" }}
-      >
-      </PageHeader>
-      <Divider />
-      <Radio.Group
-        style={{ marginBottom: "4vh" }}
-        onChange={({ target: { value } }) => {
-          setSelectionType(value);
-        }}
-        value={selectionType}
-      >
-        <Radio value="pbi">PBI View</Radio>
-        <Radio value="tasks">Tasks View</Radio>
-      </Radio.Group>
+    <div style={{ marginLeft: "2%", marginRight: "2%", marginTop: 0, marginBottom: "1%" }}>
+      <Space>
+      <Typography>{sprintPage !== null ? sprintPage.goal : ""}</Typography>
+      <Button key="1" type="link" onClick={()=>{handleUpdate();fetchMore();setIsUpdateModalVisible(true);}}> Edit Sprint </Button>,    
+      </Space>
 
       <Table
         loading={refreshRequired || initialRefresh}
         scroll={{ x: 800 }}
+        size="small"
         rowKey={(record: IProductBacklogItem) => record.id}
         rowSelection={{
           type: "checkbox",
@@ -334,7 +319,6 @@ export default function SprintBacklog() {
         columns={columns}
         dataSource={(sprintPage && sprintPage.backlogItems) ? sprintPage.backlogItems : []}
       />
-      <Divider />
       <span style={{ width: "100%", margin: "auto", display: "inline-block", justifyContent: "center" }}>
         <Button disabled={prevselectedRowKeys.length < 1} onClick={handleDelete} type="primary" style={{ marginRight: 16 }}>
           Delete
@@ -348,14 +332,14 @@ export default function SprintBacklog() {
         <Button disabled={prevselectedRowKeys.length < 1} onClick={handleEstimateButton} type="primary" style={{ marginRight: 16 }}>
           Estimate
         </Button>
-        {isEditModalVisible && selectedPBI && <CustomEditPopup data={selectedPBI as IAddPBI} visible={isEditModalVisible}
-          onCreate={function (values: any): void { handleEditPBI(values) }}
+        {isEditModalVisible && selectedPBI && <EditPBIPopup data={selectedPBI as IAddPBI} visible={isEditModalVisible}
+          onCreate={function (values: any): void { handleEditPBI(values) }} onDelete={handleDelete}
           onCancel={() => { setIsEditModalVisible(false); }} />}
-        {isEstimateModalVisible && selectedPBI && <CustomEstimatePopup data={selectedPBI as IProductBacklogItem} visible={isEstimateModalVisible}
+        {isEstimateModalVisible && selectedPBI && <EstimatePBIPopup data={selectedPBI as IProductBacklogItem} visible={isEstimateModalVisible}
           onCreate={function (values: any): void { handleEstimatePBI(values) }}
           onCancel={() => { setIsEstimateModalVisible(false); }} />}
-          {isUpdateModalVisible && !loading && <CustomUpdateSprintPopup data={sprintPage as IUpdateSprint} pbiData={tempPBIPage.list as IProductBacklogItem[]} visible={isUpdateModalVisible}
-          onCreate={function (values: any): void { handleUpdatePBI(values) }}
+          {isUpdateModalVisible && !loading && <UpdateSprintPBIsPopup data={sprintPage as ISprint} pbiData={tempPBIPage.list as IProductBacklogItem[]} visible={isUpdateModalVisible}
+          onCreate={function (values: any): void { handleUpdateSprint(values) }}
           onCancel={() => { setIsUpdateModalVisible(false); }} />}
       </span>
     </div>

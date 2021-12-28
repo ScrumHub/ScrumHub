@@ -1,16 +1,16 @@
 import { useContext, useEffect, useState } from 'react';
 import { Button, Card, Divider, PageHeader, Row } from 'antd';
 import 'antd/dist/antd.css';
-import * as Actions from "../appstate/actions";
+import * as Actions from "../../appstate/actions";
 import { Navigate, useNavigate } from 'react-router';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useSelector } from 'react-redux';
 import { LoadingOutlined } from '@ant-design/icons';
-import { AuthContext } from '../App';
-import { IFilters, IProductBacklogList, ISprint, IProductBacklogItem, initSprint, State, ISprintList } from '../appstate/stateInterfaces';
-import { store } from '../appstate/store';
-import config from '../configuration/config';
-import { CustomAddSprintPopup } from './popups/CustomAddSprintPopup';
+import { AuthContext } from '../../App';
+import { IFilters, IProductBacklogList, ISprint, IProductBacklogItem, initSprint, State, ISprintList } from '../../appstate/stateInterfaces';
+import { store } from '../../appstate/store';
+import config from '../../configuration/config';
+import { AddSprintPopup } from '../popups/AddSprintPopup';
 const { Meta } = Card;
 
 
@@ -228,7 +228,7 @@ export default function SprintList() {
           }
           </Row>
         </InfiniteScroll>}
-        {isAddModalVisible && !loading && <CustomAddSprintPopup error={error.erorMessage} data={initSprint} pbiData={tempPBIPage.list as IProductBacklogItem[]} visible={isAddModalVisible}
+        {isAddModalVisible && !loading && <AddSprintPopup error={error.erorMessage} data={initSprint} pbiData={tempPBIPage.list as IProductBacklogItem[]} visible={isAddModalVisible}
           onCreate={function (values: any): void { handleSprintAdd(values) }}
           onCancel={() => { setIsAddModalVisible(false); }} />}
     </section >
