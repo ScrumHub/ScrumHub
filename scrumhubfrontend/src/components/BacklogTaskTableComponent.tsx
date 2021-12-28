@@ -10,7 +10,6 @@ export default function TaskTableComponent(props: any) {
       size="small"
       showHeader={false}
       scroll={{ x: 800 }}
-      //loading={loading}
       rowKey={(record: ITask) => record.id}
       columns={props.taskColumns}
       components={props.taskComponents}

@@ -66,8 +66,8 @@ export const pbiPriorityCol = {
 
 };
 export const pbiProgressCol ={
-  title: 'Progress', width:"20%", key: 'operation', align: "center" as const, render: (item: IProductBacklogItem) => {
-    return (item.id===0?<span></span>:<span><Progress  width={25} size='small' type="line" showInfo={false} percent={item.tasks && item.tasks.length > 0 ? (item.tasks.filter((item: ITask) => item.finished).length / item.tasks.length):100}
+  title: 'Progress', width:"20%", key: 'progressBar', align: "center" as const, render: (item: IProductBacklogItem) => {
+    return (item.id===0?<span></span>:<span><Progress  width={25} size='small' type="line" showInfo={false} percent={item.tasks && item.tasks.length > 0 ? 100*(item.tasks.filter((item: ITask) => item.finished).length / item.tasks.length):100}
      /*format={percent => `${item.tasks?item.tasks.filter((item: ITask) => item.finished).length:0}`}*/ ></Progress></span>
     )
   }
@@ -81,7 +81,7 @@ export const pbiProgressCol2 ={
 };
 
 export const pbiProgressTagCol ={
-  title: 'Tasks Done', width:"20%", key: 'operation', align: "center" as const, render: (item: IProductBacklogItem) => {
+  title: 'Tasks Done', width:"20%", key: 'tag', align: "center" as const, render: (item: IProductBacklogItem) => {
     return (<Tag style={{cursor:"pointer"}} color={item.estimated ?(item.expectedTimeInHours>10?"red":"green"):"purple"}>
     {(item.tasks && item.tasks.length > 0 ?(item.tasks.filter((item: ITask) => item.finished).length+"/"+item.tasks.length):"0/0")+" Tasks Done"}</Tag>)
   }
@@ -89,14 +89,11 @@ export const pbiProgressTagCol ={
 
 export const routes = (ownerName: string|null, sprintID: string, location:any) => 
 [
-  {path: "/",
-  key: 0,
-  breadcrumbName: "Projects",
-  icon: <HomeOutlined/>,},
   {
     path: location.pathname,
-    key: 1,
-    breadcrumbName: (location.pathname as string).slice(1).replaceAll("/", " / "),
+    key: "location",
+    breadcrumbName: "Projects / "+(location.pathname as string).slice(1).replaceAll("/", " / "),
+    icon: <HomeOutlined/>,    
   }];
 
 

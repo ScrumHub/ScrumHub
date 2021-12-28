@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { IPerson, IProductBacklogItem, ISprint, ITask } from "../appstate/stateInterfaces";
-import { useIsMounted, validateNameFilter, validatePeopleFilter } from "./utility/commonFunctions";
+import { useIsMounted, uuid, validateNameFilter, validatePeopleFilter } from "./utility/commonFunctions";
 import { initRowIds } from "./utility/commonInitValues";
 
 export default function SprintTableComponent(props: any) {
@@ -73,12 +73,11 @@ export default function SprintTableComponent(props: any) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.loading, props.nameFilter, props.data, isMounted]);
-
   return (
-    <DndProvider backend={HTML5Backend} key={"dnd" + props.data && props.data.length > 0 ? props.data[0].sprintNumber : 0}>
+    <DndProvider backend={HTML5Backend} key={"dnd"+props.keys}>
       {<Table
-        key={props.data && props.data.length > 0 ? props.data.at(0).sprintNumber : "table0"}
-        style={{ transform: "scale(0.96)", height: "auto" }}
+        key={props.keys}
+        style={{ transform: "scale(0.96)", height: "auto"}}
         scroll={{ x: 800 }}
         size="small"
         loading={props.loading || reload}

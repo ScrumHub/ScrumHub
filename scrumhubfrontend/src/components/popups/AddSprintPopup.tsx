@@ -1,10 +1,11 @@
 
 import React, { useState } from 'react';
-import { Modal, Form, InputNumber, Typography, Checkbox } from 'antd';
+import { Modal, Form, Typography, Checkbox, Input, DatePicker } from 'antd';
 import { IProductBacklogItem, ISprint } from '../../appstate/stateInterfaces';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import TextArea from 'antd/lib/input/TextArea';
 import _ from 'lodash';
+import { disabledDate } from '../utility/commonFunctions';
 
 interface CollectionCreateFormProps {
   data: ISprint;
@@ -55,18 +56,36 @@ export const AddSprintPopup: React.FC<CollectionCreateFormProps> = ({
         initialValues={{ modifier: 'public' }}
       >
         <Typography style={{ color: "red" }}>{error}</Typography>
+        <FormItemLabel prefixCls="finishDate" label="Sprint Deadline" required={true} />
+        <Form.Item
+          initialValue={data.finishDate}
+          name="finishDate"
+          rules={[{ required: true, message: 'Please input the deadline of this sprint!' }]}
+        >
+          <DatePicker showToday={true} disabledDate={disabledDate} format={"YYYY-MM-DD"}
+          />
+        </Form.Item>
+        <FormItemLabel prefixCls="title" label="Title" required={true} />
+        <Form.Item
+          initialValue={data.title}
+          name="title"
+          rules={[{ required: true, message: 'Please input the title of this sprint!' }]}
+        >
+          <Input required={true}
+          />
+        </Form.Item>
         <FormItemLabel prefixCls="goal" label="Goal" required={true} />
         <Form.Item
           initialValue={data.goal}
           name="goal"
           rules={[{ required: true, message: 'Please input the goal of this sprint!' }]}
         >
-          <TextArea
+          <TextArea required={true}
             maxLength={105}
           />
         </Form.Item>
 
-        <FormItemLabel prefixCls="backlogItems" label="Backlog Items" required={true} />
+        {filteredData && filteredData.length>0 && <FormItemLabel prefixCls="backlogItems" label="Backlog Items" required={true} />}
         <Form.List name="backlogItems" initialValue={filteredData}>
           {(fields) => (
             <>

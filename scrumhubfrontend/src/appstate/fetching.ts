@@ -206,18 +206,20 @@ export function fetchOneSprint(token: string, ownerName: string, sprintNumber: n
 }
 
 
-export function updateOneSprint(token: string, ownerName: string, sprintNumber: number, sprint: IUpdateIdSprint
+export function updateOneSprint(token: string, ownerName: string, sprintNumber: number, sprint: any
 ): Promise<RequestResponse<ISprint, number>> {
+  console.log(sprint);
   return getResponse(
     axios.put(
       `https://${config.backend.ip}:${config.backend.port}/api/Sprints/${ownerName}/${sprintNumber}`,
-      sprint, { headers: getHeader(token, config) }
+      sprint, { headers: getHeaderWithContent(token, config) }
     )
   );
 }
 
 export function addSprint(token: string, ownerName: string, sprint: any
 ): Promise<RequestResponse<ISprint, number>> {
+  console.log(sprint);
   return getResponse(
     axios.post(
       `https://${config.backend.ip}:${config.backend.port}/api/Sprints/${ownerName}`,

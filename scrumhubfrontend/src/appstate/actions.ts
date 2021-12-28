@@ -250,14 +250,14 @@ export const fetchOneSprintThunk = createAsyncThunk<
 
 export const updateOneSprintThunk = createAsyncThunk<
   RequestResponse<ISprint, number>,
-  { token: string, ownerName: string; sprintNumber:number; sprint:IUpdateIdSprint; },
+  { token: string, ownerName: string; sprintNumber:number; sprint:any; },
   { rejectValue: RequestResponse<ISprint, number> }
 >("updateOneSprint", async (
   item: {
     token: string;
     ownerName: string;
     sprintNumber:number;
-    sprint:IUpdateIdSprint;
+    sprint:any;
   },
   { rejectWithValue }) => {
   const response: RequestResponse<ISprint, number> =
@@ -272,13 +272,13 @@ export const updateOneSprintThunk = createAsyncThunk<
 
 export const addSprintThunk = createAsyncThunk<
   RequestResponse<ISprint, number>,
-  { token: string, ownerName: string; sprint:any; },
+  { token: string, ownerName: string; sprint:ISprint|any; },
   { rejectValue: RequestResponse<ISprint, number> }
 >("addSprint", async (
   item: {
     token: string;
     ownerName: string;
-    sprint:any;
+    sprint:ISprint|any;
   },
   { rejectWithValue }) => {
   const response: RequestResponse<ISprint, number> =

@@ -1,3 +1,4 @@
+import moment, { Moment } from "moment";
 import config from "../configuration/config"
 
 export type Error = {
@@ -238,9 +239,10 @@ export const initProductBacklogList: IProductBacklogList = {
 
 export interface ISprint {
   sprintNumber: number;
+  title:string;
   goal: string;
   backlogItems: IProductBacklogItem[];
-  finishDate: Date;
+  finishDate: string|Date;
   isCurrent: boolean;
   status: string;
   isCompleted: boolean;
@@ -248,9 +250,10 @@ export interface ISprint {
 
 export const initSprint: ISprint = {
   sprintNumber: 1,
+  title:"",
   goal: "",
   backlogItems: [initProductBacklogItem],
-  finishDate: new Date(),
+  finishDate: "",
   isCurrent: false,
   status: "New",
   isCompleted: false,
@@ -260,20 +263,25 @@ export const initSprint2: ISprint = {
   sprintNumber: 2,
   goal: "",
   backlogItems: [],
-  finishDate: new Date(),
+  finishDate: "",
   isCurrent: false,
   status: "New",
   isCompleted: false,
+  title: ""
 }
 
 export interface IUpdateIdSprint {
   goal: string;
-  pbIs: string[]
+  pbIs: string[];
+  finishDate: string|Date|Moment;
+  title:string;
 }
 
 export const initUpdateSprint: IUpdateIdSprint = {
   goal: "Goal 1",
   pbIs: [],
+  finishDate: moment(),
+  title:""
 }
 
 export interface ISprintList {

@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import { Avatar, Badge, Button, Divider, Dropdown, Input, Space, } from 'antd';
 import 'antd/dist/antd.css';
-import { IAddPBI, IFilters, initAddPBI, initSprint, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, ISprint, State } from '../appstate/stateInterfaces';
+import { IAddPBI, IFilters, initAddPBI, initSprint, IPeopleList, IProductBacklogItem, IProductBacklogList, ISprint, State } from '../appstate/stateInterfaces';
 import { AuthContext } from '../App';
 import { Navigate } from 'react-router';
 import { useSelector } from 'react-redux';
@@ -13,7 +13,7 @@ import * as Actions from '../appstate/actions';
 import React from 'react';
 import { AddPBIPopup } from './popups/AddPBIPopup';
 import { AddSprintPopup } from './popups/AddSprintPopup';
-import { useIsMounted, validateNameFilter, validatePeopleFilter } from './utility/commonFunctions';
+import { useIsMounted } from './utility/commonFunctions';
 const { Search } = Input;
 
 export default function Project() {
@@ -54,7 +54,7 @@ export default function Project() {
         Actions.addSprintThunk({
           token: token as string,
           ownerName: ownerName as string,
-          sprint: { "number": sprint.sprintNumber, "goal": sprint.goal, "pbIs": ids }
+          sprint: { "title":sprint.title,"finishDate":sprint.finishDate, "goal": sprint.goal, "pbIs": ids }
         }) //filters
       );
     } catch (err) {
@@ -76,8 +76,8 @@ export default function Project() {
   return (
     <>
       <div style={{ marginTop: "0.25%", marginBottom: "1%" }}>
-        <Space wrap direction="horizontal" split={true} align="start"
-          style={{transform: "scale(0.96)", marginTop: 0, marginBottom: "0.25%" }}>
+        <Space wrap direction="horizontal" split={true}
+          style={{transform: "scale(0.96)", marginTop: 0, marginBottom: "0.25%", paddingLeft:"0.5%"}}>
           <Button onClick={() => { setIsAddSprint(true); }}>{"Create Sprint"}</Button>
           <Button onClick={() => { setIsAddPBI(true); }}>{"Add Product Backlog Item"}</Button>
           <Search placeholder="Input backlog item name" onSearch={onSearch} enterButton />
@@ -87,8 +87,8 @@ export default function Project() {
             style={{ color: "#1890ff" }}
             overlay={<MenuWithPeople itemSelected={function (items: string[]): void { updatePplFilter(items); }} people={people} inputFilter={inputPplFilter}/>}
             buttonsRender={([leftButton, rightButton]) => [
-              <Button type="primary" icon={<UserOutlined style={{ color: "white", }} />} />,
-              React.cloneElement(<Input placeholder="Input user login" style={{ width: 125 }} onChange={updateInputPplFilter} />),
+              <></>,
+              React.cloneElement(<Input prefix={<UserOutlined style={{ color: "#1890ff" }} />} placeholder="Input user login" style={{ width: 140 }} onChange={updateInputPplFilter} />),
             ]} >
 
           </Dropdown.Button>

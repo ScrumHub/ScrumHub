@@ -439,7 +439,7 @@ export const reducer = createReducer(initState, {
   );
   const sprints = payload.payload.response as ISprintList;
   //console.log(sprints);
-  if (newState.sprintPage !== null && pageNumber !== 1) {
+  /*if (newState.sprintPage !== null && pageNumber !== 1) {
     newState.sprintPage.pageSize = sprints.pageSize;
     newState.sprintPage.pageNumber = sprints.pageNumber;
     newState.sprintPage.pageCount = sprints.pageCount<0 ?1:sprints.pageCount;
@@ -447,9 +447,9 @@ export const reducer = createReducer(initState, {
     newState.sprintPage.list = newState.sprintPage.list
       .concat(sprints.list)
       .slice(0, (pageNumber + 1) * pageSize);
-  } else {
+  } else {*/
     newState.sprintPage = sprints;
-  }
+  //}
   // if response is shorter than default size - it means end is reached.
   newState.sprintLastPage = sprints.list.length < pageSize;
   newState.sprintRequireRefresh = false;
@@ -509,10 +509,11 @@ export const reducer = createReducer(initState, {
 },
 [Actions.updateOneSprintThunk.fulfilled.toString()]: (
   state: State,
-  payload: PayloadAction<RequestResponse<ISprint, number>>
+  payload: PayloadAction<RequestResponse<ISprint|any, number>>
 ) => {
   let newState = _.cloneDeep(state);
   newState.openSprint = payload.payload.response as ISprint;
+  console.log(newState.openSprint);
   console.log(newState.openSprint);
   newState.loading = false;
   newState.sprintRequireRefresh = false;
@@ -684,8 +685,6 @@ export const reducer = createReducer(initState, {
       return item;
     })
   }
-  // if response is shorter than default size - it means end is reached.
-  //newState.taskLastPage = tasks.length < pageSize;
   newState.productRequireRefresh = false;
   newState.error = initError;
   return newState;

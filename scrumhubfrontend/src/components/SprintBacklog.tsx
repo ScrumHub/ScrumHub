@@ -274,7 +274,7 @@ export default function SprintBacklog() {
     <div style={{ marginLeft: "2%", marginRight: "2%", marginTop: 0, marginBottom: "1%" }}>
       <Space>
       <Typography>{sprintPage !== null ? sprintPage.goal : ""}</Typography>
-      <Button key="1" type="link" onClick={()=>{handleUpdate();fetchMore();setIsUpdateModalVisible(true);}}> Edit Sprint </Button>,    
+      <Button key="1" type="link" onClick={()=>{handleUpdate();fetchMore();setIsUpdateModalVisible(true);}}> Edit Sprint </Button>    
       </Space>
 
       <Table

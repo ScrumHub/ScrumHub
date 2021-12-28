@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Modal, Form, Checkbox } from 'antd';
+import { Modal, Form, Checkbox, DatePicker, Input } from 'antd';
 import { IProductBacklogItem, ISprint } from '../../appstate/stateInterfaces';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import TextArea from 'antd/lib/input/TextArea';
 import _ from 'lodash';
+import { disabledDate } from '../utility/commonFunctions';
 
 interface Values {
   goal: string;
@@ -59,7 +60,25 @@ export const UpdateSprintPBIsPopup: React.FC<CollectionCreateFormProps> = ({
         name="form_in_modal"
         initialValues={{ modifier: 'public' }}
       >
-        <FormItemLabel prefixCls="name" label="Goal" required={true} />
+        <FormItemLabel prefixCls="finishDate" label="Sprint Deadline" required={true} />
+        <Form.Item
+          initialValue={data.finishDate}
+          name="finishDate"
+          rules={[{ required: true, message: 'Please input the deadline of this sprint!' }]}
+        >
+          <DatePicker showToday={true} disabledDate={disabledDate} format={"YYYY-MM-DD"}
+          />
+        </Form.Item>
+        <FormItemLabel prefixCls="title" label="Title" required={true} />
+        <Form.Item
+          initialValue={data.title}
+          name="title"
+          rules={[{ required: true, message: 'Please input the title of this sprint!' }]}
+        >
+          <Input required={true}
+          />
+        </Form.Item>
+        <FormItemLabel prefixCls="goal" label="Goal" required={true} />
         <Form.Item
           initialValue={data.goal}
           name="goal"
@@ -71,7 +90,7 @@ export const UpdateSprintPBIsPopup: React.FC<CollectionCreateFormProps> = ({
           />
         </Form.Item>
         <FormItemLabel prefixCls="name" label="Backlog Items" required={true} />
-        <Form.List name="backlogItems" initialValue={filteredData}>
+        {filteredData && filteredData.length>0 && <Form.List name="backlogItems" initialValue={filteredData}>
           {(fields) => (
             <>
               {fields.map(({ key, name }) => (
@@ -87,7 +106,7 @@ export const UpdateSprintPBIsPopup: React.FC<CollectionCreateFormProps> = ({
               ))}
             </>
           )}
-        </Form.List>
+        </Form.List>}
       </Form>
     </Modal>
   );

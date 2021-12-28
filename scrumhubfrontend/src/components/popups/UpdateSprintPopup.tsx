@@ -1,18 +1,21 @@
 import React from 'react';
-import { Modal, Form } from 'antd';
-import { IProductBacklogItem, ISprint } from '../../appstate/stateInterfaces';
+import { Modal, Form, DatePicker, Input } from 'antd';
+import { IProductBacklogItem, ISprint, IUpdateIdSprint } from '../../appstate/stateInterfaces';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import TextArea from 'antd/lib/input/TextArea';
-
+import { disabledDate } from '../utility/commonFunctions';
+import moment, { Moment } from 'moment';
 interface Values {
   goal: string;
-  backlogItems: IProductBacklogItem[];
+  backlogItems?: IProductBacklogItem[];
+  title:string;
+  finishDate:Date|string|Moment
 }
 
 interface CollectionCreateFormProps {
   data: ISprint;
   visible: boolean;
-  onCreate: (values: Values) => void;
+  onCreate: (values: ISprint|Values) => void;
   onCancel: () => void;
 }
 
@@ -22,10 +25,7 @@ export const UpdateSprintPopup: React.FC<CollectionCreateFormProps> = ({
   onCreate,
   onCancel,
 }) => {
-  //TO DO
-  //DELETE after backend is fixed
   const [form] = Form.useForm();
-
   return (
     <Modal
       centered={true}
@@ -38,9 +38,9 @@ export const UpdateSprintPopup: React.FC<CollectionCreateFormProps> = ({
       onOk={() => {
         form
           .validateFields()
-          .then((values: Values) => {
+          .then((values: ISprint|Values) => {
             form.resetFields();
-            onCreate(values);
+            onCreate({...values,backlogItems:data.backlogItems,});
           })
           .catch((info: any) => {
             console.error('Validate Failed:', info);
@@ -51,8 +51,25 @@ export const UpdateSprintPopup: React.FC<CollectionCreateFormProps> = ({
         form={form}
         layout="vertical"
         name="form_in_modal"
-        initialValues={{ modifier: 'public' }}
       >
+        <FormItemLabel prefixCls="finishDate" label="Sprint Deadline" required={true} />
+        <Form.Item
+        initialValue={moment(data.finishDate, "YYYY-MM-DD")}
+          name="finishDate"
+          rules={[{ required: true, message: 'Please input the deadline of this sprint!' }]}
+        >
+          <DatePicker defaultValue={moment(data.finishDate, "YYYY-MM-DD")} showToday={true} disabledDate={disabledDate} format={"YYYY-MM-DD"}
+          />
+        </Form.Item>
+        <FormItemLabel prefixCls="title" label="Title" required={true} />
+        <Form.Item
+          initialValue={data.title}
+          name="title"
+          rules={[{ required: true, message: 'Please input the title of this sprint!' }]}
+        >
+          <Input required={true}
+          />
+        </Form.Item>
         <FormItemLabel prefixCls="name" label="Goal" required={true} />
         <Form.Item
           initialValue={data.goal}

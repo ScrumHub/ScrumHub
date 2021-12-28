@@ -44,9 +44,9 @@
     text-align: center;
   }
   
-  .backlogScroll{
+  /*.backlogScroll{
     min-height:5vh;
-    max-height: 70vh;
+    max-height: 68vh;
     overflow-y:scroll;
 
   }
@@ -55,11 +55,11 @@
     display: none;
   }
   
-  /* Hide scrollbar for IE, Edge and Firefox */
+  // Hide scrollbar for IE, Edge and Firefox 
   .backlogScroll {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
-  }
+    -ms-overflow-style: none;  // IE and Edge 
+    scrollbar-width: none;  //Firefox 
+  }*/
 
 
   /*::-webkit-scrollbar { 
