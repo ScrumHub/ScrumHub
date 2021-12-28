@@ -1,4 +1,6 @@
-﻿namespace ScrumHubBackend.GitHubClient
+﻿using ScrumHubBackend.DatabaseModel;
+
+namespace ScrumHubBackend.GitHubClient
 {
 
     /// <summary>
@@ -26,26 +28,49 @@
             if (dbRepo == null)
                 throw new CustomExceptions.NotFoundException("Repository not found");
 
-            var repoTasks = dbContext.Tasks?.Where(task => task.RepositoryId == dbRepo.Id).ToList() ?? new List<DatabaseModel.SHTask>();
+            var scrumHubTasks = dbContext.Tasks?.Where(task => task.RepositoryId == dbRepo.Id).ToList() ?? new List<DatabaseModel.SHTask>();
 
-            foreach(var repoTask in repoTasks)
-            {
-                if(repositoryIssues.Any(repIs => repIs.Id == repoTask.GitHubIssueId))
-                    continue;
-                // Remove task where issue no longer exists
-                dbContext.Remove(repoTask);
-            }
+            RemoveAndCloseTasks(scrumHubTasks, repositoryIssues, dbContext);
 
-            foreach(var repoIssue in repositoryIssues)
-            {
-                if (repoTasks.Any(repoT => repoT.GitHubIssueId == repoIssue.Id))
-                    continue;
-                // Add task for issue
-                var newTask = new DatabaseModel.SHTask(repoIssue, dbRepo, dbContext);
-                dbContext.Add(newTask);
-            }
+            AddTasks(scrumHubTasks, repositoryIssues, dbRepo, dbContext);
 
             dbContext.SaveChanges();
+        }
+
+        private static void RemoveAndCloseTasks(IEnumerable<SHTask> scrumHubTasks, IEnumerable<Octokit.Issue> repositoryIssues, DatabaseContext dbContext)
+        {
+            foreach (var scrumHubTask in scrumHubTasks)
+            {
+                
+                var repositoryIssue = repositoryIssues.FirstOrDefault(repoIssue => repoIssue.Id == scrumHubTask.GitHubIssueId);
+
+                // If issues in reository contain actual task we check if we should close it
+                if (repositoryIssue != default)
+                {
+                    if(repositoryIssue.State.Value == Octokit.ItemState.Closed && scrumHubTask.Status != Common.SHTaskStatus.Finished)
+                    {
+                        scrumHubTask.Status = Common.SHTaskStatus.Finished;
+                        dbContext.Update(scrumHubTask);
+                    }
+                }
+                else // If not - we should delete it in ScrumHub
+                {
+                    dbContext.Remove(scrumHubTask);
+                }    
+            }
+        }
+
+        private static void AddTasks(IEnumerable<SHTask> scrumHubTasks, IEnumerable<Octokit.Issue> repositoryIssues, Repository dbRepo, DatabaseContext dbContext)
+        {
+            foreach (var repoIssue in repositoryIssues)
+            {
+                if (scrumHubTasks.Any(scrumHubTask => scrumHubTask.GitHubIssueId == repoIssue.Id))
+                    continue;
+
+                // Add task for issue
+                var newTask = new SHTask(repoIssue, dbRepo, dbContext);
+                dbContext.Add(newTask);
+            }
         }
     }
 }
