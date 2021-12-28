@@ -2,6 +2,7 @@
 using ScrumHubBackend.CommunicationModel;
 using ScrumHubBackend.CustomExceptions;
 using ScrumHubBackend.GitHubClient;
+using System.Text.RegularExpressions;
 
 namespace ScrumHubBackend.CQRS.Tasks
 {
@@ -56,7 +57,20 @@ namespace ScrumHubBackend.CQRS.Tasks
             if (issue == null)
                 throw new NotFoundException("Task not found");
 
+            string inbranchIssueName = Regex.Replace(issue.Title.Trim().ToLowerInvariant(), @"\s+", "-");
+            string newBranchName = $"{request.BranchPrefix}/{issue.Number}.{inbranchIssueName}";
 
+            var defaultBranch = gitHubClient.Repository.Branch.Get(repository.Id, repository.DefaultBranch).Result;
+
+            // Create branch from master
+            Octokit.NewReference newBranch = new Octokit.NewReference($"refs/heads/{newBranchName}", defaultBranch.Commit.Sha);
+            gitHubClient.Git.Reference.Create(repository.Id, newBranch);
+
+            dbTask.Status = Common.SHTaskStatus.InProgress;
+            _dbContext.Update(dbTask);
+            _dbContext.SaveChanges();
+
+            return Task.FromResult(new SHTask(issue, _dbContext));
         } 
     }
 }
