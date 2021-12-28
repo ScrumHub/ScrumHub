@@ -57,6 +57,9 @@ namespace ScrumHubBackend.CQRS.Tasks
             if (issue == null)
                 throw new NotFoundException("Task not found");
 
+            if (dbTask.Status != Common.SHTaskStatus.New)
+                throw new ConflictException("Task was already started");
+
             string inbranchIssueName = Regex.Replace(issue.Title.Trim().ToLowerInvariant(), @"\s+", "-");
             string newBranchName = $"{request.BranchPrefix}/{issue.Number}.{inbranchIssueName}";
 
