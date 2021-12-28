@@ -123,7 +123,6 @@ export const reducer = createReducer(initState, {
   let newState = _.cloneDeep(state);
   newState.loading = false;
   const repo = payload.payload.response as IRepository;
-  //console.log(repo);
   newState.repositories[newState.repositories.findIndex((el:IRepository) => el.gitHubId === repo.gitHubId)] = repo;
   return newState;
 },
@@ -276,13 +275,40 @@ export const reducer = createReducer(initState, {
 ) => {
   let newState = _.cloneDeep(state);
   newState.loading = false;
-  newState.people = payload.payload.response as IPeopleList;
-  newState.currentUser = newState.people.list.find((e : IPerson) => e.isCurrentUser) as IPerson;
-  newState.error = initError;
-  //newState.productRequireRefresh = false;
+  newState.people = payload.payload.response as IPeopleList; newState.error = initError;
   return newState;
 },
 [Actions.fetchPeopleThunk.rejected.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<undefined, undefined>>
+) => {
+  let newState = _.cloneDeep(state);
+  let errorResponse = payload.payload;
+  newState.loading = false;
+  newState.error = {
+    hasError: true,
+    errorCode: errorResponse ? errorResponse.code : -1,
+    erorMessage: errorResponse ? (errorResponse.response as IError).Message : "",
+  };
+  return newState;
+},
+[Actions.getCurrentUserThunk.pending.toString()]: (
+  state: State) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = true;
+  return newState;
+},
+[Actions.getCurrentUserThunk.fulfilled.toString()]: (
+  state: State,
+  payload: PayloadAction<RequestResponse<IPerson, number>>
+) => {
+  let newState = _.cloneDeep(state);
+  newState.loading = false;
+  newState.currentUser = payload.payload.response as IPerson;
+  newState.error = initError;
+  return newState;
+},
+[Actions.getCurrentUserThunk.rejected.toString()]: (
   state: State,
   payload: PayloadAction<RequestResponse<undefined, undefined>>
 ) => {

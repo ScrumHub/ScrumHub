@@ -41,7 +41,7 @@ import { AuthContext } from "../App";
           }}
         >
          <Router>
-         <Main/>
+         shallow(<Main/>)
          </Router>
          </AuthContext.Provider>
        </Provider>,

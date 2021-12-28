@@ -54,15 +54,6 @@ export const AddSprintPopup: React.FC<CollectionCreateFormProps> = ({
         name="form_in_modal"
         initialValues={{ modifier: 'public' }}
       >
-        <FormItemLabel prefixCls="sprintNumber" label="Sprint Number" required={true} />
-        <Form.Item
-          initialValue={data.sprintNumber}
-          name="sprintNumber"
-          rules={[{ required: true, message: 'Please input the number of this sprint!' }]}
-        >
-          <InputNumber />
-
-        </Form.Item>
         <Typography style={{ color: "red" }}>{error}</Typography>
         <FormItemLabel prefixCls="goal" label="Goal" required={true} />
         <Form.Item

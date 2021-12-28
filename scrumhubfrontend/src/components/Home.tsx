@@ -117,7 +117,7 @@ export default function Home() {
       <div className="reposGrid">
         {repos.map((rep: IRepository) => {
           return (<section className="card" style={{ width: "85%" }} key={rep.gitHubId} >
-            <Card  className='repoCard' type="inner" actions=
+            <Card loading={rep.gitHubId===displayId &&loading } className='repoCard' type="inner" actions=
               {[!rep.hasAdminRights ? <CantAddToShButton/>:(rep.alreadyInScrumHub ? <InShButton/>:
                 <Button loading={rep.gitHubId===displayId &&loading } disabled={false} className='cardButton' onClick={() => { addProject(rep.gitHubId);}} >
                 <span>{<FolderAddOutlined disabled={false} />}{" Add to ScrumHub" }</span></Button>),

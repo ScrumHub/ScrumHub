@@ -6,10 +6,12 @@ import logo from './scrum.jpg';
 import {useNavigate} from "react-router";
 import { useCookies } from "react-cookie";
 import config from "../configuration/config";
+import * as Actions from '../appstate/actions';
+import { State } from "../appstate/stateInterfaces";
+import { store } from "../appstate/store";
 
 export default function Login(props:any) {
   const { state, dispatch: auth } = useContext(AuthContext);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [cookies, setCookie, removeCookie] = useCookies();
   const [data, setData] = useState({ errorMessage: "", isLoading: false });
   let navigate = useNavigate();
@@ -48,10 +50,7 @@ export default function Login(props:any) {
             isLoading: false,
             errorMessage: "Sorry! Login failed"
           });
-            
           }
-            
-          //}
         })
         .catch(error => {
           setData({
@@ -67,8 +66,14 @@ export default function Login(props:any) {
   useEffect(() => {
   if (state.isLoggedIn)
   {
+    store.dispatch(
+      Actions.getCurrentUserThunk(
+       {token: cookies[config.token]},
+      )
+    );
     navigate("/", { replace: true });
   }
+// eslint-disable-next-line react-hooks/exhaustive-deps
 },[navigate, state]);
 
 

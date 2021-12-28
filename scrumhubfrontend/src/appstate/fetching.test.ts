@@ -1,5 +1,5 @@
 import expect from "expect"; // You can use any testing library
-import { initAddPBI, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList } from "./stateInterfaces";
+import { initAddPBI, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList } from "./stateInterfaces";
 import config from "../configuration/config";
 import * as Fetching from "./fetching";
 import { RequestResponse } from "./response";
@@ -75,5 +75,11 @@ test("fetching the repositories with a wrong token results in an error", async (
   test("fetch sprints with a wrong token results in an error", async () => {
     const data: RequestResponse<ISprintList, undefined> =
       await Fetching.fetchSprints("", config.token,{});
+    expect(data).toEqual(errorObject);
+  });
+
+  test("fetching current user with a wrong token results in an error", async () => {
+    const data: RequestResponse<IPerson, undefined> =
+      await Fetching.getCurrentUser(config.token);
     expect(data).toEqual(errorObject);
   });

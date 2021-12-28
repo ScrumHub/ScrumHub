@@ -40,12 +40,10 @@ function Main(props: any) {
   const [logout, setLogout] = useState(false);
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") : "";
   const currentUser = useSelector((appState: State) => appState.currentUser);
-  const people = useSelector((appState: State) => appState.people);
   const sprintID = localStorage.getItem("sprintID") ? localStorage.getItem("sprintID") as string : "";
   useEffect(() => {
     if (logout) {
       var cookies = document.cookie.split(";");
-
       for (var i = 0; i < cookies.length; i++) {
         var cookie = cookies[i];
         var eqPos = cookie.indexOf("=");

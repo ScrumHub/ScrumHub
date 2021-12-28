@@ -239,19 +239,31 @@ export const initProductBacklogList: IProductBacklogList = {
 export interface ISprint {
   sprintNumber: number;
   goal: string;
-  backlogItems: IProductBacklogItem[]
+  backlogItems: IProductBacklogItem[];
+  finishDate: Date;
+  isCurrent: boolean;
+  status: string;
+  isCompleted: boolean;
 }
 
 export const initSprint: ISprint = {
   sprintNumber: 1,
   goal: "",
   backlogItems: [initProductBacklogItem],
+  finishDate: new Date(),
+  isCurrent: false,
+  status: "New",
+  isCompleted: false,
 }
 
 export const initSprint2: ISprint = {
   sprintNumber: 2,
   goal: "",
   backlogItems: [],
+  finishDate: new Date(),
+  isCurrent: false,
+  status: "New",
+  isCompleted: false,
 }
 
 export interface IUpdateIdSprint {

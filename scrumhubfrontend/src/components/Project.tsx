@@ -65,10 +65,7 @@ export default function Project() {
     }
   };
   const updatePplFilter = (items: IPerson[]) => {
-    if(isMounted()){
     setFiltersPBI({...filterPBI, peopleFilter:items});
-  
-    }
   };
   const onSearch = (value: string) => { setFiltersPBI({ ...filterPBI, nameFilter: value.toLowerCase() }); };
   if (!state.isLoggedIn) { return <Navigate to="/login" />; }
@@ -89,11 +86,8 @@ export default function Project() {
             style={{ color: "#1890ff" }}
             overlay={<MenuWithPeople itemSelected={function (items: IPerson[]): void { updatePplFilter(items); }} visible={true} people={people}/>}
             buttonsRender={([leftButton, rightButton]) => [
-              <Button className="peopleButton" style={{ cursor: "default" }} onClick={e => e.preventDefault()}><div className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-
-                People
-              </div></Button>,
-              React.cloneElement(<Button type="primary" icon={<UserOutlined style={{ color: "white", }} />}></Button>),
+              <></>,
+              React.cloneElement(<Input placeholder="Input user login" onChange={(value)=>{}} />),
             ]} >
             
           </Dropdown.Button>
