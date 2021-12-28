@@ -34,8 +34,9 @@ namespace ScrumHubBackend.CQRS.Tasks
 
             var gitHubClient = _gitHubClientFactory.Create(request.AuthToken);
 
-            // If it does not exists then user does not have permissions to read id
             var repository = gitHubClient.Repository.Get(request.RepositoryOwner, request.RepositoryName).Result;
+            if (!repository.Permissions.Admin)
+                throw new ForbiddenException("Not enough permissions to edit task in the repository");
 
             var dbRepository = _dbContext.Repositories?.FirstOrDefault(repo => repo.FullName == repository.FullName);
 
