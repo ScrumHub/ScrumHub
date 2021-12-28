@@ -6,11 +6,11 @@ using ScrumHubBackend.GitHubClient;
 namespace ScrumHubBackend.CQRS.Tasks
 {
     /// <summary>
-    /// Handler for assigining and unassigning 
+    /// Handler for creating branches
     /// </summary>
-    public class ChangePersonInTaskCommandHandler : IRequestHandler<ChangePersonInTaskCommand, SHTask>
+    public class CreateBranchForTaskCommandHandler : IRequestHandler<CreateBranchForTaskCommand, SHTask>
     {
-        private readonly ILogger<ChangePersonInTaskCommandHandler> _logger;
+        private readonly ILogger<CreateBranchForTaskCommandHandler> _logger;
         private readonly IGitHubClientFactory _gitHubClientFactory;
         private readonly DatabaseContext _dbContext;
         private readonly IGitHubResynchronization _gitHubResynchronization;
@@ -18,7 +18,7 @@ namespace ScrumHubBackend.CQRS.Tasks
         /// <summary>
         /// Constructor
         /// </summary>
-        public ChangePersonInTaskCommandHandler(ILogger<ChangePersonInTaskCommandHandler> logger, IGitHubClientFactory clientFactory, IGitHubResynchronization gitHubResynchronization, DatabaseContext dbContext)
+        public CreateBranchForTaskCommandHandler(ILogger<CreateBranchForTaskCommandHandler> logger, IGitHubClientFactory clientFactory, IGitHubResynchronization gitHubResynchronization, DatabaseContext dbContext)
         {
             _logger = logger ?? throw new ArgumentException(null, nameof(logger));
             _dbContext = dbContext ?? throw new ArgumentException(null, nameof(dbContext));
@@ -27,7 +27,7 @@ namespace ScrumHubBackend.CQRS.Tasks
         }
 
         /// <inheritdoc/>
-        public Task<SHTask> Handle(ChangePersonInTaskCommand request, CancellationToken cancellationToken)
+        public Task<SHTask> Handle(CreateBranchForTaskCommand request, CancellationToken cancellationToken)
         {
             if (request == null || request.AuthToken == null)
                 throw new BadHttpRequestException("Missing token");
@@ -35,6 +35,8 @@ namespace ScrumHubBackend.CQRS.Tasks
             var gitHubClient = _gitHubClientFactory.Create(request.AuthToken);
 
             var repository = gitHubClient.Repository.Get(request.RepositoryOwner, request.RepositoryName).Result;
+            if (!repository.Permissions.Admin)
+                throw new ForbiddenException("Not enough permissions to edit task in the repository");
 
             var dbRepository = _dbContext.Repositories?.FirstOrDefault(repo => repo.FullName == repository.FullName);
 
@@ -54,14 +56,7 @@ namespace ScrumHubBackend.CQRS.Tasks
             if (issue == null)
                 throw new NotFoundException("Task not found");
 
-            var update = new Octokit.AssigneesUpdate(new List<string>() { request.PersonLogin });
 
-            if (request.AssignPerson)
-                issue = gitHubClient.Issue.Assignee.AddAssignees(repository.Owner.Login, repository.Name, issue.Number, update).Result;
-            else
-                issue = gitHubClient.Issue.Assignee.RemoveAssignees(repository.Owner.Login, repository.Name, issue.Number, update).Result;
-
-            return Task.FromResult(new SHTask(issue, _dbContext));
-        }
+        } 
     }
 }
