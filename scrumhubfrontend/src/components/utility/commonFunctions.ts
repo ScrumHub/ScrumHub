@@ -19,6 +19,14 @@ export const validateTaskDrag = (pbiId: number, taskId:number,oldPbiId: number) 
   return (pbiId !== -2 && pbiId !== null && taskId !== -2 && taskId !== null && oldPbiId !== pbiId );
 }
 
+export const validateNameFilter = (nameFilter:any) => {
+  return nameFilter && nameFilter !== "";
+}
+
+export const validatePeopleFilter = (peopleFilter:string[]) => {
+  return peopleFilter && peopleFilter.length >0;
+}
+
 export function dateFormat(date: Date) {
   return new Date(date as Date).toLocaleString(['en-US'], { year: 'numeric', month: 'short', day: 'numeric' });
 }

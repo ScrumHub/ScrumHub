@@ -5,6 +5,7 @@ import MenuItem from "antd/lib/menu/MenuItem";
 import { useState } from "react";
 import { IPerson } from "../../appstate/stateInterfaces";
 import "../Home.css";
+import { validateNameFilter, validatePeopleFilter } from "./commonFunctions";
 
 export default function SkeletonList(props: any) {
     const number = props.number ? props.number : 0;
@@ -40,7 +41,8 @@ export function InShButton() {
 export function MenuWithPeople(props: any) {
     const ppl = props.people && props.people.list && props.people.list.length > 0 ? props.people.list : [] as IPerson[];
     const [nameList, setList] = useState([] as string[]);
-
+    const inputFilter = validateNameFilter(props.inputFilter) ? props.inputFilter : "";
+    console.log(inputFilter);
     const handleList = (item: IPerson) => {
         if (!nameList || nameList.length < 1) { setList([item.login]); props.itemSelected([item.login]); }
         else {
@@ -51,8 +53,8 @@ export function MenuWithPeople(props: any) {
 
     };
 
-    return (<Menu className="peopleMenu">{ppl.map((item: IPerson) => {
-        return (
+    return (validateNameFilter(props.inputFilter) && <Menu className="peopleMenu">{ppl.map((item: IPerson) => {
+        return (item.login.startsWith(inputFilter) &&
             <MenuItem key={item.login} onClick={() => { handleList(item); }}>
                 <Space>
                     <Avatar src={`${item.avatarLink}`} ></Avatar>

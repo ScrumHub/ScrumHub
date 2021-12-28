@@ -20,7 +20,7 @@ const { Header, Footer, Content, Sider } = Layout;
 const { SubMenu } = Menu;
 
 function ItemRender(route: any, params: any[], routes: any[], paths: any[]) {
-  return (<span key={route.path}>{(route.icon?route.icon:"")}{" "+route.breadcrumbName}</span>)
+  return (<span key={route.path}>{(route.icon ? route.icon : "")}{" " + route.breadcrumbName}</span>)
 }
 
 function Main(props: any) {
@@ -86,11 +86,20 @@ function Main(props: any) {
     }
   }
   useEffect(() => {
-    if (error.hasError) {
-      message.error(error.erorMessage,5);
+    if (error.hasError && error.erorMessage !== "") {
+      message.error(error.erorMessage, 2);
     }
   }, [error]);
 
+  useEffect(() => {
+    if (state.isLoggedIn && currentUser===null) {
+      store.dispatch(
+        Actions.getCurrentUserThunk({
+          token: token,
+        })
+      );
+    }
+  }, [currentUser]);
   useEffect(() => {
     if (ownerName !== "") {
       try {
@@ -103,7 +112,6 @@ function Main(props: any) {
       } catch (err) {
         console.error("Failed to fetch the pbis: ", err);
       }
-
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ownerName]);
 
@@ -142,10 +150,10 @@ function Main(props: any) {
             </Sider>
             <Content style={ownerName === "" ? {} : { padding: '0 50px' }}>
               <div style={{ minHeight: "90vh", margin: 0 }}>
-              
+
                 {ownerName !== "" && <PageHeader className="pageHeader"
-                  title={<div style={{ fontWeight: "bold", lineHeight:1.25, paddingTop: 0, marginTop: 0,}}>{sprintID && sprintID !== "0"?"Sprint "+sprintID:"Product Backlog"}</div>}
-                  breadcrumb={<Breadcrumb style={{ marginTop: 0, marginBottom:0, }} itemRender={ItemRender} routes={routes(ownerName, sprintID, location)} />}
+                  title={<div style={{ fontWeight: "bold", lineHeight: 1.25, paddingTop: 0, marginTop: 0, }}>{sprintID && sprintID !== "0" ? "Sprint " + sprintID : "Product Backlog"}</div>}
+                  breadcrumb={<Breadcrumb style={{ marginTop: 0, marginBottom: 0, }} itemRender={ItemRender} routes={routes(ownerName, sprintID, location)} />}
                 >
                 </PageHeader>}
                 <AppRouter />

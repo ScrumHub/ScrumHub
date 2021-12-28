@@ -4,7 +4,7 @@ import { useDrag, useDrop } from 'react-dnd';
 import * as Actions from '../appstate/actions';
 import { IAddPBI, IAssignPBI, ICheckedAssignPBI, ICheckedProductBacklogItem, IFilters, initPBIFilter, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, ISprint, ISprintList, ITask, IUpdateIdSprint, State } from '../appstate/stateInterfaces';
 import 'antd/dist/antd.css';
-import './BacklogTable.css';
+import './ProductBacklog.css';
 import { store } from '../appstate/store';
 import { AuthContext } from '../App';
 import { useSelector } from 'react-redux';
@@ -19,13 +19,14 @@ import { initModalVals } from './utility/commonInitValues';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
 import { useIsMounted, validatePBIDrag, validateTaskDrag, } from './utility/commonFunctions';
 import { taskStatusCol, taskGhLinkCol, taskNameCol, pbiProgressCol, backlogColors, backlogPriorities, pbiProgressCol2 } from './utility/BodyRowsAndColumns';
-import TaskTableComponent from './TaskTableComponent';
+import TaskTableComponent from './BacklogTaskTableComponent';
 import PBITableComponent from './PBITableComponent';
 import { MenuWithPeopleSave } from './utility/LoadAnimations';
 import { DownOutlined, EditOutlined } from '@ant-design/icons';
-import SprintTableComponent from './SprintTableComponent';
+import SprintTableComponent from './BacklogSprintTableComponent';
 export const type = 'DraggableBodyRow';
-export const BacklogTableWithSprints: React.FC<any> = (props: any) => {
+
+export const ProductBacklog: React.FC<any> = (props: any) => {
   const { state } = useContext(AuthContext);
   const { token } = state;
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : "";

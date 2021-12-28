@@ -3,12 +3,12 @@ import { CheckOutlined, DownOutlined, StopOutlined } from '@ant-design/icons';
 import { useState, useEffect, useContext } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector } from 'react-redux';
-import { IProductBacklogList, IProductBacklogItem, State, IPBIFilter, ITask } from '../appstate/stateInterfaces';
-import { store } from '../appstate/store';
-import * as Actions from '../appstate/actions';
+import { IProductBacklogList, IProductBacklogItem, State, IPBIFilter, ITask } from '../../appstate/stateInterfaces';
+import { store } from '../../appstate/store';
+import * as Actions from '../../appstate/actions';
 import 'antd/dist/antd.css';
-import { AuthContext } from '../App';
-import config from '../configuration/config';
+import { AuthContext } from '../../App';
+import config from '../../configuration/config';
 
 const menu = (
     <Menu>

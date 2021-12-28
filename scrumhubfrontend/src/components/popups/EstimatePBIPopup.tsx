@@ -4,7 +4,7 @@ import { IProductBacklogItem, ITask } from '../../appstate/stateInterfaces';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import { MoreOutlined, NumberOutlined } from '@ant-design/icons';
 import VirtualList from 'rc-virtual-list';
-import "../BacklogTable.css";
+import "../ProductBacklog.css";
 
 interface Values {
   expectedTimeInHours: number
