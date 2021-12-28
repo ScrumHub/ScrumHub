@@ -3,6 +3,7 @@ import config from "../configuration/config";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import axios, { AxiosResponse } from "axios";
 import { IAddPBI, IFilters, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, IUpdateIdSprint } from "./stateInterfaces";
+import { getHeader, getHeaderAcceptAll, getHeaderWithContent } from "./stateUtilities";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function getResponse<T, K>(
@@ -44,20 +45,13 @@ export function fetchRepositories(filters: IFilters, token: string
         .map((filterName) => {
           const value = String(filters[filterName]).trim();
           return value && value !== "null" ? `${filterName}=${value}` : "";
-          //}
         })
         .filter((x) => x !== "")
         .join("&");
   return getResponse(
     axios.get(
       `https://${config.backend.ip}:${config.backend.port}/api/Repositories?${filtersString}`,
-      {
-        headers: {
-          'authToken': token,
-          'Accept': "application/json",
-          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
-        },
-      }
+      { headers: getHeader(token, config),}
     )
   );
 }
@@ -68,14 +62,7 @@ export function addRepository(id: number, token: string,
     axios.post(
       `https://${config.backend.ip}:${config.backend.port}/api/Repositories`,
       { "index": JSON.stringify(id) },
-      {
-        headers: {
-          'authToken': token,
-          'Accept': "application/json",
-          'contentType': "application/json",
-          'Access-Control-Allow-Origin': "*",
-        },
-      }
+      {headers: getHeaderWithContent(token, config)}
     )
   );
 }
@@ -95,13 +82,7 @@ export function fetchPBIs(ownerName: any, token: string, filters: IFilters
   return getResponse(
     axios.get(
       `https://${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}?${filtersString}`,
-      {
-        headers: {
-          'authToken': token,
-          'Accept': "application/json",
-          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
-        },
-      }
+      {headers: getHeader(token, config)}
     )
   );
 }
@@ -112,44 +93,29 @@ export function fetchPeople(ownerName: string, token: string
     axios.get(
       `https://${config.backend.ip}:${config.backend.port}/api/People/${ownerName}`,
       {
-        headers: {
-          'authToken': token,
-          'Accept': "application/json",
-          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
-        },
+        headers: getHeader(token, config)
       }
     )
   );
 }
 export function getCurrentUser(token: string
-  ): Promise<RequestResponse<IPerson, number>> {
-    return getResponse(
-      axios.get(
-        `https://${config.backend.ip}:${config.backend.port}/api/People/current`,
-        {
-          headers: {
-            'authToken': token,
-            'Accept': "application/json",
-            'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
-          },
-        }
-      )
-    );
-  }
+): Promise<RequestResponse<IPerson, number>> {
+  return getResponse(
+    axios.get(
+      `https://${config.backend.ip}:${config.backend.port}/api/People/current`,
+      {
+        headers: getHeader(token, config)
+      }
+    )
+  );
+}
 
 export function finishPBI(ownerName: string, token: string, pbild: number
 ): Promise<RequestResponse<IProductBacklogItem, number>> {
   return getResponse(
     axios.patch(
       `https://${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}/${pbild}/finish`,
-      {},
-      {
-        headers: {
-          'authToken': token,
-          'Accept': "application/json",
-          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
-        },
-      }
+      {}, { headers: getHeader(token, config) }
     )
   );
 }
@@ -160,11 +126,7 @@ export function deletePBI(ownerName: string, token: string, pbild: number
     axios.delete(
       `https://${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}/${pbild}`,
       {
-        headers: {
-          'authToken': token,
-          'Accept': "*/*",
-          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
-        },
+        headers: getHeaderAcceptAll(token, config)
       }
     )
   );
@@ -181,12 +143,7 @@ export function addPBI(ownerName: string, token: string, pbi: IAddPBI
         "acceptanceCriteria": pbi.acceptanceCriteria
       },
       {
-        headers: {
-          'authToken': token,
-          'Accept': "application/json",
-          'contentType': "application/json",
-          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
-        },
+        headers: getHeaderWithContent(token, config)
       }
     )
   );
@@ -197,14 +154,7 @@ export function estimatePBI(ownerName: string, token: string, pbiId: number, hou
   return getResponse(
     axios.patch(
       `https://${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}/${pbiId}/estimate`,
-      { "hours": JSON.stringify(hours) },
-      {
-        headers: {
-          'authToken': token,
-          'Accept': "application/json",
-          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
-        },
-      }
+      { "hours": JSON.stringify(hours) }, { headers: getHeader(token, config) }
     )
   );
 }
@@ -219,14 +169,7 @@ export function editPBI(ownerName: string, token: string, pbi: IAddPBI, pbiId: n
         "priority": pbi.priority,
         "acceptanceCriteria": pbi.acceptanceCriteria
       },
-      {
-        headers: {
-          'authToken': token,
-          'Accept': "application/json",
-          'contentType': "application/json",
-          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
-        },
-      }
+      { headers: getHeaderWithContent(token, config) }
     )
   );
 }
@@ -241,20 +184,13 @@ export function fetchSprints(token: string, ownerName: string, filters: IFilters
         .map((filterName) => {
           const value = String(filters[filterName]).trim();
           return value && value !== "null" ? `${filterName}=${value}` : "";
-          //}
         })
         .filter((x) => x !== "")
         .join("&");
   return getResponse(
     axios.get(
-      `https://${config.backend.ip}:${config.backend.port}/api/Sprints/${ownerName}?${filtersString}`,
-      {
-        headers: {
-          'authToken': token,
-          'Accept': "application/json",
-          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
-        },
-      }
+      `https://${config.backend.ip}:${config.backend.port}/api/Sprints/${ownerName}?${filtersString}`
+      , { headers: getHeader(token, config) }
     )
   );
 }
@@ -263,14 +199,8 @@ export function fetchOneSprint(token: string, ownerName: string, sprintNumber: n
 ): Promise<RequestResponse<ISprint, number>> {
   return getResponse(
     axios.get(
-      `https://${config.backend.ip}:${config.backend.port}/api/Sprints/${ownerName}/${sprintNumber}`,
-      {
-        headers: {
-          'authToken': token,
-          'Accept': "application/json",
-          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
-        },
-      }
+      `https://${config.backend.ip}:${config.backend.port}/api/Sprints/${ownerName}/${sprintNumber}`
+      , { headers: getHeader(token, config) }
     )
   );
 }
@@ -281,14 +211,7 @@ export function updateOneSprint(token: string, ownerName: string, sprintNumber: 
   return getResponse(
     axios.put(
       `https://${config.backend.ip}:${config.backend.port}/api/Sprints/${ownerName}/${sprintNumber}`,
-      sprint,
-      {
-        headers: {
-          'authToken': token,
-          'Accept': "application/json",
-          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
-        },
-      }
+      sprint, { headers: getHeader(token, config) }
     )
   );
 }
@@ -298,14 +221,7 @@ export function addSprint(token: string, ownerName: string, sprint: any
   return getResponse(
     axios.post(
       `https://${config.backend.ip}:${config.backend.port}/api/Sprints/${ownerName}`,
-      sprint,
-      {
-        headers: {
-          'authToken': token,
-          'Accept': "application/json",
-          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
-        },
-      }
+      sprint, { headers: getHeader(token, config) }
     )
   );
 }
@@ -320,20 +236,13 @@ export function fetchTasks(token: string, ownerName: string, filters: IFilters,
         .map((filterName) => {
           const value = String(filters[filterName]).trim();
           return value && value !== "null" ? `${filterName}=${value}` : "";
-          //}
         })
         .filter((x) => x !== "")
         .join("&");
   return getResponse(
     axios.get(
       `https://${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}?${filtersString}`,
-      {
-        headers: {
-          'authToken': token,
-          'Accept': "application/json",
-          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
-        },
-      }
+      { headers: getHeader(token, config) }
     )
   );
 }
@@ -343,13 +252,7 @@ export function fetchPBITasks(token: string, ownerName: string, pbiId: number,
   return getResponse(
     axios.get(
       `https://${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/PBI/${pbiId}`,
-      {
-        headers: {
-          'authToken': token,
-          'Accept': "application/json",
-          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
-        },
-      }
+      { headers: getHeader(token, config) }
     )
   );
 }
@@ -359,13 +262,7 @@ export function addTasksToPBI(token: string, ownerName: string, pbiId: number,
   return getResponse(
     axios.get(
       `https://${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/PBI/${pbiId}`,
-      {
-        headers: {
-          'authToken': token,
-          'Accept': "application/json",
-          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
-        },
-      }
+      { headers: getHeader(token, config) }
     )
   );
 }
@@ -375,13 +272,7 @@ export function addTasksToSprint(token: string, ownerName: string, pbiId: number
   return getResponse(
     axios.get(
       `https://${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/PBI/${pbiId}`,
-      {
-        headers: {
-          'authToken': token,
-          'Accept': "application/json",
-          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
-        },
-      }
+      { headers: getHeader(token, config) }
     )
   );
 }
@@ -394,14 +285,7 @@ export function addTask(token: string, ownerName: string, pbiId: number, name: s
       {
         "name": name,
         "pbiId": pbiId.toString()
-      },
-      {
-        headers: {
-          'authToken': token,
-          'Accept': "application/json",
-          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
-        },
-      }
+      }, { headers: getHeader(token, config) }
     )
   );
 }
@@ -409,8 +293,7 @@ export function addTask(token: string, ownerName: string, pbiId: number, name: s
 export function getPBINames(ownerName: any, token: string, filters: IFilters
 ): Promise<RequestResponse<IProductBacklogList[], number>> {
   const filtersString =
-    filters === undefined
-      ? ""
+    filters === undefined ? ""
       : Object.keys(filters)
         .map((filterName) => {
           const value = String(filters[filterName]).trim();
@@ -421,13 +304,7 @@ export function getPBINames(ownerName: any, token: string, filters: IFilters
   return getResponse(
     axios.get(
       `https://${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}?${filtersString}`,
-      {
-        headers: {
-          'authToken': token,
-          'Accept': "application/json",
-          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
-        },
-      }
+      { headers: getHeader(token, config) }
     )
   );
 }
@@ -437,14 +314,7 @@ export function assignTaskToPBI(token: string, ownerName: string, pbiId: number,
   return getResponse(
     axios.patch(
       `https://${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/${taskId}/assignpbi`,
-      {"index": pbiId === null ? 0 : pbiId},
-      {
-        headers: {
-          'authToken': token,
-          'Accept': "application/json",
-          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
-        },
-      }
+      { "index": pbiId === null ? 0 : pbiId }, { headers: getHeader(token, config) }
     )
   );
 }
@@ -453,16 +323,7 @@ export function assignPersonToTask(token: string, ownerName: string, login: stri
   return getResponse(
     axios.patch(
       `https://${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/${taskId}/assignperson`,
-      {
-        "login": login
-      },
-      {
-        headers: {
-          'authToken': token,
-          'Accept': "application/json",
-          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
-        },
-      }
+      { "login": login}, { headers: getHeader(token, config) }
     )
   );
 }
@@ -472,16 +333,7 @@ export function unassignPersonToTask(token: string, ownerName: string, login: st
   return getResponse(
     axios.patch(
       `https://${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/${taskId}/unassignperson`,
-      {
-        "login": login
-      },
-      {
-        headers: {
-          'authToken': token,
-          'Accept': "application/json",
-          'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
-        },
-      }
+      {"login": login}, { headers: getHeader(token, config) }
     )
   );
 }

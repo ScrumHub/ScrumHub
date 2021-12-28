@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { Avatar, Button, Divider, Dropdown, Input, Space, } from 'antd';
+import { Avatar, Badge, Button, Divider, Dropdown, Input, Space, } from 'antd';
 import 'antd/dist/antd.css';
 import { IAddPBI, IFilters, initAddPBI, initSprint, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, ISprint, State } from '../appstate/stateInterfaces';
 import { AuthContext } from '../App';
@@ -7,7 +7,7 @@ import { Navigate } from 'react-router';
 import { useSelector } from 'react-redux';
 import { UserOutlined } from '@ant-design/icons';
 import { ProductBacklog } from './ProductBacklog';
-import { MenuWithPeople } from './utility/LoadAnimations';
+import { MenuWithPeople, updateStringList } from './utility/LoadAnimations';
 import { store } from '../appstate/store';
 import * as Actions from '../appstate/actions';
 import React from 'react';
@@ -65,7 +65,7 @@ export default function Project() {
       }
     }
   };
-  const updatePplFilter = (items: IPerson[]) => {
+  const updatePplFilter = (items: string[]) => {
     setFiltersPBI({ ...filterPBI, peopleFilter: items });
   };
   const updateInputPplFilter = (e: { target: { value: string; }; }) => {
@@ -85,7 +85,7 @@ export default function Project() {
           <Dropdown.Button
             placement="bottomCenter"
             style={{ color: "#1890ff" }}
-            overlay={<MenuWithPeople itemSelected={function (items: IPerson[]): void { updatePplFilter(items); }} people={people} inputFilter={inputPplFilter}/>}
+            overlay={<MenuWithPeople itemSelected={function (items: string[]): void { updatePplFilter(items); }} people={people} inputFilter={inputPplFilter}/>}
             buttonsRender={([leftButton, rightButton]) => [
               <Button type="primary" icon={<UserOutlined style={{ color: "white", }} />} />,
               React.cloneElement(<Input placeholder="Input user login" style={{ width: 125 }} onChange={updateInputPplFilter} />),
@@ -93,9 +93,14 @@ export default function Project() {
 
           </Dropdown.Button>
           {currentUser &&
-            <Avatar src={`${currentUser.avatarLink}`} >
-              {/*<a href={"https://github.com/"+currentUser.login}>{" "+currentUser.login as string}</a>
-          */}</Avatar>
+          <div onClick={()=>{updatePplFilter(updateStringList(filterPBI.peopleFilter, currentUser.login))}} style={{cursor:"pointer",boxShadow:filterPBI.peopleFilter.includes(currentUser.login)?"white 0px 0px 0.1px 0.05em":"",
+            borderRadius: "50%" }}>
+            
+           <Badge  status={"success"} style={{borderColor:"transparent"}} dot={filterPBI.peopleFilter.includes(currentUser.login)}>
+             <Avatar  src={`${currentUser.avatarLink}`} >
+</Avatar></Badge>
+          
+          </div>
           }
         </Space>
 
@@ -112,3 +117,4 @@ export default function Project() {
     </>
   );
 }
+

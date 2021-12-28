@@ -38,15 +38,25 @@ export function InShButton() {
             {" In ScrumHub"}</span></Button>
 }
 
+export const updateStringList = (items: string[], item:string) => {
+    if (!items || items.length < 1) { return([item]); }
+    else {
+        const list = items.includes(item) ? items.filter((name: string) => name !== item) : items.concat(item);
+        return(list);
+    }
+
+};
+
 export function MenuWithPeople(props: any) {
     const ppl = props.people && props.people.list && props.people.list.length > 0 ? props.people.list : [] as IPerson[];
     const [nameList, setList] = useState([] as string[]);
     const inputFilter = validateNameFilter(props.inputFilter) ? props.inputFilter : "";
-    console.log(inputFilter);
+    console.log(nameList);
     const handleList = (item: IPerson) => {
         if (!nameList || nameList.length < 1) { setList([item.login]); props.itemSelected([item.login]); }
         else {
             const list = nameList.includes(item.login) ? nameList.filter((name: string) => name !== item.login) : nameList.concat(item.login);
+            console.log(list);
             setList(list);
             props.itemSelected(list);
         }
@@ -54,7 +64,7 @@ export function MenuWithPeople(props: any) {
     };
 
     return (validateNameFilter(props.inputFilter) && <Menu className="peopleMenu">{ppl.map((item: IPerson) => {
-        return (item.login.startsWith(inputFilter) &&
+        return ((item.login.startsWith(inputFilter) || nameList.includes(item.login)) &&
             <MenuItem key={item.login} onClick={() => { handleList(item); }}>
                 <Space>
                     <Avatar src={`${item.avatarLink}`} ></Avatar>
