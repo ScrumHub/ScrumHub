@@ -72,6 +72,9 @@ export default function SprintTableComponent(props: any) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.loading, props.nameFilter, props.data, isMounted]);
+  const handleChange = (pagination: any, filters: any, sorter: any) => {
+    console.log('Various parameters', pagination, filters, sorter);
+  };
   return (
     <DndProvider backend={HTML5Backend} key={"dnd"+props.keys}>
       {<Table
@@ -83,6 +86,7 @@ export default function SprintTableComponent(props: any) {
         showHeader={false}
         pagination={false}
         dataSource={data}
+        onChange={(pagination: any, filters: any, sorter: any)=>{handleChange(pagination, filters, sorter)}}
         columns={props.columns}
         components={props.components}
         rowKey={(record: ISprint) => record.sprintNumber}
