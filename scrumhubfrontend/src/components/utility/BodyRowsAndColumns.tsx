@@ -33,7 +33,7 @@ export const taskGhLinkCol = {
   key: "link",
   width:"15%",
   align: "right" as const,
-  render: (text: string) => <a style={{paddingRight:"4%"}}href={text}>{"See on GitHub"}</a>,
+  render: (text: string) => <a href={text}>{"See on GitHub"}</a>,
 };
 
 export const pbiPriorityCol = {

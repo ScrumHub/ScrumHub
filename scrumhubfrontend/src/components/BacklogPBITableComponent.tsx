@@ -29,7 +29,6 @@ export default function PBITableComponent(props: any) {
   }, [props.sortedInfo]);
   return (
     <Table
-      style={{ borderSpacing: "separate", }}
       size="small"
       showHeader={true}
       scroll={{x:800,scrollToFirstRowOnChange:true }}

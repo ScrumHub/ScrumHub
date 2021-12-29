@@ -6,7 +6,7 @@ export type Error = {
   erorMessage: string;
 };
 export interface IFilters {
-  [name: string]: any;
+  [name: string]: any|any[];
 }
 export interface IFiltersAndToken {
   filters: IFilters;

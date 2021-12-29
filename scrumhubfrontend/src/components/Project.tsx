@@ -7,7 +7,7 @@ import { Navigate } from 'react-router';
 import { useSelector } from 'react-redux';
 import { DownOutlined, FilterOutlined, UserOutlined } from '@ant-design/icons';
 import { ProductBacklog } from './ProductBacklog';
-import { MenuWithPeople, MenuWithSorting, updateStringList } from './utility/LoadAnimations';
+import { MenuWithFilters, MenuWithPeople, MenuWithSorting, updateStringList } from './utility/LoadAnimations';
 import { store } from '../appstate/store';
 import * as Actions from '../appstate/actions';
 import React from 'react';
@@ -23,7 +23,7 @@ export default function Project() {
   const pbiPage = useSelector((appState: State) => appState.pbiPage as IProductBacklogList);
   const [initialRefresh, setInitialRefresh] = useState(true);
   const [infos, setInfos] = useState({
-    filteredInfo: {completed:-1,priorities:[] as number[]},
+    filteredInfo: {complete:-1, pbiPriorities:[] as number[]},
     sortedInfo: {
       order: '',
       columnKey: '',
@@ -103,7 +103,7 @@ export default function Project() {
           <Dropdown.Button
             placement="bottomCenter"
             style={{ color: "#1890ff" }}
-            overlay={<MenuWithPeople itemSelected={function (items: string[]): void { updatePplFilter(items); }} people={people} peopleFilter={filterPBI.peopleFilter} inputFilter={inputPplFilter}/>}
+            overlay={<MenuWithFilters itemSelected={function (items: any): void { setInfos({...infos, filteredInfo:items}); }} filteredInfo={infos.filteredInfo}/>}
             buttonsRender={([leftButton, rightButton]) => [
               <></>,
               React.cloneElement(<Button type="primary" icon={<FilterOutlined style={{ color: "white" }}></FilterOutlined>}>Filter</Button>),
@@ -143,7 +143,7 @@ export default function Project() {
           }
         </Space>
 
-        <ProductBacklog sortedInfo={infos.sortedInfo} peopleFilter={filterPBI.peopleFilter} nameFilter={filterPBI.nameFilter} />
+        <ProductBacklog sortedInfo={infos.sortedInfo} filteredInfo={infos.filteredInfo} peopleFilter={filterPBI.peopleFilter} nameFilter={filterPBI.nameFilter} />
         {isAddSprint && <AddSprintPopup error={error.erorMessage} data={initSprint} visible={isAddSprint}
           onCreate={function (values: any): void { addSprint(values); }}
           onCancel={() => { setIsAddSprint(false); }} pbiData={pbiPage.list} />}
