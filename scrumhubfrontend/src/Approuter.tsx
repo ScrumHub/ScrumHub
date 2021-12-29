@@ -3,7 +3,7 @@ import Login from './components/Login';
 import Teams from "./components/Teams";
 import Project from "./components/Project";
 import Home from "./components/Home";
-import SprintBacklog from "./components/SprintProject";
+import SprintBacklog from "./components/SprintBacklog";
 const AppRouter = () => {
     return (
         <Routes>

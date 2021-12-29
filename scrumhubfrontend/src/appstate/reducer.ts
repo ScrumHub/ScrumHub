@@ -149,8 +149,10 @@ export const reducer = createReducer(initState, {
   if(pbi.isInSprint)
   {
     const index = newState.sprintPage.list.findIndex((sprint:ISprint)=>sprint.sprintNumber===pbi.sprintNumber);
+    if(index !== -1){
     const pbiIndex = newState.sprintPage.list[index].backlogItems.findIndex((pb:IProductBacklogItem)=>pb.id===pbi.id);
-    newState.sprintPage[index].backlogItems[pbiIndex] = pbi;
+    newState.sprintPage.list[index].backlogItems[pbiIndex] = pbi;
+    }
   }
   else{
     const index = newState.pbiPage.list.findIndex((pb:IProductBacklogItem)=>pb.id===pbi.id);
@@ -346,8 +348,10 @@ export const reducer = createReducer(initState, {
   if(pbi.isInSprint)
   {
     const index = newState.sprintPage.list.findIndex((sprint:ISprint)=>sprint.sprintNumber===pbi.sprintNumber);
+    if(index !== -1){
     const pbiIndex = newState.sprintPage.list[index].backlogItems.findIndex((pb:IProductBacklogItem)=>pb.id===pbi.id);
-    newState.sprintPage[index].backlogItems[pbiIndex] = pbi;
+    newState.sprintPage.list[index].backlogItems[pbiIndex] = pbi;
+    }
   }
   else{
     const index = newState.pbiPage.list.findIndex((pb:IProductBacklogItem)=>pb.id===pbi.id);
@@ -377,10 +381,20 @@ export const reducer = createReducer(initState, {
   state: State,
   payload: PayloadAction<RequestResponse<IProductBacklogItem, number>>) => {
   let newState = _.cloneDeep(state);
-  newState.pbiPage = [];
-  newState.productRequireRefresh = true;
+  const pbi = payload.payload.response as IProductBacklogItem;
+  if(pbi.isInSprint)
+  {
+    const index = newState.sprintPage.list.findIndex((sprint:ISprint)=>sprint.sprintNumber===pbi.sprintNumber);
+    if(index !== -1){
+    const pbiIndex = newState.sprintPage.list[index].backlogItems.findIndex((pb:IProductBacklogItem)=>pb.id===pbi.id);
+    newState.sprintPage.list[index].backlogItems[pbiIndex] = pbi;
+    }
+  }
+  else{
+    const index = newState.pbiPage.list.findIndex((pb:IProductBacklogItem)=>pb.id===pbi.id);
+    newState.pbiPage.list[index] = pbi;
+  }
   newState.error = initError;
-  newState.pages = 1;
   newState.loading = false;
   return newState;
 },
@@ -472,6 +486,7 @@ export const reducer = createReducer(initState, {
   const objIndex = newState.sprintPage.list.findIndex((s:ISprint)=>s.sprintNumber===sprint.sprintNumber);
   newState.sprintPage.list[objIndex] = sprint;
   if(sprint.isCurrent) {newState.activeSprintNumber = sprint.sprintNumber};
+  if(newState.openSprint && newState.openSprint.sprintNumber === sprint.sprintNumber){newState.openSprint = sprint;}
   newState.loading = false;
   return newState;
 },
@@ -500,6 +515,7 @@ export const reducer = createReducer(initState, {
   const objIndex = newState.sprintPage.list.findIndex((s:ISprint)=>s.sprintNumber===sprint.sprintNumber);
   (newState.sprintPage.list[objIndex] as ISprint) = sprint;
   if(sprint.isCurrent) {newState.activeSprintNumber = sprint.sprintNumber};
+  if(newState.openSprint && newState.openSprint.sprintNumber === sprint.sprintNumber){newState.openSprint = sprint;}
   newState.loading = false;
   return newState;
 },

@@ -26,6 +26,7 @@ import { initPBIFilter } from '../appstate/initStateValues';
 import { CompleteSprintPopup } from './popups/CompleteSprint';
 import { EditPBIPopup } from './popups/EditPBIPopup';
 import { response } from 'express';
+import { assignPerson, updatePBI, updateTask } from './utility/BacklogHandlers';
 export const type = 'DraggableBodyRow';
 
 export const ProductBacklog: React.FC<any> = (props: any) => {
@@ -76,7 +77,7 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
     } catch (err) { console.error("Failed to edit the pbis: ", err); }
     finally {
         setSelectedPBI({} as IProductBacklogItem);
-        setInitialRefresh(true);
+        //setInitialRefresh(true);
     }
   };
   const finishPBI = (item: IProductBacklogItem) => {
@@ -135,41 +136,7 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
         isFailure: value
       })).then((response)=>{setSelectedSprint({} as ISprint);});
   };
-  const updatePBI = (pbiId: number, oldSprintId: number, newSprintId: number) => {
-    if (oldSprintId !== 0) {
-      const oldSprint = sprintPage.list.find((i: ISprint) => i.sprintNumber === oldSprintId);
-      const oldPbis = oldSprint?.backlogItems.map((i: IProductBacklogItem) => { return ((i.id !== pbiId ? i.id.toString() : "")) }).filter((x: string) => x !== "");
-      store.dispatch(Actions.updateOneSprintThunk({
-        token: token, ownerName: ownerName, sprintNumber: oldSprintId, sprint:
-        { "goal": oldSprint?.goal as string,"title": oldSprint?.title,"pbIs": oldPbis as string[],"finishDate": new Date(oldSprint?.finishDate as string)}
-      })).then((response) => { if (response.payload && response.payload?.code === 200) { if(newSprintId === 0){store.dispatch(Actions.clearPBIsList());}
-      else{
-        const newSprint = sprintPage.list.find((i: ISprint) => i.sprintNumber === newSprintId);
-      const newPbis = newSprint?.backlogItems.map((i: IProductBacklogItem) => { return (i.id.toString()) }).concat([pbiId.toString()]);
-      store.dispatch(Actions.updateOneSprintThunk({
-        token: token, ownerName: ownerName, sprintNumber: newSprintId, sprint:
-        {"goal": newSprint?.goal as string, "pbIs": newPbis as string[], "title": newSprint?.title,"finishDate": new Date(newSprint?.finishDate as string)}
-      }));
-      } } });
-    }
-    if (newSprintId !== 0 && oldSprintId === 0) {
-      const newSprint = sprintPage.list.find((i: ISprint) => i.sprintNumber === newSprintId);
-      const newPbis = newSprint?.backlogItems.map((i: IProductBacklogItem) => { return (i.id.toString()) }).concat([pbiId.toString()]);
-      store.dispatch(Actions.updateOneSprintThunk({
-        token: token, ownerName: ownerName, sprintNumber: newSprintId, sprint:
-        {"goal": newSprint?.goal as string, "pbIs": newPbis as string[], "title": newSprint?.title,"finishDate": new Date(newSprint?.finishDate as string)}
-      })).then((response) => {if (response.payload && response.payload?.code === 200 ) { store.dispatch(Actions.clearPBIsList()); } });
-    }
-  }
-  const updateTask = (pbiId: number, taskId: number) => {
-      store.dispatch(Actions.assignTaskToPBIThunk({ token: token, ownerName: ownerName, pbiId: pbiId, taskId: taskId}));
-  }
-  const assignPerson = (person: string, taskId: number, taskPeople: IPerson[]) => {
-    const names = taskPeople.map((item: IPerson) => { return (item.login) });
-      store.dispatch(taskPeople.length < 1 || !names.includes(person) ?
-        Actions.assignPersonToTaskThunk({ token: token, ownerName: ownerName, login: person, taskId: taskId, }) :
-        Actions.unassignPersonToTaskThunk({ token: token, ownerName: ownerName, login: person, taskId: taskId, }));
-  }
+
   const DraggableBodyRow = ({ index: index_row, bodyType, record, className, style, ...restProps }: BodyRowProps) => {
     const ref = useRef();
     const [{ isOver, dropClassName }, drop] = useDrop({
@@ -188,13 +155,13 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
             message.info("Cannot assign not estimated pbi", 5);
           }
           else if (item.bodyType === "IProductBacklogItem" && canDropPBI(item.index, item.record.sprintNumber, record.sprintNumber)) {
-            updatePBI(item.index, item.record.sprintNumber, record.sprintNumber);
+            updatePBI(item.index, item.record.sprintNumber, record.sprintNumber, sprintPage, token, ownerName);
           }
           else if (item.bodyType === "ITask" && canDropTask(record.pbiID, item.index, item.record.pbiID)) {
-            updateTask(record.pbiID, item.index);
+            updateTask(record.pbiID, item.index, token, ownerName);
           }
           else if (item.bodyType === "ITask" && record.pbiID === -2 && record.sprintNumber === 0 && item.index !== -2 && item.record.pbiID !== -2) {
-            updateTask(0, item.index);
+            updateTask(0, item.index, token, ownerName);
           }
         }
       },
@@ -225,7 +192,7 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
       render: (record: ITask) => {
         return (
           <Dropdown.Button style={{ cursor: "pointer" }} placement='bottomCenter' type="text"
-            overlay={<MenuWithPeopleSave itemSelected={function (person: string): void { assignPerson(person, record.id, record.assigness) }} visible={true} people={people} taskPeople={record.assigness} />}
+            overlay={<MenuWithPeopleSave itemSelected={function (person: string): void { assignPerson(person, record.id, record.assigness, token, ownerName) }} visible={true} people={people} taskPeople={record.assigness} />}
             buttonsRender={() => [
               <></>, React.cloneElement(<span>
                 <Badge size='small'
@@ -245,11 +212,11 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
       }, align: "left" as const, key: 'name', render: (item: IProductBacklogItem) => { return (<div className={item.id === 0 ? '' : 'link-button'} onClick={() => { if (item.id !== 0) { setSelectedPBI(item); setIsModal({ ...isModal, editPBI: true }); } }}>{item.name}</div>) },
     },
     pbiProgressCol, pbiProgressCol2,props.sortedInfo && props.sortedInfo.columnKey === 'pbiPriority' && props.sortedInfo.order&& 
-    !props.filteredInfo && !isArrayValid(props.filteredInfo.pbiPriorities)?
+    (!props.filteredInfo || !isArrayValid(props.filteredInfo.pbiPriorities))?
     {title: 'Priority', sorter: {compare: (a: IProductBacklogItem, b: IProductBacklogItem) => a.priority - b.priority,multiple: 1, }, align: "center" as const, width: "20%", key: 'pbiPriority',
       filters: [{text: backlogPriorities[0], value: 0, },{text: backlogPriorities[1],value: 1,},{text: backlogPriorities[2],value: 2,},],
       onFilter: (value:any, item:IProductBacklogItem) => item.priority === value,sortOrder: props.sortedInfo && props.sortedInfo.columnKey === 'pbiPriority' && props.sortedInfo.order,render: (item: IProductBacklogItem) => item.id !== 0 ? <Tag style={{ cursor: "pointer" }} color={backlogColors[item.priority % 3]}>{backlogPriorities[item.priority % 3]}</Tag> : <Tag style={{color:"transparent", backgroundColor:"transparent", borderColor:"transparent" }} color={backlogColors[0]}>{backlogPriorities[0]}</Tag>
-    }:props.filteredInfo && isArrayValid(props.filteredInfo.pbiPriorities)?
+    }:(props.filteredInfo && isArrayValid(props.filteredInfo.pbiPriorities)?
     {title: 'Priority', sorter: {compare: (a: IProductBacklogItem, b: IProductBacklogItem) => a.priority - b.priority,multiple: 1,}, align: "center" as const, width: "20%", key: 'pbiPriority',
       filteredValue: props.filteredInfo.pbiPriorities || null,filters: [{text: backlogPriorities[0], value: 0, },{text: backlogPriorities[1],value: 1,},
         {text: backlogPriorities[2],value: 2,},],onFilter: (value:any, item:IProductBacklogItem) => props.filteredInfo && isArrayValid(props.filteredInfo.pbiPriorities) ?props.filteredInfo.pbiPriorities.includes(item.priority):item.priority === value,
@@ -258,7 +225,7 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
     {title: 'Priority', sorter: {compare: (a: IProductBacklogItem, b: IProductBacklogItem) => a.priority - b.priority,multiple: 1,}, align: "center" as const, width: "20%", key: 'pbiPriority',
     filters: [{text: backlogPriorities[0], value: 0, },{text: backlogPriorities[1],value: 1,}, {text: backlogPriorities[2],value: 2,},],onFilter: (value:any, item:IProductBacklogItem) =>item.priority === value,
     render: (item: IProductBacklogItem) => item.id !== 0 ? <Tag style={{ cursor: "pointer" }} color={backlogColors[item.priority % 3]}>{backlogPriorities[item.priority % 3]}</Tag> : <Tag style={{color:"transparent", backgroundColor:"transparent", borderColor:"transparent" }} color={backlogColors[0]}>{backlogPriorities[0]}</Tag>
-  },
+  }),
     {
       title: 'Story Points', sorter: {
         compare: (a: IProductBacklogItem, b: IProductBacklogItem) => a.priority - b.priority,
@@ -269,7 +236,7 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
       }
     },
     {
-      title: '', align: "right" as const, width: "25%", key: 'actions', render: (item: IProductBacklogItem) => {
+      title: '', align: "right" as const, width: "15%", key: 'actions', render: (item: IProductBacklogItem) => {
         return ( <span >
             <Button size='small' type="link" onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, addTask: true }); }} >
               {"Add Task"}</Button></span>)
@@ -280,13 +247,13 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
       item={item} pbiColumns={pbiColumns} nestedcomponents={nestedcomponents} />)
   };
   useEffect(() => {
-    if (initialRefresh && isMounted()) {
+    if (initialRefresh) {
       store.dispatch(Actions.clearPBIsList());
       store.dispatch(Actions.clearSprintList());
       localStorage.removeItem("sprintID");
-      if (isMounted()) { setInitialRefresh(false); }
+      setInitialRefresh(false);
     }
-  }, [initialRefresh, isMounted]);
+  }, [initialRefresh]);
   useEffect(() => {
     if (refreshRequired && ownerName && ownerName !== "") {
       store.dispatch(Actions.fetchPBIsThunk({
@@ -304,10 +271,8 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
       store.dispatch(Actions.fetchSprintsThunk({ token: token, ownerName: ownerName as string, filters: { ...initPBIFilter, onePage: true } }));
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sprintRefreshRequired]);
-
   const sprintColumns = [
-    {
-      title: 'Title', width: "15%", align: "left" as const, key: 'sprintNumber',
+    { title: 'Title', width: "15%", align: "left" as const, key: 'sprintNumber',
       render: (s: ISprint) => {
         return (s.sprintNumber === 0 ? <div style={{alignSelf:"flex-start"}} key={"sprintName" + s.sprintNumber} >{s.title}</div> : (<div key={"sprintName" + s.sprintNumber} className='link-button' onClick={() => {
           localStorage.setItem("sprintID", JSON.stringify(s.sprintNumber));
@@ -316,7 +281,7 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
       },
     },
     {
-      title: 'Goal', width: "25%", align: "center" as const, dataIndex: 'goal', key: 'sprintTitle',
+      title: 'Goal', width: "30%", align: "center" as const, dataIndex: 'goal', key: 'sprintTitle',
     },
     {
       title: 'Deadline', width: "15%", align: "center" as const, dataIndex: 'finishDate', key: 'finishDate',
@@ -338,7 +303,7 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
       align: "center" as const,
     },
     {
-      title: 'Action', width: "15%", align: "right" as const, key: 'action', render: (record: ISprint) => {
+      title: 'Action', width: "10%", align: "right" as const, key: 'action', render: (record: ISprint) => {
         return (record.sprintNumber !== 0 ? <Button key={"action" + record.sprintNumber} size='small' type="link" onClick={() => { setSelectedSprint(record); setIsModal({ ...isModal, updateSprint: true }); }} >
           {"Update"}</Button> : <></>)
       },

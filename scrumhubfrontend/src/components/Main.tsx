@@ -14,7 +14,7 @@ import { useCookies } from "react-cookie";
 import * as Actions from '../appstate/actions';
 import './Main.css';
 import { useSelector } from 'react-redux';
-import { State } from '../appstate/stateInterfaces';
+import { ISprint, State } from '../appstate/stateInterfaces';
 import { routes } from './utility/BodyRowsAndColumns';
 const { Header, Footer, Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -40,6 +40,8 @@ function Main(props: any) {
   const currentUser = useSelector((appState: State) => appState.currentUser);
   const activeSprintNumber = useSelector((appState: State) => appState.activeSprintNumber);
   const sprintID = localStorage.getItem("sprintID") ? localStorage.getItem("sprintID") as string : "";
+  const sprintPage = useSelector((appState: State) => appState.openSprint as ISprint);
+  const loading = useSelector((appState: State) => appState.loading);
   useEffect(() => {
     if (logout || (!isLoggedIn)) {
       var cookies = document.cookie.split(";");
@@ -153,9 +155,8 @@ function Main(props: any) {
             </Sider>
             <Content style={ownerName === "" ? {} : { padding: '0 50px' }}>
               <div style={{ minHeight: "90vh", margin: 0 }}>
-
                 {ownerName !== "" && <PageHeader className="pageHeader"
-                  title={<div style={{ fontWeight: "bold", lineHeight: 1.25, paddingTop: 0, marginTop: 0, }}>{sprintID && sprintID !== "0" ? "Sprint " + sprintID : "Product Backlog"}</div>}
+                  title={<div style={{ fontWeight: "bold", lineHeight: 1.25, paddingTop: 0, marginTop: 0, }}>{sprintID && sprintID !== "0" && sprintPage && sprintPage.title?sprintPage.title: "Product Backlog"}</div>}
                   breadcrumb={<Breadcrumb style={{ marginTop: 0, marginBottom: 0, }} itemRender={ItemRender} routes={routes(ownerName, sprintID, location)} />}
                 >
                 </PageHeader>}
