@@ -374,7 +374,8 @@ export const reducer = createReducer(initState, {
   return newState;
 },
 [Actions.editPBIThunk.fulfilled.toString()]: (
-  state: State) => {
+  state: State,
+  payload: PayloadAction<RequestResponse<IProductBacklogItem, number>>) => {
   let newState = _.cloneDeep(state);
   newState.pbiPage = [];
   newState.productRequireRefresh = true;
@@ -410,7 +411,9 @@ export const reducer = createReducer(initState, {
     config.defaultFilters.size
   );
   const sprints = payload.payload.response as ISprintList;
-    newState.sprintPage = sprints;
+  newState.sprintPage = sprints;
+  const index = sprints && isArrayValid(sprints.list) ? sprints.list.findIndex((sprint:ISprint)=>sprint.isCurrent):-1;
+  if(index !== -1) {newState.activeSprintID = sprints.list[index].sprintNumber};
   newState.sprintLastPage = sprints.list.length < pageSize;
   newState.sprintRequireRefresh = false;
   newState.error = initError;
@@ -467,6 +470,7 @@ export const reducer = createReducer(initState, {
   newState.openSprint = payload.payload.response as ISprint;
   const objIndex = newState.sprintPage.list.findIndex((s:ISprint)=>s.sprintNumber===newState.openSprint.sprintNumber);
   newState.sprintPage.list[objIndex] = newState.openSprint;
+  if(newState.openSprint.isCurrent) {newState.activeSprintID = newState.openSprint.sprintNumber};
   newState.loading = false;
   return newState;
 },
@@ -495,6 +499,7 @@ export const reducer = createReducer(initState, {
   newState.openSprint = payload.payload.response as ISprint;
   const objIndex = newState.sprintPage.list.findIndex((s:ISprint)=>s.sprintNumber===newState.openSprint.sprintNumber);
   (newState.sprintPage.list[objIndex] as ISprint).isCompleted = newState.openSprint;
+  if(newState.openSprint.isCurrent) {newState.activeSprintID = newState.openSprint.sprintNumber};
   newState.loading = false;
   return newState;
 },
@@ -515,9 +520,18 @@ export const reducer = createReducer(initState, {
   return newState;
 },
 [Actions.addSprintThunk.fulfilled.toString()]: (
-  state: State) => {
+  state: State,
+  payload: PayloadAction<RequestResponse<ISprint, undefined>>) => {
   let newState = _.cloneDeep(state);
-  newState.sprintRequireRefresh = true;
+  const sprint = payload.payload.response as ISprint;
+  if(newState.sprintPage && isArrayValid(newState.sprintPage.list))
+  {
+    newState.sprintPage.list = newState.sprintPage.list.concat([sprint]);
+  }
+  else{
+    newState.sprintPage.list = [sprint];
+  }
+  if(sprint.isCurrent) {newState.activeSprintID = newState.openSprint.sprintNumber};
   newState.error = initError;
   newState.loading = false;
   return newState;
@@ -700,13 +714,15 @@ export const reducer = createReducer(initState, {
   return newState;
 },
 [Actions.addTaskThunk.pending.toString()]: (
-  state: State) => {
+  state: State,
+  payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
   let newState = _.cloneDeep(state);
   newState.loading = true;
   return newState;
 },
 [Actions.addTaskThunk.fulfilled.toString()]: (
-  state: State) => {
+  state: State,
+  payload: PayloadAction<RequestResponse<ITask, number>>) => {
   let newState = _.cloneDeep(state);
   newState.productRequireRefresh = true;
   newState.error = initError;

@@ -38,6 +38,7 @@ function Main(props: any) {
   const [logout, setLogout] = useState(false);
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") : "";
   const currentUser = useSelector((appState: State) => appState.currentUser);
+  const activeSprintNumber = useSelector((appState: State) => appState.activeSprintNumber);
   const sprintID = localStorage.getItem("sprintID") ? localStorage.getItem("sprintID") as string : "";
   useEffect(() => {
     if (logout || (!isLoggedIn)) {

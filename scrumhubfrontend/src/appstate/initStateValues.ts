@@ -219,7 +219,8 @@ export const initState: State = {
   repoId: -1,
   ownerName: "",
   people: initPeopleList,
-  currentUser: null
+  currentUser: null,
+  activeSprintNumber: -1
 };
 export const backlogSprint: ISprint = { 
   goal: "",

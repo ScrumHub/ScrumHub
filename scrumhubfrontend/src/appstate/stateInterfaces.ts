@@ -207,5 +207,6 @@ export type State = {
   ownerName: string;
   namedPBI: IAssignPBI[];
   people: IPeopleList;
+  activeSprintNumber:number;
   currentUser: IPerson|null;
 };
