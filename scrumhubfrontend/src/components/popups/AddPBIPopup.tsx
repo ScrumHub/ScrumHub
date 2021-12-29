@@ -28,9 +28,8 @@ export const AddPBIPopup: React.FC<CollectionCreateFormProps> = ({
   const [value, setValue] = React.useState(0);
   return (
     <Modal
-      destroyOnClose={true}
-      closable={true}
-      visible={true}
+      visible={visible}
+      closable={false}
       title="Add Product Backlog Item"
       okText="Save"
       cancelText="Cancel"
@@ -59,7 +58,7 @@ export const AddPBIPopup: React.FC<CollectionCreateFormProps> = ({
           name="name"
           rules={[{ required: true, message: 'Please input the name of the new backlog item!' }]}
         >
-          <Input placeholder='Product Backlog Name'/>
+          <Input placeholder='Product Backlog Name' />
         </Form.Item>
         <FormItemLabel prefixCls="priority" label="Priority" required={true} />
         <Form.Item
@@ -67,18 +66,18 @@ export const AddPBIPopup: React.FC<CollectionCreateFormProps> = ({
           name="priority"
           rules={[{ required: true, message: 'Please input the priority of the new backlog item!' }]}
         >
-          <Radio.Group value={value} onChange={(e)=>{ setValue(e.target.value);form.setFieldsValue({"priority":e.target.value});}}>
-          {backlogPriorities.map((item: string, key: number) => {
-              return <Radio key={"key"+key} value={key}><Tag key={"tag"+key} color={backlogColors[key]}>{item}</Tag></Radio>
+          <Radio.Group value={value} onChange={(e) => { setValue(e.target.value); form.setFieldsValue({ "priority": e.target.value }); }}>
+            {backlogPriorities.map((item: string, key: number) => {
+              return <Radio key={"key" + key} value={key}><Tag key={"tag" + key} color={backlogColors[key]}>{item}</Tag></Radio>
             })}
-            </Radio.Group>
+          </Radio.Group>
         </Form.Item>
         <FormItemLabel prefixCls="acceptanceCriteria" label="Acceptance Criteria" required={true} />
         <Form.List name="acceptanceCriteria" initialValue={[""]}>
           {(fields, { add, remove }) => (
             <>
               {fields.map(({ key, name }) => (
-                <Form.Item {...formItemLayoutWithOutLabel} key={"key"+key} style={{ marginBottom: "4px" }}>
+                <Form.Item {...formItemLayoutWithOutLabel} key={"key" + key} style={{ marginBottom: "4px" }}>
                   <Form.Item
                     noStyle
                     key={key}
@@ -87,7 +86,7 @@ export const AddPBIPopup: React.FC<CollectionCreateFormProps> = ({
                   >
                     <Input style={{ width: "95%" }} placeholder={`New Cirterion`} />
                   </Form.Item>
-                  <MinusCircleOutlined style={{ width: "5%", alignSelf:"flex-end" }} className="dynamic-delete-button" onClick={() => remove(name)} />
+                  <MinusCircleOutlined style={{ width: "5%", alignSelf: "flex-end" }} className="dynamic-delete-button" onClick={() => remove(name)} />
                 </Form.Item>
               ))}
               <Form.Item>

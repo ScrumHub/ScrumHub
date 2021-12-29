@@ -30,8 +30,8 @@ export const CustomFilterPopup: React.FC<CollectionCreateFormProps> = ({
   return (
     <Modal
       centered={true}
-      closable={true}
       visible={visible}
+      closable={false}
       title="Filter Backlog Items"
       okText="Save"
       cancelText="Cancel"

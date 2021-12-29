@@ -333,7 +333,7 @@ export default function SprintBacklog() {
           Estimate
         </Button>
         {isEditModalVisible && selectedPBI && <EditPBIPopup data={selectedPBI as IAddPBI} visible={isEditModalVisible}
-          onCreate={function (values: any): void { handleEditPBI(values) }} onDelete={handleDelete}
+          onCreate={function (values: any): void { handleEditPBI(values) }} onFinish={handleFinish} onDelete={handleDelete}
           onCancel={() => { setIsEditModalVisible(false); }} />}
         {isEstimateModalVisible && selectedPBI && <EstimatePBIPopup data={selectedPBI as IProductBacklogItem} visible={isEstimateModalVisible}
           onCreate={function (values: any): void { handleEstimatePBI(values) }}

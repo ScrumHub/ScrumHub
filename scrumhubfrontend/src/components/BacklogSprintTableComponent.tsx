@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { IPerson, IProductBacklogItem, ISprint, ITask } from "../appstate/stateInterfaces";
-import { useIsMounted, isNameFilterValid, isPeopleFilterValid } from "./utility/commonFunctions";
+import { useIsMounted, isNameFilterValid, isPeopleFilterValid, isArrayValid } from "./utility/commonFunctions";
 import { initRowIds } from "./utility/commonInitValues";
 
 export default function SprintTableComponent(props: any) {
@@ -11,7 +11,7 @@ export default function SprintTableComponent(props: any) {
   const [expand, setExpanded] = useState(false);
   const [reload, setReload] = useState(true);
   const isMounted = useIsMounted();
-  const [expandedRowKeys, setExpandedRowKeys] = useState([0, 1]);
+  const [expandedRowKeys, setExpandedRowKeys] = useState(isArrayValid(props.data)&& props.data.at(0).isCurrent?[props.data.at(0).sprintNumber]:[0]);
   const updateExpandedRowKeys = (record: ISprint) => {
     const rowKey = record.sprintNumber;
     const isExpanded = expandedRowKeys.includes(rowKey);
@@ -29,10 +29,11 @@ export default function SprintTableComponent(props: any) {
   };
   useEffect(() => {
     if (!props.loading) {
+      if(!reload){setReload(true);}
       const isNameFilter = isNameFilterValid(props.nameFilter);
       const isPeopleFilter = isPeopleFilterValid(props.peopleFilter);
       setExpanded(isNameFilter);
-      const filteredData = props.data && props.data.length > 0 && (isNameFilter || isPeopleFilter) ?
+      const filteredData = isArrayValid(props.data) && (isNameFilter || isPeopleFilter) ?
         ([{
           ...props.data.at(0), backlogItems: isNameFilter ? (
             isPeopleFilter ? (props.data.at(0).backlogItems.map((pbi: IProductBacklogItem) => {
@@ -65,13 +66,15 @@ export default function SprintTableComponent(props: any) {
         setExpandedRowKeys([(filteredData.at(0) as ISprint).sprintNumber]);
       }
       else if (!isNameFilter) {
-        setExpandedRowKeys([0, 1]);
+        setExpandedRowKeys(isArrayValid(props.data)&& props.data.at(0).isCurrent?[props.data.at(0).sprintNumber]:[0]);
       }
       if (!isMounted()) { console.log("sprint" + isMounted()) };
       setReload(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.loading, props.nameFilter, props.data, isMounted]);
+  console.log(props.loading);
+  console.log(isArrayValid(props.data)? props.data.at(0).isCurrent:"");
   return (
     <DndProvider backend={HTML5Backend} key={"dnd"+props.keys}>
       {<Table
@@ -82,16 +85,17 @@ export default function SprintTableComponent(props: any) {
         loading={props.loading || reload}
         showHeader={false}
         pagination={false}
-        dataSource={data}//props.data.filter((item:IProductBacklogItem)=>item.name.includes(props.nameFilter))] as ISprint[]}
+        dataSource={data}
         columns={props.columns}
         components={props.components}
         rowKey={(record: ISprint) => record.sprintNumber}
         expandable={{
           expandedRowRender: props.PBITableforSprint,
-          expandedRowKeys: expandedRowKeys,
+          /*expandedRowKeys: expandedRowKeys,
           onExpand: (expanded, record) => {
             updateExpandedRowKeys(record);
-          },
+          },*/
+          defaultExpandAllRows:true,
           rowExpandable: record => record.backlogItems && record.backlogItems.length > 0,
         }}
         onRow={(row) => {

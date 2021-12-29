@@ -7,9 +7,9 @@ import { backlogColors, backlogPriorities } from '../utility/BodyRowsAndColumns'
 import { formItemLayoutWithOutLabel } from '../utility/commonInitValues';
 
 interface Values {
-  title: string;
-  description: string;
-  modifier: string;
+  name: string;
+  priority: string;
+  acceptanceCriteria: string[];
 }
 
 interface CollectionCreateFormProps {
@@ -18,6 +18,7 @@ interface CollectionCreateFormProps {
   onCreate: (values: Values) => void;
   onCancel: () => void;
   onDelete: () => void;
+  onFinish: () => void;
 }
 
 export const EditPBIPopup: React.FC<CollectionCreateFormProps> = ({
@@ -25,28 +26,40 @@ export const EditPBIPopup: React.FC<CollectionCreateFormProps> = ({
   visible,
   onCreate,
   onCancel,
-  onDelete
+  onDelete,
+  onFinish
 }) => {
   const [form] = Form.useForm();
   return (
     <Modal
       centered={true}
-      visible={visible}
       title="Edit Backlog Item"
-      closable={true}
-      destroyOnClose={true}
+      visible={visible}
+      closable={false}
       footer={[
         <Popconfirm
+          key="delInEditPopup"
           title="Are you sure you want to delete this backlog item?"
           onConfirm={onDelete}
           onCancel={(e) => { message.info(data.name + " was not deleted") }}
           okText="Yes"
           cancelText="No"
           icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-        ><Button key="DeleteInEditPopup">
+        ><Button key="DeleteInEditPopup" type="link">
             {"Delete"}</Button>
         </Popconfirm>,
         <Button key="CancelInEditPopup" onClick={onCancel}>Cancel</Button>,
+        <Popconfirm
+        key="finInEditPopup"
+          title="Are you sure you want to finish this backlog item?"
+          onConfirm={onFinish}
+          onCancel={(e) => { message.info(data.name + " was not finished") }}
+          okText="Yes"
+          cancelText="No"
+          icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+        ><Button type="primary" key="FinishInEditPopup">
+            {"Finish"}</Button>
+        </Popconfirm>,
         <Button key="SaveInEditPopup" type="primary" onClick={() => {
           form
             .validateFields()

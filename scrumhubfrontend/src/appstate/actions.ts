@@ -109,7 +109,7 @@ export const finishPBIThunk = createAsyncThunk<
     await Fetching.finishPBI(item.ownerName, item.token, item.pbild);
   if (response.code !== 200) {
     return rejectWithValue(
-      response as RequestResponse<IProductBacklogItem, number>
+      response as RequestResponse<undefined, number>
     );
   }
   return response as RequestResponse<IProductBacklogItem, number>;
@@ -131,7 +131,7 @@ export const deletePBIThunk = createAsyncThunk<
     await Fetching.deletePBI(item.ownerName, item.token, item.pbild);
   if (response.code !== 204) {
     return rejectWithValue(
-      response as RequestResponse<number, number>
+      response as RequestResponse<undefined, number>
     );
   }
   return response as RequestResponse<number, number>;
@@ -264,7 +264,7 @@ export const updateOneSprintThunk = createAsyncThunk<
     await Fetching.updateOneSprint(item.token, item.ownerName, item.sprintNumber,item.sprint);
   if (response.code !== 200) {
     return rejectWithValue(
-      response as RequestResponse<ISprint, number>
+      response as RequestResponse<undefined, undefined>
     );
   }
   return response as RequestResponse<ISprint, number>;

@@ -36,8 +36,8 @@ export const UpdateSprintPBIsPopup: React.FC<CollectionCreateFormProps> = ({
   return (
     <Modal
       centered={true}
-      closable={true}
       visible={visible}
+      closable={false}
       title="Edit Sprint"
       okText="Save"
       cancelText="Cancel"
@@ -90,7 +90,7 @@ export const UpdateSprintPBIsPopup: React.FC<CollectionCreateFormProps> = ({
           />
         </Form.Item>
         <FormItemLabel prefixCls="name" label="Backlog Items" required={true} />
-        {filteredData && filteredData.length>0 && <Form.List name="backlogItems" initialValue={filteredData}>
+        {filteredData && filteredData.length > 0 && <Form.List name="backlogItems" initialValue={filteredData}>
           {(fields) => (
             <>
               {fields.map(({ key, name }) => (

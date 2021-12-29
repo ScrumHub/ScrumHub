@@ -103,9 +103,9 @@ function Main(props: any) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser, state.isLoggedIn]);
 
-  console.log(state.isLoggedIn);
+  /*console.log(state.isLoggedIn);
   console.log(logout);
-  console.log(cookies["token"]);
+  console.log(cookies["token"]);*/
 
   const [isCollapsed, setIsCollapsed] = useState(true);
   return (

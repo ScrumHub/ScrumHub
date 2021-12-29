@@ -29,13 +29,12 @@ export const AddSprintPopup: React.FC<CollectionCreateFormProps> = ({
   const [temp, setTemp] = useState(filteredData);
   return (
     <Modal
-      closable={true}
-      visible={true}
+    visible={visible}
+    closable={false}
       centered={true}
       title="Create Sprint"
       okText="Save"
       cancelText="Cancel"
-      destroyOnClose={true}
       onCancel={onCancel}
       onOk={() => {
         form

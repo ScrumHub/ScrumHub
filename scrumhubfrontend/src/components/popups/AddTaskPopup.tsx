@@ -27,8 +27,8 @@ export const AddTaskPopup: React.FC<CollectionCreateFormProps> = ({
   return (
     <Modal
       centered={true}
-      closable={true}
       visible={visible}
+      closable={false}
       title="Add New Task"
       okText="Save"
       cancelText="Cancel"

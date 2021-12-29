@@ -8,14 +8,14 @@ import moment, { Moment } from 'moment';
 interface Values {
   goal: string;
   backlogItems?: IProductBacklogItem[];
-  title:string;
-  finishDate:Date|string|Moment
+  title: string;
+  finishDate: Date | string | Moment
 }
 
 interface CollectionCreateFormProps {
   data: ISprint;
   visible: boolean;
-  onCreate: (values: ISprint|Values) => void;
+  onCreate: (values: ISprint | Values) => void;
   onCancel: () => void;
 }
 
@@ -29,8 +29,8 @@ export const UpdateSprintPopup: React.FC<CollectionCreateFormProps> = ({
   return (
     <Modal
       centered={true}
-      closable={true}
       visible={visible}
+      closable={false}
       title="Edit Sprint"
       okText="Save"
       cancelText="Cancel"
@@ -38,9 +38,9 @@ export const UpdateSprintPopup: React.FC<CollectionCreateFormProps> = ({
       onOk={() => {
         form
           .validateFields()
-          .then((values: ISprint|Values) => {
+          .then((values: ISprint | Values) => {
             form.resetFields();
-            onCreate({...values,backlogItems:data.backlogItems,});
+            onCreate({ ...values, backlogItems: data.backlogItems, });
           })
           .catch((info: any) => {
             console.error('Validate Failed:', info);
@@ -54,7 +54,7 @@ export const UpdateSprintPopup: React.FC<CollectionCreateFormProps> = ({
       >
         <FormItemLabel prefixCls="finishDate" label="Sprint Deadline" required={true} />
         <Form.Item
-        initialValue={moment(data.finishDate, "YYYY-MM-DD")}
+          initialValue={moment(data.finishDate, "YYYY-MM-DD")}
           name="finishDate"
           rules={[{ required: true, message: 'Please input the deadline of this sprint!' }]}
         >

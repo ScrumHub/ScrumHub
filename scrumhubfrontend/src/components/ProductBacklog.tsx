@@ -2,15 +2,14 @@ import React, { useState, useRef, useContext, useEffect } from 'react';
 import { Button, Tag, message, Dropdown, Badge } from 'antd';
 import { useDrag, useDrop } from 'react-dnd';
 import * as Actions from '../appstate/actions';
-import { IAddPBI, ICheckedProductBacklogItem, IFilters, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, ISprint, ISprintList, ITask, State } from '../appstate/stateInterfaces';
+import { IAddPBI, IFilters, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, ISprint, ISprintList, ITask, State } from '../appstate/stateInterfaces';
 import 'antd/dist/antd.css';
 import moment from 'moment';
 import './ProductBacklog.css';
 import { store } from '../appstate/store';
 import { AuthContext } from '../App';
 import { useSelector } from 'react-redux';
-import { Navigate, useNavigate } from 'react-router';
-import { EditPBIPopup } from './popups/EditPBIPopup';
+import { useNavigate } from 'react-router';
 import { EstimatePBIPopup } from './popups/EstimatePBIPopup';
 import { UpdateSprintPopup } from './popups/UpdateSprintPopup';
 import { AddTaskPopup } from './popups/AddTaskPopup';
@@ -25,6 +24,7 @@ import { CalendarOutlined, DownOutlined, EditOutlined } from '@ant-design/icons'
 import SprintTableComponent from './BacklogSprintTableComponent';
 import { initPBIFilter } from '../appstate/initStateValues';
 import { CompleteSprintPopup } from './popups/CompleteSprint';
+import { EditPBIPopup } from './popups/EditPBIPopup';
 export const type = 'DraggableBodyRow';
 
 export const ProductBacklog: React.FC<any> = (props: any) => {
@@ -35,14 +35,13 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
   const loading = useSelector((appState: State) => appState.loading as boolean);
   const pbiPage = useSelector((appState: State) => appState.pbiPage as IProductBacklogList);
   const people = useSelector((appState: State) => appState.people as IPeopleList);
-  const error = useSelector((appState: State) => appState.error);
   const refreshRequired = useSelector((appState: State) => appState.productRequireRefresh as boolean);
   const sprintRefreshRequired = useSelector((appState: State) => appState.sprintRequireRefresh as boolean);
   const [initialRefresh, setInitialRefresh] = useState(true);
   const [selectedPBI, setSelectedPBI] = useState({} as IProductBacklogItem);
   const [selectedSprint, setSelectedSprint] = useState({} as ISprint);
-  const [selectedTask, setSelectedTask] = useState({} as ITask);
   const [isModal, setIsModal] = useState<IModals>(initModalVals);
+  console.log("refresh"+refreshRequired);
   const isMounted = useIsMounted();
   const navigate = useNavigate();
   message.config({ maxCount: 1 });
@@ -56,19 +55,6 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
     finally {
       if (isMounted()) {
         setSelectedPBI({} as IProductBacklogItem);
-        setInitialRefresh(true);
-      }
-    }
-  };
-  const assignTask = (input: any) => {
-    const ids = input.backlogItems.map((value: ICheckedProductBacklogItem) => { return ((value.checked ? value.id.toString() : "")) }).filter((x: string) => x !== "");
-    setIsModal({ ...isModal, assgnTask: false });
-    try {
-      store.dispatch(Actions.assignTaskToPBIThunk({ token: token, ownerName: ownerName, pbiId: ids.length > 1 ? 0 : ids[0], taskId: selectedTask.id, }));
-    } catch (err) { console.error("Failed to add the pbis: ", err); }
-    finally {
-      if (isMounted()) {
-        setSelectedTask({} as ITask);
         setInitialRefresh(true);
       }
     }
@@ -97,30 +83,26 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
       }
     }
   };
-  /*const handleFinish = () => {
+  const finishPBI = (item: IProductBacklogItem) => {
       try {
         store.dispatch(
           Actions.finishPBIThunk({
             ownerName: ownerName,
             token: token,
-            pbild: prevselectedRowKeys[0] as number
+            pbild: item.id
           }) //filters
         );
       } catch (err) { console.error("Failed to finish the pbis: ", err); }
       finally {
         setSelectedPBI({} as IProductBacklogItem);
-      }}*/
+      }}
   const deletePBI = (item: IProductBacklogItem) => {
     try {
       store.dispatch(Actions.deletePBIThunk({ ownerName: ownerName, token: token, pbild: item.id as number }) //filters
       );
-    } catch (err) { console.error("Failed to add the repos: ", err); }
+    } catch (err) { console.error("Failed to delete the pbis: ", err); }
     finally {
-      if (isMounted()) {
         setSelectedPBI({} as IProductBacklogItem);
-        message.success(item.name + " was deleted");
-        setInitialRefresh(true);
-      }
     }
   };
   const updateSprint = (sprint: ISprint) => {
@@ -160,45 +142,38 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
       const oldPbis = oldSprint?.backlogItems.map((i: IProductBacklogItem) => { return ((i.id !== pbiId ? i.id.toString() : "")) }).filter((x: string) => x !== "");
       store.dispatch(Actions.updateOneSprintThunk({
         token: token, ownerName: ownerName, sprintNumber: oldSprintId, sprint:
-        {
-          "goal": oldSprint?.goal as string,
-          "title": oldSprint?.title,
-          "pbIs": oldPbis as string[],
-          "finishDate": new Date(oldSprint?.finishDate as string)
-        }
-      }))
-        .then((response) => { if (response.payload && response.payload?.code === 200 && newSprintId === 0) { setInitialRefresh(true) } });
+        { "goal": oldSprint?.goal as string,"title": oldSprint?.title,"pbIs": oldPbis as string[],"finishDate": new Date(oldSprint?.finishDate as string)}
+      })).then((response) => { if (response.payload && response.payload?.code === 200) { if(newSprintId === 0){store.dispatch(Actions.clearPBIsList());}
+      else{
+        const newSprint = sprintPage.list.find((i: ISprint) => i.sprintNumber === newSprintId);
+      const newPbis = newSprint?.backlogItems.map((i: IProductBacklogItem) => { return (i.id.toString()) }).concat([pbiId.toString()]);
+      store.dispatch(Actions.updateOneSprintThunk({
+        token: token, ownerName: ownerName, sprintNumber: newSprintId, sprint:
+        {"goal": newSprint?.goal as string, "pbIs": newPbis as string[], "title": newSprint?.title,"finishDate": new Date(newSprint?.finishDate as string)}
+      }));
+      } } });
     }
-    if (newSprintId !== 0) {
+    if (newSprintId !== 0 && oldSprintId === 0) {
       const newSprint = sprintPage.list.find((i: ISprint) => i.sprintNumber === newSprintId);
       const newPbis = newSprint?.backlogItems.map((i: IProductBacklogItem) => { return (i.id.toString()) }).concat([pbiId.toString()]);
       store.dispatch(Actions.updateOneSprintThunk({
         token: token, ownerName: ownerName, sprintNumber: newSprintId, sprint:
-        {
-          "goal": newSprint?.goal as string, "pbIs": newPbis as string[], "title": newSprint?.title,
-          "finishDate": new Date(newSprint?.finishDate as string)
-        }
-      }))
-        .then((response) => { if (response.payload && response.payload?.code === 200) { setInitialRefresh(true) } });
+        {"goal": newSprint?.goal as string, "pbIs": newPbis as string[], "title": newSprint?.title,"finishDate": new Date(newSprint?.finishDate as string)}
+      })).then((response) => {if (response.payload && response.payload?.code === 200 ) { store.dispatch(Actions.clearPBIsList()); } });
     }
   }
   const updateTask = (pbiId: number, taskId: number) => {
     try {
       store.dispatch(Actions.assignTaskToPBIThunk({ token: token, ownerName: ownerName, pbiId: pbiId, taskId: taskId, }));
     } catch (err) { console.error("Failed to add the pbis: ", err); }
-    finally {
-      if (isMounted()) {
-        setInitialRefresh(true);
-      }
+    finally {setInitialRefresh(true);
     }
   }
   const assignPerson = (person: string, taskId: number, taskPeople: IPerson[]) => {
     const names = taskPeople.map((item: IPerson) => { return (item.login) });
-    try {
       store.dispatch(taskPeople.length < 1 || !names.includes(person) ?
         Actions.assignPersonToTaskThunk({ token: token, ownerName: ownerName, login: person, taskId: taskId, }) :
         Actions.unassignPersonToTaskThunk({ token: token, ownerName: ownerName, login: person, taskId: taskId, }));
-    } catch (err) { console.error("Failed to add the pbis: ", err); }
   }
   const DraggableBodyRow = ({ index: index_row, bodyType, record, className, style, ...restProps }: BodyRowProps) => {
     const ref = useRef();
@@ -323,9 +298,7 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
           inSprint: false,
           onePage: true
         }
-      })).catch((error) => { console.error("Failed to fetch the pbis: ", error); return ({}); }).then(() => {
-        store.dispatch(Actions.addTasksToPBIThunk({ token: token, ownerName: ownerName, pbiId: 0 }));
-      });
+      })).then((response:any) => { if(response.payload && response.payload.code ===200){store.dispatch(Actions.addTasksToPBIThunk({ token: token, ownerName: ownerName, pbiId: 0 }));}});
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshRequired]);
   useEffect(() => {
@@ -365,8 +338,6 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
           {"Update"}</Button> : <></>)
       },
     }];
-    console.log(loading);
-    console.log(selectedSprint);
   return (<div className='backlogScroll'>
     <SprintTableComponent nameFilter={props.nameFilter} key={0} keys={0} peopleFilter={props.peopleFilter} loading={refreshRequired || initialRefresh} data={[{
       goal: "",finishDate: "",isCurrent: false,status: "",isCompleted: false, sprintNumber: 0,title: "Product Backlog", backlogItems: pbiPage.list
@@ -377,7 +348,7 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
         data={[sprint] as ISprint[]} components={nestedcomponents} columns={sprintColumns} PBITableforSprint={PBITableforSprint} />)
     })}
     {isModal.editPBI && selectedPBI && selectedPBI.id && <EditPBIPopup data={selectedPBI as IAddPBI} visible={isModal.editPBI}
-      onCreate={function (values: any): void { editPBI(values) }} onDelete={() => { deletePBI(selectedPBI) }}
+      onCreate={function (values: any): void { editPBI(values) }} onDelete={() => { deletePBI(selectedPBI) }} onFinish={() => { finishPBI(selectedPBI) }}
       onCancel={() => { setIsModal({ ...isModal, editPBI: false }); }} />}
     {isModal.estimatePBI && selectedPBI && selectedPBI.id && <EstimatePBIPopup data={selectedPBI as IProductBacklogItem} visible={isModal.estimatePBI}
       onCreate={function (values: any): void { estimatePBI(values) }} onCancel={() => { setIsModal({ ...isModal, estimatePBI: false }); }} />}
