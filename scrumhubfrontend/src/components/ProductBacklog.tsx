@@ -129,7 +129,7 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
     }
   };
   const completeSprint = (value: boolean) => {
-    setIsModal({ ...isModal, updateSprint: false });
+    setIsModal({ ...isModal, completeSprint: false });
     const sprintID = selectedSprint.sprintNumber;
       store.dispatch(Actions.completeOneSprintThunk({
         token: token,
@@ -315,7 +315,7 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
       },
     },
     {
-      title: 'Deadline', width: "15%", align: "left" as const, dataIndex: 'finishDate', key: 'finishDate',
+      title: 'Deadline', width: "15%", align: "center" as const, dataIndex: 'finishDate', key: 'finishDate',
       render: (date: string) =>date ?  <span><CalendarOutlined></CalendarOutlined>{" "+dateFormat(date as unknown as Date)}</span> : ""
     },
     {

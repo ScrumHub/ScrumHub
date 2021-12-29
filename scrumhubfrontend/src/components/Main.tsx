@@ -2,7 +2,7 @@ import { Avatar, Breadcrumb, Layout, Menu, message, PageHeader } from 'antd';
 import { useLocation, useNavigate } from 'react-router';
 import { useContext } from 'react';
 import 'antd/dist/antd.css';
-import { DatabaseOutlined, GithubOutlined } from '@ant-design/icons';
+import { DatabaseOutlined, GithubOutlined, ProjectOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import AppRouter from '../Approuter';
 import { AuthContext } from '../App';
@@ -39,6 +39,7 @@ function Main(props: any) {
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") : "";
   const currentUser = useSelector((appState: State) => appState.currentUser);
   const activeSprintNumber = useSelector((appState: State) => appState.activeSprintNumber);
+  console.log(activeSprintNumber);
   const sprintID = localStorage.getItem("sprintID") ? localStorage.getItem("sprintID") as string : "";
   useEffect(() => {
     if (logout || (!isLoggedIn)) {
@@ -80,8 +81,18 @@ function Main(props: any) {
       if (location.pathname !== newPath) {
         localStorage.removeItem("sprintID");
         store.dispatch(clearState());
-        store.dispatch(Actions.clearProject());
-        setSelectedSiderKey('2');
+        setSelectedSiderKey('ProductBacklog');
+        navigate(newPath, { replace: true });
+      }
+    }
+  }
+  const handleActiveSprint = () => {
+    if (ownerName && ownerName !== "" && activeSprintNumber !== -1) {
+      const newPath = `/${ownerName.split("/")[0]}/${ownerName.split("/")[1]}/Sprints/${activeSprintNumber}`;
+      if (location.pathname !== newPath) {
+        localStorage.setItem("sprintID", JSON.stringify(activeSprintNumber));
+        store.dispatch(Actions.clearSprintList());
+        setSelectedSiderKey('ActiveSprint');
         navigate(newPath, { replace: true });
       }
     }
@@ -107,6 +118,7 @@ function Main(props: any) {
   /*console.log(state.isLoggedIn);
   console.log(logout);
   console.log(cookies["token"]);*/
+  if(ownerName === null && location.pathname !== "/"){handleProjects();}
 
   const [isCollapsed, setIsCollapsed] = useState(true);
   return (
@@ -139,6 +151,9 @@ function Main(props: any) {
                   <span>Project Details</span></Menu.Item>
                 */}<Menu.Item key="ProductBacklog" onClick={() => handlePBacklog()} icon={<DatabaseOutlined />}>
                   <span>Product Backlog</span></Menu.Item>
+                  {<Menu.Item key="ActiveSprint" onClick={() => handleActiveSprint()} disabled={activeSprintNumber===-1} icon={<ProjectOutlined />}>
+                  <span>Active Sprint</span></Menu.Item>
+                }
               </Menu>
             </Sider>
             <Content style={ownerName === "" ? {} : { padding: '0 50px' }}>

@@ -413,7 +413,7 @@ export const reducer = createReducer(initState, {
   const sprints = payload.payload.response as ISprintList;
   newState.sprintPage = sprints;
   const index = sprints && isArrayValid(sprints.list) ? sprints.list.findIndex((sprint:ISprint)=>sprint.isCurrent):-1;
-  if(index !== -1) {newState.activeSprintID = sprints.list[index].sprintNumber};
+  if(index !== -1) {newState.activeSprintNumber = sprints.list[index].sprintNumber};
   newState.sprintLastPage = sprints.list.length < pageSize;
   newState.sprintRequireRefresh = false;
   newState.error = initError;
@@ -441,6 +441,7 @@ export const reducer = createReducer(initState, {
 ) => {
   let newState = _.cloneDeep(state);
   newState.openSprint = payload.payload.response as ISprint;
+  if(newState.openSprint.isCurrent) {newState.activeSprintNumber = newState.openSprint.sprintNumber};
   newState.sprintRequireRefresh = false;
   newState.error = initError;
   newState.loading = false;
@@ -467,10 +468,10 @@ export const reducer = createReducer(initState, {
   payload: PayloadAction<RequestResponse<ISprint|any, number>>
 ) => {
   let newState = _.cloneDeep(state);
-  newState.openSprint = payload.payload.response as ISprint;
-  const objIndex = newState.sprintPage.list.findIndex((s:ISprint)=>s.sprintNumber===newState.openSprint.sprintNumber);
-  newState.sprintPage.list[objIndex] = newState.openSprint;
-  if(newState.openSprint.isCurrent) {newState.activeSprintID = newState.openSprint.sprintNumber};
+  const sprint = payload.payload.response as ISprint;
+  const objIndex = newState.sprintPage.list.findIndex((s:ISprint)=>s.sprintNumber===sprint.sprintNumber);
+  newState.sprintPage.list[objIndex] = sprint;
+  if(sprint.isCurrent) {newState.activeSprintNumber = sprint.sprintNumber};
   newState.loading = false;
   return newState;
 },
@@ -495,11 +496,10 @@ export const reducer = createReducer(initState, {
   payload: PayloadAction<RequestResponse<ISprint, number>>
 ) => {
   let newState = _.cloneDeep(state);
-  console.log(payload.payload.response);
-  newState.openSprint = payload.payload.response as ISprint;
-  const objIndex = newState.sprintPage.list.findIndex((s:ISprint)=>s.sprintNumber===newState.openSprint.sprintNumber);
-  (newState.sprintPage.list[objIndex] as ISprint).isCompleted = newState.openSprint;
-  if(newState.openSprint.isCurrent) {newState.activeSprintID = newState.openSprint.sprintNumber};
+  const sprint = payload.payload.response as ISprint;
+  const objIndex = newState.sprintPage.list.findIndex((s:ISprint)=>s.sprintNumber===sprint.sprintNumber);
+  (newState.sprintPage.list[objIndex] as ISprint) = sprint;
+  if(sprint.isCurrent) {newState.activeSprintNumber = sprint.sprintNumber};
   newState.loading = false;
   return newState;
 },
@@ -531,7 +531,7 @@ export const reducer = createReducer(initState, {
   else{
     newState.sprintPage.list = [sprint];
   }
-  if(sprint.isCurrent) {newState.activeSprintID = newState.openSprint.sprintNumber};
+  if(sprint.isCurrent) {newState.activeSprintNumber = sprint.sprintNumber};
   newState.error = initError;
   newState.loading = false;
   return newState;

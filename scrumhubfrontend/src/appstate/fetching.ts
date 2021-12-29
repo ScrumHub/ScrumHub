@@ -220,7 +220,7 @@ export function completeOneSprint(token: string, ownerName: string, sprintNumber
   ): Promise<RequestResponse<ISprint, number>> {
     return getResponse(
       axios.put(
-        `https://${config.backend.ip}:${config.backend.port}/api/Sprints/${ownerName}/${sprintNumber}?finish=${isFailure}`,
+        `https://${config.backend.ip}:${config.backend.port}/api/Sprints/${ownerName}/${sprintNumber}/finish?failed=${isFailure}`,
          {},{ headers: getHeader(token, config) }
       )
     );
