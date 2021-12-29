@@ -121,7 +121,7 @@ export function finishPBI(ownerName: string, token: string, pbild: number
 }
 
 export function deletePBI(ownerName: string, token: string, pbild: number
-): Promise<RequestResponse<number, number>> {
+): Promise<RequestResponse<any, any>> {
   return getResponse(
     axios.delete(
       `https://${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}/${pbild}`,

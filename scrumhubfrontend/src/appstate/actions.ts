@@ -116,25 +116,26 @@ export const finishPBIThunk = createAsyncThunk<
 });
 
 export const deletePBIThunk = createAsyncThunk<
-  RequestResponse<number, number>,
-  { ownerName: string; token: string; pbild: number; },
-  { rejectValue: RequestResponse<number, number> }
+  RequestResponse<any, any>,
+  { ownerName: string; token: string; pbiId: number; },
+  { rejectValue: RequestResponse<any, any> }
 >("deletePBI", async (
   item: {
     ownerName: string;
     token: string;
-    pbild: number;
+    pbiId: number;
   },
   { rejectWithValue }
 ) => {
-  const response: RequestResponse<number, number> =
-    await Fetching.deletePBI(item.ownerName, item.token, item.pbild);
+  const response: RequestResponse<any, any> =
+    await Fetching.deletePBI(item.ownerName, item.token, item.pbiId);
+    console.log(response);
   if (response.code !== 204) {
     return rejectWithValue(
-      response as RequestResponse<undefined, number>
+      response as RequestResponse<undefined, undefined>
     );
   }
-  return response as RequestResponse<number, number>;
+  return response as RequestResponse<any, any>;
 });
 
 export const addPBIThunk = createAsyncThunk<

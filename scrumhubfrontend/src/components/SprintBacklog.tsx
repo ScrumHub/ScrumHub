@@ -181,7 +181,7 @@ export default function SprintBacklog() {
         Actions.deletePBIThunk({
           ownerName: ownerName,
           token: token,
-          pbild: prevselectedRowKeys[0] as number
+          pbiId: prevselectedRowKeys[0] as number
         }) //filters
       );
     } catch (err) {

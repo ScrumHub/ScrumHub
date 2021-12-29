@@ -25,6 +25,7 @@ import SprintTableComponent from './BacklogSprintTableComponent';
 import { initPBIFilter } from '../appstate/initStateValues';
 import { CompleteSprintPopup } from './popups/CompleteSprint';
 import { EditPBIPopup } from './popups/EditPBIPopup';
+import { response } from 'express';
 export const type = 'DraggableBodyRow';
 
 export const ProductBacklog: React.FC<any> = (props: any) => {
@@ -97,14 +98,15 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
         setSelectedPBI({} as IProductBacklogItem);
       }}
   const deletePBI = (item: IProductBacklogItem) => {
-    try {
-      store.dispatch(Actions.deletePBIThunk({ ownerName: ownerName, token: token, pbild: item.id as number }) //filters
-      );
-    } catch (err) { console.error("Failed to delete the pbis: ", err); }
-    finally {
-        setSelectedPBI({} as IProductBacklogItem);
-    }
-  };
+      store.dispatch(Actions.deletePBIThunk({ ownerName: ownerName, token: token, pbiId: item.id as number }))
+        .then((response: any) => {
+          if (response.payload && response.payload.code === 204) {
+            if (item.isInSprint) { store.dispatch(Actions.clearSprintList()) }
+            else {store.dispatch(Actions.clearPBIsList());
+            }setSelectedPBI({} as IProductBacklogItem);
+          }
+        })
+    } 
   const updateSprint = (sprint: ISprint) => {
     setIsModal({ ...isModal, updateSprint: false });
     const sprintID = selectedSprint.sprintNumber;
@@ -163,11 +165,7 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
     }
   }
   const updateTask = (pbiId: number, taskId: number) => {
-    try {
-      store.dispatch(Actions.assignTaskToPBIThunk({ token: token, ownerName: ownerName, pbiId: pbiId, taskId: taskId, }));
-    } catch (err) { console.error("Failed to add the pbis: ", err); }
-    finally {setInitialRefresh(true);
-    }
+      store.dispatch(Actions.assignTaskToPBIThunk({ token: token, ownerName: ownerName, pbiId: pbiId, taskId: taskId}));
   }
   const assignPerson = (person: string, taskId: number, taskPeople: IPerson[]) => {
     const names = taskPeople.map((item: IPerson) => { return (item.login) });
@@ -288,7 +286,6 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
       if (isMounted()) { setInitialRefresh(false); }
     }
   }, [initialRefresh, isMounted]);
-  
   useEffect(() => {
     if (refreshRequired && ownerName && ownerName !== "") {
       store.dispatch(Actions.fetchPBIsThunk({

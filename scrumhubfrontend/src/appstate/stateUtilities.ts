@@ -1,4 +1,4 @@
-import { IFilters } from "./stateInterfaces";
+import { IError, IFilters } from "./stateInterfaces";
 
 export const getHeader = (token: string, config:any) => {
     return ({
@@ -23,5 +23,13 @@ export const getHeader = (token: string, config:any) => {
         'Accept': "*/*",
         'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
       } as IFilters);
+  }
+
+  export const getError = (errorResponse:any)=>{
+    return({
+      hasError: true,
+      errorCode: errorResponse ? errorResponse.code : -1,
+      erorMessage: errorResponse ? (errorResponse.response as IError).Message : "",
+    })
   }
 

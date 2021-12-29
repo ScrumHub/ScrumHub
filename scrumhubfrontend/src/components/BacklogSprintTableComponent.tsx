@@ -68,13 +68,10 @@ export default function SprintTableComponent(props: any) {
       else if (!isNameFilter) {
         setExpandedRowKeys(isArrayValid(props.data)&& props.data.at(0).isCurrent?[props.data.at(0).sprintNumber]:[0]);
       }
-      if (!isMounted()) { console.log("sprint" + isMounted()) };
       setReload(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.loading, props.nameFilter, props.data, isMounted]);
-  console.log(props.loading);
-  console.log(isArrayValid(props.data)? props.data.at(0).isCurrent:"");
   return (
     <DndProvider backend={HTML5Backend} key={"dnd"+props.keys}>
       {<Table
@@ -91,11 +88,10 @@ export default function SprintTableComponent(props: any) {
         rowKey={(record: ISprint) => record.sprintNumber}
         expandable={{
           expandedRowRender: props.PBITableforSprint,
-          /*expandedRowKeys: expandedRowKeys,
+          expandedRowKeys: expandedRowKeys,
           onExpand: (expanded, record) => {
             updateExpandedRowKeys(record);
-          },*/
-          defaultExpandAllRows:true,
+          },
           rowExpandable: record => record.backlogItems && record.backlogItems.length > 0,
         }}
         onRow={(row) => {
