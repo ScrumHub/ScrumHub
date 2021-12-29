@@ -146,7 +146,6 @@ export function MenuWithFilters(props: any) {
         }
         else if (typeof(item.pbiPriorities)!=="undefined" &&  filteredInfo) {
             if (isArrayValid(filteredInfo.pbiPriorities)) {
-                console.log(item);
                 props.itemSelected({
                     ...filteredInfo, pbiPriorities: filteredInfo.pbiPriorities.includes(item.pbiPriorities) ?
                         filteredInfo.pbiPriorities.filter((num: number) => num !== item.pbiPriorities) : filteredInfo.pbiPriorities.concat(item.pbiPriorities)
@@ -162,7 +161,6 @@ export function MenuWithFilters(props: any) {
         setFilteredInfo(props.filteredInfo);
         }
     }, [props.filteredInfo]);
-    console.log(props.filteredInfo);
     return (props.filteredInfo && <Menu className="peopleMenu">
         <SubMenu title="Sprint Completeness">
             <MenuItem key={"completed"} onClick={() => { handleList({ complete: 1 }); }}>

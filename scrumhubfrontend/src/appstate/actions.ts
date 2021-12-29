@@ -478,7 +478,6 @@ export const assignPersonToTaskThunk = createAsyncThunk<
   { rejectWithValue }) => {
   const response: RequestResponse<ITask, number> =
     await Fetching.assignPersonToTask(item.token, item.ownerName, item.login,item.taskId);
-    console.log(response);
   if (response.code !== 200) {
     return rejectWithValue(
       response as RequestResponse<ITask, number>
