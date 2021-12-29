@@ -44,22 +44,21 @@
     text-align: center;
   }
   
-  /*.backlogScroll{
+.baccklogScroll{
     min-height:5vh;
     max-height: 68vh;
     overflow-y:scroll;
 
   }
   
-  .backlogScroll::-webkit-scrollbar {
+  .baccklogScroll::-webkit-scrollbar {
     display: none;
   }
   
-  // Hide scrollbar for IE, Edge and Firefox 
-  .backlogScroll {
-    -ms-overflow-style: none;  // IE and Edge 
-    scrollbar-width: none;  //Firefox 
-  }*/
+  .baccklogScroll {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 
 
   /*::-webkit-scrollbar { 
@@ -76,9 +75,4 @@
     overflow-x: scroll;
     width: 800;
   }
-  .scrollableDiv::-webkit-scrollbar {
-  }
-  
-  /* Hide scrollbar for IE, Edge and Firefox */
-  .scrollableDiv {
-  }
+

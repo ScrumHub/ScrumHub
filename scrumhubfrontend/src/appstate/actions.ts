@@ -95,18 +95,18 @@ export const fetchPBIsThunk = createAsyncThunk<
 
 export const finishPBIThunk = createAsyncThunk<
   RequestResponse<IProductBacklogItem, number>,
-  { ownerName: string; token: string; pbild: number; },
+  { ownerName: string; token: string; pbiId: number; },
   { rejectValue: RequestResponse<IProductBacklogItem, number> }
 >("finishPBI", async (
   item: {
     ownerName: string;
     token: string;
-    pbild: number;
+    pbiId: number;
   },
   { rejectWithValue }
 ) => {
   const response: RequestResponse<IProductBacklogItem, number> =
-    await Fetching.finishPBI(item.ownerName, item.token, item.pbild);
+    await Fetching.finishPBI(item.ownerName, item.token, item.pbiId);
   if (response.code !== 200) {
     return rejectWithValue(
       response as RequestResponse<undefined, number>

@@ -3,8 +3,30 @@ import { IProductBacklogItem } from "../appstate/stateInterfaces";
 import { initRowIds } from "./utility/commonInitValues";
 import { IRowIds } from "./utility/commonInterfaces";
 import "./ProductBacklog.css"
+import { useEffect, useState } from "react";
 
 export default function PBITableComponent(props: any) {
+  const [expandedRowKeys, setExpandedRowKeys] = useState([0]);
+  const updateExpandedRowKeys = (record: IProductBacklogItem) => {
+    const rowKey = record.id;
+    const isExpanded = expandedRowKeys.includes(rowKey);
+    let newExpandedRowKeys = [] as number[];
+    if (isExpanded) {
+      newExpandedRowKeys = expandedRowKeys.reduce((acc: number[], key: number) => {
+        if (key !== rowKey) { acc.push(key) };
+        return acc;
+      }, []);
+    } else {
+      newExpandedRowKeys = expandedRowKeys;
+      newExpandedRowKeys.push(rowKey);
+    }
+    setExpandedRowKeys(newExpandedRowKeys);
+  };
+  useEffect(() => {
+    if (expandedRowKeys && expandedRowKeys.length > 1) {
+      setExpandedRowKeys(expandedRowKeys);
+    }
+  }, [props.sortedInfo]);
   return (
     <Table
       style={{ borderSpacing: "separate", }}
@@ -15,7 +37,11 @@ export default function PBITableComponent(props: any) {
       rowKey={(record: IProductBacklogItem) => record.id}
       expandable={{
         expandedRowRender: props.TaskTableforPBI,
-        defaultExpandAllRows: true,
+        expandedRowKeys: expandedRowKeys,
+        defaultExpandAllRows:props.sortedInfo,
+        onExpand: (expanded, record) => {
+          updateExpandedRowKeys(record);
+        },
         rowExpandable: record => record.tasks && record.tasks.length > 0,
 
       }}

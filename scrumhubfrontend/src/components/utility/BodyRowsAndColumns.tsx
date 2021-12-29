@@ -11,14 +11,14 @@ export const taskNameCol = {
   title: "Name",
   align: "left" as const,
   dataIndex: "name",
-  width:"60%",
+  width:"37%",
   key: "name",
 };
 export const taskStatusCol = {
   title: "Status",
   key: "finished",
   dataIndex: "finished",
-  width:"15%",
+  width:"28%",
   align: "center" as const,
   render: (val: boolean) => (
     <span>
@@ -27,35 +27,13 @@ export const taskStatusCol = {
     </span>
   ),
 };
-export const taskAssigneeCol =
-{
-  key: "isAssignedToPBI",
-  title: "Assigned",
-  width:"20%",
-  render: (record: ITask) => (
-    <span>
-      <Badge size='small'
-        status={
-          typeof record.assigness !== "undefined" &&
-            record.assigness.length > 0
-            ? "success"
-            : "error"
-        }
-      />
-      {typeof record.assigness !== "undefined" && record.assigness.length > 0
-        ? (record.assigness.at(0).login as string)
-        : "Not Assigned"}
-    </span>
-  ),
-  align: "center" as const,
-};
 export const taskGhLinkCol = {
   title: "Related Link",
   dataIndex: "link",
   key: "link",
-  width:"10%",
+  width:"15%",
   align: "right" as const,
-  render: (text: string) => <a href={text}>{"See on GitHub"}</a>,
+  render: (text: string) => <a style={{paddingRight:"4%"}}href={text}>{"See on GitHub"}</a>,
 };
 
 export const pbiPriorityCol = {

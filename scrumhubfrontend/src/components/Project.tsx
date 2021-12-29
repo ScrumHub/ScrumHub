@@ -23,7 +23,7 @@ export default function Project() {
   const pbiPage = useSelector((appState: State) => appState.pbiPage as IProductBacklogList);
   const [initialRefresh, setInitialRefresh] = useState(true);
   const [infos, setInfos] = useState({
-    filteredInfo: null,
+    filteredInfo: {completed:-1,priorities:[] as number[]},
     sortedInfo: {
       order: '',
       columnKey: '',
@@ -37,10 +37,8 @@ export default function Project() {
   const [isAddPBI, setIsAddPBI] = useState(false);
   const [isAddSprint, setIsAddSprint] = useState(false);
   const error = useSelector((appState: State) => appState.error);
-  const isMounted = useIsMounted();
 
   const addPBI = (pbi: IAddPBI) => {
-    //check if all elements of acceptanceCriteria array are defined
     pbi.acceptanceCriteria = pbi.acceptanceCriteria.filter((value: any) => { return (typeof (value) === "string"); });
     try {
       store.dispatch(
@@ -69,9 +67,7 @@ export default function Project() {
     } catch (err) {
       console.error("Failed to add the sprint: ", err);
     } finally {
-      if (isMounted()) {
         setIsAddSprint(false);
-      }
     }
   };
   const updatePplFilter = (items: string[]) => {
@@ -100,7 +96,7 @@ export default function Project() {
     <>
       <div style={{ marginTop: "0.25%", marginBottom: "1%" }}>
         <Space wrap direction="horizontal" split={true}
-          style={{transform: "scale(0.96)", marginTop: 0, marginBottom: "0.25%", display:"flex"}}>
+          style={{transform: "scale(0.96)", marginTop: 0, marginBottom: "0.25%", display:"flex",}}>
           <Button onClick={() => { setIsAddSprint(true); }}>{"Create Sprint"}</Button>
           <Button onClick={() => { setIsAddPBI(true); }}>{"Add Product Backlog Item"}</Button>
           <Search placeholder="Input backlog item name" onSearch={onSearch} enterButton />
@@ -117,7 +113,7 @@ export default function Project() {
           <Dropdown.Button
             placement="bottomCenter"
             style={{ color: "#1890ff" }}
-            overlay={<MenuWithSorting itemSelected={function (items: string[]): void { updatePplFilter(items); }} people={people} peopleFilter={filterPBI.peopleFilter} inputFilter={inputPplFilter}/>}
+            overlay={<MenuWithSorting itemSelected={function (items: any): void { setInfos({...infos, sortedInfo:items}); }} sortedInfo={infos.sortedInfo}/>}
             buttonsRender={([leftButton, rightButton]) => [
               <></>,
               React.cloneElement(<Button  type="primary" icon={<DownOutlined prefix='Sort' style={{ color: "white" }}></DownOutlined>}>{"Sort"}</Button>),

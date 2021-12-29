@@ -1,9 +1,9 @@
-import { CheckCircleOutlined, CheckOutlined, CloseCircleOutlined } from "@ant-design/icons";
+import { BorderOutlined, CheckCircleOutlined, CheckOutlined, CheckSquareOutlined, CloseCircleOutlined, CloseSquareOutlined, SortAscendingOutlined, SortDescendingOutlined } from "@ant-design/icons";
 import 'antd/dist/antd.css';
 import { Avatar, Button, Menu, Popover, Skeleton, Space } from "antd";
 import MenuItem from "antd/lib/menu/MenuItem";
 import { useState } from "react";
-import { IPerson } from "../../appstate/stateInterfaces";
+import { IFilters, IPerson } from "../../appstate/stateInterfaces";
 import "../Home.css";
 import { isNameFilterValid } from "./commonFunctions";
 import { useEffect } from "react";
@@ -85,39 +85,54 @@ export function MenuWithPeople(props: any) {
 }
 
 export function MenuWithSorting(props: any) {
-    const ppl = props.people && props.people.list && props.people.list.length > 0 ? props.people.list : [] as IPerson[];
-    const [nameList, setList] = useState([] as string[]);
-
-    const inputFilter = isNameFilterValid(props.inputFilter) ? props.inputFilter : "";
-    const handleList = (item: IPerson) => {
-        if (!nameList || nameList.length < 1) { setList([item.login]); props.itemSelected([item.login]); }
-        else {
-            const list = nameList.includes(item.login) ? nameList.filter((name: string) => name !== item.login) : nameList.concat(item.login);
-            setList(list);
-            props.itemSelected(list);
-        }
+    const [sortedInfo, setSortedInfo] = useState([] as IFilters);
+    const handleList = (item: any) => {
+        //if (!nameList || nameList.length < 1) { setList([item.login]); props.itemSelected([item.login]); }
+        //else {
+          //  const list = nameList.includes(item.login) ? nameList.filter((name: string) => name !== item.login) : nameList.concat(item.login);
+            //setList(list);
+            props.itemSelected(item);
+        //}
 
     };
     useEffect(() => {
-      setList(props.peopleFilter);
+        setSortedInfo(props.sortedInfo);
 
-    },[props.peopleFilter]);
-
-    return (isNameFilterValid(props.inputFilter) && <Menu className="peopleMenu">{ppl.map((item: IPerson) => {
-        return ((item.login.startsWith(inputFilter) || nameList.includes(item.login)) &&
-            <MenuItem key={item.login} onClick={() => { handleList(item); }}>
+    },[props.sortedInfo]);
+//descend
+//ascend
+    return (props.sortedInfo && <Menu className="peopleMenu">
+            <MenuItem key={"pbiPriorityDesc"} onClick={() => { handleList({columnKey:"pbiPriority", order:"descend"}); }}>
                 <Space>
-                    <Avatar src={`${item.avatarLink}`} ></Avatar>
-                    {" "}
-                    <div style={{ minWidth: "10vw" }} >{" " + item.login as string}</div>
-
-
-                    {nameList && nameList.length > 0 && nameList.includes(item.login) ? <CheckOutlined /> : <></>}
+                    <div style={{ minWidth: "6vw" }} >{"Priority"}</div>
+                     <SortDescendingOutlined disabled={sortedInfo && sortedInfo.columnKey && sortedInfo.columnKey.includes("pbiPriority") &&
+                     sortedInfo.order && sortedInfo.order.includes("descend")}/> 
+                </Space>
+            </MenuItem>
+            <MenuItem key={"pbiPriorityAsc"} onClick={() => { handleList({columnKey:"pbiPriority", order:"ascend"}); }}>
+            <Space>
+                    <div style={{ minWidth: "6vw" }} >{"Priority"}</div>
+                     <SortAscendingOutlined disabled={sortedInfo && sortedInfo.columnKey && sortedInfo.columnKey.includes("pbiPriority") &&
+                     sortedInfo.order && sortedInfo.order.includes("ascend")}/> 
                 </Space>
 
-            </MenuItem>);
-    })
-    }</Menu >);
+            </MenuItem>
+            <MenuItem key={"sprintDesc"} onClick={() => { handleList({columnKey:"sprintNumber", order:"descend"}); }}>
+                <Space>
+                    <div style={{ minWidth: "6vw" }} >{"Sprint"}</div>
+                     <SortDescendingOutlined disabled={sortedInfo && sortedInfo.columnKey && sortedInfo.columnKey.includes("sprintNumber") &&
+                     sortedInfo.order && sortedInfo.order.includes("descend")}/> 
+                </Space>
+            </MenuItem>
+            <MenuItem key={"sprintAsc"} onClick={() => { handleList({columnKey:"sprintNumber", order:"ascend"}); }}>
+            <Space>
+                    <div style={{ minWidth: "6vw" }} >{"Sprint"}</div>
+                     <SortAscendingOutlined disabled={sortedInfo && sortedInfo.columnKey && sortedInfo.columnKey.includes("sprintNumber") &&
+                     sortedInfo.order && sortedInfo.order.includes("ascend")}/> 
+                </Space>
+
+            </MenuItem>
+    </Menu >);
 }
 
 export function MenuWithPeopleSave(props: any) {

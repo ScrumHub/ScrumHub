@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Form, InputNumber, Slider, Progress, Skeleton, List, Spin } from 'antd';
+import { Modal, Form, InputNumber, Slider, Progress, List } from 'antd';
 import { IFilters, IProductBacklogItem, ITask } from '../../appstate/stateInterfaces';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import { NumberOutlined } from '@ant-design/icons';

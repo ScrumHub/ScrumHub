@@ -724,7 +724,6 @@ export const reducer = createReducer(initState, {
   state: State,
   payload: PayloadAction<RequestResponse<ITask, number>>) => {
   let newState = _.cloneDeep(state);
-  newState.productRequireRefresh = true;
   newState.error = initError;
   newState.loading = false;
   return newState;

@@ -11,7 +11,7 @@ import { CheckOutlined, StopOutlined } from '@ant-design/icons';
 import { store } from '../appstate/store';
 import { EditPBIPopup } from './popups/EditPBIPopup';
 import { EstimatePBIPopup } from './popups/EstimatePBIPopup';
-import "./SprintBacklog.css";
+import "./SprintProject.css";
 import { UpdateSprintPopup } from './popups/UpdateSprintPopup';
 import { UpdateSprintPBIsPopup } from './popups/UpdateSprintPBIsPopup';
 
@@ -71,7 +71,7 @@ const columns = [
 ];
 
 
-export default function SprintBacklog() {
+export default function SprintProject() {
   const { state } = useContext(AuthContext);
   const { token } = state;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

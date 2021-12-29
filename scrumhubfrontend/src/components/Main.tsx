@@ -120,17 +120,16 @@ function Main(props: any) {
   return (
     <section className="container">
       <Layout style={{ height: "100vh" }}>
-        <Header hidden={!isLoggedIn ||currentUser === null } className="clearfix" style={{ position: 'fixed', zIndex: 1, padding: 0, height: "5vh", lineHeight: "5vh", width: "100%", backgroundColor: "#f0f0f0" }}>
+        <Header hidden={!isLoggedIn} className="clearfix" style={{ position: 'fixed', zIndex: 1, padding: 0, height: "5vh", lineHeight: "5vh", width: "100%", backgroundColor: "#f0f0f0" }}>
           <Menu mode="horizontal" theme="light"
             className="mainMenu" >
-            {currentUser !== null &&
-              <SubMenu style={{ float: "unset" }} key="SubMenu0" title={currentUser?.login as string} icon={
-                <Avatar style={{ transform: "scale(0.8)", marginBottom: "0.4vh" }} size="small" src={`${currentUser?.avatarLink}`} ></Avatar>}>
+              <SubMenu style={{ float: "unset" }} key="SubMenu0" title={currentUser?currentUser.login as string:""} icon={
+                currentUser?<Avatar style={{ transform: "scale(0.8)", marginBottom: "0.4vh" }} size="small" src={`${currentUser?currentUser.avatarLink:""}`} ></Avatar>:<></>}>
                 <Menu.Item key="SubMenu4">
-                  <a href={"https://github.com/" + currentUser?.login}>See on Github</a>
+                  <a href={"https://github.com/" + currentUser!==null?currentUser?.login:""}>See on Github</a>
                 </Menu.Item>
 
-              </SubMenu>}
+              </SubMenu>
             <Menu.Item className='mainMenuItem' key="proj" onClick={() => handleProjects()}><span style={{ maxHeight: "1vh" }}>Projects</span></Menu.Item>
             <Menu.Item className='mainMenuItem' key="logout" onClick={() => handleLogout()} >Logout</Menu.Item>
           </Menu>
