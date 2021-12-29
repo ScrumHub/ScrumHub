@@ -777,11 +777,28 @@ export const reducer = createReducer(initState, {
   let newState = _.cloneDeep(state);
   newState.error = initError;
   const task = payload.payload.response as ITask; 
-  if (newState.pbiPage && newState.pbiPage.list.length >0 &&newState.pbiPage.list.filter((item:IProductBacklogItem)=>item.id===task.pbiId).length>0 ) {
+  if (!task.isAssignedToPBI) {
+    const index = newState.pbiPage && isArrayValid(newState.pbiPage.list) ? newState.pbiPage.list.findIndex((pbi:IProductBacklogItem)=>pbi.id===0):-1;
+    if(index !== -1){
+      newState.pbiPage.list = newState.pbiPage.list.map((item:IProductBacklogItem)=>{ 
+        if(item.id === index){
+          item.tasks =  item.tasks.map((t:ITask)=>{
+            if(t.id === task.id){
+              return task;
+            }
+            return t;
+            });
+          }
+            return item;
+          });
+    }
+
+  }
+  else if (newState.pbiPage && newState.pbiPage.list.length >0 &&newState.pbiPage.list.filter((item:IProductBacklogItem)=>item.id===task.pbiId).length>0 ) {
     newState.pbiPage.list = newState.pbiPage.list.map((item:IProductBacklogItem)=>{ 
       if(item.id === task.pbiId && item.tasks){
         item.tasks =  item.tasks.map((t:ITask)=>{
-          if(item.id === task.pbiId){
+          if(t.id === task.id){
             return task;
           }
           return t;
@@ -796,6 +813,7 @@ export const reducer = createReducer(initState, {
           if(item.id === task.pbiId && item.tasks && item.tasks.length>0){
           item.tasks =  item.tasks.map((t:ITask)=>{
             if(t.id === task.id){
+
               return task;
             }
             return t;
@@ -832,7 +850,24 @@ export const reducer = createReducer(initState, {
   let newState = _.cloneDeep(state);
   newState.error = initError;
   const task = payload.payload.response as ITask; 
-  if (newState.pbiPage && newState.pbiPage.list.length >0 &&newState.pbiPage.list.filter((item:IProductBacklogItem)=>item.id===task.pbiId).length>0 ) {
+  if (!task.isAssignedToPBI) {
+    const index = newState.pbiPage && isArrayValid(newState.pbiPage.list) ? newState.pbiPage.list.findIndex((pbi:IProductBacklogItem)=>pbi.id===0):-1;
+    if(index !== -1){
+      newState.pbiPage.list = newState.pbiPage.list.map((item:IProductBacklogItem)=>{ 
+        if(item.id === index){
+          item.tasks =  item.tasks.map((t:ITask)=>{
+            if(t.id === task.id){
+              return task;
+            }
+            return t;
+            });
+          }
+            return item;
+          });
+    }
+
+  }
+  else if (newState.pbiPage && newState.pbiPage.list.length >0 &&newState.pbiPage.list.filter((item:IProductBacklogItem)=>item.id===task.pbiId).length>0 ) {
     newState.pbiPage.list = newState.pbiPage.list.map((item:IProductBacklogItem)=>{ 
       if(item.id === task.pbiId && item.tasks){
         item.tasks =  item.tasks.map((t:ITask)=>{

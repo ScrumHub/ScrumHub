@@ -63,7 +63,7 @@ export const init2ProductBacklogItem: IProductBacklogItem = {
 
 export const unassignedPBI: IProductBacklogItem = {
   id: 0,
-  name: "Unassigned Tasks",
+  name: "Tasks To Assign",
   finished: false,
   expectedTimeInHours: 2,
   estimated: true,

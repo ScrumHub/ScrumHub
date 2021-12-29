@@ -129,7 +129,6 @@ export const deletePBIThunk = createAsyncThunk<
 ) => {
   const response: RequestResponse<any, any> =
     await Fetching.deletePBI(item.ownerName, item.token, item.pbiId);
-    console.log(response);
   if (response.code !== 204) {
     return rejectWithValue(
       response as RequestResponse<undefined, undefined>
@@ -469,7 +468,7 @@ export const assignPersonToTaskThunk = createAsyncThunk<
   RequestResponse<ITask, number>,
   { token: string, ownerName: string; login:string; taskId:number},
   { rejectValue: RequestResponse<ITask, number> }
->("assignPersonToTask", async (
+>("assignPersonToTaskThunk", async (
   item: {
     token: string;
     ownerName: string;
@@ -479,6 +478,7 @@ export const assignPersonToTaskThunk = createAsyncThunk<
   { rejectWithValue }) => {
   const response: RequestResponse<ITask, number> =
     await Fetching.assignPersonToTask(item.token, item.ownerName, item.login,item.taskId);
+    console.log(response);
   if (response.code !== 200) {
     return rejectWithValue(
       response as RequestResponse<ITask, number>
@@ -491,7 +491,7 @@ export const unassignPersonToTaskThunk = createAsyncThunk<
   RequestResponse<ITask, number>,
   { token: string, ownerName: string; login:string; taskId:number},
   { rejectValue: RequestResponse<ITask, number> }
->("unassignPersonToTask", async (
+>("unassignPersonToTaskThunk", async (
   item: {
     token: string;
     ownerName: string;

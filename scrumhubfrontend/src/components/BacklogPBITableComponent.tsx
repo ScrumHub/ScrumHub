@@ -1,6 +1,5 @@
 import { Table } from "antd";
 import { IProductBacklogItem } from "../appstate/stateInterfaces";
-import { useIsMounted, isPeopleFilterValid } from "./utility/commonFunctions";
 import { initRowIds } from "./utility/commonInitValues";
 import { IRowIds } from "./utility/commonInterfaces";
 import "./ProductBacklog.css"
@@ -16,7 +15,7 @@ export default function PBITableComponent(props: any) {
       rowKey={(record: IProductBacklogItem) => record.id}
       expandable={{
         expandedRowRender: props.TaskTableforPBI,
-        defaultExpandAllRows: isPeopleFilterValid(props.peopleFilter),
+        defaultExpandAllRows: true,
         rowExpandable: record => record.tasks && record.tasks.length > 0,
 
       }}

@@ -42,7 +42,6 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
   const [selectedPBI, setSelectedPBI] = useState({} as IProductBacklogItem);
   const [selectedSprint, setSelectedSprint] = useState({} as ISprint);
   const [isModal, setIsModal] = useState<IModals>(initModalVals);
-  console.log("refresh"+refreshRequired);
   const isMounted = useIsMounted();
   const navigate = useNavigate();
   message.config({ maxCount: 1 });
@@ -266,7 +265,7 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
       }
     },
     {
-      title: '', align: "right" as const, width: "15%", key: 'actions', render: (item: IProductBacklogItem) => {
+      title: '', align: "right" as const, width: "25%", key: 'actions', render: (item: IProductBacklogItem) => {
         return ({
           children: <span style={{ alignItems: "flex-end" }}>
             <Button size='small' type="link" onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, addTask: true }); }} >

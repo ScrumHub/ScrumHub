@@ -39,7 +39,6 @@ function Main(props: any) {
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") : "";
   const currentUser = useSelector((appState: State) => appState.currentUser);
   const activeSprintNumber = useSelector((appState: State) => appState.activeSprintNumber);
-  console.log(activeSprintNumber);
   const sprintID = localStorage.getItem("sprintID") ? localStorage.getItem("sprintID") as string : "";
   useEffect(() => {
     if (logout || (!isLoggedIn)) {
@@ -115,9 +114,6 @@ function Main(props: any) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser, state.isLoggedIn]);
 
-  /*console.log(state.isLoggedIn);
-  console.log(logout);
-  console.log(cookies["token"]);*/
   if(ownerName === null && location.pathname !== "/"){handleProjects();}
 
   const [isCollapsed, setIsCollapsed] = useState(true);

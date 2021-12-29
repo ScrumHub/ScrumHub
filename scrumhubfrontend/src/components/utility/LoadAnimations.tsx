@@ -63,11 +63,9 @@ export function MenuWithPeople(props: any) {
 
     };
     useEffect(() => {
-        console.log(props.peopleFilter);
       setList(props.peopleFilter);
 
     },[props.peopleFilter]);
-    console.log(nameList);
 
     return (isNameFilterValid(props.inputFilter) && <Menu className="peopleMenu">{ppl.map((item: IPerson) => {
         return ((item.login.startsWith(inputFilter) || nameList.includes(item.login)) &&
@@ -101,11 +99,9 @@ export function MenuWithSorting(props: any) {
 
     };
     useEffect(() => {
-        console.log(props.peopleFilter);
       setList(props.peopleFilter);
 
     },[props.peopleFilter]);
-    console.log(nameList);
 
     return (isNameFilterValid(props.inputFilter) && <Menu className="peopleMenu">{ppl.map((item: IPerson) => {
         return ((item.login.startsWith(inputFilter) || nameList.includes(item.login)) &&
