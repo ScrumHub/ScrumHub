@@ -144,7 +144,7 @@ export function MenuWithFilters(props: any) {
         else if (typeof(item.complete)!=="undefined" && filteredInfo) {
             props.itemSelected({ ...filteredInfo, complete: filteredInfo.complete!==null && filteredInfo.complete === item.complete ? -1 : item.complete });
         }
-        else if (item.pbiPriorities && filteredInfo) {
+        else if (typeof(item.pbiPriorities)!=="undefined" &&  filteredInfo) {
             if (isArrayValid(filteredInfo.pbiPriorities)) {
                 console.log(item);
                 props.itemSelected({

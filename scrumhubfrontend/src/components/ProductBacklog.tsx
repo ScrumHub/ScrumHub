@@ -251,7 +251,9 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
         compare: (a: IProductBacklogItem, b: IProductBacklogItem) => a.priority - b.priority,
         multiple: 1,
       }, align: "center" as const, width: "20%", key: 'pbiPriority',
-        onFilter: (item:IProductBacklogItem) => item.priority>100,
+      filters: [{text: backlogPriorities[0], value: 0, },{text: backlogPriorities[1],value: 1,},
+        {text: backlogPriorities[2],value: 2,},],
+      onFilter: (value:any, item:IProductBacklogItem) => props.filteredInfo && isArrayValid(props.filteredInfo.pbiPriorities) ?props.filteredInfo.pbiPriorities.includes(item.priority):item.priority === value,
       sortOrder: props.sortedInfo && props.sortedInfo.columnKey === 'pbiPriority' && props.sortedInfo.order,
       render: (item: IProductBacklogItem) => item.id !== 0 ? <Tag style={{ cursor: "pointer" }} color={backlogColors[item.priority % 3]}>{backlogPriorities[item.priority % 3]}</Tag> : <Tag style={{color:"transparent", backgroundColor:"transparent", borderColor:"transparent" }} color={backlogColors[0]}>{backlogPriorities[0]}</Tag>
     }:
@@ -260,6 +262,10 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
         compare: (a: IProductBacklogItem, b: IProductBacklogItem) => a.priority - b.priority,
         multiple: 1,
       }, align: "center" as const, width: "20%", key: 'pbiPriority',
+      filteredValue: props.filteredInfo.pbiPriorities || null,
+      filters: [{text: backlogPriorities[0], value: 0, },{text: backlogPriorities[1],value: 1,},
+        {text: backlogPriorities[2],value: 2,},],
+        onFilter: (value:any, item:IProductBacklogItem) => props.filteredInfo && isArrayValid(props.filteredInfo.pbiPriorities) ?props.filteredInfo.pbiPriorities.includes(item.priority):item.priority === value,
       render: (item: IProductBacklogItem) => item.id !== 0 ? <Tag style={{ cursor: "pointer" }} color={backlogColors[item.priority % 3]}>{backlogPriorities[item.priority % 3]}</Tag> : <Tag style={{color:"transparent", backgroundColor:"transparent", borderColor:"transparent" }} color={backlogColors[0]}>{backlogPriorities[0]}</Tag>
     }
     ,
