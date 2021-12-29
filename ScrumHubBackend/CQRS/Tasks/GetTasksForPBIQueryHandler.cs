@@ -61,7 +61,7 @@ namespace ScrumHubBackend.CQRS.Tasks
 
             var repoTasks = dbRepository.GetTasksForRepository(_dbContext);
 
-            var filteredTasks = repoTasks.Where(rt => request.PBIId <= 0 ? (rt.PBI == null || rt.PBI < 0) : (rt.PBI != null && rt.PBI == request.PBIId));
+            var filteredTasks = repoTasks.Where(rt => request.PBIId <= 0 ? (rt.PBI == null || rt.PBI <= 0) : (rt.PBI != null && rt.PBI == request.PBIId));
             var filteredIssues = filteredTasks.Select(rt => issues.FirstOrDefault(iss => iss.Id == rt.GitHubIssueId) ?? null);
             var notNullIssues = filteredIssues.Where(iss => iss != null).Select(iss => iss!);
 

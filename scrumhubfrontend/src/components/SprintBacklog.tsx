@@ -1,235 +1,51 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Button, Divider, PageHeader, Radio, Table, Typography, } from 'antd';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { Badge, Button, Dropdown, message, Space, Tag, Typography, } from 'antd';
 import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
-import { IAddPBI, IFilters, IProductBacklogItem, IProductBacklogList, ISprint, IUpdateIdSprint, IUpdateSprint, State } from '../appstate/stateInterfaces';
+import { IAddPBI, IFilters, IPeopleList, IProductBacklogItem, IProductBacklogList, ISprint, ITask, IUpdateIdSprint, State } from '../appstate/stateInterfaces';
 import { AuthContext } from '../App';
-import { Navigate } from 'react-router';
 import config from '../configuration/config';
 import { useSelector } from 'react-redux';
-import { CheckOutlined, StopOutlined } from '@ant-design/icons';
+import { DownOutlined, EditOutlined } from '@ant-design/icons';
 import { store } from '../appstate/store';
-import { CustomEditPopup } from './popups/CustomEditPopup';
-import { CustomEstimatePopup } from './popups/CustomEstimatePopup';
-import "./SprintBacklog.css";
-import { CustomUpdateSprintPopup } from './popups/CustomUpdateSprintPopup';
-
-const columns = [
-  {
-    key: "0",
-    title: 'Name',
-    colSpan:1,
-    dataIndex: 'name',
-    align: 'center' as const,
-    render:  (text: string) => {return ({ children: text,props: { colSpan: 1 }})},
-    fixed: 'left' as const,
-  },
-  {
-    key: "1",
-    title: 'Story Points',
-    dataIndex: 'expectedTimeInHours',
-    align: 'center' as const,
-  },
-  {
-    key: "3",
-    title: 'Real Time',
-    dataIndex: 'realTime',
-    align: 'center' as const,
-  },
-  {
-    key: "4",
-    title: 'Priority',
-    dataIndex: 'priority',
-    align: 'center' as const,
-  },
-  {
-    key: "5",
-    colSpan: 2,
-    title: 'Acceptance Criteria',
-    dataIndex: 'acceptanceCriteria',
-    align: 'center' as const,
-    render: (record: string[]) => {
-      return ({
-        children:
-          <div style={{ verticalAlign: "center", alignItems: "center", textAlign: "center" }}>{
-            record.map((value: string, index: number) => { return (<p key={index} style={{ margin: "auto", marginTop: "5%", marginBottom: "5%" }}>{value}</p>) })
-          }
-          </div>,
-        props: { colSpan: 2 }
-      })
-    }
-  },
-  {
-    key: "6",
-    title: 'Finished',
-    dataIndex: 'finished',
-    render: (finishValue: boolean) => finishValue ? <CheckOutlined /> : <StopOutlined />,
-    align: 'center' as const,
-  }
-
-];
-
+import "./SprintProject.css";
+import PBITableComponent from './BacklogPBITableComponent';
+import TaskTableComponent from './BacklogTaskTableComponent';
+import { taskNameCol, taskStatusCol, taskGhLinkCol, pbiProgressCol, pbiProgressCol2, backlogPriorities, backlogColors } from './utility/BodyRowsAndColumns';
+import { canDropTask, isArrayValid } from './utility/commonFunctions';
+import { MenuWithPeopleSave } from './utility/LoadAnimations';
+import { assignPerson, updateTask } from './utility/BacklogHandlers';
+import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
+import { useDrop, useDrag, DndProvider } from 'react-dnd';
+import { type } from './ProductBacklog';
+import { initModalVals } from './utility/commonInitValues';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { AddTaskPopup } from './popups/AddTaskPopup';
+import { CompleteSprintPopup } from './popups/CompleteSprint';
+import { EditPBIPopup } from './popups/EditPBIPopup';
+import { EstimatePBIPopup } from './popups/EstimatePBIPopup';
+import { UpdateSprintPopup } from './popups/UpdateSprintPopup';
+import moment from 'moment';
 
 export default function SprintBacklog() {
   const { state } = useContext(AuthContext);
   const { token } = state;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [filterPBI, setFiltersPBI] = useState<IFilters>({
+  const [infos, setInfos] = useState({
+    filteredInfo: { complete: -1, pbiPriorities: [] as number[] },
+    sortedInfo: { order: '', columnKey: '', },
+  });
+  const [filterPBI, setFiltersPBI] = useState<IFilters>({ nameFilter: "", peopleFilter: [] });
+  const [inputPplFilter, setInputPplFilter] = useState("");
+  const people = useSelector((appState: State) => appState.people as IPeopleList);
+  const [isAddPBI, setIsAddPBI] = useState(false);
+  const [filters, setFilters] = useState<IFilters>({
     pageNumber: config.defaultFilters.page,
     pageSize: config.defaultFilters.size,
   });
-  const loading = useSelector((appState: State) => appState.loading);
+  const [isModal, setIsModal] = useState<IModals>(initModalVals);
   const tempPBIPage = useSelector((appState: State) => appState.pbiPage as IProductBacklogList);
-  const [selectionType, setSelectionType] = useState<'pbi' | 'tasks'>('pbi');
+  const loading = useSelector((appState: State) => appState.loading);
   const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
-  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-  const [isEstimateModalVisible, setIsEstimateModalVisible] = useState(false);
-  const handleEditButton = () => {
-    setIsEditModalVisible(true);
-  }
-  const handleEstimateButton = () => {
-    setIsEstimateModalVisible(true);
-  }
-
-  const handleEstimatePBI = (pbi: IProductBacklogItem) => {
-    try {
-      store.dispatch(
-        Actions.estimatePBIThunk({
-          ownerName: ownerName,
-          token: token,
-          pbiId: selectedPBI.id,
-          hours: pbi.expectedTimeInHours
-        }) //filters
-      );
-    } catch (err) {
-      console.error("Failed to estimate the pbis: ", err);
-    }
-    finally {
-      setSelectedPBI({} as IProductBacklogItem);
-      setPrevSelectedRowKeys([] as React.Key[]);
-      setIsEstimateModalVisible(false);
-      setInitialRefresh(true);
-    }
-  }
-  const handleUpdatePBI = (pbi: IUpdateSprint) => {
-    setIsUpdateModalVisible(false);
-     const ids = pbi.backlogItems.map((value: IProductBacklogItem) => 
-    {  return((value.sprintNumber === Number(sprintID) ? value.id.toString():"")) }).filter((x) => x !== "");
-    try {
-      store.dispatch(
-        Actions.updateOneSprintThunk({
-          token: token as string,
-          ownerName: ownerName,
-          sprintNumber: Number(sprintID),
-          sprint: {"goal":pbi.goal,"pbIs":ids} as IUpdateIdSprint
-        }) //filters
-      );
-    } catch (err) {
-      console.error("Failed to update the pbis: ", err);
-    }
-    finally {
-      setSelectedPBI({} as IProductBacklogItem);
-      setPrevSelectedRowKeys([] as React.Key[]);
-      setInitialRefresh(true);
-    }
-  }
-  const handleEditPBI = (pbi: IAddPBI) => {
-    setIsEditModalVisible(false);
-    //check if all elements of acceptanceCriteria array are defined
-    pbi.acceptanceCriteria = pbi.acceptanceCriteria.filter((value: any) => { return (typeof (value) === "string"); });
-    try {
-      store.dispatch(
-        Actions.editPBIThunk({
-          ownerName: ownerName,
-          token: token,
-          pbi: pbi,
-          pbiId: selectedPBI.id,
-        }) //filters
-      );
-    } catch (err) {
-      console.error("Failed to add the repos: ", err);
-    }
-    finally{
-      setSelectedPBI({} as IProductBacklogItem);
-      setPrevSelectedRowKeys([] as React.Key[]);
-      setInitialRefresh(true);
-    }
-  }
-  const handleFinish = () => {
-    try {
-      store.dispatch(
-        Actions.finishPBIThunk({
-          ownerName: ownerName,
-          token: token,
-          pbild: prevselectedRowKeys[0] as number
-        }) //filters
-      );
-    } catch (err) {
-      console.error("Failed to add the repos: ", err);
-    }
-    finally{
-      setSelectedPBI({} as IProductBacklogItem);
-      setPrevSelectedRowKeys([] as React.Key[]);
-      setInitialRefresh(true);
-    }
-
-  }
-  const handleDelete = () => {
-    try {
-      store.dispatch(
-        Actions.deletePBIThunk({
-          ownerName: ownerName,
-          token: token,
-          pbild: prevselectedRowKeys[0] as number
-        }) //filters
-      );
-    } catch (err) {
-      console.error("Failed to add the repos: ", err);
-    }
-    finally{
-      setSelectedPBI({} as IProductBacklogItem);
-      setPrevSelectedRowKeys([] as React.Key[]);
-      setInitialRefresh(true);
-    }
-  }
-  const handleUpdate= () => {
-    try {
-      store.dispatch(
-        Actions.fetchPBIsThunk({
-          ownerName: ownerName,
-          token: token,
-          filters: {
-            pageNumber: filterPBI.pageNumber,
-            pageSize: config.defaultFilters.pbiSize,
-            estimated: true
-          }
-        }) //filters
-      );
-    } catch (err) {
-      console.error("Failed to add the repos: ", err);
-    }
-  }
-
-  const fetchMore=() => {
-    if(tempPBIPage.pageCount > 1){
-    try {
-      store.dispatch(
-        Actions.fetchPBIsThunk({
-          ownerName: ownerName,
-          token: token,
-          filters: {
-            pageNumber: 1,
-            pageSize: config.defaultFilters.pbiSize*tempPBIPage.pageCount,
-            estimated: true
-          }
-        }) //filters
-      );
-    } catch (err) {
-      console.error("Failed to add the repos: ", err);
-    }
-  }
-  }
-
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : "";
   const sprintID = localStorage.getItem("sprintID") ? localStorage.getItem("sprintID") as string : "";
   const [initialRefresh, setInitialRefresh] = useState(true);
@@ -237,127 +53,221 @@ export default function SprintBacklog() {
   const sprintPage = useSelector((appState: State) => appState.openSprint as ISprint);
   
 
+
   useEffect(() => {
     if (initialRefresh) {
-      store.dispatch(Actions.clearSprint());
+      store.dispatch(Actions.fetchOneSprintThunk({ token: token, ownerName: ownerName, sprintNumber: Number(sprintID) }));
+      store.dispatch(Actions.fetchPeopleThunk({ownerName,token}));
       setInitialRefresh(false);
     }
   }, [initialRefresh]);
-
-  useEffect(() => {
-    if (refreshRequired && ownerName && ownerName !== "" && sprintID && sprintID !== "") {
+  const estimatePBI = (pbi: IProductBacklogItem) => {
+    try {
+      store.dispatch(Actions.estimatePBIThunk({ ownerName: ownerName, token: token, pbiId: selectedPBI.id, hours: pbi.expectedTimeInHours }));
+    } catch (err) { console.error("Failed to estimate the pbis: ", err); }
+    finally {
+        setIsModal({ ...isModal, estimatePBI: false });
+        setSelectedPBI({} as IProductBacklogItem);
+    }
+  };
+  const editPBI = (pbi: IAddPBI) => {
+    setIsModal({ ...isModal, editPBI: false });//check if all elements of acceptanceCriteria array are defined    
+    pbi.acceptanceCriteria = pbi.acceptanceCriteria.filter((value: any) => { return (typeof (value) === "string"); });
+    try {
+      store.dispatch(Actions.editPBIThunk({ ownerName: ownerName, token: token, pbi: pbi, pbiId: selectedPBI.id, }));
+    } catch (err) { console.error("Failed to edit the pbis: ", err); }
+    finally {
+        setSelectedPBI({} as IProductBacklogItem);
+        setInitialRefresh(true);
+    }
+  };
+  const finishPBI = (item: IProductBacklogItem) => {
+    setIsModal({ ...isModal, editPBI: false });
       try {
         store.dispatch(
-          Actions.fetchOneSprintThunk({
-            token: token,
+          Actions.finishPBIThunk({
             ownerName: ownerName,
-            sprintNumber: Number(sprintID)
+            token: token,
+            pbiId: item.id
           }) //filters
         );
-      } catch (err) {
-        console.error("Failed to fetch sprint: ", err);
-        localStorage.setItem("ownerName", "");
-        localStorage.setItem("sprintID", "");
-      }
-
+      } catch (err) { console.error("Failed to finish the pbis: ", err); }
+      finally {
+        setSelectedPBI({} as IProductBacklogItem);
+        setInitialRefresh(true);
+      }}
+  const deletePBI = (item: IProductBacklogItem) => {
+    setIsModal({ ...isModal, editPBI: false });
+      store.dispatch(Actions.deletePBIThunk({ ownerName: ownerName, token: token, pbiId: item.id as number }))
+        .then((response: any) => {
+          if (response.payload && response.payload.code === 204) {
+            if (item.isInSprint) { store.dispatch(Actions.clearSprintList()) }
+            else {store.dispatch(Actions.clearPBIsList());
+            }setSelectedPBI({} as IProductBacklogItem);
+            setInitialRefresh(true);
+          }
+        })
+    } 
+  const updateSprint = (sprint: ISprint) => {
+    setIsModal({ ...isModal, updateSprint: false });
+    const sprintID = sprintPage.sprintNumber;
+    const ids = sprint.backlogItems.map((value: IProductBacklogItem) => { return ((value.sprintNumber === Number(sprintID) ? value.id.toString() : "")) }).filter((x) => x !== "");
+    try {
+      store.dispatch(Actions.updateOneSprintThunk({
+        token: token as string,
+        ownerName: ownerName,
+        sprintNumber: Number(sprintID),
+        sprint: {
+          "title": sprint.title,
+          "finishDate": moment((sprint.finishDate as any)._d).format("YYYY-MM-DDTHH:mm:ss") + "Z", "goal": sprint.goal, "pbIs": ids
+        }
+      }));
+    } catch (err) {
+      console.error("Failed to update the pbis: ", err);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refreshRequired]);
-
-  const [prevselectedRowKeys, setPrevSelectedRowKeys] = useState([] as React.Key[]);
+  };
+  const completeSprint = (value: boolean) => {
+    setIsModal({ ...isModal, completeSprint: false });
+    const sprintID = sprintPage.sprintNumber;
+      store.dispatch(Actions.completeOneSprintThunk({
+        token: token,
+        ownerName: ownerName,
+        sprintNumber: Number(sprintID),
+        isFailure: value
+      }));
+      setInitialRefresh(true);
+  };
+  const addTaskToPBI = (input: IFilters) => {
+    setIsModal({ ...isModal, addTask: false });
+    try {
+      store.dispatch(Actions.addTaskThunk({ token: token, ownerName: ownerName, pbiId: selectedPBI.id, name: input.name }) //filters
+      );
+    } catch (err) { console.error("Failed to add the pbis: ", err); }
+    finally {
+        setSelectedPBI({} as IProductBacklogItem);
+        if(selectedPBI.isInSprint && selectedPBI.sprintNumber !== 0 ){store.dispatch(Actions.clearSprintList())}
+        else{store.dispatch(Actions.clearPBIsList())}
+        setInitialRefresh(true);
+    }
+  };
   const [selectedPBI, setSelectedPBI] = useState({} as IProductBacklogItem);
-  if (!state.isLoggedIn) {
-    return <Navigate to="/login" />;
-  }
-  return (
-    <div>
-      <PageHeader
-        ghost={false}
-        title={"Sprint " + (sprintPage !== null ? sprintPage.sprintNumber : "")}
-        subTitle={sprintPage !== null ? sprintPage.goal : ""}
-        extra={[
-          <Button key="1" type="link" onClick={()=>{handleUpdate();fetchMore();setIsUpdateModalVisible(true);}}> Update </Button>,
-        ]}
-        style={{ marginBottom: "4vh" }}
-      >
-      </PageHeader>
-      <Divider />
-      <Radio.Group
-        style={{ marginBottom: "4vh" }}
-        onChange={({ target: { value } }) => {
-          setSelectionType(value);
-        }}
-        value={selectionType}
-      >
-        <Radio value="pbi">PBI View</Radio>
-        <Radio value="tasks">Tasks View</Radio>
-      </Radio.Group>
-
-      <Table
-        loading={refreshRequired || initialRefresh}
-        scroll={{ x: 800 }}
-        rowKey={(record: IProductBacklogItem) => record.id}
-        rowSelection={{
-          type: "checkbox",
-          hideSelectAll: true,
-          selectedRowKeys: prevselectedRowKeys,
-          onChange: (keys: React.Key[], selectedRows: IProductBacklogItem[]) => {
-            if (keys.indexOf(prevselectedRowKeys[0]) >= 0) {
-              keys.splice(keys.indexOf(prevselectedRowKeys[0]), 1);
-            }
-            setSelectedPBI(selectedRows[0]);
-            setPrevSelectedRowKeys(keys);
-          },
-        }}
-        summary={(pageData: readonly IProductBacklogItem[]) => {
-          let totalHours = 0;
-
-          pageData.forEach(({ expectedTimeInHours }) => {
-            totalHours += expectedTimeInHours;
-          });
-          return (
-            <>
-            <Table.Summary fixed="bottom">
-              <Table.Summary.Row>
-              <Table.Summary.Cell className="summary" index={0} colSpan={1}></Table.Summary.Cell>
-                <Table.Summary.Cell className="summary" align="center" index={1} colSpan={1}>{"Total Story Points"}</Table.Summary.Cell>
-                <Table.Summary.Cell  align="center" index={2} colSpan={1}>
-                  <Typography style={{ color: "deeppink"}} >{totalHours}</Typography>
-                </Table.Summary.Cell>
-                <Table.Summary.Cell index={3} colSpan={5}></Table.Summary.Cell>
-              </Table.Summary.Row>
-              </Table.Summary>
-            </>
-          );
-        }}
-        pagination={{ pageSize: config.defaultFilters.pbiSize, total: (sprintPage && sprintPage.backlogItems) ? sprintPage.backlogItems.length : 0, showSizeChanger: false }}
-        columns={columns}
-        dataSource={(sprintPage && sprintPage.backlogItems) ? sprintPage.backlogItems : []}
+  const DraggableBodyRow = ({ index: index_row, bodyType, record, className, style, ...restProps }: BodyRowProps) => {
+    const ref = useRef();
+    const [{ isOver, dropClassName }, drop] = useDrop({
+      accept: type,
+      collect: monitor => {
+        const index = monitor.getItem() || {} as number;
+        if (index === index_row) { return {}; }
+        return {
+          isOver: monitor.isOver(),
+          dropClassName: index as number < index_row ? ' drop-over-downward' : ' drop-over-upward',
+        };
+      },
+      drop: (item: any) => {
+        if (typeof (index_row) !== "undefined") {
+          if (!item.record.estimated) {
+            message.info("Cannot assign not estimated pbi", 5);
+          }
+          else if (item.bodyType === "ITask" && canDropTask(record.pbiID, item.index, item.record.pbiID)) {
+            updateTask(record.pbiID, item.index, token, ownerName);
+            setInitialRefresh(true);
+          }
+          else if (item.bodyType === "ITask" && record.pbiID === -2 && record.sprintNumber === 0 && item.index !== -2 && item.record.pbiID !== -2) {
+            updateTask(0, item.index, token, ownerName);
+            setInitialRefresh(true);
+          }
+        }
+      },
+    });
+    const isDraggable = index_row !== 0 && bodyType !== "ISprint" && index_row !== undefined;
+    const [, drag] = useDrag({
+      type,
+      item: { index: index_row, bodyType: bodyType, record: record as IRowIds },
+      collect: monitor => ({
+        isDragging: monitor.isDragging(),
+      }),
+      canDrag: isDraggable
+    });
+    drop(drag(ref));
+    return (
+      <tr
+        ref={ref as any}
+        className={`${className}${isOver ? dropClassName : ''}`}
+        style={{ cursor: isDraggable ? "move" : "default", ...style }}
+        {...restProps}
       />
-      <Divider />
-      <span style={{ width: "100%", margin: "auto", display: "inline-block", justifyContent: "center" }}>
-        <Button disabled={prevselectedRowKeys.length < 1} onClick={handleDelete} type="primary" style={{ marginRight: 16 }}>
-          Delete
-        </Button>
-        <Button disabled={prevselectedRowKeys.length < 1} onClick={handleEditButton} type="primary" style={{ marginRight: 16 }}>
-          Edit
-        </Button>
-        <Button disabled={!selectedPBI || prevselectedRowKeys.length < 1 || (prevselectedRowKeys.length > 0 && selectedPBI.finished)} onClick={handleFinish} type="primary" style={{ marginRight: 16 }}>
-          Finish
-        </Button>
-        <Button disabled={prevselectedRowKeys.length < 1} onClick={handleEstimateButton} type="primary" style={{ marginRight: 16 }}>
-          Estimate
-        </Button>
-        {isEditModalVisible && selectedPBI && <CustomEditPopup data={selectedPBI as IAddPBI} visible={isEditModalVisible}
-          onCreate={function (values: any): void { handleEditPBI(values) }}
-          onCancel={() => { setIsEditModalVisible(false); }} />}
-        {isEstimateModalVisible && selectedPBI && <CustomEstimatePopup data={selectedPBI as IProductBacklogItem} visible={isEstimateModalVisible}
-          onCreate={function (values: any): void { handleEstimatePBI(values) }}
-          onCancel={() => { setIsEstimateModalVisible(false); }} />}
-          {isUpdateModalVisible && !loading && <CustomUpdateSprintPopup data={sprintPage as IUpdateSprint} pbiData={tempPBIPage.list as IProductBacklogItem[]} visible={isUpdateModalVisible}
-          onCreate={function (values: any): void { handleUpdatePBI(values) }}
-          onCancel={() => { setIsUpdateModalVisible(false); }} />}
-      </span>
+    );
+  };
+  const nestedcomponents = { body: { row: DraggableBodyRow, }, };
+  const taskColumns = [taskNameCol, taskStatusCol,
+    {
+      key: "isAssignedToPBI", title: "Assignees", width: "20%", align: "center" as const,
+      render: (record: ITask) => {
+        return (
+          <Dropdown.Button style={{ cursor: "pointer" }} placement='bottomCenter' type="text"
+            overlay={<MenuWithPeopleSave itemSelected={function (person: string): void { assignPerson(person, record.id, record.assigness, token, ownerName); setInitialRefresh(true); }} visible={true} people={people} taskPeople={record.assigness} />}
+            buttonsRender={() => [
+              <></>, React.cloneElement(<span>
+                <Badge size='small'
+                  status={typeof record.assigness !== "undefined" && record.assigness.length > 0 ? "success" : "error"} />
+                {typeof record.assigness !== "undefined" && record.assigness.length > 0
+                  ? (record.assigness.at(0).login as string) + " " : "Not Assigned "}
+                <DownOutlined />
+              </span>),]} > </Dropdown.Button>)
+      },
+    }, taskGhLinkCol,];
+  const TaskTableforPBI: React.FC<IProductBacklogItem> = (item: IProductBacklogItem) => { return (<TaskTableComponent peopleFilter={filterPBI.peopleFilter} item={item} taskColumns={taskColumns} taskComponents={nestedcomponents} />) };
+  const pbiColumns = [
+    {
+      title: 'Name', width: "25%", sorter: {
+        compare: (a: IProductBacklogItem, b: IProductBacklogItem) => a.priority - b.priority,
+        multiple: 1,
+      }, align: "left" as const, key: 'name', render: (item: IProductBacklogItem) => { return (<div className={item.id === 0 ? '' : 'link-button'} onClick={() => { if (item.id !== 0) { setSelectedPBI(item); setIsModal({ ...isModal, editPBI: true }); } }}>{item.name}</div>) },
+    },
+    pbiProgressCol, pbiProgressCol2,
+    {
+      title: 'Priority', sorter: { compare: (a: IProductBacklogItem, b: IProductBacklogItem) => a.priority - b.priority, multiple: 1, }, align: "center" as const, width: "20%", key: 'pbiPriority',
+      filters: [{ text: backlogPriorities[0], value: 0, }, { text: backlogPriorities[1], value: 1, }, { text: backlogPriorities[2], value: 2, },], onFilter: (value: any, item: IProductBacklogItem) => item.priority === value,
+      render: (item: IProductBacklogItem) => item.id !== 0 ? <Tag style={{ cursor: "pointer" }} color={backlogColors[item.priority % 3]}>{backlogPriorities[item.priority % 3]}</Tag> : <Tag style={{ color: "transparent", backgroundColor: "transparent", borderColor: "transparent" }} color={backlogColors[0]}>{backlogPriorities[0]}</Tag>
+    },
+    {
+      title: 'Story Points', sorter: {
+        compare: (a: IProductBacklogItem, b: IProductBacklogItem) => a.priority - b.priority,
+        multiple: 1,
+      }, width: "15%", key: 'storyPoints', align: "center" as const, render: (item: IProductBacklogItem) => {
+        return (item.id !== 0 ? <Tag style={{ cursor: "pointer" }} color={item.estimated ? (item.expectedTimeInHours > 10 ? "red" : "green") : "purple"} onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, estimatePBI: true }); }}>
+          {item.estimated ? (item.expectedTimeInHours + " SP ") : "Not estimated "}{<EditOutlined />}</Tag> : <Tag style={{ color: "transparent", backgroundColor: "transparent", borderColor: "transparent" }} color={backlogColors[0]}>{"Not estimated "}{<EditOutlined />}</Tag>)
+      }
+    },
+    {
+      title: 'Action', align: "center" as const, width: "15%", key: 'actions', render: (item: IProductBacklogItem) => {
+        return (<span >
+          <Button size='small' type="link" onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, addTask: true }); }} >
+            {"Add Task"}</Button></span>)
+      }
+    },];
+  return (
+    <div style={{ marginLeft: "2%", marginRight: "2%", marginTop: 0, marginBottom: "1%" }}>
+      <Space>
+        <Typography>{sprintPage !== null ? sprintPage.goal : ""}</Typography>
+        <Button key="1" type="link" onClick={() => { setIsModal({ ...isModal, updateSprint: true }); }}> Update Sprint </Button>
+      </Space>
+
+      <DndProvider backend={HTML5Backend} key={"dnd_sprint"}>
+        {sprintPage && sprintPage.backlogItems && <PBITableComponent loading={loading || initialRefresh} sortedInfo={infos.sortedInfo} TaskTableforPBI={TaskTableforPBI} nameFilter={filters.nameFilter} peopleFilter={filters.peopleFilter}
+          item={sprintPage} pbiColumns={pbiColumns} nestedcomponents={nestedcomponents} />}
+      </DndProvider>
+      {isModal.editPBI && selectedPBI && selectedPBI.id && <EditPBIPopup data={selectedPBI as IAddPBI} visible={isModal.editPBI}
+      onCreate={function (values: any): void { editPBI(values) }} onDelete={() => { deletePBI(selectedPBI) }} onFinish={() => { finishPBI(selectedPBI) }}
+      onCancel={() => { setIsModal({ ...isModal, editPBI: false }); }} />}
+    {isModal.estimatePBI && selectedPBI && selectedPBI.id && <EstimatePBIPopup data={selectedPBI as IProductBacklogItem} visible={isModal.estimatePBI}
+      onCreate={function (values: any): void { estimatePBI(values) }} onCancel={() => { setIsModal({ ...isModal, estimatePBI: false }); }} />}
+    {isModal.addTask && <AddTaskPopup data={{ name: "" } as IFilters} visible={isModal.addTask}
+      onCreate={function (values: any): void { addTaskToPBI(values); }} onCancel={() => { setIsModal({ ...isModal, addTask: false }); }} />}
+    {isModal.updateSprint && !loading && <UpdateSprintPopup data={sprintPage} visible={isModal.updateSprint} onCreate={function (values: any): void { updateSprint(values) }}
+      onCancel={() => { setIsModal({ ...isModal, updateSprint: false }); }} />}
+      {isModal.completeSprint && !loading && <CompleteSprintPopup data={sprintPage} visible={isModal.completeSprint} onComplete={function (value: boolean): void {completeSprint(value) }}
+      onCancel={() => { setIsModal({ ...isModal, completeSprint: false }); }} />}
     </div>
   );
 }

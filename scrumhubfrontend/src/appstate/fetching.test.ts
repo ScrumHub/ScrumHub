@@ -1,8 +1,9 @@
 import expect from "expect"; // You can use any testing library
-import { initAddPBI, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList } from "./stateInterfaces";
+import { IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList } from "./stateInterfaces";
 import config from "../configuration/config";
 import * as Fetching from "./fetching";
 import { RequestResponse } from "./response";
+import { initAddPBI, initSprint } from "./initStateValues";
 
 jest.mock("axios");
 
@@ -69,5 +70,29 @@ test("fetching the repositories with a wrong token results in an error", async (
   test("fetch one sprint with a wrong token results in an error", async () => {
     const data: RequestResponse<ISprint, undefined> =
       await Fetching.fetchOneSprint("", config.token,0);
+    expect(data).toEqual(errorObject);
+  });
+
+  test("fetch sprints with a wrong token results in an error", async () => {
+    const data: RequestResponse<ISprintList, undefined> =
+      await Fetching.fetchSprints("", config.token,{});
+    expect(data).toEqual(errorObject);
+  });
+
+  test("fetching current user with a wrong token results in an error", async () => {
+    const data: RequestResponse<IPerson, undefined> =
+      await Fetching.getCurrentUser(config.token);
+    expect(data).toEqual(errorObject);
+  });
+
+  test("updating one sprint with a wrong token results in an error", async () => {
+    const data: RequestResponse<ISprint, undefined> =
+      await Fetching.updateOneSprint(config.token, "", 0,initSprint);
+    expect(data).toEqual(errorObject);
+  });
+
+  test("completing one sprint with a wrong token results in an error", async () => {
+    const data: RequestResponse<ISprint, undefined> =
+      await Fetching.completeOneSprint(config.token, "", 0,true);
     expect(data).toEqual(errorObject);
   });

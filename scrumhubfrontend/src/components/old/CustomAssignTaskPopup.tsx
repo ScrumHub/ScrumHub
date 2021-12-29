@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Form, Space, Typography, Checkbox } from 'antd';
-import { IProductBacklogItem, IUpdateSprint } from '../../appstate/stateInterfaces';
+import { ICheckedAssignPBI } from '../../appstate/stateInterfaces';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
-import TextArea from 'antd/lib/input/TextArea';
 import _ from 'lodash';
 import Title from 'antd/lib/typography/Title';
 
@@ -13,30 +12,29 @@ interface Values {
 }
 
 interface CollectionCreateFormProps {
-  data: IUpdateSprint;
-  pbiData: IProductBacklogItem[];
+  error: string;
+  pbiData: ICheckedAssignPBI[];
   visible: boolean;
   onCreate: (values: Values) => void;
   onCancel: () => void;
 }
 
-export const CustomUpdateSprintPopup: React.FC<CollectionCreateFormProps> = ({
-  data,
+export const CustomAssignTaskPopup: React.FC<CollectionCreateFormProps> = ({
+  error,
   pbiData,
   visible,
   onCreate,
   onCancel,
 }) => {
-  //TO DO
-  //DELETE after backend is fixed
-  pbiData = pbiData.filter((item)=>item.estimated !== false);
+  pbiData = pbiData.filter((item) => item.id !== 0);
   const [form] = Form.useForm();
   const [temp, setTemp] = useState(pbiData);
-  const id = Number(localStorage.getItem("sprintID"));
   return (
     <Modal
+      centered={true}
+      closable={true}
       visible={visible}
-      title="Edit Sprint"
+      title="Assign Task To Backlog Item"
       okText="Save"
       cancelText="Cancel"
       onCancel={onCancel}
@@ -58,40 +56,26 @@ export const CustomUpdateSprintPopup: React.FC<CollectionCreateFormProps> = ({
         name="form_in_modal"
         initialValues={{ modifier: 'public' }}
       >
-
-        <Form.Item
-          initialValue={data.goal}
-          name="goal"
-          labelAlign="left"
-          label={<Title style={{marginTop:"10%"}} level={4}>{"Goal"}</Title>}
-          rules={[{ required: true, message: 'Please input the goal of this sprint!' }]}
-        >
-          <TextArea
-            maxLength={105}
-          />
-        </Form.Item>
-
         <FormItemLabel
-        labelAlign="left"
-        label={<Title style={{marginTop:"10%"}} level={4}>{"Backlog Items"}</Title>} prefixCls="backlogItems" required={true} />
+          labelAlign="left"
+          label={<Title level={4}>{"Estimated Backlog Items"}</Title>} prefixCls="backlogItems" required={true} />
         <></>
         <Form.List name="backlogItems" initialValue={pbiData}>
           {(fields) => (
             <>
               {fields.map(({ key, name }) => (
-                <Space key={key} style={{ display: 'flex', margin:0}} align="baseline">
-                  <Checkbox checked={form.getFieldValue("backlogItems")[key].sprintNumber === id}
+                <Space key={key} style={{ display: 'flex', margin: 0 }} align="baseline">
+                  <Checkbox checked={form.getFieldValue("backlogItems")[key].checked}
                     onClick={() => {
                       const temp2 = _.cloneDeep(temp);
-                      temp2[key].sprintNumber = (temp2[key].sprintNumber === id) ? null : id;
-                      setTemp(temp2);
+                      temp2[key].checked = temp2[key].checked === null ? true : !temp2[key].checked;
                       form.setFieldsValue({ "backlogItems": temp2 });
                     }} />
                   <Form.Item
                     name={key}
-                  //rules={[{ required: key<1?true:false, message: 'Please input at least one acceptance criteria!' }]}
+                    key={key}
                   >
-                    <Typography>{pbiData[key].name +(pbiData[key].isInSprint?" from Sprint "+ pbiData[key].sprintNumber:"")}</Typography>
+                    <Typography>{pbiData[key].name}</Typography>
                   </Form.Item>
                 </Space>
               ))}

@@ -1,4 +1,4 @@
-import config from "../configuration/config"
+import  { Moment } from "moment";
 
 export type Error = {
   hasError: boolean;
@@ -6,7 +6,7 @@ export type Error = {
   erorMessage: string;
 };
 export interface IFilters {
-  [name: string]: any;
+  [name: string]: any|any[];
 }
 export interface IFiltersAndToken {
   filters: IFilters;
@@ -18,6 +18,41 @@ export interface IError {
   Message: string;
   metadata: any;
   successful: boolean;
+  title?:string;
+}
+
+export interface IMessCodeError {
+  Message: string;
+  code:number;
+}
+
+export interface ITask {
+  assigness: IPerson[]|any[];
+  id: number;
+  name: string;
+  finished: boolean;
+  pbiId: number;
+  isAssignedToPBI: boolean;
+  link: string;
+}
+
+
+export interface ITaskNamed {
+  id: number;
+  name: string;
+  finished: boolean;
+  pbiId: number;
+  pbiName: string;
+  isAssignedtoPBI: boolean;
+  link: string;
+}
+
+export interface ITaskList {
+  pageNumber: number;
+  pageCount: number;
+  pageSize: number;
+  realSize: number;
+  list: ITask[];
 }
 
 export interface IProductBacklogItem {
@@ -26,20 +61,45 @@ export interface IProductBacklogItem {
   finished: boolean;
   expectedTimeInHours: number;
   estimated: boolean;
-  sprintNumber: number|null;
+  sprintNumber: number | null;
   isInSprint: boolean;
   timeSpentInHours: number;
   priority: number;
   acceptanceCriteria: string[];
-  tasks: any
+  tasks: ITask[]
 }
 
+export interface ICheckedProductBacklogItem {
+  checked: boolean;
+  id: number;
+  name: string;
+  finished: boolean;
+  expectedTimeInHours: number;
+  estimated: boolean;
+  sprintNumber: number | null;
+  isInSprint: boolean;
+  timeSpentInHours: number;
+  priority: number;
+  acceptanceCriteria: string[];
+  tasks: ITask[]
+}
 export interface IAddPBI {
   name: string;
   priority: number;
   acceptanceCriteria: string[];
 }
+export interface IAssignPBI {
+  name: string;
+  id: number;
+  isInSprint:boolean;
+}
 
+export interface ICheckedAssignPBI extends IAssignPBI {
+  name: string;
+  id: number;
+  
+  checked: boolean;
+}
 export interface IPBIFilter {
   pageNumber: number;
   pageSize: number;
@@ -49,18 +109,6 @@ export interface IPBIFilter {
   inSprint?: boolean;
 }
 
-export const initPBIFilter: IPBIFilter = {
-  pageNumber: config.defaultFilters.page,
-  pageSize: config.defaultFilters.pbiSize,
-
-};
-
-export const initAddPBI: IAddPBI = {
-  name: "Item",
-  priority: 0,
-  acceptanceCriteria: ["criteria", "criteria2"],
-};
-
 export interface IProductBacklogList {
   pageNumber: number;
   pageCount: number;
@@ -69,52 +117,23 @@ export interface IProductBacklogList {
   list: IProductBacklogItem[];
 }
 
-export const initProductBacklogItem: IProductBacklogItem = {
-  id: 0,
-  name: "Item",
-  finished: false,
-  expectedTimeInHours: 2,
-  estimated: true,
-  sprintNumber: 0,
-  isInSprint: false,
-  timeSpentInHours: 0,
-  priority: 0,
-  acceptanceCriteria: ["criteria", "criteria2"],
-  tasks: [],
-};
-
-export const initProductBacklogList: IProductBacklogList = {
-  pageNumber: 1,
-  pageCount: 1,
-  pageSize: 10,
-  realSize: 10,
-  list: [],
-};
-
-export interface ISprint extends IUpdateSprint {
+export interface ISprint {
   sprintNumber: number;
-}
-
-export const initSprint: ISprint = {
-  sprintNumber: 1,
-  goal: "",
-  backlogItems: [],
-}
-
-export interface IUpdateSprint {
+  title:string;
   goal: string;
-  backlogItems: IProductBacklogItem[]
+  backlogItems: IProductBacklogItem[];
+  finishDate: string|Date;
+  isCurrent: boolean;
+  status: string;
+  isCompleted: boolean;
 }
-
 export interface IUpdateIdSprint {
-  "goal": string;
-  "pbIs": string[]
+  goal: string;
+  pbIs: string[];
+  finishDate: string|Date|Moment;
+  title:string;
 }
 
-export const initUpdateSprint: IUpdateSprint = {
-  goal: "Goal 1",
-  backlogItems: [initProductBacklogItem],
-}
 
 export interface ISprintList {
   pageNumber: 1,
@@ -124,13 +143,6 @@ export interface ISprintList {
   list: ISprint[];
 }
 
-export const initSprintList: ISprintList = {
-  pageNumber: 1,
-  pageCount: 1,
-  pageSize: 10,
-  realSize: 10,
-  list: [],
-};
 
 export interface IRepository {
   name: string;
@@ -144,18 +156,25 @@ export interface IRepository {
   sprints: ISprint[] | any;
 }
 
-export const initRepository: IRepository = {
-  name: "Repo",
-  gitHubId: 0,
-  hasAdminRights: true,
-  alreadyInScrumHub: true,
-  backlogItems: [initProductBacklogItem],
-  sprints: [initSprint],
-  description: "",
-  dateOfLastActivity: null,
-  typeOfLastActivity: ""
+export interface IPerson {
+  avatarLink:string;
+  gitHubId: number;
+  isCurrentUser:boolean;
+  login: string;
+  name: string|null;
 }
 
+
+
+export interface IPeopleList {
+  pageNumber: number;
+  pageCount: number;
+  pageSize: number;
+  realSize: number;
+  list: IPerson[];
+}
+
+export type BodyRowTypes = ISprint | IProductBacklogItem | ITask;
 export interface IRepositoryList {
   pageNumber: number;
   pageCount: number;
@@ -164,20 +183,12 @@ export interface IRepositoryList {
   list: IRepository[];
 }
 
-export const initRepositoryList: IRepositoryList = {
-  pageNumber: 1,
-  pageCount: 1,
-  pageSize: 10,
-  realSize: 0,
-  list: [],
-}
-
 export type State = {
   loading: boolean;
   error: Error;
   redirect: string | null;
   pages: number;
-  pbiPage : IProductBacklogList;
+  pbiPage: IProductBacklogList;
   repositories: IRepositoryList | any;
   openRepository: IRepository | null;
   reposLastPage: boolean;
@@ -187,31 +198,15 @@ export type State = {
   sprintLastPage: boolean;
   sprintRequireRefresh: boolean;
   sprintPage: ISprintList;
-  openSprint:ISprint|null;
+  taskLastPage: boolean;
+  taskRequireRefresh: boolean;
+  taskPage: ITaskList;
+  tasks: ITask[] | ITaskNamed[];
+  openSprint: ISprint | null;
   repoId: number;
   ownerName: string;
-};
-
-export const initState: State = {
-  loading: false,
-  error: {
-    hasError: false,
-    errorCode: 0,
-    erorMessage: "",
-  },
-  pbiPage:initProductBacklogList,
-  sprintPage:initSprintList,
-  redirect: null,
-  pages: 1,
-  repositories: [],
-  openSprint:null,
-  openRepository: null,
-  reposLastPage: false,
-  reposRequireRefresh: false,
-  productLastPage: false,
-  productRequireRefresh: false,
-  sprintLastPage: false,
-  sprintRequireRefresh: false,
-  repoId:-1,
-  ownerName:""
+  namedPBI: IAssignPBI[];
+  people: IPeopleList;
+  activeSprintNumber:number;
+  currentUser: IPerson|null;
 };

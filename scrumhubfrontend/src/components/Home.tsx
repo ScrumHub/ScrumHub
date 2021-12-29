@@ -2,37 +2,35 @@ import { useContext, useEffect, useState } from 'react';
 import { Button, Card } from 'antd';
 import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
+import './Home.css';
 import { IFilters, IRepository, State } from '../appstate/stateInterfaces';
 import { AuthContext } from '../App';
 import { Navigate, useNavigate } from 'react-router';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import config from '../configuration/config';
 import { useSelector } from 'react-redux';
-import { CalendarOutlined, FolderAddOutlined, InfoCircleOutlined, LoadingOutlined } from '@ant-design/icons';
+import { CalendarOutlined, FolderAddOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { store } from '../appstate/store';
 import { clearReposList } from '../appstate/actions';
+import SkeletonList, { CantAddToShButton, InShButton } from './utility/LoadAnimations';
+import { dateFormat } from './utility/commonFunctions';
 const { Meta } = Card;
 
 
 export default function Home() {
   const { state } = useContext(AuthContext);
   const { token, isLoggedIn } = state;
-  const [filters, setFilters] = useState<IFilters>({
-    pageNumber: config.defaultFilters.page,
-    pageSize: config.defaultFilters.size,
-  });
-  const lastPage = useSelector((state: State) => state.reposLastPage); // eslint-disable-next-line
-  const [displayLoader, setDisplayLoader] = useState(false); // eslint-disable-next-line
+  const [filters, setFilters] = useState<IFilters>({pageNumber: config.defaultFilters.page,pageSize: config.defaultFilters.size,});
+  const lastPage = useSelector((state: State) => state.reposLastPage);
+  const [displayId, setDisplayId] = useState(-1);
   const [fetching, setFetching] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const loading = useSelector((state: State) => state.loading);
   const refreshRequired = useSelector(
     (appState: State) => appState.reposRequireRefresh as boolean
   );
   const repos = useSelector(
     (state: State) => state.repositories as IRepository[]
   );
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") : "";
   const navigate = useNavigate();
   const [initialRefresh, setInitialRefresh] = useState(true);
   useEffect(() => {
@@ -44,7 +42,6 @@ export default function Home() {
 
   useEffect(() => {
     if (isLoggedIn && refreshRequired) {
-      setDisplayLoader(true);
       try {
         store.dispatch(
           Actions.fetchRepositoriesThunk({
@@ -60,7 +57,6 @@ export default function Home() {
       }
       finally {
         setFilters({ ...filters, pageNumber: config.defaultFilters.page + 1 });
-        setDisplayLoader(false);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -88,81 +84,56 @@ export default function Home() {
     }
   };
 
-  function addProject(prop: number) {
-    try {
+  function addProject(projId: number) {
+    setDisplayId(projId);
       store.dispatch(
         Actions.addRepositoryThunk({
-          id: prop,
+          id: projId,
           token: token,
         }) //filters
-      );
-    } catch (err) {
-      console.error("Failed to add the repos: ", err);
-    } finally {
-      setFilters({ ...filters, pageNumber: config.defaultFilters.page });
-      //setInitialRefresh(true);
-    }
+      )
+      .catch((error)=>{console.error("Failed to fetch the pbis: ", error);
+      setDisplayId(-1);
+      return({});})
+      .then(()=>setDisplayId(-1));
   };
 
   function redirectToProject(props: IRepository) {
     localStorage.setItem("ownerName", props.name);
-    try {
-      store.dispatch(
-        Actions.fetchPBIsThunk({
-          ownerName: props.name,
-          token: token,
-          filters: {
-            ...filters,
-            pageSize: config.defaultFilters.pbiSize
-          }
-        }) //filters
-      );
-    } catch (err) {
-      console.error("Failed to add the repos: ", err);
-      localStorage.setItem("ownerName", "");
-    } finally {
-      navigate(`/${props.name.split("/")[0]}/${props.name.split("/")[1]}`, { replace: true });
-    }
-
+    navigate(`/${props.name.split("/")[0]}/${props.name.split("/")[1]}`, { replace: true });
   };
 
-  if (!isLoggedIn) {
-    return <Navigate to="/login" />;
-  }
   return (
     <section className="container">
-      {!initialRefresh && !refreshRequired && repos && repos.length > 0 && <InfiniteScroll
-        dataLength={repos ? repos.length : 0}
-        scrollThreshold={0.7}
-        next={fetchMore}
-        hasMore={!lastPage && !fetching}
-        loader={
-          (displayLoader && <LoadingOutlined />) || (!displayLoader && <></>)
-        }>
-        <div style={{ display: "grid", placeItems: "center", margin: "4.5%", background: "transparent" }}>
-          {repos.map((rep: IRepository) => {
-            return (<section className="card" style={{ width: "85%", }} key={rep.gitHubId} >
-              <Card style={{ backgroundColor: "white", marginBottom: "3vh" }} type="inner" actions=
-                {[<Button disabled={rep.alreadyInScrumHub || !rep.hasAdminRights} style={{ width: "180px" }} onClick={() => { addProject(rep.gitHubId) }} ><span><FolderAddOutlined disabled={!rep.alreadyInScrumHub} />
-                  {" Add to ScrumHub"}</span></Button>,
-                <Button disabled={!rep.alreadyInScrumHub} style={{ width: "180px" }} onClick={() => { redirectToProject(rep) }}><span><InfoCircleOutlined />{" Project Details"}</span></Button>,
-                <Button style={{ width: "180px" }}><span><CalendarOutlined />
-                  {rep.dateOfLastActivity === "No recent activity" ? " Not updated" : " Updated " + new Date(rep.dateOfLastActivity as Date).toLocaleString(['en-US'], { year: 'numeric', month: 'short', day: 'numeric' })}</span></Button>
-                ]}>
-                <Meta
-                  title={rep.name.split("/")[1]}
-                  description={rep.description}
-                ></Meta>
-                <br />
-                <p>{"There are " + rep.sprints.length + " sprints and " + rep.backlogItems.length + " backlog items.\n"}</p>
-                <p>{rep.typeOfLastActivity + (rep.dateOfLastActivity === "No recent activity" ? " " : " was the last activity") + " in the repository."}</p>
-              </Card>
-            </section>);
-          })
-          }
-        </div>
-      </InfiniteScroll>
-      }
+      <InfiniteScroll
+      dataLength={repos ? repos.length : 0}
+      scrollThreshold={0.7}
+      next={fetchMore}
+      hasMore={!lastPage && !fetching}
+      loader={<></>}>
+      <div className="reposGrid">
+        {repos.map((rep: IRepository) => {
+          return (<section className="card" style={{ width: "85%" }} key={rep.gitHubId} >
+            <Card loading={rep.gitHubId===displayId &&loading } className='repoCard' type="inner" actions=
+              {[!rep.hasAdminRights ? <CantAddToShButton/>:(rep.alreadyInScrumHub ? <InShButton/>:
+                <Button loading={rep.gitHubId===displayId &&loading } disabled={false} className='cardButton' onClick={() => { addProject(rep.gitHubId);}} >
+                <span>{<FolderAddOutlined disabled={false} />}{" Add to ScrumHub" }</span></Button>),
+              <Button loading={rep.gitHubId===displayId &&loading} disabled={!rep.alreadyInScrumHub} type="primary" className='cardButton' onClick={() => { redirectToProject(rep) }}><span><InfoCircleOutlined />{" Manage project"}</span></Button>,
+              <Button className='calButton'><span><CalendarOutlined />{rep.typeOfLastActivity === "No recent activity" ? " Not updated" : " " + dateFormat(rep.dateOfLastActivity as Date)}</span></Button>]}>
+              <Meta
+                title={rep.alreadyInScrumHub ? <div className='link-button' onClick={() => { redirectToProject(rep) }}>{rep.name.split("/")[1]}</div> : <div>{rep.name.split("/")[1]}</div>}
+                description={rep.description}
+              ></Meta>
+              <br />
+              <p>{"This project has " + (rep.sprints && rep.sprints.length === 1 ? "1 sprint and " : (rep.sprints.length + " sprints and ")) + (rep.backlogItems && rep.backlogItems.length === 1 ? "1 backlog item.\n" : rep.backlogItems.length + " backlog items.\n")}</p>
+              <p>{rep.typeOfLastActivity + (rep.dateOfLastActivity === "No recent activity" ? " " : " was the last activity") + " in the repository."}</p>
+            </Card>
+          </section>);
+        })
+        }
+        <SkeletonList loading={loading  || refreshRequired} number={repos.length < 1?5:1} />
+      </div>
+    </InfiniteScroll>
     </section >
   );
 }

@@ -5,7 +5,7 @@
     "port": 5033
   },
   "defaultFilters": {
-    "size": 5,
+    "size": 4,
     "page": 1,
     "pbiSize":10,
     "sprintSize":6
