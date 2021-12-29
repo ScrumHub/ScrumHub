@@ -245,29 +245,20 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
       }, align: "left" as const, key: 'name', render: (item: IProductBacklogItem) => { return (<div className={item.id === 0 ? '' : 'link-button'} onClick={() => { if (item.id !== 0) { setSelectedPBI(item); setIsModal({ ...isModal, editPBI: true }); } }}>{item.name}</div>) },
     },
     pbiProgressCol, pbiProgressCol2,
-    props.sortedInfo && props.sortedInfo.columnKey === 'pbiPriority' && props.sortedInfo.order?
-    {
-      title: 'Priority',  sorter: {
-        compare: (a: IProductBacklogItem, b: IProductBacklogItem) => a.priority - b.priority,
-        multiple: 1,
-      }, align: "center" as const, width: "20%", key: 'pbiPriority',
-      sortOrder: props.sortedInfo && props.sortedInfo.columnKey === 'pbiPriority' && props.sortedInfo.order,
-      render: (item: IProductBacklogItem) => item.id !== 0 ? <Tag style={{ cursor: "pointer" }} color={backlogColors[item.priority % 3]}>{backlogPriorities[item.priority % 3]}</Tag> : <></>
-    }:
     {
       title: 'Priority', sorter: {
         compare: (a: IProductBacklogItem, b: IProductBacklogItem) => a.priority - b.priority,
         multiple: 1,
       }, align: "center" as const, width: "20%", key: 'pbiPriority',
-      render: (item: IProductBacklogItem) => item.id !== 0 ? <Tag style={{ cursor: "pointer" }} color={backlogColors[item.priority % 3]}>{backlogPriorities[item.priority % 3]}</Tag> : <></>
+      render: (item: IProductBacklogItem) => item.id !== 0 ? <Tag style={{ cursor: "pointer" }} color={backlogColors[item.priority % 3]}>{backlogPriorities[item.priority % 3]}</Tag> : <Tag style={{color:"transparent", backgroundColor:"transparent", borderColor:"transparent" }} color={backlogColors[0]}>{backlogPriorities[0]}</Tag>
     },
     {
       title: 'Story Points', sorter: {
         compare: (a: IProductBacklogItem, b: IProductBacklogItem) => a.priority - b.priority,
         multiple: 1,
       }, width: "20%", key: 'storyPoints', align: "center" as const, render: (item: IProductBacklogItem) => {
-        return (item.id !== 0 && <Tag style={{ cursor: "pointer" }} color={item.estimated ? (item.expectedTimeInHours > 10 ? "red" : "green") : "purple"} onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, estimatePBI: true }); }}>
-          {item.estimated ? (item.expectedTimeInHours + " SP ") : "Not estimated "}{<EditOutlined />}</Tag>)
+        return (item.id !==0? <Tag style={{ cursor: "pointer" }} color={item.estimated ? (item.expectedTimeInHours > 10 ? "red" : "green") : "purple"} onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, estimatePBI: true }); }}>
+          {item.estimated ? (item.expectedTimeInHours + " SP ") : "Not estimated "}{<EditOutlined />}</Tag>:<Tag style={{color:"transparent", backgroundColor:"transparent", borderColor:"transparent" }} color={backlogColors[0]}>{"Not estimated "}{<EditOutlined />}</Tag> )
       }
     },
     {
@@ -309,7 +300,7 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
 
   const sprintColumns = [
     {
-      title: 'Title', width: "20%", align: "left" as const, key: 'sprintNumber',
+      title: 'Title', width: "15%", align: "left" as const, key: 'sprintNumber',
       render: (s: ISprint) => {
         return (s.sprintNumber === 0 ? <div style={{alignSelf:"flex-start"}} key={"sprintName" + s.sprintNumber} >{s.title}</div> : (<div key={"sprintName" + s.sprintNumber} className='link-button' onClick={() => {
           localStorage.setItem("sprintID", JSON.stringify(s.sprintNumber));
@@ -318,21 +309,21 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
       },
     },
     {
-      title: 'Deadline', width: "10%", align: "center" as const, dataIndex: 'finishDate', key: 'finishDate',
+      title: 'Goal', width: "30%", align: "center" as const, dataIndex: 'goal', key: 'sprintTitle',
+    },
+    {
+      title: 'Deadline', width: "15%", align: "center" as const, dataIndex: 'finishDate', key: 'finishDate',
       render: (date: string) =>date ?  <span><CalendarOutlined></CalendarOutlined>{" "+dateFormat(date as unknown as Date)}</span> : ""
     },
     {
-      title: 'Goal', width: "28%", align: "center" as const, dataIndex: 'goal', key: 'sprintTitle',
-    },
-    {
-      title: 'Story Points', width: "21%", align: "center" as const,  key: 'finishDate',
+      title: 'Story Points', width: "15%", align: "center" as const,  key: 'finishDate',
       render: (item: ISprint) => {
         return (item.sprintNumber !== 0 && <Tag style={{ cursor: "pointer" }} color={"purple"} >
           {item && isArrayValid(item.backlogItems) ? (item.backlogItems.map(item=>item.expectedTimeInHours).reduce((prev,next)=>prev+next) + " Story Points ") : "Not estimated "}</Tag>)
       }
     },
     {
-      key: "isCompleted", title: "completed", width: "11%",
+      key: "isCompleted", title: "completed", width: "15%",
       render: (record: ISprint) => {
         return (record.sprintNumber !==0 &&(record.isCompleted?<Tag color={record.status === "Failed" ?"red":"green"}><span>
         {record.status.replace("Not","Not ").replace("In", "In ")}</span></Tag>: <Tag style={{cursor:"pointer"}} onClick={()=>{setSelectedSprint(record); setIsModal({ ...isModal, completeSprint: true });}} color="geekblue"><span>
@@ -340,18 +331,18 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
       align: "center" as const,
     },
     {
-      title: 'Action', width: "15%", align: "right" as const, key: 'action', render: (record: ISprint) => {
+      title: 'Action', width: "10%", align: "right" as const, key: 'action', render: (record: ISprint) => {
         return (record.sprintNumber !== 0 ? <Button key={"action" + record.sprintNumber} size='small' type="link" onClick={() => { setSelectedSprint(record); setIsModal({ ...isModal, updateSprint: true }); }} >
           {"Update"}</Button> : <></>)
       },
     }];
-  return (<div className='backlogScroll' style={{}}onScroll={(e:any)=>{console.log(e.target.clientHeight+"/"+e.target.scrollHeight+"/"+e.target.scrollTop);setSkeletonLoading(e.target.clientHeight>e.target.scrollHeight-e.target.scrollTop); }}>
-    <SprintTableComponent nameFilter={props.nameFilter} key={0} keys={0} peopleFilter={props.peopleFilter} loading={refreshRequired || initialRefresh} data={[{
+  return (<div className='backlogScroll' >
+    <SprintTableComponent sortedInfo={props.sortedInfo && props.sortedInfo.columnKey.includes("pbiPriority")?props.sortedInfo.order:""} nameFilter={props.nameFilter} key={0} keys={0} peopleFilter={props.peopleFilter} loading={refreshRequired || initialRefresh} data={[{
       goal: "",finishDate: "",isCurrent: false,status: "",isCompleted: false, sprintNumber: 0,title: "Product Backlog", backlogItems: pbiPage.list
     } as ISprint] as ISprint[]}
       components={nestedcomponents} columns={sprintColumns} PBITableforSprint={PBITableforSprint} />
     {(sprintPage.list.length > 1 ? sprintPage.list.slice().sort((a:ISprint, b:ISprint) => b.sprintNumber - a.sprintNumber):sprintPage.list).map((sprint, key) => {
-      return (<SprintTableComponent key={sprint.sprintNumber} keys={sprint.sprintNumber} nameFilter={props.nameFilter} peopleFilter={props.peopleFilter} loading={sprintRefreshRequired || initialRefresh}
+      return (<SprintTableComponent key={sprint.sprintNumber} keys={sprint.sprintNumber} sortedInfo={props.sortedInfo} nameFilter={props.nameFilter} peopleFilter={props.peopleFilter} loading={sprintRefreshRequired || initialRefresh}
         data={[sprint] as ISprint[]} components={nestedcomponents} columns={sprintColumns} PBITableforSprint={PBITableforSprint} />)
     })}
     {isModal.editPBI && selectedPBI && selectedPBI.id && <EditPBIPopup data={selectedPBI as IAddPBI} visible={isModal.editPBI}

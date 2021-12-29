@@ -6,7 +6,7 @@ import "./ProductBacklog.css"
 import { useEffect, useState } from "react";
 
 export default function PBITableComponent(props: any) {
-  const [expandedRowKeys, setExpandedRowKeys] = useState([0]);
+  const [expandedRowKeys, setExpandedRowKeys] = useState([]as number[]);
   const updateExpandedRowKeys = (record: IProductBacklogItem) => {
     const rowKey = record.id;
     const isExpanded = expandedRowKeys.includes(rowKey);

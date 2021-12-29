@@ -3,7 +3,7 @@ import { createReducer, PayloadAction } from "@reduxjs/toolkit";
 import { RequestResponse } from "./response";
 import config from "../configuration/config";
 import { IAssignPBI, IError, IMessCodeError,  IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, State } from "./stateInterfaces";
-import { initState, initError, unassignedPBI } from "./initStateValues";
+import { initState, initError, unassignedPBI, initProductBacklogList } from "./initStateValues";
 import { isArrayValid } from "../components/utility/commonFunctions";
 import { getError } from "./stateUtilities";
 var _ = require('lodash');
@@ -647,6 +647,9 @@ export const reducer = createReducer(initState, {
   const tasks = payload.payload.response as ITaskList;
   const pbisList = [unassignedPBI] as IProductBacklogItem[];
   if (tasks && tasks.list.length>0) {
+    if(!newState.pbiPage){
+      newState.pbiPage = initProductBacklogList;
+    }
     if(newState.pbiPage && newState.pbiPage.list && (newState.pbiPage.list.length<1 || newState.pbiPage.list[0].id !==0)){
       newState.pbiPage.list = pbisList.concat(newState.pbiPage.list);//empty pbi that holds unassigned tasks
     }
