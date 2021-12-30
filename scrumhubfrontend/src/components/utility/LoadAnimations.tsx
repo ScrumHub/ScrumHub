@@ -157,7 +157,7 @@ export function MenuWithFilters(props: any) {
         }
     };
     useEffect(() => {
-        if(props.filteredInfo.complete && props.filteredInfo.pbiPriorities){
+        if(props.filteredInfo){
         setFilteredInfo(props.filteredInfo);
         }
     }, [props.filteredInfo]);

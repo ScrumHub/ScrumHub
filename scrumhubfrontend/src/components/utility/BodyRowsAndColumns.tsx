@@ -46,10 +46,7 @@ export const pbiPriorityCol = {
 
 };
 export const pbiProgressCol ={
-  title: 'Progress', sorter: {
-    compare: (a: IProductBacklogItem, b: IProductBacklogItem) => a.priority - b.priority,
-    multiple: 1,
-  },width:"20%", key: 'progressBar', align: "center" as const, render: (item: IProductBacklogItem) => {
+  title: 'Progress', width:"20%", key: 'progressBar', align: "center" as const, render: (item: IProductBacklogItem) => {
     return (<span><Progress className={item.id !== 0 ?"":"transparentEl"}  width={25} size='small' type="line" 
     showInfo={false} percent={isArrayValid(item.tasks) ? 100*(item.tasks.filter((item: ITask) => item.finished).length / item.tasks.length):100}></Progress></span>
     )

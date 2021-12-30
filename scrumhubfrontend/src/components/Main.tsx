@@ -8,7 +8,6 @@ import AppRouter from '../Approuter';
 import { AuthContext } from '../App';
 import { store } from '../appstate/store';
 import { clearReposList, clearState } from '../appstate/actions';
-import config from '../configuration/config';
 //@ts-ignore
 import { useCookies } from "react-cookie";
 import * as Actions from '../appstate/actions';
@@ -92,7 +91,6 @@ function Main(props: any) {
       const newPath = `/${ownerName.split("/")[0]}/${ownerName.split("/")[1]}/Sprints/${activeSprintNumber}`;
       if (location.pathname !== newPath) {
         localStorage.setItem("sprintID", JSON.stringify(activeSprintNumber));
-        store.dispatch(Actions.clearSprintList());
         setSelectedSiderKey('ActiveSprint');
         navigate(newPath, { replace: true });
       }

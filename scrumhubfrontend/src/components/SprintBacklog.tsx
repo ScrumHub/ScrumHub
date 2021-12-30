@@ -2,17 +2,18 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Badge, Button, Dropdown, message, Space, Tag, Typography, } from 'antd';
 import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
-import { IAddPBI, IFilters, IPeopleList, IProductBacklogItem, IProductBacklogList, ISprint, ITask, IUpdateIdSprint, State } from '../appstate/stateInterfaces';
+import { IAddPBI, IFilters, IPeopleList, IProductBacklogItem, IProductBacklogList, ISprint, ITask, State } from '../appstate/stateInterfaces';
 import { AuthContext } from '../App';
 import config from '../configuration/config';
 import { useSelector } from 'react-redux';
 import { DownOutlined, EditOutlined } from '@ant-design/icons';
 import { store } from '../appstate/store';
 import "./SprintProject.css";
+import { useLocation } from 'react-router';
 import PBITableComponent from './BacklogPBITableComponent';
 import TaskTableComponent from './BacklogTaskTableComponent';
 import { taskNameCol, taskStatusCol, taskGhLinkCol, pbiProgressCol, pbiProgressCol2, backlogPriorities, backlogColors } from './utility/BodyRowsAndColumns';
-import { canDropTask, isArrayValid } from './utility/commonFunctions';
+import { canDropTask } from './utility/commonFunctions';
 import { MenuWithPeopleSave } from './utility/LoadAnimations';
 import { assignPerson, updateTask } from './utility/BacklogHandlers';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
@@ -47,20 +48,18 @@ export default function SprintBacklog() {
   const loading = useSelector((appState: State) => appState.loading);
   const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : "";
-  const sprintID = localStorage.getItem("sprintID") ? localStorage.getItem("sprintID") as string : "";
+  const [sprintID, setSprintID] = useState(localStorage.getItem("sprintID") ? localStorage.getItem("sprintID") as string : "");
   const [initialRefresh, setInitialRefresh] = useState(true);
   const refreshRequired = useSelector((appState: State) => appState.sprintRequireRefresh as boolean);
   const sprintPage = useSelector((appState: State) => appState.openSprint as ISprint);
-  
-
-
+  const location = useLocation();
   useEffect(() => {
-    if (initialRefresh) {
-      store.dispatch(Actions.fetchOneSprintThunk({ token: token, ownerName: ownerName, sprintNumber: Number(sprintID) }));
+    if (initialRefresh || (localStorage.getItem("sprintID") && sprintID !== localStorage.getItem("sprintID") as string)) {
+      store.dispatch(Actions.fetchOneSprintThunk({ token: token, ownerName: ownerName, sprintNumber: Number(localStorage.getItem("sprintID") as string) }));
       store.dispatch(Actions.fetchPeopleThunk({ownerName,token}));
       setInitialRefresh(false);
     }
-  }, [initialRefresh]);
+  }, [initialRefresh,localStorage.getItem("sprintID")]);
   const estimatePBI = (pbi: IProductBacklogItem) => {
     try {
       store.dispatch(Actions.estimatePBIThunk({ ownerName: ownerName, token: token, pbiId: selectedPBI.id, hours: pbi.expectedTimeInHours }));

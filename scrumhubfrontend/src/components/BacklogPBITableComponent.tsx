@@ -37,11 +37,7 @@ export default function PBITableComponent(props: any) {
       rowKey={(record: IProductBacklogItem) => record.id}
       expandable={{
         expandedRowRender: props.TaskTableforPBI,
-        expandedRowKeys: expandedRowKeys,
-        defaultExpandAllRows:props.sortedInfo,
-        onExpand: (expanded, record) => {
-          updateExpandedRowKeys(record);
-        },
+        defaultExpandAllRows:true,
         rowExpandable: record => record.tasks && record.tasks.length > 0,
 
       }}

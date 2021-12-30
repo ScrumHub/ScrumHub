@@ -207,28 +207,36 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
   const TaskTableforPBI: React.FC<IProductBacklogItem> = (item: IProductBacklogItem) => { return (<TaskTableComponent peopleFilter={props.peopleFilter} item={item} taskColumns={taskColumns} taskComponents={nestedcomponents} />) };
   const pbiColumns = [
     {
-      title: 'Name', width: "25%", sorter: {
-        compare: (a: IProductBacklogItem, b: IProductBacklogItem) => a.priority - b.priority,
-        multiple: 1,
-      }, align: "left" as const, key: 'name', render: (item: IProductBacklogItem) => { return (<div className={item.id === 0 ? '' : 'link-button'} onClick={() => { if (item.id !== 0) { setSelectedPBI(item); setIsModal({ ...isModal, editPBI: true }); } }}>{item.name}</div>) },
+      title: 'Name', width: "25%", align: "left" as const, key: 'name', render: (item: IProductBacklogItem) => { return (<div className={item.id === 0 ? '' : 'link-button'} onClick={() => { if (item.id !== 0) { setSelectedPBI(item); setIsModal({ ...isModal, editPBI: true }); } }}>{item.name}</div>) },
     },
-    pbiProgressCol, pbiProgressCol2,  (props.filteredInfo && isArrayValid(props.filteredInfo.pbiPriorities) ?
+    pbiProgressCol, pbiProgressCol2, 
+     (props.filteredInfo && isArrayValid(props.filteredInfo.pbiPriorities) ?
+     (props.sortedInfo && props.sortedInfo.columnKey === 'pbiPriority' && props.sortedInfo.order?
         {
           title: 'Priority', sorter: { compare: (a: IProductBacklogItem, b: IProductBacklogItem) => a.priority - b.priority, multiple: 1, }, 
           sortOrder: props.sortedInfo && props.sortedInfo.columnKey === 'pbiPriority' && props.sortedInfo.order,align: "center" as const, width: "20%", key: 'pbiPriority',
           filteredValue: props.filteredInfo.pbiPriorities || null, filters: priorityFilter, onFilter: (value: any, item: IProductBacklogItem) => props.filteredInfo && isArrayValid(props.filteredInfo.pbiPriorities) ? props.filteredInfo.pbiPriorities.includes(item.priority) : item.priority === value,
           render: (item: IProductBacklogItem) =>  <Tag className={item.id !== 0 ?"":"transparentEl"} style={{ cursor: "pointer" }} color={backlogColors[item.priority % 3]}>{backlogPriorities[item.priority % 3]}</Tag>
-        } :
+        }
+        :{
+          title: 'Priority', align:"center" as const, sorter: { compare: (a: IProductBacklogItem, b: IProductBacklogItem) => a.priority - b.priority, multiple: 1, }, 
+          width: "20%", key: 'pbiPriority', filteredValue: props.filteredInfo.pbiPriorities || null, filters: priorityFilter, onFilter: (value: any, item: IProductBacklogItem) => props.filteredInfo && isArrayValid(props.filteredInfo.pbiPriorities) ? props.filteredInfo.pbiPriorities.includes(item.priority) : item.priority === value,
+          render: (item: IProductBacklogItem) =>  <Tag className={item.id !== 0 ?"":"transparentEl"} style={{ cursor: "pointer" }} color={backlogColors[item.priority % 3]}>{backlogPriorities[item.priority % 3]}</Tag>
+        })
+        :(props.sortedInfo && props.sortedInfo.columnKey === 'pbiPriority' && props.sortedInfo.order?
         {
-          title: 'Priority', sorter: { compare: (a: IProductBacklogItem, b: IProductBacklogItem) => a.priority - b.priority, multiple: 1, }, sortOrder: (props.sortedInfo && props.sortedInfo.columnKey === 'pbiPriority' && props.sortedInfo.order)||null,align: "center" as const, width: "20%", key: 'pbiPriority',
-          filters: priorityFilter, onFilter: (value: any, item: IProductBacklogItem) => item.priority === value,
-          render: (item: IProductBacklogItem) => <Tag className={item.id !== 0 ?"":"transparentEl"} style={{ cursor: "pointer" }} color={backlogColors[item.priority % 3]}>{backlogPriorities[item.priority % 3]}</Tag>
-        }),
+          title: 'Priority', sorter: { compare: (a: IProductBacklogItem, b: IProductBacklogItem) => a.priority - b.priority, multiple: 1, }, 
+          sortOrder: props.sortedInfo && props.sortedInfo.columnKey === 'pbiPriority' && props.sortedInfo.order,align: "center" as const, width: "20%", key: 'pbiPriority',
+          filters: priorityFilter, onFilter: (value: any, item: IProductBacklogItem) => props.filteredInfo && isArrayValid(props.filteredInfo.pbiPriorities) ? props.filteredInfo.pbiPriorities.includes(item.priority) : item.priority === value,
+          render: (item: IProductBacklogItem) =>  <Tag className={item.id !== 0 ?"":"transparentEl"} style={{ cursor: "pointer" }} color={backlogColors[item.priority % 3]}>{backlogPriorities[item.priority % 3]}</Tag>
+        }
+        :{
+          title: 'Priority', align:"center" as const, sorter: { compare: (a: IProductBacklogItem, b: IProductBacklogItem) => a.priority - b.priority, multiple: 1, }, 
+          width: "20%", key: 'pbiPriority', filters: priorityFilter, onFilter: (value: any, item: IProductBacklogItem) => props.filteredInfo && isArrayValid(props.filteredInfo.pbiPriorities) ? props.filteredInfo.pbiPriorities.includes(item.priority) : item.priority === value,
+          render: (item: IProductBacklogItem) =>  <Tag className={item.id !== 0 ?"":"transparentEl"} style={{ cursor: "pointer" }} color={backlogColors[item.priority % 3]}>{backlogPriorities[item.priority % 3]}</Tag>
+        })),
     {
-      title: 'Story Points', sorter: {
-        compare: (a: IProductBacklogItem, b: IProductBacklogItem) => a.priority - b.priority,
-        multiple: 1,
-      }, width: "15%", key: 'storyPoints', align: "center" as const, render: (item: IProductBacklogItem) => {
+      title: 'Story Points', width: "15%", key: 'storyPoints', align: "center" as const, render: (item: IProductBacklogItem) => {
         return (<Tag className={item.id !== 0 ?"":"transparentEl"}  style={{ cursor: "pointer" }} color={item.estimated ? (item.expectedTimeInHours > 10 ? "red" : "green") : "purple"} onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, estimatePBI: true }); }}>
           {item.estimated ? (item.expectedTimeInHours + " SP ") : "Not estimated "}{<EditOutlined />}</Tag>)
       }
@@ -313,7 +321,7 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
       const d = sortAndFilterSprints(sprintPage.list, props.sortedInfo, props.filteredInfo);
       setData(d.data);
       setSprintLoading(!d.valid);
-    },[sprintPage.list])
+    },[props.filteredInfo, props.sortedInfo, sprintPage.list])
     console.log(sprintLoading);
   return (<div className='backlogScroll' >
     <SprintTableComponent sortedInfo={props.sortedInfo && props.sortedInfo.columnKey.includes("pbiPriority") ? props.sortedInfo.order : ""} nameFilter={props.nameFilter} key={0} keys={0} peopleFilter={props.peopleFilter} loading={refreshRequired || initialRefresh} data={[{
