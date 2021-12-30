@@ -33,7 +33,7 @@ export const CompleteSprintPopup: React.FC<CollectionCreateFormProps> = ({
         </Button>,
         <Popconfirm
         key="succInComplPopup"
-        title="Are you sure you want to mark this sprint as successful?"
+        title="Are you sure you want to mark this sprint as failed?"
         onConfirm={()=>{onComplete(true)}}
         onCancel={(e) => { message.info("Sprint " +data.sprintNumber+ " was not marked") }}
         okText="Yes"
