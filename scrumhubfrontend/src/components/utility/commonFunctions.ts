@@ -59,13 +59,13 @@ export function sortAndFilterSprints (list:ISprint[], sortedInfo:{columnKey:stri
   const order = isArrayValid(list) && sortedInfo && validateString(sortedInfo.columnKey) && validateString(sortedInfo.order) && sortedInfo.columnKey.includes("sprint")
   ? (sortedInfo.order ==="ascend"?2:1):0;
   const filter = filteredInfo && filteredInfo.complete !== null ? filteredInfo.complete : -1;
-  console.log(filter);
-  return filter===-1?(order === 0  ? list :( order === 1 ?
+  return {data:filter===-1?(order === 0  ? list :( order === 1 ?
     list.slice().sort((a:ISprint, b:ISprint) => a.sprintNumber - b.sprintNumber)
     :list.slice().sort((a:ISprint, b:ISprint) => b.sprintNumber - a.sprintNumber))):
     (order === 0  ? list :( order === 1 ?
       list.slice().sort((a:ISprint, b:ISprint) => a.sprintNumber - b.sprintNumber)
-      :list.slice().sort((a:ISprint, b:ISprint) => b.sprintNumber - a.sprintNumber))).filter((c:ISprint)=> c.isCompleted ===(filteredInfo.complete===1))
+      :list.slice().sort((a:ISprint, b:ISprint) => b.sprintNumber - a.sprintNumber))).filter((c:ISprint)=> c.isCompleted ===(filteredInfo.complete===1)),
+      valid:true}
 }
 
 

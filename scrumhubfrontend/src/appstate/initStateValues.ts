@@ -122,6 +122,7 @@ export const initSprint: ISprint = {
   isCurrent: false,
   status: "New",
   isCompleted: false,
+  expanded:true
 }
 
 export const initSprint2: ISprint = {
@@ -132,7 +133,8 @@ export const initSprint2: ISprint = {
   isCurrent: false,
   status: "New",
   isCompleted: false,
-  title: ""
+  title: "",
+  expanded:true
 }
 
 
@@ -229,4 +231,5 @@ export const backlogSprint: ISprint = {
   status: "New",
   isCompleted: false, sprintNumber: 0, 
   title: "Product Backlog", 
+  expanded:true,
   backlogItems: [] }

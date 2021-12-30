@@ -3,15 +3,15 @@ import { useEffect, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { IPerson, IProductBacklogItem, ISprint, ITask } from "../appstate/stateInterfaces";
+import { store } from "../appstate/store";
 import { useIsMounted, isNameFilterValid, isPeopleFilterValid, isArrayValid } from "./utility/commonFunctions";
 import { initRowIds } from "./utility/commonInitValues";
+import * as Actions from '../appstate/actions';
 
 export default function SprintTableComponent(props: any) {
   const [data, setData] = useState(props.data as ISprint[]);
-  const [expand, setExpanded] = useState(false);
-  const [reload, setReload] = useState(true);
-  const isMounted = useIsMounted();
-  const [expandedRowKeys, setExpandedRowKeys] = useState(isArrayValid(props.data)&& props.data.at(0).isCurrent?[props.data.at(0).sprintNumber]:[0]);
+  const [reload, setReload] = useState(false);
+  const [expandedRowKeys, setExpandedRowKeys] = useState(isArrayValid(props.data)&&props.data.at(0).expanded?[props.data.at(0).sprintNumber]:[]);
   const updateExpandedRowKeys = (record: ISprint) => {
     const rowKey = record.sprintNumber;
     const isExpanded = expandedRowKeys.includes(rowKey);
@@ -26,13 +26,19 @@ export default function SprintTableComponent(props: any) {
       newExpandedRowKeys.push(rowKey);
     }
     setExpandedRowKeys(newExpandedRowKeys);
+    store.dispatch(Actions.updateExpandedSprint(newExpandedRowKeys));
   };
   useEffect(() => {
-    if (!props.loading) {
-      if(!reload){setReload(true);}
+    console.log(props.data);
+    console.log(props.loading);
+    console.log(props.nameFilter);
+    
+
+    /*if (!props.loading && data !== props.data) {
+    if(!reload){setReload(true);}
+      console.log("here");
       const isNameFilter = isNameFilterValid(props.nameFilter);
       const isPeopleFilter = isPeopleFilterValid(props.peopleFilter);
-      setExpanded(isNameFilter);
       const filteredData = isArrayValid(props.data) && (isNameFilter || isPeopleFilter) ?
         ([{
           ...props.data.at(0), backlogItems: isNameFilter ? (
@@ -61,20 +67,27 @@ export default function SprintTableComponent(props: any) {
             })
         }])
         : props.data as ISprint[];
-      setData(filteredData);
+        if(props.data !== filteredData){
+          setData(filteredData);}
       if (isNameFilter && filteredData && filteredData.length > 0 && filteredData.at(0) && (filteredData.at(0) as ISprint).backlogItems && (filteredData.at(0) as ISprint).backlogItems.length > 0) {
-        setExpandedRowKeys([(filteredData.at(0) as ISprint).sprintNumber]);
+        const newExp = [(filteredData.at(0) as ISprint).sprintNumber];
+        if(newExp!== expandedRowKeys){
+        setExpandedRowKeys(newExp);
+        store.dispatch(Actions.updateExpandedSprint(newExp));
+        }
       }
       else if (!isNameFilter) {
-        setExpandedRowKeys(isArrayValid(props.data)&& props.data.at(0).isCurrent?[props.data.at(0).sprintNumber]:[0]);
+        const newExp = isArrayValid(props.data)&&props.data.at(0).expanded?[props.data.at(0).sprintNumber]:[];
+        if(newExp!== expandedRowKeys){
+        setExpandedRowKeys(newExp);
+        store.dispatch(Actions.updateExpandedSprint(newExp));
+        }
       }
       setReload(false);
-    }
+    }*/
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.loading, props.nameFilter, props.data, isMounted]);
-  const handleChange = (pagination: any, filters: any, sorter: any) => {
-    console.log('Various parameters', pagination, filters, sorter);
-  };
+  }, [props.loading, props.nameFilter, props.data]);
+  
   return (
     <DndProvider backend={HTML5Backend} key={"dnd"+props.keys}>
       {<Table
@@ -82,11 +95,10 @@ export default function SprintTableComponent(props: any) {
         style={{ transform: "scale(0.96)", height: "auto"}}
         scroll={{ x: 800 }}
         size="small"
-        loading={props.loading || reload}
+        loading={props.loading||reload}
         showHeader={false}
         pagination={false}
         dataSource={data}
-        onChange={(pagination: any, filters: any, sorter: any)=>{handleChange(pagination, filters, sorter)}}
         columns={props.columns}
         components={props.components}
         rowKey={(record: ISprint) => record.sprintNumber}

@@ -126,6 +126,7 @@ export interface ISprint {
   isCurrent: boolean;
   status: string;
   isCompleted: boolean;
+  expanded:boolean;
 }
 export interface IUpdateIdSprint {
   goal: string;

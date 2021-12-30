@@ -24,9 +24,10 @@ export default function PBITableComponent(props: any) {
   };
   useEffect(() => {
     if (expandedRowKeys && expandedRowKeys.length > 1) {
-      setExpandedRowKeys(expandedRowKeys);
+      //setExpandedRowKeys(expandedRowKeys);
     }
   }, [props.sortedInfo]);
+  console.log(expandedRowKeys);
   return (
     <Table
       size="small"

@@ -516,3 +516,6 @@ export const clearSprintList = createAction("clearSprintList");
 export const clearSprint = createAction("clearSprint");
 export const clearReposList = createAction("clearReposList");
 export const clearPBIsList = createAction("clearPBIsList");
+export const updateExpandedSprint = createAction<number[]>("updateExpandedSprint");
+//export const updateExpandedPbi = createAction<number[]>("updateExpandedPbi");
+//export const updateExpandedTask = createAction<number[]>("updateExpandedTask");

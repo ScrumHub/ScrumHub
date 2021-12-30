@@ -32,6 +32,7 @@ export const EstimatePBIPopup: React.FC<CollectionCreateFormProps> = ({
     else {
       setSlicedData(data.acceptanceCriteria.slice(0, slicedData.length + 2).map((data, key) => { return { "key": key, "acceptanceCriteria": data } }));
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const [value, setValue] = useState(data.expectedTimeInHours);
   const marks = {
@@ -79,7 +80,6 @@ export const EstimatePBIPopup: React.FC<CollectionCreateFormProps> = ({
           key="progress"
           style={{ width: "87%" }}
         >  <>
-
             <Progress percent={data.tasks && data.tasks.length > 0 ? (100 * data.tasks.filter((item: ITask) => !item.assigness || item.assigness.length < 1).length / data.tasks.length) : 100}
               format={percent => `${data.tasks && data.tasks.length > 0 ? data.tasks.filter((item: ITask) => !item.assigness || item.assigness.length < 1).length : 0} Assigned`} ></Progress>
             <br />

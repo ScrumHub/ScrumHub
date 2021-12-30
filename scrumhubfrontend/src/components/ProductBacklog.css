@@ -60,19 +60,9 @@
     scrollbar-width: none;
   }
 
-
-  /*::-webkit-scrollbar { 
-    overflow-y: hidden !important;   
-    overflow-x: scroll !important;   
-  }*/
-  
-  /* Hide scrollbar for IE, Edge and Firefox */
-  .backlogNestScroll {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
-  }
-  .backlogHorScroll {
-    overflow-x: scroll;
-    width: 800;
+  .transparentEl {
+    color: transparent;
+     background-color:  transparent;
+      border-color:  transparent;
   }
 

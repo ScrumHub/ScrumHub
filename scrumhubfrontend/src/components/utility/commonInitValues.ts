@@ -1,4 +1,5 @@
 import { IFilters } from "../../appstate/stateInterfaces";
+import { backlogPriorities } from "./BodyRowsAndColumns";
 import { IModals, IRowIds } from "./commonInterfaces";
 
 export const initIDs: IFilters = {
@@ -31,3 +32,6 @@ export const initIDs: IFilters = {
       sm: { offset: 0 },
     },
   };
+
+  export const priorityFilter = [{ text: backlogPriorities[0], value: 0, }, { text: backlogPriorities[1], value: 1, }, { text: backlogPriorities[2], value: 2, },];
+  
