@@ -50,7 +50,7 @@ export function fetchRepositories(filters: IFilters, token: string
         .join("&");
   return getResponse(
     axios.get(
-      `https://${config.backend.ip}:${config.backend.port}/api/Repositories?${filtersString}`,
+      `${config.backend.ip}:${config.backend.port}/api/Repositories?${filtersString}`,
       { headers: getHeader(token, config),}
     )
   );
@@ -60,7 +60,7 @@ export function addRepository(id: number, token: string,
 ): Promise<RequestResponse<IRepository, number>> {
   return getResponse(
     axios.post(
-      `https://${config.backend.ip}:${config.backend.port}/api/Repositories`,
+      `${config.backend.ip}:${config.backend.port}/api/Repositories`,
       { "index": JSON.stringify(id) },
       {headers: getHeaderWithContent(token, config)}
     )
@@ -81,7 +81,7 @@ export function fetchPBIs(ownerName: any, token: string, filters: IFilters
         .join("&");
   return getResponse(
     axios.get(
-      `https://${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}?${filtersString}`,
+      `${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}?${filtersString}`,
       {headers: getHeader(token, config)}
     )
   );
@@ -91,7 +91,7 @@ export function fetchPeople(ownerName: string, token: string
 ): Promise<RequestResponse<IProductBacklogList, number>> {
   return getResponse(
     axios.get(
-      `https://${config.backend.ip}:${config.backend.port}/api/People/${ownerName}`,
+      `${config.backend.ip}:${config.backend.port}/api/People/${ownerName}`,
       {
         headers: getHeader(token, config)
       }
@@ -102,7 +102,7 @@ export function getCurrentUser(token: string
 ): Promise<RequestResponse<IPerson, number>> {
   return getResponse(
     axios.get(
-      `https://${config.backend.ip}:${config.backend.port}/api/People/current`,
+      `${config.backend.ip}:${config.backend.port}/api/People/current`,
       {
         headers: getHeader(token, config)
       }
@@ -114,7 +114,7 @@ export function finishPBI(ownerName: string, token: string, pbild: number
 ): Promise<RequestResponse<IProductBacklogItem, number>> {
   return getResponse(
     axios.patch(
-      `https://${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}/${pbild}/finish`,
+      `${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}/${pbild}/finish`,
       {}, { headers: getHeader(token, config) }
     )
   );
@@ -124,7 +124,7 @@ export function deletePBI(ownerName: string, token: string, pbild: number
 ): Promise<RequestResponse<any, any>> {
   return getResponse(
     axios.delete(
-      `https://${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}/${pbild}`,
+      `${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}/${pbild}`,
       {
         headers: getHeaderAcceptAll(token, config)
       }
@@ -136,7 +136,7 @@ export function addPBI(ownerName: string, token: string, pbi: IAddPBI
 ): Promise<RequestResponse<IProductBacklogItem, number>> {
   return getResponse(
     axios.post(
-      `https://${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}`,
+      `${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}`,
       {
         "name": pbi.name,
         "priority": pbi.priority,
@@ -153,7 +153,7 @@ export function estimatePBI(ownerName: string, token: string, pbiId: number, hou
 ): Promise<RequestResponse<IProductBacklogItem, number>> {
   return getResponse(
     axios.patch(
-      `https://${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}/${pbiId}/estimate`,
+      `${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}/${pbiId}/estimate`,
       { "hours": JSON.stringify(hours) }, { headers: getHeader(token, config) }
     )
   );
@@ -163,7 +163,7 @@ export function editPBI(ownerName: string, token: string, pbi: IAddPBI, pbiId: n
 ): Promise<RequestResponse<IProductBacklogItem, number>> {
   return getResponse(
     axios.put(
-      `https://${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}/${pbiId}`,
+      `${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}/${pbiId}`,
       {
         "name": pbi.name,
         "priority": pbi.priority,
@@ -189,7 +189,7 @@ export function fetchSprints(token: string, ownerName: string, filters: IFilters
         .join("&");
   return getResponse(
     axios.get(
-      `https://${config.backend.ip}:${config.backend.port}/api/Sprints/${ownerName}?${filtersString}`
+      `${config.backend.ip}:${config.backend.port}/api/Sprints/${ownerName}?${filtersString}`
       , { headers: getHeader(token, config) }
     )
   );
@@ -199,7 +199,7 @@ export function fetchOneSprint(token: string, ownerName: string, sprintNumber: n
 ): Promise<RequestResponse<ISprint, number>> {
   return getResponse(
     axios.get(
-      `https://${config.backend.ip}:${config.backend.port}/api/Sprints/${ownerName}/${sprintNumber}`
+      `${config.backend.ip}:${config.backend.port}/api/Sprints/${ownerName}/${sprintNumber}`
       , { headers: getHeader(token, config) }
     )
   );
@@ -210,7 +210,7 @@ export function updateOneSprint(token: string, ownerName: string, sprintNumber: 
 ): Promise<RequestResponse<ISprint, number>> {
   return getResponse(
     axios.put(
-      `https://${config.backend.ip}:${config.backend.port}/api/Sprints/${ownerName}/${sprintNumber}`,
+      `${config.backend.ip}:${config.backend.port}/api/Sprints/${ownerName}/${sprintNumber}`,
       sprint, { headers: getHeaderWithContent(token, config) }
     )
   );
@@ -220,7 +220,7 @@ export function completeOneSprint(token: string, ownerName: string, sprintNumber
   ): Promise<RequestResponse<ISprint, number>> {
     return getResponse(
       axios.put(
-        `https://${config.backend.ip}:${config.backend.port}/api/Sprints/${ownerName}/${sprintNumber}/finish?failed=${isFailure}`,
+        `${config.backend.ip}:${config.backend.port}/api/Sprints/${ownerName}/${sprintNumber}/finish?failed=${isFailure}`,
          {},{ headers: getHeader(token, config) }
       )
     );
@@ -230,7 +230,7 @@ export function addSprint(token: string, ownerName: string, sprint: any
 ): Promise<RequestResponse<ISprint, number>> {
   return getResponse(
     axios.post(
-      `https://${config.backend.ip}:${config.backend.port}/api/Sprints/${ownerName}`,
+      `${config.backend.ip}:${config.backend.port}/api/Sprints/${ownerName}`,
       sprint, { headers: getHeader(token, config) }
     )
   );
@@ -251,7 +251,7 @@ export function fetchTasks(token: string, ownerName: string, filters: IFilters,
         .join("&");
   return getResponse(
     axios.get(
-      `https://${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}?${filtersString}`,
+      `${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}?${filtersString}`,
       { headers: getHeader(token, config) }
     )
   );
@@ -261,7 +261,7 @@ export function fetchPBITasks(token: string, ownerName: string, pbiId: number,
 ): Promise<RequestResponse<ITaskList, number>> {
   return getResponse(
     axios.get(
-      `https://${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/PBI/${pbiId}`,
+      `${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/PBI/${pbiId}`,
       { headers: getHeader(token, config) }
     )
   );
@@ -271,7 +271,7 @@ export function addTasksToPBI(token: string, ownerName: string, pbiId: number,
 ): Promise<RequestResponse<ITaskList, number>> {
   return getResponse(
     axios.get(
-      `https://${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/PBI/${pbiId}`,
+      `${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/PBI/${pbiId}`,
       { headers: getHeader(token, config) }
     )
   );
@@ -281,7 +281,7 @@ export function addTasksToSprint(token: string, ownerName: string, pbiId: number
 ): Promise<RequestResponse<ITaskList, number>> {
   return getResponse(
     axios.get(
-      `https://${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/PBI/${pbiId}`,
+      `${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/PBI/${pbiId}`,
       { headers: getHeader(token, config) }
     )
   );
@@ -291,7 +291,7 @@ export function addTask(token: string, ownerName: string, pbiId: number, name: s
 ): Promise<RequestResponse<ITask, number>> {
   return getResponse(
     axios.post(
-      `https://${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}`,
+      `${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}`,
       {
         "name": name,
         "pbiId": pbiId.toString()
@@ -313,7 +313,7 @@ export function getPBINames(ownerName: any, token: string, filters: IFilters
         .join("&");
   return getResponse(
     axios.get(
-      `https://${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}?${filtersString}`,
+      `${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}?${filtersString}`,
       { headers: getHeader(token, config) }
     )
   );
@@ -323,7 +323,7 @@ export function assignTaskToPBI(token: string, ownerName: string, pbiId: number,
 ): Promise<RequestResponse<ITask, number>> {
   return getResponse(
     axios.patch(
-      `https://${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/${taskId}/assignpbi`,
+      `${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/${taskId}/assignpbi`,
       { "index": pbiId === null ? 0 : pbiId }, { headers: getHeader(token, config) }
     )
   );
@@ -332,7 +332,7 @@ export function assignPersonToTask(token: string, ownerName: string, login: stri
 ): Promise<RequestResponse<ITask, number>> {
   return getResponse(
     axios.patch(
-      `https://${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/${taskId}/assignperson`,
+      `${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/${taskId}/assignperson`,
       { "login": login}, { headers: getHeader(token, config) }
     )
   );
@@ -342,7 +342,7 @@ export function unassignPersonToTask(token: string, ownerName: string, login: st
 ): Promise<RequestResponse<ITask, number>> {
   return getResponse(
     axios.patch(
-      `https://${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/${taskId}/unassignperson`,
+      `${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/${taskId}/unassignperson`,
       {"login": login}, { headers: getHeader(token, config) }
     )
   );

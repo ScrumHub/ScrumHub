@@ -1,7 +1,7 @@
 {
   "environment_name": "Production",
   "backend": {
-    "ip": "localhost",
+    "ip": "http://localhost",
     "port": 5033
   },
   "defaultFilters": {
