@@ -9,6 +9,8 @@ namespace ScrumHubBackend
     /// </summary>
     public class DatabaseContext : DbContext
     {
+        private ILogger<DatabaseContext>? _logger;
+
         /// <summary>
         /// Repositories in ScrumHub
         /// </summary>
@@ -42,8 +44,9 @@ namespace ScrumHubBackend
         /// <summary>
         /// Construtor
         /// </summary>
-        public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) 
+        public DatabaseContext(DbContextOptions<DatabaseContext> options, ILogger<DatabaseContext> logger) : base(options) 
         {
+            _logger = logger;
             Database.EnsureCreated();
         }
 
