@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ScrumHubBackend.Common;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ScrumHubBackend.DatabaseModel
@@ -33,6 +34,12 @@ namespace ScrumHubBackend.DatabaseModel
         /// </summary>
         [Required]
         public long RepositoryId { get; set; }
+
+        /// <summary>
+        /// Status of the task
+        /// </summary>
+        [Required]
+        public SHTaskStatus Status { get; set; }
 
         /// <summary>
         /// Id of the PBI where the task is assigned
@@ -78,6 +85,8 @@ namespace ScrumHubBackend.DatabaseModel
             GitHubIssueNumberInRepo = issue.Number;
             RepositoryId = repository.Id;
             PBI = pbiAssignedToTheTask;
+
+            Status = issue.State.Value == Octokit.ItemState.Closed ? SHTaskStatus.Finished : SHTaskStatus.New;
         }
     }
 }

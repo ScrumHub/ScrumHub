@@ -268,5 +268,41 @@ namespace ScrumHubBackend.Controllers
             var result = await _mediator.Send(query);
             return Ok(result);
         }
+
+        /// <summary>
+        /// Starts the task by creating a branch (requires admin permissions in repository)
+        /// </summary>
+        /// <param name="authToken">Authorization token of user</param>
+        /// <param name="repositoryOwner">Owner of the repository</param>
+        /// <param name="repositoryName">Name of the repository</param>
+        /// <param name="taskId">Id of the task</param>
+        /// <param name="hotFix">Should create hotfix branch? True for hotfix, false/not present for feature</param>
+        [HttpPatch("{repositoryOwner}/{repositoryName}/{taskId}/start")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(SHTask), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(ErrorMessage), (int)HttpStatusCode.Conflict)]
+        public async Task<IActionResult> StartTask(
+            [FromHeader] string authToken,
+            [FromRoute] string repositoryOwner,
+            [FromRoute] string repositoryName,
+            [FromRoute] long taskId,
+            [FromQuery] bool? hotFix
+            )
+        {
+            var query = new CreateBranchForTaskCommand
+            {
+                AuthToken = authToken,
+                RepositoryOwner = repositoryOwner,
+                RepositoryName = repositoryName,
+                TaskId = taskId,
+                BranchPrefix = hotFix.GetValueOrDefault() ? "hotfix" : "feature"
+            };
+
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        }
     }
 }

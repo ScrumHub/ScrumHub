@@ -13,15 +13,17 @@ namespace ScrumHubBackend.CQRS.Tasks
         private readonly ILogger<ChangePersonInTaskCommandHandler> _logger;
         private readonly IGitHubClientFactory _gitHubClientFactory;
         private readonly DatabaseContext _dbContext;
+        private readonly IGitHubResynchronization _gitHubResynchronization;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public ChangePersonInTaskCommandHandler(ILogger<ChangePersonInTaskCommandHandler> logger, IGitHubClientFactory clientFactory, DatabaseContext dbContext)
+        public ChangePersonInTaskCommandHandler(ILogger<ChangePersonInTaskCommandHandler> logger, IGitHubClientFactory clientFactory, IGitHubResynchronization gitHubResynchronization, DatabaseContext dbContext)
         {
             _logger = logger ?? throw new ArgumentException(null, nameof(logger));
             _dbContext = dbContext ?? throw new ArgumentException(null, nameof(dbContext));
             _gitHubClientFactory = clientFactory ?? throw new ArgumentException(null, nameof(clientFactory));
+            _gitHubResynchronization = gitHubResynchronization ?? throw new ArgumentException(null, nameof(gitHubResynchronization));
         }
 
         /// <inheritdoc/>
@@ -32,7 +34,6 @@ namespace ScrumHubBackend.CQRS.Tasks
 
             var gitHubClient = _gitHubClientFactory.Create(request.AuthToken);
 
-            // If it does not exists then user does not have permissions to read id
             var repository = gitHubClient.Repository.Get(request.RepositoryOwner, request.RepositoryName).Result;
 
             var dbRepository = _dbContext.Repositories?.FirstOrDefault(repo => repo.FullName == repository.FullName);

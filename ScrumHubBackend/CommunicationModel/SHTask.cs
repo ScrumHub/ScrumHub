@@ -1,4 +1,5 @@
-﻿using ScrumHubBackend.GitHubClient;
+﻿using ScrumHubBackend.Common;
+using ScrumHubBackend.GitHubClient;
 
 namespace ScrumHubBackend.CommunicationModel
 {
@@ -18,9 +19,14 @@ namespace ScrumHubBackend.CommunicationModel
         public string Name { get; set; } = String.Empty;
 
         /// <summary>
+        /// Status of the task
+        /// </summary>
+        public SHTaskStatus Status { get; set; } = SHTaskStatus.New;
+
+        /// <summary>
         /// Flag if the PBI was finished
         /// </summary>
-        public bool Finished { get; set; } = false;
+        public bool Finished { get => Status == SHTaskStatus.Finished; }
 
         /// <summary>
         /// PBI where the task is assigned
@@ -60,7 +66,7 @@ namespace ScrumHubBackend.CommunicationModel
 
             Id = dbTask.Id;
             Name = issue.Title;
-            Finished = issue.State.Value == Octokit.ItemState.Closed;
+            Status = dbTask.Status;
             PBIId = dbTask.PBI;
             Link = issue.HtmlUrl;
 

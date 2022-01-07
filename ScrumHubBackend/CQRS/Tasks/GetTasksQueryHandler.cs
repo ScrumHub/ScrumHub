@@ -54,7 +54,7 @@ namespace ScrumHubBackend.CQRS.Tasks
 
             var issues = issuesAndPullRequests.Where(iss => iss.PullRequest == null);
 
-            _gitHubResynchronization.ResynchronizeIssues(repository, issues, _dbContext);
+            _gitHubResynchronization.ResynchronizeIssues(repository, gitHubClient, _dbContext);
 
             return Task.FromResult(PaginateTasks(issues ?? new List<Octokit.Issue>(), request.PageNumber, request.PageSize, request.OnePage));
         }
