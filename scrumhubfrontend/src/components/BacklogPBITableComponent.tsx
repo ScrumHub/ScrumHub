@@ -7,6 +7,9 @@ import { useEffect, useState } from "react";
 
 export default function PBITableComponent(props: any) {
   const [expandedRowKeys, setExpandedRowKeys] = useState([]as number[]);
+  const handleChange = (pagination: any, filters: any, sorter: any) => {
+    console.log('Various parameters', pagination, filters, sorter);
+  };
   const updateExpandedRowKeys = (record: IProductBacklogItem) => {
     const rowKey = record.id;
     const isExpanded = expandedRowKeys.includes(rowKey);
@@ -45,6 +48,7 @@ export default function PBITableComponent(props: any) {
 
       }}
       components={props.nestedcomponents}
+      onChange={(pagination: any, filters: any, sorter: any)=>{handleChange(pagination, filters, sorter)}}
       dataSource={props.item.backlogItems}//:item.backlogItems.filter((item:IProductBacklogItem)=>{item.name.startsWith(filterPBI.nameFilter as string)})}
       pagination={false}
       onRow={(row, id) => {

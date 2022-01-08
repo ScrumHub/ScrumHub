@@ -209,4 +209,5 @@ export type State = {
   people: IPeopleList;
   activeSprintNumber:number;
   currentUser: IPerson|null;
+  sprintKeys:number[];
 };

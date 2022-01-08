@@ -220,7 +220,8 @@ export const initState: State = {
   ownerName: "",
   people: initPeopleList,
   currentUser: null,
-  activeSprintNumber: -1
+  activeSprintNumber: -1,
+  sprintKeys: []
 };
 export const backlogSprint: ISprint = { 
   goal: "",

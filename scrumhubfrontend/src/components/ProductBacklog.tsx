@@ -227,7 +227,7 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
     render: (item: IProductBacklogItem) => item.id !== 0 ? <Tag style={{ cursor: "pointer" }} color={backlogColors[item.priority % 3]}>{backlogPriorities[item.priority % 3]}</Tag> : <Tag style={{color:"transparent", backgroundColor:"transparent", borderColor:"transparent" }} color={backlogColors[0]}>{backlogPriorities[0]}</Tag>
   }),
     {
-      title: 'Story Points', sorter: {
+      title: 'Story Points',  sorter: {
         compare: (a: IProductBacklogItem, b: IProductBacklogItem) => a.priority - b.priority,
         multiple: 1,
       }, width: "15%", key: 'storyPoints', align: "center" as const, render: (item: IProductBacklogItem) => {
@@ -236,7 +236,7 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
       }
     },
     {
-      title: '', align: "right" as const, width: "15%", key: 'actions', render: (item: IProductBacklogItem) => {
+      title: '',  align: "right" as const, width: "15%", key: 'actions', render: (item: IProductBacklogItem) => {
         return ( <span >
             <Button size='small' type="link" onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, addTask: true }); }} >
               {"Add Task"}</Button></span>)
