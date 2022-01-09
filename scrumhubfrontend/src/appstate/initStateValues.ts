@@ -1,4 +1,5 @@
 import moment from "moment";
+import { initKeys as initTableKeys } from "../components/utility/commonInitValues";
 import config from "../configuration/config"
 import { IAddPBI, IAssignPBI, IFilters, IPBIFilter, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, ITaskNamed, IUpdateIdSprint, State } from "./stateInterfaces";
 
@@ -163,12 +164,12 @@ export const initRepository: IRepository = {
   typeOfLastActivity: ""
 }
 
-export const initPeople: IPerson = {
-  name: "string",
-  login: "string",
+export const initPerson: IPerson = {
+  name: "",
+  login: "",
   gitHubId: 0,
-  avatarLink: "string",
-  isCurrentUser: true
+  avatarLink: "",
+  isCurrentUser: false
 }
 
 
@@ -219,9 +220,9 @@ export const initState: State = {
   repoId: -1,
   ownerName: "",
   people: initPeopleList,
-  currentUser: null,
+  currentUser: initPerson,
   activeSprintNumber: -1,
-  sprintKeys: []
+  keys: initTableKeys
 };
 export const backlogSprint: ISprint = { 
   goal: "",

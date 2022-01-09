@@ -32,3 +32,8 @@
     sprintNumber:number;
     estimated:boolean;
   }
+
+  export interface tableKeys{
+    sprintKeys:number[],
+    pbiKeys:number[],
+  }

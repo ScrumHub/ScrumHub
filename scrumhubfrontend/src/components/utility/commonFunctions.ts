@@ -59,7 +59,6 @@ export function sortAndFilterSprints (list:ISprint[], sortedInfo:{columnKey:stri
   const order = isArrayValid(list) && sortedInfo && validateString(sortedInfo.columnKey) && validateString(sortedInfo.order) && sortedInfo.columnKey.includes("sprint")
   ? (sortedInfo.order ==="ascend"?2:1):0;
   const filter = filteredInfo && filteredInfo.complete !== null ? filteredInfo.complete : -1;
-  console.log(filter);
   return filter===-1?(order === 0  ? list :( order === 1 ?
     list.slice().sort((a:ISprint, b:ISprint) => a.sprintNumber - b.sprintNumber)
     :list.slice().sort((a:ISprint, b:ISprint) => b.sprintNumber - a.sprintNumber))):
@@ -72,4 +71,25 @@ export function sortAndFilterSprints (list:ISprint[], sortedInfo:{columnKey:stri
 export function getIndex(record: ISprint) {
   return record.sprintNumber;
 }
+
+export function updateRowKeys(record: ISprint, expandedRowKeys:any[]) {
+  const rowKey = record.sprintNumber;
+  const isExpanded = expandedRowKeys.includes(rowKey);
+  let newExpandedRowKeys = [] as number[];
+  if (isExpanded) {
+    newExpandedRowKeys = expandedRowKeys.reduce((acc: number[], key: number) => {
+      if (key !== rowKey) { acc.push(key) };
+      return acc;
+    }, []);
+  } else {
+    newExpandedRowKeys = expandedRowKeys;
+    newExpandedRowKeys.push(rowKey);
+  }
+  return(newExpandedRowKeys);
+};
+
+export function updateKeys(oldKeys:number[], newKeys:number[]) {
+   //remove unexpanded
+  return((oldKeys.filter((key:number)=>!newKeys.includes(key))).concat(newKeys.filter((key:number)=>!oldKeys.includes(key))));
+};
 

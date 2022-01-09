@@ -1,4 +1,5 @@
 import  { Moment } from "moment";
+import { tableKeys } from "../components/utility/commonInterfaces";
 
 export type Error = {
   hasError: boolean;
@@ -208,6 +209,6 @@ export type State = {
   namedPBI: IAssignPBI[];
   people: IPeopleList;
   activeSprintNumber:number;
-  currentUser: IPerson|null;
-  sprintKeys:number[];
+  currentUser: IPerson;
+  keys:tableKeys;
 };

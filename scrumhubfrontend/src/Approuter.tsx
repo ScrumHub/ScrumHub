@@ -12,6 +12,7 @@ const AppRouter = () => {
             <Route path="/teams" element={<Teams/>}/>
             <Route path={`/:owner/:name`} element={<Project/>}/>
             <Route path={`/:owner/:name/Sprints/:number`} element={<SprintBacklog/>}/>
+            <Route path={`/:owner/:name/active-sprint`} element={<SprintBacklog/>}/>
         </Routes>
     );
 }

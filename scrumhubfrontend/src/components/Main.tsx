@@ -7,8 +7,7 @@ import { useState, useEffect } from 'react';
 import AppRouter from '../Approuter';
 import { AuthContext } from '../App';
 import { store } from '../appstate/store';
-import { clearReposList, clearState } from '../appstate/actions';
-import config from '../configuration/config';
+import { clearState } from '../appstate/actions';
 //@ts-ignore
 import { useCookies } from "react-cookie";
 import * as Actions from '../appstate/actions';
@@ -27,6 +26,7 @@ function Main(props: any) {
   const { state, dispatch: unAuth } = useContext(AuthContext);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [cookies, setCookie, removeCookie] = useCookies();
+  const [load, setLoad] = useState(false);
   const { isLoggedIn, token } = state;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const location = useLocation();
@@ -57,7 +57,7 @@ function Main(props: any) {
         type: "LOGOUT"
       });
       setLogout(false);
-      if (!isLoggedIn) {
+      if (!state.isLoggedIn) {
         navigate("/login",{replace:true});
       }
     }
@@ -70,30 +70,32 @@ function Main(props: any) {
     store.dispatch(Actions.clearProject());
     localStorage.removeItem("ownerName");
     localStorage.removeItem("sprintID");
-    if (location.pathname === "/") {
-      store.dispatch(clearReposList());
+    if (location.pathname !== "/") {
+      navigate("/", { replace: true });
+      //store.dispatch(clearReposList());
     }
-    navigate("/", { replace: true });
+    
   }
   const [selectedSiderKey, setSelectedSiderKey] = useState('2');
   const handlePBacklog = () => {
     if (ownerName && ownerName !== "") {
       const newPath = `/${ownerName.split("/")[0]}/${ownerName.split("/")[1]}`;
       if (location.pathname !== newPath) {
-        localStorage.removeItem("sprintID");
-        store.dispatch(clearState());
+        //localStorage.removeItem("sprintID");
         setSelectedSiderKey('ProductBacklog');
+        //return(<Link to={newPath} replace={true}/>);
         navigate(newPath, { replace: true });
       }
     }
   }
   const handleActiveSprint = () => {
     if (ownerName && ownerName !== "" && activeSprintNumber !== -1) {
-      const newPath = `/${ownerName.split("/")[0]}/${ownerName.split("/")[1]}/Sprints/${activeSprintNumber}`;
+      const newPath = `/${ownerName.split("/")[0]}/${ownerName.split("/")[1]}/active-sprint`;
       if (location.pathname !== newPath) {
         localStorage.setItem("sprintID", JSON.stringify(activeSprintNumber));
-        store.dispatch(Actions.clearSprintList());
         setSelectedSiderKey('ActiveSprint');
+        store.dispatch(Actions.fetchOneSprintThunk({ token: token, ownerName: ownerName, sprintNumber: Number(localStorage.getItem("sprintID") as string) }));
+        store.dispatch(Actions.fetchPeopleThunk({ownerName,token}));
         navigate(newPath, { replace: true });
       }
     }
@@ -106,15 +108,16 @@ function Main(props: any) {
   }, [error]);
 
   useEffect(() => {
-    if (state.isLoggedIn && currentUser===null) {
+    if (state.isLoggedIn && !currentUser.isCurrentUser && !load) {
+      setLoad(true);
       store.dispatch(
         Actions.getCurrentUserThunk({
           token: token,
         })
-      );
+      ).then(()=>{setLoad(false);});
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUser, state.isLoggedIn]);
+  }, [currentUser, load, state.isLoggedIn]);
 
   if(ownerName === null && location.pathname !== "/"){handleProjects();}
 
@@ -125,11 +128,11 @@ function Main(props: any) {
         <Header hidden={!isLoggedIn} className="clearfix" style={{ position: 'fixed', zIndex: 1, padding: 0, height: "5vh", lineHeight: "5vh", width: "100%", backgroundColor: "#f0f0f0" }}>
           <Menu mode="horizontal" theme="light"
             className="mainMenu" >
-              <SubMenu style={{ float: "unset" }} key="SubMenu0" title={currentUser?currentUser.login as string:""} icon={
-                currentUser?<Avatar style={{ transform: "scale(0.8)", marginBottom: "0.4vh" }} size="small" src={`${currentUser?currentUser.avatarLink:""}`} ></Avatar>:<></>}>
-                <Menu.Item key="SubMenu4">
-                  <a href={"https://github.com/" + currentUser!==null?currentUser?.login:""}>See on Github</a>
-                </Menu.Item>
+              <SubMenu style={{ float: "unset" }} key="SubMenu0" title={currentUser.isCurrentUser?currentUser.login:""} icon={
+                currentUser.isCurrentUser?<Avatar style={{ transform: "scale(0.8)", marginBottom: "0.4vh" }} size="small" src={`${currentUser.avatarLink}`} ></Avatar>:<></>}>
+                {currentUser.isCurrentUser&&<Menu.Item key="SubMenu4">
+                <a href={"https://github.com/" + currentUser.login}>See on Github</a>
+                </Menu.Item>}
 
               </SubMenu>
             <Menu.Item className='mainMenuItem' key="proj" onClick={() => handleProjects()}><span style={{ maxHeight: "1vh" }}>Projects</span></Menu.Item>
@@ -156,7 +159,7 @@ function Main(props: any) {
             <Content style={ownerName === "" ? {} : { padding: '0 50px' }}>
               <div style={{ minHeight: "90vh", margin: 0 }}>
                 {ownerName !== "" && <PageHeader className="pageHeader"
-                  title={<div style={{ fontWeight: "bold", lineHeight: 1.25, paddingTop: 0, marginTop: 0, }}>{sprintID && sprintID !== "0" && sprintPage && sprintPage.title?sprintPage.title: "Product Backlog"}</div>}
+                  title={<div style={{ fontWeight: "bold", lineHeight: 1.25, paddingTop: 0, marginTop: 0, }}>{sprintID && sprintID !== "0" && sprintPage && sprintPage.title && Number(sprintID)===sprintPage.sprintNumber?sprintPage.title: location.pathname.includes("Sprint")?"":"Product Backlog"}</div>}
                   breadcrumb={<Breadcrumb style={{ marginTop: 0, marginBottom: 0, }} itemRender={ItemRender} routes={routes(ownerName, sprintID, location)} />}
                 >
                 </PageHeader>}

@@ -1,45 +1,47 @@
 import { Table } from "antd";
-import { IProductBacklogItem } from "../appstate/stateInterfaces";
-import { initRowIds } from "./utility/commonInitValues";
+import { IProductBacklogItem, ISprint, State } from "../appstate/stateInterfaces";
+import { initRowIds, initSortedInfo } from "./utility/commonInitValues";
 import { IRowIds } from "./utility/commonInterfaces";
 import "./ProductBacklog.css"
 import { useEffect, useState } from "react";
+import * as Actions from '../appstate/actions';
+import { store } from "../appstate/store";
+import { useSelector } from "react-redux";
 
 export default function PBITableComponent(props: any) {
-  const [expandedRowKeys, setExpandedRowKeys] = useState([]as number[]);
+  const keys = useSelector((appState: State) => appState.keys.pbiKeys as number[]);
+  const updateExpandedRowKeys = (record: IProductBacklogItem) => {
+    store.dispatch(Actions.updatePBIKeys([record.id]));
+  };
   const handleChange = (pagination: any, filters: any, sorter: any) => {
+    if (props.itemSelected && filters && typeof(filters.pbiPriority)!=="undefined" && (props.filteredInfos && props.filteredInfo.pbiPriorities? filters.pbiPriority !== props.filteredInfo.pbiPriorities:true)){
+          props.itemSelected(filters.pbiPriority);
+    }
+
+    if (props.sortSelected && sorter && sorter.order!==false)
+    {
+      if(typeof(sorter.order)!=="undefined" && (props.sortedInfo ? (sorter.order !== props.sortedInfo.order || sorter.columnKey !== props.sortedInfo.columnKey):true)){
+      props.sortSelected({columnKey:sorter.columnKey, order:sorter.order});}
+      else{
+        props.sortSelected(initSortedInfo);}
+    }
     console.log('Various parameters', pagination, filters, sorter);
   };
-  const updateExpandedRowKeys = (record: IProductBacklogItem) => {
-    const rowKey = record.id;
-    const isExpanded = expandedRowKeys.includes(rowKey);
-    let newExpandedRowKeys = [] as number[];
-    if (isExpanded) {
-      newExpandedRowKeys = expandedRowKeys.reduce((acc: number[], key: number) => {
-        if (key !== rowKey) { acc.push(key) };
-        return acc;
-      }, []);
-    } else {
-      newExpandedRowKeys = expandedRowKeys;
-      newExpandedRowKeys.push(rowKey);
-    }
-    setExpandedRowKeys(newExpandedRowKeys);
-  };
-  useEffect(() => {
+  /*useEffect(() => {
     if (expandedRowKeys && expandedRowKeys.length > 1) {
       setExpandedRowKeys(expandedRowKeys);
     }
-  }, [props.sortedInfo]);
+  }, [props.sortedInfo]);*/
   return (
     <Table
       size="small"
       showHeader={true}
-      scroll={{x:800,scrollToFirstRowOnChange:true }}
+      //scroll={{x:800,scrollToFirstRowOnChange:true }}
       columns={props.pbiColumns}
       rowKey={(record: IProductBacklogItem) => record.id}
       expandable={{
         expandedRowRender: props.TaskTableforPBI,
-        expandedRowKeys: expandedRowKeys,
+        expandedRowKeys: keys,
         defaultExpandAllRows:props.sortedInfo,
         onExpand: (expanded, record) => {
           updateExpandedRowKeys(record);

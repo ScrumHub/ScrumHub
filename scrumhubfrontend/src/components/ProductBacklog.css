@@ -12,7 +12,7 @@
   .ant-table-tbody {
     border-collapse: collapse;
     border-radius: 1px;
-    border-color:#f0f2f5;
+    border-color:transparent;
   }
 
   .ant-table-tbody > tr  {
@@ -35,7 +35,6 @@
   }
   tr.ant-table-expanded-row > td,
    tr.ant-table-expanded-row:hover > td {
-    
     background:"none";
     background-color:#f0f2f5;
   }

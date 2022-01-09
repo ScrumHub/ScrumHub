@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Badge, Button, Dropdown, message, Space, Tag, Typography, } from 'antd';
 import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
-import { IAddPBI, IFilters, IPeopleList, IProductBacklogItem, IProductBacklogList, ISprint, ITask, IUpdateIdSprint, State } from '../appstate/stateInterfaces';
+import { IAddPBI, IFilters, IPeopleList, IProductBacklogItem, IProductBacklogList, ISprint, ITask, State } from '../appstate/stateInterfaces';
 import { AuthContext } from '../App';
 import config from '../configuration/config';
 import { useSelector } from 'react-redux';
@@ -12,8 +12,8 @@ import "./SprintProject.css";
 import PBITableComponent from './BacklogPBITableComponent';
 import TaskTableComponent from './BacklogTaskTableComponent';
 import { taskNameCol, taskStatusCol, taskGhLinkCol, pbiProgressCol, pbiProgressCol2, backlogPriorities, backlogColors } from './utility/BodyRowsAndColumns';
-import { canDropTask, isArrayValid } from './utility/commonFunctions';
-import { MenuWithPeopleSave } from './utility/LoadAnimations';
+import { canDropTask } from './utility/commonFunctions';
+import SkeletonList, { MenuWithPeopleSave } from './utility/LoadAnimations';
 import { assignPerson, updateTask } from './utility/BacklogHandlers';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
 import { useDrop, useDrag, DndProvider } from 'react-dnd';
@@ -26,6 +26,8 @@ import { EditPBIPopup } from './popups/EditPBIPopup';
 import { EstimatePBIPopup } from './popups/EstimatePBIPopup';
 import { UpdateSprintPopup } from './popups/UpdateSprintPopup';
 import moment from 'moment';
+import { useLocation } from 'react-router';
+import { initPeopleList } from '../appstate/initStateValues';
 
 export default function SprintBacklog() {
   const { state } = useContext(AuthContext);
@@ -35,9 +37,7 @@ export default function SprintBacklog() {
     sortedInfo: { order: '', columnKey: '', },
   });
   const [filterPBI, setFiltersPBI] = useState<IFilters>({ nameFilter: "", peopleFilter: [] });
-  const [inputPplFilter, setInputPplFilter] = useState("");
   const people = useSelector((appState: State) => appState.people as IPeopleList);
-  const [isAddPBI, setIsAddPBI] = useState(false);
   const [filters, setFilters] = useState<IFilters>({
     pageNumber: config.defaultFilters.page,
     pageSize: config.defaultFilters.size,
@@ -45,22 +45,22 @@ export default function SprintBacklog() {
   const [isModal, setIsModal] = useState<IModals>(initModalVals);
   const tempPBIPage = useSelector((appState: State) => appState.pbiPage as IProductBacklogList);
   const loading = useSelector((appState: State) => appState.loading);
-  const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : "";
-  const sprintID = localStorage.getItem("sprintID") ? localStorage.getItem("sprintID") as string : "";
+  const sprintID = localStorage.getItem("sprintID") ? Number(localStorage.getItem("sprintID")) : -1;
   const [initialRefresh, setInitialRefresh] = useState(true);
-  const refreshRequired = useSelector((appState: State) => appState.sprintRequireRefresh as boolean);
   const sprintPage = useSelector((appState: State) => appState.openSprint as ISprint);
-  
 
-
+  const location = useLocation();
   useEffect(() => {
     if (initialRefresh) {
-      store.dispatch(Actions.fetchOneSprintThunk({ token: token, ownerName: ownerName, sprintNumber: Number(sprintID) }));
+      //if(sprintPage===null || people === initPeopleList || (sprintID!==-1 &&sprintID !== sprintPage.sprintNumber)){
+      store.dispatch(Actions.fetchOneSprintThunk({ token: token, ownerName: ownerName, sprintNumber: sprintID }));
       store.dispatch(Actions.fetchPeopleThunk({ownerName,token}));
+      //}
       setInitialRefresh(false);
     }
-  }, [initialRefresh]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialRefresh,location]);
   const estimatePBI = (pbi: IProductBacklogItem) => {
     try {
       store.dispatch(Actions.estimatePBIThunk({ ownerName: ownerName, token: token, pbiId: selectedPBI.id, hours: pbi.expectedTimeInHours }));
@@ -68,6 +68,7 @@ export default function SprintBacklog() {
     finally {
         setIsModal({ ...isModal, estimatePBI: false });
         setSelectedPBI({} as IProductBacklogItem);
+        setInitialRefresh(true);
     }
   };
   const editPBI = (pbi: IAddPBI) => {
@@ -78,7 +79,6 @@ export default function SprintBacklog() {
     } catch (err) { console.error("Failed to edit the pbis: ", err); }
     finally {
         setSelectedPBI({} as IProductBacklogItem);
-        setInitialRefresh(true);
     }
   };
   const finishPBI = (item: IProductBacklogItem) => {
@@ -110,13 +110,13 @@ export default function SprintBacklog() {
     } 
   const updateSprint = (sprint: ISprint) => {
     setIsModal({ ...isModal, updateSprint: false });
-    const sprintID = sprintPage.sprintNumber;
-    const ids = sprint.backlogItems.map((value: IProductBacklogItem) => { return ((value.sprintNumber === Number(sprintID) ? value.id.toString() : "")) }).filter((x) => x !== "");
+    const sprintNr = sprintPage.sprintNumber;
+    const ids = sprint.backlogItems.map((value: IProductBacklogItem) => { return ((value.sprintNumber === sprintNr ? value.id.toString() : "")) }).filter((x) => x !== "");
     try {
       store.dispatch(Actions.updateOneSprintThunk({
         token: token as string,
         ownerName: ownerName,
-        sprintNumber: Number(sprintID),
+        sprintNumber: sprintNr,
         sprint: {
           "title": sprint.title,
           "finishDate": moment((sprint.finishDate as any)._d).format("YYYY-MM-DDTHH:mm:ss") + "Z", "goal": sprint.goal, "pbIs": ids
@@ -128,11 +128,11 @@ export default function SprintBacklog() {
   };
   const completeSprint = (value: boolean) => {
     setIsModal({ ...isModal, completeSprint: false });
-    const sprintID = sprintPage.sprintNumber;
+    const sprintNr = sprintPage.sprintNumber;
       store.dispatch(Actions.completeOneSprintThunk({
         token: token,
         ownerName: ownerName,
-        sprintNumber: Number(sprintID),
+        sprintNumber: sprintNr,
         isFailure: value
       }));
       setInitialRefresh(true);
@@ -205,7 +205,7 @@ export default function SprintBacklog() {
       render: (record: ITask) => {
         return (
           <Dropdown.Button style={{ cursor: "pointer" }} placement='bottomCenter' type="text"
-            overlay={<MenuWithPeopleSave itemSelected={function (person: string): void { assignPerson(person, record.id, record.assigness, token, ownerName); setInitialRefresh(true); }} visible={true} people={people} taskPeople={record.assigness} />}
+            overlay={<MenuWithPeopleSave itemSelected={function (person: string): void { assignPerson(person, record.id, record.assigness, token, ownerName);}} visible={true} people={people} taskPeople={record.assigness} />}
             buttonsRender={() => [
               <></>, React.cloneElement(<span>
                 <Badge size='small'
@@ -248,13 +248,13 @@ export default function SprintBacklog() {
     },];
   return (
     <div style={{ marginLeft: "2%", marginRight: "2%", marginTop: 0, marginBottom: "1%" }}>
+      <SkeletonList width={true} loading={sprintPage == null || (sprintID!==-1 && sprintPage && sprintID !== sprintPage.sprintNumber)} number={2} />
       <Space>
-        <Typography>{sprintPage !== null ? sprintPage.goal : ""}</Typography>
-        <Button key="1" type="link" onClick={() => { setIsModal({ ...isModal, updateSprint: true }); }}> Update Sprint </Button>
+        <Typography>{sprintPage !== null  && sprintID === sprintPage.sprintNumber? sprintPage.goal : ""}</Typography>
+        <Button key="1" type="link" onClick={() => { setIsModal({ ...isModal, updateSprint: true }); }}>{sprintPage !== null&& sprintID === sprintPage.sprintNumber ?  "Update Sprint":""} </Button>
       </Space>
-
       <DndProvider backend={HTML5Backend} key={"dnd_sprint"}>
-        {sprintPage && sprintPage.backlogItems && <PBITableComponent loading={loading || initialRefresh} sortedInfo={infos.sortedInfo} TaskTableforPBI={TaskTableforPBI} nameFilter={filters.nameFilter} peopleFilter={filters.peopleFilter}
+        {sprintPage && sprintPage.backlogItems  && (sprintID !==-1 && sprintPage && sprintID === sprintPage.sprintNumber) && <PBITableComponent loading={loading || initialRefresh} sortedInfo={infos.sortedInfo} TaskTableforPBI={TaskTableforPBI} nameFilter={filters.nameFilter} peopleFilter={filters.peopleFilter}
           item={sprintPage} pbiColumns={pbiColumns} nestedcomponents={nestedcomponents} />}
       </DndProvider>
       {isModal.editPBI && selectedPBI && selectedPBI.id && <EditPBIPopup data={selectedPBI as IAddPBI} visible={isModal.editPBI}

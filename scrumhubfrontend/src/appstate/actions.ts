@@ -356,11 +356,11 @@ export const fetchPBITasksThunk = createAsyncThunk<
   return response as RequestResponse<ITaskList, number>;
 });
 
-export const addTasksToPBIThunk = createAsyncThunk<
+export const addUnassignedTasksToPBI = createAsyncThunk<
   RequestResponse<ITaskList, number>,
   { token: string, ownerName: string; pbiId:number; },
   { rejectValue: RequestResponse<ITaskList, number> }
->("addTasksToPBI", async (
+>("addUnassignedTasksToPBI", async (
   item: {
     token: string;
     ownerName: string;
@@ -368,7 +368,7 @@ export const addTasksToPBIThunk = createAsyncThunk<
   },
   { rejectWithValue }) => {
   const response: RequestResponse<ITaskList, number> =
-    await Fetching.addTasksToPBI(item.token, item.ownerName, item.pbiId);
+    await Fetching.addUnassignedTasksToPBI(item.token, item.ownerName, item.pbiId);
   if (response.code !== 200) {
     return rejectWithValue(
       response as RequestResponse<ITaskList, number>
@@ -516,3 +516,5 @@ export const clearSprintList = createAction("clearSprintList");
 export const clearSprint = createAction("clearSprint");
 export const clearReposList = createAction("clearReposList");
 export const clearPBIsList = createAction("clearPBIsList");
+export const updateSprintKeys = createAction<number[]>("updateSprintKeys");
+export const updatePBIKeys = createAction<number[]>("updatePBIKeys");

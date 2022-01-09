@@ -1,5 +1,5 @@
 import { BrowserRouter as Router } from 'react-router-dom';
-import { useReducer } from 'react';
+import { Suspense, useReducer } from 'react';
 import 'antd/dist/antd.css';
 import React from 'react';
 import { authReducer } from './authstate/authreducer';

@@ -25,6 +25,7 @@
     "react-router": "^6.0.2",
     "react-scripts": "4.0.3",
     "serve": "^13.0.2",
+    "swr": "^1.1.2",
     "web-vitals": "^1.0.1"
   },
   "scripts": {

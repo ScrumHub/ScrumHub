@@ -267,7 +267,7 @@ export function fetchPBITasks(token: string, ownerName: string, pbiId: number,
   );
 }
 
-export function addTasksToPBI(token: string, ownerName: string, pbiId: number,
+export function addUnassignedTasksToPBI(token: string, ownerName: string, pbiId: number,
 ): Promise<RequestResponse<ITaskList, number>> {
   return getResponse(
     axios.get(
