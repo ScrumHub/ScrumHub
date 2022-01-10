@@ -1,0 +1,48 @@
+\hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_repository}{}\doxysection{Scrum\+Hub\+Backend.\+Database\+Model.\+Repository Class Reference}
+\label{class_scrum_hub_backend_1_1_database_model_1_1_repository}\index{ScrumHubBackend.DatabaseModel.Repository@{ScrumHubBackend.DatabaseModel.Repository}}
+
+
+Represents repository already transformed to Scrum\+Hub  
+
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_repository_ad7c511178a37abdd25db2e67ebf23325}\label{class_scrum_hub_backend_1_1_database_model_1_1_repository_ad7c511178a37abdd25db2e67ebf23325}} 
+{\bfseries Repository} ()
+\begin{DoxyCompactList}\small\item\em Constructor \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_repository_a19da08773ae20558c4e59b8a2e887e5e}\label{class_scrum_hub_backend_1_1_database_model_1_1_repository_a19da08773ae20558c4e59b8a2e887e5e}} 
+{\bfseries Repository} (Octokit.\+Repository repository)
+\begin{DoxyCompactList}\small\item\em Constructor \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_repository_adba0bb5d33c90159de6614bc8448f16b}\label{class_scrum_hub_backend_1_1_database_model_1_1_repository_adba0bb5d33c90159de6614bc8448f16b}} 
+List$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_model_1_1_sprint}{Sprint}} $>$ {\bfseries Get\+Sprints\+For\+Repository} (\mbox{\hyperlink{class_scrum_hub_backend_1_1_database_context}{Database\+Context}} db\+Context)
+\begin{DoxyCompactList}\small\item\em Gets sprints for repository \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_repository_a9baa45853d0fb3db8ba00c9eee27a1b5}\label{class_scrum_hub_backend_1_1_database_model_1_1_repository_a9baa45853d0fb3db8ba00c9eee27a1b5}} 
+List$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item}{Backlog\+Item}} $>$ {\bfseries Get\+PBIs\+For\+Repository} (\mbox{\hyperlink{class_scrum_hub_backend_1_1_database_context}{Database\+Context}} db\+Context)
+\begin{DoxyCompactList}\small\item\em Gets PBIs for repository \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_repository_a423fbc26c1b1c0bdfd794fc494fcd642}\label{class_scrum_hub_backend_1_1_database_model_1_1_repository_a423fbc26c1b1c0bdfd794fc494fcd642}} 
+List$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_model_1_1_s_h_task}{SHTask}} $>$ {\bfseries Get\+Tasks\+For\+Repository} (\mbox{\hyperlink{class_scrum_hub_backend_1_1_database_context}{Database\+Context}} db\+Context)
+\begin{DoxyCompactList}\small\item\em Gets tasks for repository \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_repository_af5a5dbd7c7fd5383533a936b5f94135a}\label{class_scrum_hub_backend_1_1_database_model_1_1_repository_af5a5dbd7c7fd5383533a936b5f94135a}} 
+long {\bfseries Id}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Internal id of repository \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_repository_a02a57bdf00d91af071165615654af338}\label{class_scrum_hub_backend_1_1_database_model_1_1_repository_a02a57bdf00d91af071165615654af338}} 
+long {\bfseries Git\+Hub\+Id} = 0\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Git\+Hub id of repository \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_repository_a8b95d0922a9882fe61e7b4f1fb8844cb}\label{class_scrum_hub_backend_1_1_database_model_1_1_repository_a8b95d0922a9882fe61e7b4f1fb8844cb}} 
+string {\bfseries Full\+Name} = String.\+Empty\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Full name of Git\+Hub repository \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_repository_aa22f26388c15120f1016e8eed0f5b2be}\label{class_scrum_hub_backend_1_1_database_model_1_1_repository_aa22f26388c15120f1016e8eed0f5b2be}} 
+int {\bfseries Last\+Sprint\+Number} = 0\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Last \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_model_1_1_sprint}{Sprint}} number \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents repository already transformed to Scrum\+Hub 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Scrum\+Hub\+Backend/\+Database\+Model/Repository.\+cs\end{DoxyCompactItemize}

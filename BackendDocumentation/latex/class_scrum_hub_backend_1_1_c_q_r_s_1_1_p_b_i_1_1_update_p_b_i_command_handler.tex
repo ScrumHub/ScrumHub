@@ -1,0 +1,45 @@
+\hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_update_p_b_i_command_handler}{}\doxysection{Scrum\+Hub\+Backend.\+CQRS.\+PBI.\+Update\+PBICommand\+Handler Class Reference}
+\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_update_p_b_i_command_handler}\index{ScrumHubBackend.CQRS.PBI.UpdatePBICommandHandler@{ScrumHubBackend.CQRS.PBI.UpdatePBICommandHandler}}
+
+
+Handler for updating a \mbox{\hyperlink{namespace_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i}{PBI}}  
+
+
+Inheritance diagram for Scrum\+Hub\+Backend.\+CQRS.\+PBI.\+Update\+PBICommand\+Handler\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_update_p_b_i_command_handler}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_update_p_b_i_command_handler_aa86e357de4224beba385827f8ed49ff6}\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_update_p_b_i_command_handler_aa86e357de4224beba385827f8ed49ff6}} 
+{\bfseries Update\+PBICommand\+Handler} (ILogger$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_update_p_b_i_command_handler}{Update\+PBICommand\+Handler}} $>$ logger, \mbox{\hyperlink{interface_scrum_hub_backend_1_1_git_hub_client_1_1_i_git_hub_client_factory}{IGit\+Hub\+Client\+Factory}} client\+Factory, \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_context}{Database\+Context}} db\+Context, IMediator mediator)
+\begin{DoxyCompactList}\small\item\em Constructor \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_update_p_b_i_command_handler_a2e13048c628213d7b296a45d7acf36e4}\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_update_p_b_i_command_handler_a2e13048c628213d7b296a45d7acf36e4}} 
+Task$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item}{Communication\+Model.\+Backlog\+Item}} $>$ {\bfseries Handle} (\mbox{\hyperlink{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_update_p_b_i_command}{Update\+PBICommand}} request, Cancellation\+Token cancellation\+Token)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_update_p_b_i_command_handler_aa820450585ce22cd7de28ecbbed9a183}\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_update_p_b_i_command_handler_aa820450585ce22cd7de28ecbbed9a183}} 
+readonly ILogger$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_update_p_b_i_command_handler}{Update\+PBICommand\+Handler}} $>$ {\bfseries \+\_\+logger}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_update_p_b_i_command_handler_aeeee9dfce72f5a56e93bcb3499fa217a}\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_update_p_b_i_command_handler_aeeee9dfce72f5a56e93bcb3499fa217a}} 
+readonly \mbox{\hyperlink{interface_scrum_hub_backend_1_1_git_hub_client_1_1_i_git_hub_client_factory}{IGit\+Hub\+Client\+Factory}} {\bfseries \+\_\+git\+Hub\+Client\+Factory}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_update_p_b_i_command_handler_a8bd9446c690c407c64375b642df5a9c5}\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_update_p_b_i_command_handler_a8bd9446c690c407c64375b642df5a9c5}} 
+readonly \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_context}{Database\+Context}} {\bfseries \+\_\+db\+Context}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_update_p_b_i_command_handler_a7ec4bc9f846536f6004b7fa6f4d1d2b9}\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_update_p_b_i_command_handler_a7ec4bc9f846536f6004b7fa6f4d1d2b9}} 
+readonly IMediator {\bfseries \+\_\+mediator}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Handler for updating a \mbox{\hyperlink{namespace_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i}{PBI}} 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Scrum\+Hub\+Backend/\+CQRS/\+PBI/Update\+PBICommand\+Handler.\+cs\end{DoxyCompactItemize}

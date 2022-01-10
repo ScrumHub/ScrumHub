@@ -1,0 +1,77 @@
+\hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_people_controller}{}\doxysection{Scrum\+Hub\+Backend.\+Controllers.\+People\+Controller Class Reference}
+\label{class_scrum_hub_backend_1_1_controllers_1_1_people_controller}\index{ScrumHubBackend.Controllers.PeopleController@{ScrumHubBackend.Controllers.PeopleController}}
+
+
+Controller for people  
+
+
+Inheritance diagram for Scrum\+Hub\+Backend.\+Controllers.\+People\+Controller\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_scrum_hub_backend_1_1_controllers_1_1_people_controller}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_people_controller_ab216b519c8a9233b3e92c9ec7a73702c}\label{class_scrum_hub_backend_1_1_controllers_1_1_people_controller_ab216b519c8a9233b3e92c9ec7a73702c}} 
+{\bfseries People\+Controller} (ILogger$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_people_controller}{People\+Controller}} $>$ logger, IMediator mediator)
+\begin{DoxyCompactList}\small\item\em Constructor \end{DoxyCompactList}\item 
+async Task$<$ IAction\+Result $>$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_people_controller_a7fbcf78902363e261209016d4d2b78d8}{Get\+Current\+User}} (\mbox{[}From\+Header\mbox{]} string auth\+Token)
+\begin{DoxyCompactList}\small\item\em Get current user \end{DoxyCompactList}\item 
+async Task$<$ IAction\+Result $>$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_people_controller_a308352817c95e12a3a7aba61d0fcb31f}{Get\+People\+In\+Repository}} (\mbox{[}From\+Header\mbox{]} string auth\+Token, \mbox{[}From\+Route\mbox{]} string repository\+Owner, \mbox{[}From\+Route\mbox{]} string repository\+Name)
+\begin{DoxyCompactList}\small\item\em Gets users for given repository (requires read permissions in repository) \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_people_controller_a7eea4760cff47037a27d870d927adce1}\label{class_scrum_hub_backend_1_1_controllers_1_1_people_controller_a7eea4760cff47037a27d870d927adce1}} 
+readonly ILogger$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_people_controller}{People\+Controller}} $>$ {\bfseries \+\_\+logger}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_people_controller_a2cc5e2ccc3a2f2cdb8117019c18841bd}\label{class_scrum_hub_backend_1_1_controllers_1_1_people_controller_a2cc5e2ccc3a2f2cdb8117019c18841bd}} 
+readonly IMediator {\bfseries \+\_\+mediator}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Controller for people 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_people_controller_a7fbcf78902363e261209016d4d2b78d8}\label{class_scrum_hub_backend_1_1_controllers_1_1_people_controller_a7fbcf78902363e261209016d4d2b78d8}} 
+\index{ScrumHubBackend.Controllers.PeopleController@{ScrumHubBackend.Controllers.PeopleController}!GetCurrentUser@{GetCurrentUser}}
+\index{GetCurrentUser@{GetCurrentUser}!ScrumHubBackend.Controllers.PeopleController@{ScrumHubBackend.Controllers.PeopleController}}
+\doxysubsubsection{\texorpdfstring{GetCurrentUser()}{GetCurrentUser()}}
+{\footnotesize\ttfamily async Task$<$ IAction\+Result $>$ Scrum\+Hub\+Backend.\+Controllers.\+People\+Controller.\+Get\+Current\+User (\begin{DoxyParamCaption}\item[{\mbox{[}\+From\+Header\mbox{]} string}]{auth\+Token }\end{DoxyParamCaption})}
+
+
+
+Get current user 
+
+
+\begin{DoxyParams}{Parameters}
+{\em auth\+Token} & Authorization token of user\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_people_controller_a308352817c95e12a3a7aba61d0fcb31f}\label{class_scrum_hub_backend_1_1_controllers_1_1_people_controller_a308352817c95e12a3a7aba61d0fcb31f}} 
+\index{ScrumHubBackend.Controllers.PeopleController@{ScrumHubBackend.Controllers.PeopleController}!GetPeopleInRepository@{GetPeopleInRepository}}
+\index{GetPeopleInRepository@{GetPeopleInRepository}!ScrumHubBackend.Controllers.PeopleController@{ScrumHubBackend.Controllers.PeopleController}}
+\doxysubsubsection{\texorpdfstring{GetPeopleInRepository()}{GetPeopleInRepository()}}
+{\footnotesize\ttfamily async Task$<$ IAction\+Result $>$ Scrum\+Hub\+Backend.\+Controllers.\+People\+Controller.\+Get\+People\+In\+Repository (\begin{DoxyParamCaption}\item[{\mbox{[}\+From\+Header\mbox{]} string}]{auth\+Token,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Owner,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Name }\end{DoxyParamCaption})}
+
+
+
+Gets users for given repository (requires read permissions in repository) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em auth\+Token} & Authorization token of user\\
+\hline
+{\em repository\+Owner} & Owner of the repository\\
+\hline
+{\em repository\+Name} & Name of the repository\\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Scrum\+Hub\+Backend/\+Controllers/People\+Controller.\+cs\end{DoxyCompactItemize}

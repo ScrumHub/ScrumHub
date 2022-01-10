@@ -1,0 +1,51 @@
+\hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_sprint}{}\doxysection{Scrum\+Hub\+Backend.\+Database\+Model.\+Sprint Class Reference}
+\label{class_scrum_hub_backend_1_1_database_model_1_1_sprint}\index{ScrumHubBackend.DatabaseModel.Sprint@{ScrumHubBackend.DatabaseModel.Sprint}}
+
+
+Represents a sprint  
+
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_sprint_a15124ffd7de1081717f348d7365171ec}\label{class_scrum_hub_backend_1_1_database_model_1_1_sprint_a15124ffd7de1081717f348d7365171ec}} 
+{\bfseries Sprint} ()
+\begin{DoxyCompactList}\small\item\em Constructor \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_sprint_a101a747d459039946f768caef766a802}\label{class_scrum_hub_backend_1_1_database_model_1_1_sprint_a101a747d459039946f768caef766a802}} 
+{\bfseries Sprint} (string goal, string title, Date\+Time finish\+Date, long repository\+Id, \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_context}{Database\+Context}} db\+Context)
+\begin{DoxyCompactList}\small\item\em Constructor, modifies repository \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_sprint_ac9ed6fb8502484abeb47272972ad7d67}\label{class_scrum_hub_backend_1_1_database_model_1_1_sprint_ac9ed6fb8502484abeb47272972ad7d67}} 
+List$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item}{Backlog\+Item}} $>$ {\bfseries Get\+PBIs\+For\+Sprint} (List$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item}{Backlog\+Item}} $>$ pbis\+For\+Repository)
+\begin{DoxyCompactList}\small\item\em Gets PBIs for sprint \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_sprint_ab19a1c047d2b3f26d92e457d147cdd5a}\label{class_scrum_hub_backend_1_1_database_model_1_1_sprint_ab19a1c047d2b3f26d92e457d147cdd5a}} 
+long {\bfseries Id}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Internal id of sprint \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_sprint_a10effed3e1679b7d7dad4ebc0e8883c7}\label{class_scrum_hub_backend_1_1_database_model_1_1_sprint_a10effed3e1679b7d7dad4ebc0e8883c7}} 
+long {\bfseries Sprint\+Number}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Number of a sprint in the project \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_sprint_a894a72129b92ec5218779c3677c29686}\label{class_scrum_hub_backend_1_1_database_model_1_1_sprint_a894a72129b92ec5218779c3677c29686}} 
+string {\bfseries Title} = String.\+Empty\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Title of the sprint \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_sprint_a63867a57811728b7bf4b1fc16d280dc9}\label{class_scrum_hub_backend_1_1_database_model_1_1_sprint_a63867a57811728b7bf4b1fc16d280dc9}} 
+string {\bfseries Goal} = String.\+Empty\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Goal of the sprint \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_sprint_af83af2b00fc9088ab4fdcec1315a0e6e}\label{class_scrum_hub_backend_1_1_database_model_1_1_sprint_af83af2b00fc9088ab4fdcec1315a0e6e}} 
+long? {\bfseries Repository\+Id} = null\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Id of a repository where \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_model_1_1_sprint}{Sprint}} is \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_sprint_a487876a326e6070325eeb13e2a77aee1}\label{class_scrum_hub_backend_1_1_database_model_1_1_sprint_a487876a326e6070325eeb13e2a77aee1}} 
+Date\+Time {\bfseries Finish\+Date} = Date\+Time.\+Min\+Value\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Date of the sprint finish \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_sprint_a16ff70a64487cc218fc2969b7e0b462f}\label{class_scrum_hub_backend_1_1_database_model_1_1_sprint_a16ff70a64487cc218fc2969b7e0b462f}} 
+\mbox{\hyperlink{namespace_scrum_hub_backend_1_1_common_a0bec89b6f9f544bca58ddc66ed0eab94}{Sprint\+Status}} {\bfseries Status} = Sprint\+Status.\+Not\+Finished\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Status of the sprint \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents a sprint 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Scrum\+Hub\+Backend/\+Database\+Model/Sprint.\+cs\end{DoxyCompactItemize}

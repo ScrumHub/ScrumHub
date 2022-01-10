@@ -1,0 +1,48 @@
+\hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query_handler}{}\doxysection{Scrum\+Hub\+Backend.\+CQRS.\+Sprints.\+Get\+Sprints\+Query\+Handler Class Reference}
+\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query_handler}\index{ScrumHubBackend.CQRS.Sprints.GetSprintsQueryHandler@{ScrumHubBackend.CQRS.Sprints.GetSprintsQueryHandler}}
+
+
+Handler for getting sprints  
+
+
+Inheritance diagram for Scrum\+Hub\+Backend.\+CQRS.\+Sprints.\+Get\+Sprints\+Query\+Handler\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query_handler}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query_handler_ab7e30e791f4aed47d37cf6854451b84d}\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query_handler_ab7e30e791f4aed47d37cf6854451b84d}} 
+{\bfseries Get\+Sprints\+Query\+Handler} (ILogger$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query_handler}{Get\+Sprints\+Query\+Handler}} $>$ logger, \mbox{\hyperlink{interface_scrum_hub_backend_1_1_git_hub_client_1_1_i_git_hub_client_factory}{IGit\+Hub\+Client\+Factory}} client\+Factory, \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_context}{Database\+Context}} db\+Context, IMediator mediator)
+\begin{DoxyCompactList}\small\item\em Constructor \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query_handler_ae1048dc7aa383a2923a4acbcc183605b}\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query_handler_ae1048dc7aa383a2923a4acbcc183605b}} 
+Task$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_common_1_1_paginated_list}{Paginated\+List}}$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_sprint}{Sprint}} $>$ $>$ {\bfseries Handle} (\mbox{\hyperlink{class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query}{Get\+Sprints\+Query}} request, Cancellation\+Token cancellation\+Token)
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query_handler_a85539e0ba9fc07528a33d4823ff86b7d}\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query_handler_a85539e0ba9fc07528a33d4823ff86b7d}} 
+virtual \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_common_1_1_paginated_list}{Paginated\+List}}$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_sprint}{Sprint}} $>$ {\bfseries Filter\+And\+Paginate\+Sprints} (\mbox{\hyperlink{interface_scrum_hub_backend_1_1_c_q_r_s_1_1_i_common_in_repository_request}{ICommon\+In\+Repository\+Request}} request, IEnumerable$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_model_1_1_sprint}{Database\+Model.\+Sprint}} $>$ sprints, int page\+Number, int page\+Size, bool? completed\+Filter, bool? one\+Page)
+\begin{DoxyCompactList}\small\item\em Paginates sprints and transforms them to model repositories \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query_handler_af0563015f0dd82c4748f43740d69a9bc}\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query_handler_af0563015f0dd82c4748f43740d69a9bc}} 
+readonly ILogger$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query_handler}{Get\+Sprints\+Query\+Handler}} $>$ {\bfseries \+\_\+logger}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query_handler_a3f4e50eeb222052e304fdff0b1693b83}\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query_handler_a3f4e50eeb222052e304fdff0b1693b83}} 
+readonly \mbox{\hyperlink{interface_scrum_hub_backend_1_1_git_hub_client_1_1_i_git_hub_client_factory}{IGit\+Hub\+Client\+Factory}} {\bfseries \+\_\+git\+Hub\+Client\+Factory}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query_handler_a48a2769714643bb592a6ff6997810ae4}\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query_handler_a48a2769714643bb592a6ff6997810ae4}} 
+readonly \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_context}{Database\+Context}} {\bfseries \+\_\+db\+Context}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query_handler_a8d261095bd396c5044452cafbc675cf6}\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query_handler_a8d261095bd396c5044452cafbc675cf6}} 
+readonly IMediator {\bfseries \+\_\+mediator}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Handler for getting sprints 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Scrum\+Hub\+Backend/\+CQRS/\+Sprints/Get\+Sprints\+Query\+Handler.\+cs\end{DoxyCompactItemize}

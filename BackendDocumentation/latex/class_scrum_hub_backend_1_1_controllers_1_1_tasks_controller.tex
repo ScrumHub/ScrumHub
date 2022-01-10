@@ -1,0 +1,235 @@
+\hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller}{}\doxysection{Scrum\+Hub\+Backend.\+Controllers.\+Tasks\+Controller Class Reference}
+\label{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller}\index{ScrumHubBackend.Controllers.TasksController@{ScrumHubBackend.Controllers.TasksController}}
+
+
+Controller for tasks  
+
+
+Inheritance diagram for Scrum\+Hub\+Backend.\+Controllers.\+Tasks\+Controller\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller_a0f494aa249ab0316f6036c6c1225515d}\label{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller_a0f494aa249ab0316f6036c6c1225515d}} 
+{\bfseries Tasks\+Controller} (ILogger$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller}{Tasks\+Controller}} $>$ logger, IMediator mediator)
+\begin{DoxyCompactList}\small\item\em Constructor \end{DoxyCompactList}\item 
+async Task$<$ IAction\+Result $>$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller_a3b78e82dd292e1c33b36039aed81032e}{Get\+Tasks\+For\+Repository}} (\mbox{[}From\+Header\mbox{]} string auth\+Token, \mbox{[}From\+Route\mbox{]} string repository\+Owner, \mbox{[}From\+Route\mbox{]} string repository\+Name, \mbox{[}From\+Query\mbox{]} int page\+Number=1, \mbox{[}From\+Query\mbox{]} int page\+Size=10, \mbox{[}From\+Query\mbox{]} bool? one\+Page=null)
+\begin{DoxyCompactList}\small\item\em Gets tasks for repository (requires read permissions in repository) \end{DoxyCompactList}\item 
+async Task$<$ IAction\+Result $>$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller_a615d09ac5b8da8ca7837042f48cf787b}{Get\+One\+Task}} (\mbox{[}From\+Header\mbox{]} string auth\+Token, \mbox{[}From\+Route\mbox{]} string repository\+Owner, \mbox{[}From\+Route\mbox{]} string repository\+Name, \mbox{[}From\+Route\mbox{]} long task\+Id)
+\begin{DoxyCompactList}\small\item\em Gets one task (requires read permissions in repository) \end{DoxyCompactList}\item 
+async Task$<$ IAction\+Result $>$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller_ada7e59d19d043613b5d66ffc97df7c1f}{Get\+Tasks\+For\+PBI}} (\mbox{[}From\+Header\mbox{]} string auth\+Token, \mbox{[}From\+Route\mbox{]} string repository\+Owner, \mbox{[}From\+Route\mbox{]} string repository\+Name, \mbox{[}From\+Route\mbox{]} long pbi\+Id)
+\begin{DoxyCompactList}\small\item\em Gets tasks for given PBI (or uassigned) (requires read permissions in repository) \end{DoxyCompactList}\item 
+async Task$<$ IAction\+Result $>$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller_a50415c542c27db012d1982352cbdd369}{Assign\+PBITo\+Task}} (\mbox{[}From\+Header\mbox{]} string auth\+Token, \mbox{[}From\+Route\mbox{]} string repository\+Owner, \mbox{[}From\+Route\mbox{]} string repository\+Name, \mbox{[}From\+Route\mbox{]} long task\+Id, \mbox{[}From\+Body\mbox{]} \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_id_f}{IdF}} pbi\+Id)
+\begin{DoxyCompactList}\small\item\em Assigns the PBI for the task (or unassigns it) (requires admin permissions in repository) \end{DoxyCompactList}\item 
+async Task$<$ IAction\+Result $>$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller_a043b6d9b609c34d540d0279bf6f8fe2a}{Create\+Task}} (\mbox{[}From\+Header\mbox{]} string auth\+Token, \mbox{[}From\+Route\mbox{]} string repository\+Owner, \mbox{[}From\+Route\mbox{]} string repository\+Name, \mbox{[}From\+Body\mbox{]} \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_task_f}{TaskF}} new\+Task)
+\begin{DoxyCompactList}\small\item\em Adds new task in the repository (requires admin permissions in repository) \end{DoxyCompactList}\item 
+async Task$<$ IAction\+Result $>$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller_a11c09c5621ac22d3b443b1d951fdb5a6}{Assign\+Person\+To\+Task}} (\mbox{[}From\+Header\mbox{]} string auth\+Token, \mbox{[}From\+Route\mbox{]} string repository\+Owner, \mbox{[}From\+Route\mbox{]} string repository\+Name, \mbox{[}From\+Route\mbox{]} long task\+Id, \mbox{[}From\+Body\mbox{]} \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_assign_person_f}{Assign\+PersonF}} login)
+\begin{DoxyCompactList}\small\item\em Assigns the person for the task (requires admin permissions in repository) \end{DoxyCompactList}\item 
+async Task$<$ IAction\+Result $>$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller_a9341453b94c2f43b05971fb8f3f9cf3b}{Unassign\+Person\+To\+Task}} (\mbox{[}From\+Header\mbox{]} string auth\+Token, \mbox{[}From\+Route\mbox{]} string repository\+Owner, \mbox{[}From\+Route\mbox{]} string repository\+Name, \mbox{[}From\+Route\mbox{]} long task\+Id, \mbox{[}From\+Body\mbox{]} \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_assign_person_f}{Assign\+PersonF}} login)
+\begin{DoxyCompactList}\small\item\em Unassigns the person from the task (requires admin permissions in repository) \end{DoxyCompactList}\item 
+async Task$<$ IAction\+Result $>$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller_abe35ae33c919f389b76c3910c2720a1d}{Start\+Task}} (\mbox{[}From\+Header\mbox{]} string auth\+Token, \mbox{[}From\+Route\mbox{]} string repository\+Owner, \mbox{[}From\+Route\mbox{]} string repository\+Name, \mbox{[}From\+Route\mbox{]} long task\+Id, \mbox{[}From\+Query\mbox{]} bool? hot\+Fix)
+\begin{DoxyCompactList}\small\item\em Starts the task by creating a branch (requires admin permissions in repository) \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller_a7bd0137729a6e0c2ee8d20a3cc87e30a}\label{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller_a7bd0137729a6e0c2ee8d20a3cc87e30a}} 
+readonly ILogger$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller}{Tasks\+Controller}} $>$ {\bfseries \+\_\+logger}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller_ad155cf33e7aeaff49bea767ada45963c}\label{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller_ad155cf33e7aeaff49bea767ada45963c}} 
+readonly IMediator {\bfseries \+\_\+mediator}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Controller for tasks 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller_a50415c542c27db012d1982352cbdd369}\label{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller_a50415c542c27db012d1982352cbdd369}} 
+\index{ScrumHubBackend.Controllers.TasksController@{ScrumHubBackend.Controllers.TasksController}!AssignPBIToTask@{AssignPBIToTask}}
+\index{AssignPBIToTask@{AssignPBIToTask}!ScrumHubBackend.Controllers.TasksController@{ScrumHubBackend.Controllers.TasksController}}
+\doxysubsubsection{\texorpdfstring{AssignPBIToTask()}{AssignPBIToTask()}}
+{\footnotesize\ttfamily async Task$<$ IAction\+Result $>$ Scrum\+Hub\+Backend.\+Controllers.\+Tasks\+Controller.\+Assign\+PBITo\+Task (\begin{DoxyParamCaption}\item[{\mbox{[}\+From\+Header\mbox{]} string}]{auth\+Token,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Owner,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Name,  }\item[{\mbox{[}\+From\+Route\mbox{]} long}]{task\+Id,  }\item[{\mbox{[}\+From\+Body\mbox{]} \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_id_f}{IdF}}}]{pbi\+Id }\end{DoxyParamCaption})}
+
+
+
+Assigns the PBI for the task (or unassigns it) (requires admin permissions in repository) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em auth\+Token} & Authorization token of user\\
+\hline
+{\em repository\+Owner} & Owner of the repository\\
+\hline
+{\em repository\+Name} & Name of the repository\\
+\hline
+{\em task\+Id} & Id of the task\\
+\hline
+{\em pbi\+Id} & Id of the PBI, 0 to unassign\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller_a11c09c5621ac22d3b443b1d951fdb5a6}\label{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller_a11c09c5621ac22d3b443b1d951fdb5a6}} 
+\index{ScrumHubBackend.Controllers.TasksController@{ScrumHubBackend.Controllers.TasksController}!AssignPersonToTask@{AssignPersonToTask}}
+\index{AssignPersonToTask@{AssignPersonToTask}!ScrumHubBackend.Controllers.TasksController@{ScrumHubBackend.Controllers.TasksController}}
+\doxysubsubsection{\texorpdfstring{AssignPersonToTask()}{AssignPersonToTask()}}
+{\footnotesize\ttfamily async Task$<$ IAction\+Result $>$ Scrum\+Hub\+Backend.\+Controllers.\+Tasks\+Controller.\+Assign\+Person\+To\+Task (\begin{DoxyParamCaption}\item[{\mbox{[}\+From\+Header\mbox{]} string}]{auth\+Token,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Owner,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Name,  }\item[{\mbox{[}\+From\+Route\mbox{]} long}]{task\+Id,  }\item[{\mbox{[}\+From\+Body\mbox{]} \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_assign_person_f}{Assign\+PersonF}}}]{login }\end{DoxyParamCaption})}
+
+
+
+Assigns the person for the task (requires admin permissions in repository) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em auth\+Token} & Authorization token of user\\
+\hline
+{\em repository\+Owner} & Owner of the repository\\
+\hline
+{\em repository\+Name} & Name of the repository\\
+\hline
+{\em task\+Id} & Id of the task\\
+\hline
+{\em login} & Login of the person\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller_a043b6d9b609c34d540d0279bf6f8fe2a}\label{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller_a043b6d9b609c34d540d0279bf6f8fe2a}} 
+\index{ScrumHubBackend.Controllers.TasksController@{ScrumHubBackend.Controllers.TasksController}!CreateTask@{CreateTask}}
+\index{CreateTask@{CreateTask}!ScrumHubBackend.Controllers.TasksController@{ScrumHubBackend.Controllers.TasksController}}
+\doxysubsubsection{\texorpdfstring{CreateTask()}{CreateTask()}}
+{\footnotesize\ttfamily async Task$<$ IAction\+Result $>$ Scrum\+Hub\+Backend.\+Controllers.\+Tasks\+Controller.\+Create\+Task (\begin{DoxyParamCaption}\item[{\mbox{[}\+From\+Header\mbox{]} string}]{auth\+Token,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Owner,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Name,  }\item[{\mbox{[}\+From\+Body\mbox{]} \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_task_f}{TaskF}}}]{new\+Task }\end{DoxyParamCaption})}
+
+
+
+Adds new task in the repository (requires admin permissions in repository) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em auth\+Token} & Authorization token of user\\
+\hline
+{\em repository\+Owner} & Owner of the repository\\
+\hline
+{\em repository\+Name} & Name of the repository\\
+\hline
+{\em new\+Task} & Information about new task\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller_a615d09ac5b8da8ca7837042f48cf787b}\label{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller_a615d09ac5b8da8ca7837042f48cf787b}} 
+\index{ScrumHubBackend.Controllers.TasksController@{ScrumHubBackend.Controllers.TasksController}!GetOneTask@{GetOneTask}}
+\index{GetOneTask@{GetOneTask}!ScrumHubBackend.Controllers.TasksController@{ScrumHubBackend.Controllers.TasksController}}
+\doxysubsubsection{\texorpdfstring{GetOneTask()}{GetOneTask()}}
+{\footnotesize\ttfamily async Task$<$ IAction\+Result $>$ Scrum\+Hub\+Backend.\+Controllers.\+Tasks\+Controller.\+Get\+One\+Task (\begin{DoxyParamCaption}\item[{\mbox{[}\+From\+Header\mbox{]} string}]{auth\+Token,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Owner,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Name,  }\item[{\mbox{[}\+From\+Route\mbox{]} long}]{task\+Id }\end{DoxyParamCaption})}
+
+
+
+Gets one task (requires read permissions in repository) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em auth\+Token} & Authorization token of user\\
+\hline
+{\em repository\+Owner} & Owner of the repository\\
+\hline
+{\em repository\+Name} & Name of the repository\\
+\hline
+{\em task\+Id} & Id of the task\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller_ada7e59d19d043613b5d66ffc97df7c1f}\label{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller_ada7e59d19d043613b5d66ffc97df7c1f}} 
+\index{ScrumHubBackend.Controllers.TasksController@{ScrumHubBackend.Controllers.TasksController}!GetTasksForPBI@{GetTasksForPBI}}
+\index{GetTasksForPBI@{GetTasksForPBI}!ScrumHubBackend.Controllers.TasksController@{ScrumHubBackend.Controllers.TasksController}}
+\doxysubsubsection{\texorpdfstring{GetTasksForPBI()}{GetTasksForPBI()}}
+{\footnotesize\ttfamily async Task$<$ IAction\+Result $>$ Scrum\+Hub\+Backend.\+Controllers.\+Tasks\+Controller.\+Get\+Tasks\+For\+PBI (\begin{DoxyParamCaption}\item[{\mbox{[}\+From\+Header\mbox{]} string}]{auth\+Token,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Owner,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Name,  }\item[{\mbox{[}\+From\+Route\mbox{]} long}]{pbi\+Id }\end{DoxyParamCaption})}
+
+
+
+Gets tasks for given PBI (or uassigned) (requires read permissions in repository) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em auth\+Token} & Authorization token of user\\
+\hline
+{\em repository\+Owner} & Owner of the repository\\
+\hline
+{\em repository\+Name} & Name of the repository\\
+\hline
+{\em pbi\+Id} & Id of the PBI or 0 for unassigned\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller_a3b78e82dd292e1c33b36039aed81032e}\label{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller_a3b78e82dd292e1c33b36039aed81032e}} 
+\index{ScrumHubBackend.Controllers.TasksController@{ScrumHubBackend.Controllers.TasksController}!GetTasksForRepository@{GetTasksForRepository}}
+\index{GetTasksForRepository@{GetTasksForRepository}!ScrumHubBackend.Controllers.TasksController@{ScrumHubBackend.Controllers.TasksController}}
+\doxysubsubsection{\texorpdfstring{GetTasksForRepository()}{GetTasksForRepository()}}
+{\footnotesize\ttfamily async Task$<$ IAction\+Result $>$ Scrum\+Hub\+Backend.\+Controllers.\+Tasks\+Controller.\+Get\+Tasks\+For\+Repository (\begin{DoxyParamCaption}\item[{\mbox{[}\+From\+Header\mbox{]} string}]{auth\+Token,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Owner,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Name,  }\item[{\mbox{[}\+From\+Query\mbox{]} int}]{page\+Number = {\ttfamily 1},  }\item[{\mbox{[}\+From\+Query\mbox{]} int}]{page\+Size = {\ttfamily 10},  }\item[{\mbox{[}\+From\+Query\mbox{]} bool?}]{one\+Page = {\ttfamily null} }\end{DoxyParamCaption})}
+
+
+
+Gets tasks for repository (requires read permissions in repository) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em auth\+Token} & Authorization token of user\\
+\hline
+{\em repository\+Owner} & Owner of the repository\\
+\hline
+{\em repository\+Name} & Name of the repository\\
+\hline
+{\em page\+Number} & Page to get, default = 1\\
+\hline
+{\em page\+Size} & Size of page, default = 10\\
+\hline
+{\em one\+Page} & True if want to fetch everything as one page, false/skipped otherwise\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller_abe35ae33c919f389b76c3910c2720a1d}\label{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller_abe35ae33c919f389b76c3910c2720a1d}} 
+\index{ScrumHubBackend.Controllers.TasksController@{ScrumHubBackend.Controllers.TasksController}!StartTask@{StartTask}}
+\index{StartTask@{StartTask}!ScrumHubBackend.Controllers.TasksController@{ScrumHubBackend.Controllers.TasksController}}
+\doxysubsubsection{\texorpdfstring{StartTask()}{StartTask()}}
+{\footnotesize\ttfamily async Task$<$ IAction\+Result $>$ Scrum\+Hub\+Backend.\+Controllers.\+Tasks\+Controller.\+Start\+Task (\begin{DoxyParamCaption}\item[{\mbox{[}\+From\+Header\mbox{]} string}]{auth\+Token,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Owner,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Name,  }\item[{\mbox{[}\+From\+Route\mbox{]} long}]{task\+Id,  }\item[{\mbox{[}\+From\+Query\mbox{]} bool?}]{hot\+Fix }\end{DoxyParamCaption})}
+
+
+
+Starts the task by creating a branch (requires admin permissions in repository) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em auth\+Token} & Authorization token of user\\
+\hline
+{\em repository\+Owner} & Owner of the repository\\
+\hline
+{\em repository\+Name} & Name of the repository\\
+\hline
+{\em task\+Id} & Id of the task\\
+\hline
+{\em hot\+Fix} & Should create hotfix branch? True for hotfix, false/not present for feature\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller_a9341453b94c2f43b05971fb8f3f9cf3b}\label{class_scrum_hub_backend_1_1_controllers_1_1_tasks_controller_a9341453b94c2f43b05971fb8f3f9cf3b}} 
+\index{ScrumHubBackend.Controllers.TasksController@{ScrumHubBackend.Controllers.TasksController}!UnassignPersonToTask@{UnassignPersonToTask}}
+\index{UnassignPersonToTask@{UnassignPersonToTask}!ScrumHubBackend.Controllers.TasksController@{ScrumHubBackend.Controllers.TasksController}}
+\doxysubsubsection{\texorpdfstring{UnassignPersonToTask()}{UnassignPersonToTask()}}
+{\footnotesize\ttfamily async Task$<$ IAction\+Result $>$ Scrum\+Hub\+Backend.\+Controllers.\+Tasks\+Controller.\+Unassign\+Person\+To\+Task (\begin{DoxyParamCaption}\item[{\mbox{[}\+From\+Header\mbox{]} string}]{auth\+Token,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Owner,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Name,  }\item[{\mbox{[}\+From\+Route\mbox{]} long}]{task\+Id,  }\item[{\mbox{[}\+From\+Body\mbox{]} \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_assign_person_f}{Assign\+PersonF}}}]{login }\end{DoxyParamCaption})}
+
+
+
+Unassigns the person from the task (requires admin permissions in repository) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em auth\+Token} & Authorization token of user\\
+\hline
+{\em repository\+Owner} & Owner of the repository\\
+\hline
+{\em repository\+Name} & Name of the repository\\
+\hline
+{\em task\+Id} & Id of the task\\
+\hline
+{\em login} & Login of the person\\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Scrum\+Hub\+Backend/\+Controllers/Tasks\+Controller.\+cs\end{DoxyCompactItemize}

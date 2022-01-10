@@ -1,0 +1,94 @@
+\hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_repository}{}\doxysection{Scrum\+Hub\+Backend.\+Communication\+Model.\+Repository Class Reference}
+\label{class_scrum_hub_backend_1_1_communication_model_1_1_repository}\index{ScrumHubBackend.CommunicationModel.Repository@{ScrumHubBackend.CommunicationModel.Repository}}
+
+
+Represents repository  
+
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_repository_a2f33507047408a94a85315d6d18ab44a}\label{class_scrum_hub_backend_1_1_communication_model_1_1_repository_a2f33507047408a94a85315d6d18ab44a}} 
+{\bfseries Repository} ()
+\begin{DoxyCompactList}\small\item\em Constructor \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_repository_aea6bc563a4fa2348dceaf308798dcb7a}\label{class_scrum_hub_backend_1_1_communication_model_1_1_repository_aea6bc563a4fa2348dceaf308798dcb7a}} 
+{\bfseries Repository} (Octokit.\+Repository repository, IEnumerable$<$ Octokit.\+Activity $>$ repo\+Activities, \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_context}{Database\+Context}} db\+Context)
+\begin{DoxyCompactList}\small\item\em Constructor \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_repository_acecc25dde17bd6a610c444f24e6f2987}\label{class_scrum_hub_backend_1_1_communication_model_1_1_repository_acecc25dde17bd6a610c444f24e6f2987}} 
+string? {\bfseries Name} = String.\+Empty\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Name of repository \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_repository_a42bfd3596698e3403490428017877ae3}\label{class_scrum_hub_backend_1_1_communication_model_1_1_repository_a42bfd3596698e3403490428017877ae3}} 
+string? {\bfseries Description} = String.\+Empty\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Description of the repository \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_repository_a1dca9ada74fb3984fbc48b9e00be2452}\label{class_scrum_hub_backend_1_1_communication_model_1_1_repository_a1dca9ada74fb3984fbc48b9e00be2452}} 
+string? {\bfseries Date\+Of\+Last\+Activity} = String.\+Empty\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Date of last user activity in format \char`\"{}yyyy-\/\+MM-\/dd HH\+:mm\+:ss \textquotesingle{}\+UTC\textquotesingle{}\char`\"{} or \char`\"{}\+No recent activity\char`\"{} \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_repository_aa826864356e1a5d2f015e798e115cef1}\label{class_scrum_hub_backend_1_1_communication_model_1_1_repository_aa826864356e1a5d2f015e798e115cef1}} 
+string? {\bfseries Type\+Of\+Last\+Activity} = String.\+Empty\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Type of last user activity or \char`\"{}\+No recent activity\char`\"{} \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_repository_ab32e0661fd1c351ac5ccf344f8140192}\label{class_scrum_hub_backend_1_1_communication_model_1_1_repository_ab32e0661fd1c351ac5ccf344f8140192}} 
+long {\bfseries Git\+Hub\+Id} = 0\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Git\+Hub id of repository \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_repository_a1e2e4a5d150077705eb3c9caf0d4dae6}\label{class_scrum_hub_backend_1_1_communication_model_1_1_repository_a1e2e4a5d150077705eb3c9caf0d4dae6}} 
+bool {\bfseries Has\+Admin\+Rights} = false\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Does current user have admin rights to the repository \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_repository_af45e6e597642617a2feedcffb5e1442e}\label{class_scrum_hub_backend_1_1_communication_model_1_1_repository_af45e6e597642617a2feedcffb5e1442e}} 
+bool {\bfseries Already\+In\+Scrum\+Hub} = false\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Is this repository already in Scrum\+Hub \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_repository_a85218a7f4ddaca97e0cafcb44c52b20b}\label{class_scrum_hub_backend_1_1_communication_model_1_1_repository_a85218a7f4ddaca97e0cafcb44c52b20b}} 
+List$<$ long $>$ {\bfseries Backlog\+Items} = new List$<$long$>$()\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em List of ids of backlog items \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_repository_aedb707bef94b5f77a165d3b035e9f54b}\label{class_scrum_hub_backend_1_1_communication_model_1_1_repository_aedb707bef94b5f77a165d3b035e9f54b}} 
+List$<$ long $>$ {\bfseries Sprints} = new List$<$long$>$()\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em List of numbers of sprints \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_repository_a3322a61c688133faf784e0bc4b63df0d}\label{class_scrum_hub_backend_1_1_communication_model_1_1_repository_a3322a61c688133faf784e0bc4b63df0d}} 
+const string {\bfseries no\+Recent\+Activity} = \char`\"{}No recent activity\char`\"{}
+\item 
+static Read\+Only\+Dictionary$<$ string, string $>$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_repository_a64024232b0144dbd9d6a30953352e780}{event\+Type\+To\+Readable\+String}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents repository 
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_repository_a64024232b0144dbd9d6a30953352e780}\label{class_scrum_hub_backend_1_1_communication_model_1_1_repository_a64024232b0144dbd9d6a30953352e780}} 
+\index{ScrumHubBackend.CommunicationModel.Repository@{ScrumHubBackend.CommunicationModel.Repository}!eventTypeToReadableString@{eventTypeToReadableString}}
+\index{eventTypeToReadableString@{eventTypeToReadableString}!ScrumHubBackend.CommunicationModel.Repository@{ScrumHubBackend.CommunicationModel.Repository}}
+\doxysubsubsection{\texorpdfstring{eventTypeToReadableString}{eventTypeToReadableString}}
+{\footnotesize\ttfamily Read\+Only\+Dictionary$<$string, string$>$ Scrum\+Hub\+Backend.\+Communication\+Model.\+Repository.\+event\+Type\+To\+Readable\+String\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \textcolor{keyword}{new}(\textcolor{keyword}{new} Dictionary<string, string>}
+\DoxyCodeLine{        \{}
+\DoxyCodeLine{            [\textcolor{stringliteral}{"{}CommitCommentEvent"{}}] = \textcolor{stringliteral}{"{}Commit comment created"{}},}
+\DoxyCodeLine{            [\textcolor{stringliteral}{"{}CreateEvent"{}}] = \textcolor{stringliteral}{"{}Branch or tag created"{}},}
+\DoxyCodeLine{            [\textcolor{stringliteral}{"{}DeleteEvent"{}}] = \textcolor{stringliteral}{"{}Branch or tag deleted"{}},}
+\DoxyCodeLine{            [\textcolor{stringliteral}{"{}ForkEvent"{}}] = \textcolor{stringliteral}{"{}Repository forked"{}},}
+\DoxyCodeLine{            [\textcolor{stringliteral}{"{}GollumEvent"{}}] = \textcolor{stringliteral}{"{}Wiki page created or updated"{}},}
+\DoxyCodeLine{            [\textcolor{stringliteral}{"{}IssueCommentEvent"{}}] = \textcolor{stringliteral}{"{}Issue or pull request comment action"{}},}
+\DoxyCodeLine{            [\textcolor{stringliteral}{"{}IssuesEvent"{}}] = \textcolor{stringliteral}{"{}Issue action"{}},}
+\DoxyCodeLine{            [\textcolor{stringliteral}{"{}MemberEvent"{}}] = \textcolor{stringliteral}{"{}Collabolators related action"{}},}
+\DoxyCodeLine{            [\textcolor{stringliteral}{"{}PublicEvent"{}}] = \textcolor{stringliteral}{"{}Repository changed from private to public, \(\backslash\)"{}Without a doubt: the best GitHub event.\(\backslash\)"{}"{}},}
+\DoxyCodeLine{            [\textcolor{stringliteral}{"{}PullRequestEvent"{}}] = \textcolor{stringliteral}{"{}Pull request action"{}},}
+\DoxyCodeLine{            [\textcolor{stringliteral}{"{}PullRequestReviewEvent"{}}] = \textcolor{stringliteral}{"{}Pull request review action"{}},}
+\DoxyCodeLine{            [\textcolor{stringliteral}{"{}PullRequestReviewCommentEvent"{}}] = \textcolor{stringliteral}{"{}Pull request review comment action"{}},}
+\DoxyCodeLine{            [\textcolor{stringliteral}{"{}PushEvent"{}}] = \textcolor{stringliteral}{"{}Commits pushed to a branch or tag"{}},}
+\DoxyCodeLine{            [\textcolor{stringliteral}{"{}ReleaseEvent"{}}] = \textcolor{stringliteral}{"{}Release action"{}},}
+\DoxyCodeLine{            [\textcolor{stringliteral}{"{}SponsorshipEvent"{}}] = \textcolor{stringliteral}{"{}Sponsorship action"{}},}
+\DoxyCodeLine{            [\textcolor{stringliteral}{"{}WatchEvent"{}}] = \textcolor{stringliteral}{"{}Starring action"{}},}
+\DoxyCodeLine{        \})}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Scrum\+Hub\+Backend/\+Communication\+Model/Repository.\+cs\end{DoxyCompactItemize}

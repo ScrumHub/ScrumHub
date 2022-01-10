@@ -1,0 +1,75 @@
+\hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_s_h_task}{}\doxysection{Scrum\+Hub\+Backend.\+Database\+Model.\+SHTask Class Reference}
+\label{class_scrum_hub_backend_1_1_database_model_1_1_s_h_task}\index{ScrumHubBackend.DatabaseModel.SHTask@{ScrumHubBackend.DatabaseModel.SHTask}}
+
+
+Represents one task that has elements in Scrum\+Hub  
+
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_s_h_task_aade5c45ab3a22cf1e63e06c7a658f504}\label{class_scrum_hub_backend_1_1_database_model_1_1_s_h_task_aade5c45ab3a22cf1e63e06c7a658f504}} 
+{\bfseries SHTask} ()
+\begin{DoxyCompactList}\small\item\em Constructor \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_scrum_hub_backend_1_1_database_model_1_1_s_h_task_a20ea5053bf157742407ab1498f1903fd}{SHTask}} (Octokit.\+Issue issue, \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_model_1_1_repository}{Repository}} repository, \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_context}{Database\+Context}} db\+Context, long? pbi\+Assigned\+To\+The\+Task=null)
+\begin{DoxyCompactList}\small\item\em Constructor, throws exceptions \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_s_h_task_aca7c3f77d84a0461995e1d75e43a8409}\label{class_scrum_hub_backend_1_1_database_model_1_1_s_h_task_aca7c3f77d84a0461995e1d75e43a8409}} 
+static ? \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_model_1_1_s_h_task}{SHTask}} {\bfseries Get\+Task\+From\+Issue} (Octokit.\+Issue issue, \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_context}{Database\+Context}} db\+Context)
+\begin{DoxyCompactList}\small\item\em Gests Scrum\+Hub task from issue, null if not found \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_s_h_task_aa56728b602fd4fb89f4683cbfc92460c}\label{class_scrum_hub_backend_1_1_database_model_1_1_s_h_task_aa56728b602fd4fb89f4683cbfc92460c}} 
+static bool {\bfseries Is\+Isue\+In\+Scrum\+Hub} (Octokit.\+Issue issue, \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_context}{Database\+Context}} db\+Context)
+\begin{DoxyCompactList}\small\item\em Checks if issue is already in Scrum\+Hub \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_s_h_task_a8d862862abba3ae21277f6e4c22d8e1b}\label{class_scrum_hub_backend_1_1_database_model_1_1_s_h_task_a8d862862abba3ae21277f6e4c22d8e1b}} 
+long {\bfseries Id}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Internal id of task \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_s_h_task_a3933087c5c7515e2a0a1f9b2a4a1e196}\label{class_scrum_hub_backend_1_1_database_model_1_1_s_h_task_a3933087c5c7515e2a0a1f9b2a4a1e196}} 
+int {\bfseries Git\+Hub\+Issue\+Id} = 0\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Id of the github issue representing the task \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_s_h_task_a05f42ceeb0a440b2b4b9b2bc1c5e463b}\label{class_scrum_hub_backend_1_1_database_model_1_1_s_h_task_a05f42ceeb0a440b2b4b9b2bc1c5e463b}} 
+int {\bfseries Git\+Hub\+Issue\+Number\+In\+Repo} = 0\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Id of the github issue representing the task \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_s_h_task_a77d838003e4f878a61561dbe88c5554a}\label{class_scrum_hub_backend_1_1_database_model_1_1_s_h_task_a77d838003e4f878a61561dbe88c5554a}} 
+long {\bfseries Repository\+Id}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Id of the repository \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_s_h_task_a1a39c4ab7b3a6c6aadcb0292af43c9ef}\label{class_scrum_hub_backend_1_1_database_model_1_1_s_h_task_a1a39c4ab7b3a6c6aadcb0292af43c9ef}} 
+\mbox{\hyperlink{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6}{SHTask\+Status}} {\bfseries Status}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Status of the task \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_s_h_task_ad5a7804450425589091cec021b8ebdbc}\label{class_scrum_hub_backend_1_1_database_model_1_1_s_h_task_ad5a7804450425589091cec021b8ebdbc}} 
+long? {\bfseries PBI}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Id of the PBI where the task is assigned \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents one task that has elements in Scrum\+Hub 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_s_h_task_a20ea5053bf157742407ab1498f1903fd}\label{class_scrum_hub_backend_1_1_database_model_1_1_s_h_task_a20ea5053bf157742407ab1498f1903fd}} 
+\index{ScrumHubBackend.DatabaseModel.SHTask@{ScrumHubBackend.DatabaseModel.SHTask}!SHTask@{SHTask}}
+\index{SHTask@{SHTask}!ScrumHubBackend.DatabaseModel.SHTask@{ScrumHubBackend.DatabaseModel.SHTask}}
+\doxysubsubsection{\texorpdfstring{SHTask()}{SHTask()}}
+{\footnotesize\ttfamily Scrum\+Hub\+Backend.\+Database\+Model.\+SHTask.\+SHTask (\begin{DoxyParamCaption}\item[{Octokit.\+Issue}]{issue,  }\item[{\mbox{\hyperlink{class_scrum_hub_backend_1_1_database_model_1_1_repository}{Repository}}}]{repository,  }\item[{\mbox{\hyperlink{class_scrum_hub_backend_1_1_database_context}{Database\+Context}}}]{db\+Context,  }\item[{long?}]{pbi\+Assigned\+To\+The\+Task = {\ttfamily null} }\end{DoxyParamCaption})}
+
+
+
+Constructor, throws exceptions 
+
+
+\begin{DoxyExceptions}{Exceptions}
+{\em \mbox{\hyperlink{class_scrum_hub_backend_1_1_custom_exceptions_1_1_conflict_exception}{Custom\+Exceptions.\+Conflict\+Exception}}} & Issue is already in Scrum\+Hub\\
+\hline
+{\em \mbox{\hyperlink{class_scrum_hub_backend_1_1_custom_exceptions_1_1_not_found_exception}{Custom\+Exceptions.\+Not\+Found\+Exception}}} & Pbi does not exist in the repository\\
+\hline
+{\em \mbox{\hyperlink{class_scrum_hub_backend_1_1_custom_exceptions_1_1_not_found_exception}{Custom\+Exceptions.\+Not\+Found\+Exception}}} & Issue does not belong to the repository\\
+\hline
+\end{DoxyExceptions}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Scrum\+Hub\+Backend/\+Database\+Model/SHTask.\+cs\end{DoxyCompactItemize}

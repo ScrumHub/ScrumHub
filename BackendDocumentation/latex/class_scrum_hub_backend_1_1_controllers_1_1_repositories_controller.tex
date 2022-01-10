@@ -1,0 +1,81 @@
+\hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_repositories_controller}{}\doxysection{Scrum\+Hub\+Backend.\+Controllers.\+Repositories\+Controller Class Reference}
+\label{class_scrum_hub_backend_1_1_controllers_1_1_repositories_controller}\index{ScrumHubBackend.Controllers.RepositoriesController@{ScrumHubBackend.Controllers.RepositoriesController}}
+
+
+Controller for repositories  
+
+
+Inheritance diagram for Scrum\+Hub\+Backend.\+Controllers.\+Repositories\+Controller\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_scrum_hub_backend_1_1_controllers_1_1_repositories_controller}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_repositories_controller_a817aa633072cb51540b5c2e3f79b6218}\label{class_scrum_hub_backend_1_1_controllers_1_1_repositories_controller_a817aa633072cb51540b5c2e3f79b6218}} 
+{\bfseries Repositories\+Controller} (ILogger$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_repositories_controller}{Repositories\+Controller}} $>$ logger, IMediator mediator)
+\begin{DoxyCompactList}\small\item\em Constructor \end{DoxyCompactList}\item 
+async Task$<$ IAction\+Result $>$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_repositories_controller_a0a3fad9c3bf9837b759332ee8dbd3932}{Get\+Repositories}} (\mbox{[}From\+Header\mbox{]} string auth\+Token, \mbox{[}From\+Query\mbox{]} int page\+Number=1, \mbox{[}From\+Query\mbox{]} int page\+Size=10, \mbox{[}From\+Query\mbox{]} string? name\+Filter=null)
+\begin{DoxyCompactList}\small\item\em Gets repositories (requires read permissions in repository) \end{DoxyCompactList}\item 
+async Task$<$ IAction\+Result $>$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_repositories_controller_a57a482d448f9bf469df08da4745537ff}{Add\+Repository\+To\+Scrum\+Hub}} (\mbox{[}From\+Header\mbox{]} string auth\+Token, \mbox{[}From\+Body\mbox{]} \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_id_f}{IdF}} repository\+Index)
+\begin{DoxyCompactList}\small\item\em Adds repository to Scrum\+Hub (requires admin permissions in repository) \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_repositories_controller_a6f23bf09312d219942f6b0a719f92e88}\label{class_scrum_hub_backend_1_1_controllers_1_1_repositories_controller_a6f23bf09312d219942f6b0a719f92e88}} 
+readonly ILogger$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_repositories_controller}{Repositories\+Controller}} $>$ {\bfseries \+\_\+logger}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_repositories_controller_ad25fe59a29013783c7da31ed795af127}\label{class_scrum_hub_backend_1_1_controllers_1_1_repositories_controller_ad25fe59a29013783c7da31ed795af127}} 
+readonly IMediator {\bfseries \+\_\+mediator}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Controller for repositories 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_repositories_controller_a57a482d448f9bf469df08da4745537ff}\label{class_scrum_hub_backend_1_1_controllers_1_1_repositories_controller_a57a482d448f9bf469df08da4745537ff}} 
+\index{ScrumHubBackend.Controllers.RepositoriesController@{ScrumHubBackend.Controllers.RepositoriesController}!AddRepositoryToScrumHub@{AddRepositoryToScrumHub}}
+\index{AddRepositoryToScrumHub@{AddRepositoryToScrumHub}!ScrumHubBackend.Controllers.RepositoriesController@{ScrumHubBackend.Controllers.RepositoriesController}}
+\doxysubsubsection{\texorpdfstring{AddRepositoryToScrumHub()}{AddRepositoryToScrumHub()}}
+{\footnotesize\ttfamily async Task$<$ IAction\+Result $>$ Scrum\+Hub\+Backend.\+Controllers.\+Repositories\+Controller.\+Add\+Repository\+To\+Scrum\+Hub (\begin{DoxyParamCaption}\item[{\mbox{[}\+From\+Header\mbox{]} string}]{auth\+Token,  }\item[{\mbox{[}\+From\+Body\mbox{]} \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_id_f}{IdF}}}]{repository\+Index }\end{DoxyParamCaption})}
+
+
+
+Adds repository to Scrum\+Hub (requires admin permissions in repository) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em auth\+Token} & Authorization token of user\\
+\hline
+{\em repository\+Index} & Id of repository that will be added to Scrum\+Hub\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_repositories_controller_a0a3fad9c3bf9837b759332ee8dbd3932}\label{class_scrum_hub_backend_1_1_controllers_1_1_repositories_controller_a0a3fad9c3bf9837b759332ee8dbd3932}} 
+\index{ScrumHubBackend.Controllers.RepositoriesController@{ScrumHubBackend.Controllers.RepositoriesController}!GetRepositories@{GetRepositories}}
+\index{GetRepositories@{GetRepositories}!ScrumHubBackend.Controllers.RepositoriesController@{ScrumHubBackend.Controllers.RepositoriesController}}
+\doxysubsubsection{\texorpdfstring{GetRepositories()}{GetRepositories()}}
+{\footnotesize\ttfamily async Task$<$ IAction\+Result $>$ Scrum\+Hub\+Backend.\+Controllers.\+Repositories\+Controller.\+Get\+Repositories (\begin{DoxyParamCaption}\item[{\mbox{[}\+From\+Header\mbox{]} string}]{auth\+Token,  }\item[{\mbox{[}\+From\+Query\mbox{]} int}]{page\+Number = {\ttfamily 1},  }\item[{\mbox{[}\+From\+Query\mbox{]} int}]{page\+Size = {\ttfamily 10},  }\item[{\mbox{[}\+From\+Query\mbox{]} string?}]{name\+Filter = {\ttfamily null} }\end{DoxyParamCaption})}
+
+
+
+Gets repositories (requires read permissions in repository) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em auth\+Token} & Authorization token of user\\
+\hline
+{\em page\+Number} & Page to get, default = 1\\
+\hline
+{\em page\+Size} & Size of page, default = 10\\
+\hline
+{\em name\+Filter} & Filter for name, default is empty\\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Scrum\+Hub\+Backend/\+Controllers/Repositories\+Controller.\+cs\end{DoxyCompactItemize}

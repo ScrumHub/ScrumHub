@@ -1,0 +1,216 @@
+\hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller}{}\doxysection{Scrum\+Hub\+Backend.\+Controllers.\+Backlog\+Item\+Controller Class Reference}
+\label{class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller}\index{ScrumHubBackend.Controllers.BacklogItemController@{ScrumHubBackend.Controllers.BacklogItemController}}
+
+
+Controller for repositories  
+
+
+Inheritance diagram for Scrum\+Hub\+Backend.\+Controllers.\+Backlog\+Item\+Controller\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller_a124830aa216e546fa98830eccbc1d290}\label{class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller_a124830aa216e546fa98830eccbc1d290}} 
+{\bfseries Backlog\+Item\+Controller} (ILogger$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller}{Backlog\+Item\+Controller}} $>$ logger, IMediator mediator)
+\begin{DoxyCompactList}\small\item\em Constructor \end{DoxyCompactList}\item 
+async Task$<$ IAction\+Result $>$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller_afb00c90e9f6650aedd86ead8a286bfe6}{Get\+Backlog\+Items}} (\mbox{[}From\+Header\mbox{]} string auth\+Token, \mbox{[}From\+Route\mbox{]} string repository\+Owner, \mbox{[}From\+Route\mbox{]} string repository\+Name, \mbox{[}From\+Query\mbox{]} int page\+Number=1, \mbox{[}From\+Query\mbox{]} int page\+Size=10, \mbox{[}From\+Query\mbox{]} string? name\+Filter=null, \mbox{[}From\+Query\mbox{]} bool? finished=null, \mbox{[}From\+Query\mbox{]} bool? esimated=null, \mbox{[}From\+Query\mbox{]} bool? in\+Sprint=null, \mbox{[}From\+Query\mbox{]} bool? one\+Page=null)
+\begin{DoxyCompactList}\small\item\em Gets PBIs for given repository (requires read permissions in repository) \end{DoxyCompactList}\item 
+async Task$<$ IAction\+Result $>$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller_aee9c67db257390c5b91e9432102a2383}{Get\+One\+Backlog\+Item}} (\mbox{[}From\+Header\mbox{]} string auth\+Token, \mbox{[}From\+Route\mbox{]} string repository\+Owner, \mbox{[}From\+Route\mbox{]} string repository\+Name, \mbox{[}From\+Route\mbox{]} int pbi\+Id)
+\begin{DoxyCompactList}\small\item\em Gets one PBI from the repository (requires read permissions in repository) \end{DoxyCompactList}\item 
+async Task$<$ IAction\+Result $>$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller_af0c92159990e1a1016e1514f121d712e}{Add\+Backlog\+Item}} (\mbox{[}From\+Header\mbox{]} string auth\+Token, \mbox{[}From\+Route\mbox{]} string repository\+Owner, \mbox{[}From\+Route\mbox{]} string repository\+Name, \mbox{[}From\+Body\mbox{]} \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_backlog_item_f}{Backlog\+ItemF}} backlog\+Item)
+\begin{DoxyCompactList}\small\item\em Add PBI for given repository (requires admin permissions in repository) \end{DoxyCompactList}\item 
+async Task$<$ IAction\+Result $>$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller_a33ed9df3ff4199eb9bce5ee688ec86cc}{Update\+Backlog\+Item}} (\mbox{[}From\+Header\mbox{]} string auth\+Token, \mbox{[}From\+Route\mbox{]} string repository\+Owner, \mbox{[}From\+Route\mbox{]} string repository\+Name, \mbox{[}From\+Route\mbox{]} int pbi\+Id, \mbox{[}From\+Body\mbox{]} \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_backlog_item_f}{Backlog\+ItemF}} backlog\+Item)
+\begin{DoxyCompactList}\small\item\em Update PBI for given repository (requires admin permissions in repository) \end{DoxyCompactList}\item 
+async Task$<$ IAction\+Result $>$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller_a7ab966e32cb237024d4e8cfc49136627}{Finish\+Backlog\+Item}} (\mbox{[}From\+Header\mbox{]} string auth\+Token, \mbox{[}From\+Route\mbox{]} string repository\+Owner, \mbox{[}From\+Route\mbox{]} string repository\+Name, \mbox{[}From\+Route\mbox{]} int pbi\+Id)
+\begin{DoxyCompactList}\small\item\em Finish PBI for given repository (requires admin permissions in repository) \end{DoxyCompactList}\item 
+async Task$<$ IAction\+Result $>$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller_ae5529033c5b42a08d943f2aae95806b2}{Estimate\+Backlog\+Item}} (\mbox{[}From\+Header\mbox{]} string auth\+Token, \mbox{[}From\+Route\mbox{]} string repository\+Owner, \mbox{[}From\+Route\mbox{]} string repository\+Name, \mbox{[}From\+Route\mbox{]} int pbi\+Id, \mbox{[}From\+Body\mbox{]} \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_estimate_f}{EstimateF}} estimation)
+\begin{DoxyCompactList}\small\item\em Estimate PBI for given repository (requires admin permissions in repository) \end{DoxyCompactList}\item 
+async Task$<$ IAction\+Result $>$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller_a080488483c042ac68b92fb5fb7df3d85}{Remove\+Backlog\+Item}} (\mbox{[}From\+Header\mbox{]} string auth\+Token, \mbox{[}From\+Route\mbox{]} string repository\+Owner, \mbox{[}From\+Route\mbox{]} string repository\+Name, \mbox{[}From\+Route\mbox{]} int pbi\+Id)
+\begin{DoxyCompactList}\small\item\em Delete PBI for given repository (requires admin permissions in repository) \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller_aa5335458ec04c5d35cdd79f92557c071}\label{class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller_aa5335458ec04c5d35cdd79f92557c071}} 
+readonly ILogger$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller}{Backlog\+Item\+Controller}} $>$ {\bfseries \+\_\+logger}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller_a2fb6b06f04a4f2599e4f78be6b047fa3}\label{class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller_a2fb6b06f04a4f2599e4f78be6b047fa3}} 
+readonly IMediator {\bfseries \+\_\+mediator}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Controller for repositories 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller_af0c92159990e1a1016e1514f121d712e}\label{class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller_af0c92159990e1a1016e1514f121d712e}} 
+\index{ScrumHubBackend.Controllers.BacklogItemController@{ScrumHubBackend.Controllers.BacklogItemController}!AddBacklogItem@{AddBacklogItem}}
+\index{AddBacklogItem@{AddBacklogItem}!ScrumHubBackend.Controllers.BacklogItemController@{ScrumHubBackend.Controllers.BacklogItemController}}
+\doxysubsubsection{\texorpdfstring{AddBacklogItem()}{AddBacklogItem()}}
+{\footnotesize\ttfamily async Task$<$ IAction\+Result $>$ Scrum\+Hub\+Backend.\+Controllers.\+Backlog\+Item\+Controller.\+Add\+Backlog\+Item (\begin{DoxyParamCaption}\item[{\mbox{[}\+From\+Header\mbox{]} string}]{auth\+Token,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Owner,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Name,  }\item[{\mbox{[}\+From\+Body\mbox{]} \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_backlog_item_f}{Backlog\+ItemF}}}]{backlog\+Item }\end{DoxyParamCaption})}
+
+
+
+Add PBI for given repository (requires admin permissions in repository) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em auth\+Token} & Authorization token of user\\
+\hline
+{\em repository\+Owner} & Owner of the repository\\
+\hline
+{\em repository\+Name} & Name of the repository\\
+\hline
+{\em backlog\+Item} & Item to add\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller_ae5529033c5b42a08d943f2aae95806b2}\label{class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller_ae5529033c5b42a08d943f2aae95806b2}} 
+\index{ScrumHubBackend.Controllers.BacklogItemController@{ScrumHubBackend.Controllers.BacklogItemController}!EstimateBacklogItem@{EstimateBacklogItem}}
+\index{EstimateBacklogItem@{EstimateBacklogItem}!ScrumHubBackend.Controllers.BacklogItemController@{ScrumHubBackend.Controllers.BacklogItemController}}
+\doxysubsubsection{\texorpdfstring{EstimateBacklogItem()}{EstimateBacklogItem()}}
+{\footnotesize\ttfamily async Task$<$ IAction\+Result $>$ Scrum\+Hub\+Backend.\+Controllers.\+Backlog\+Item\+Controller.\+Estimate\+Backlog\+Item (\begin{DoxyParamCaption}\item[{\mbox{[}\+From\+Header\mbox{]} string}]{auth\+Token,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Owner,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Name,  }\item[{\mbox{[}\+From\+Route\mbox{]} int}]{pbi\+Id,  }\item[{\mbox{[}\+From\+Body\mbox{]} \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_estimate_f}{EstimateF}}}]{estimation }\end{DoxyParamCaption})}
+
+
+
+Estimate PBI for given repository (requires admin permissions in repository) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em auth\+Token} & Authorization token of user\\
+\hline
+{\em repository\+Owner} & Owner of the repository\\
+\hline
+{\em repository\+Name} & Name of the repository\\
+\hline
+{\em pbi\+Id} & Id of the PBI\\
+\hline
+{\em estimation} & Estimation of the PBI\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller_a7ab966e32cb237024d4e8cfc49136627}\label{class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller_a7ab966e32cb237024d4e8cfc49136627}} 
+\index{ScrumHubBackend.Controllers.BacklogItemController@{ScrumHubBackend.Controllers.BacklogItemController}!FinishBacklogItem@{FinishBacklogItem}}
+\index{FinishBacklogItem@{FinishBacklogItem}!ScrumHubBackend.Controllers.BacklogItemController@{ScrumHubBackend.Controllers.BacklogItemController}}
+\doxysubsubsection{\texorpdfstring{FinishBacklogItem()}{FinishBacklogItem()}}
+{\footnotesize\ttfamily async Task$<$ IAction\+Result $>$ Scrum\+Hub\+Backend.\+Controllers.\+Backlog\+Item\+Controller.\+Finish\+Backlog\+Item (\begin{DoxyParamCaption}\item[{\mbox{[}\+From\+Header\mbox{]} string}]{auth\+Token,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Owner,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Name,  }\item[{\mbox{[}\+From\+Route\mbox{]} int}]{pbi\+Id }\end{DoxyParamCaption})}
+
+
+
+Finish PBI for given repository (requires admin permissions in repository) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em auth\+Token} & Authorization token of user\\
+\hline
+{\em repository\+Owner} & Owner of the repository\\
+\hline
+{\em repository\+Name} & Name of the repository\\
+\hline
+{\em pbi\+Id} & Id of the PBI\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller_afb00c90e9f6650aedd86ead8a286bfe6}\label{class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller_afb00c90e9f6650aedd86ead8a286bfe6}} 
+\index{ScrumHubBackend.Controllers.BacklogItemController@{ScrumHubBackend.Controllers.BacklogItemController}!GetBacklogItems@{GetBacklogItems}}
+\index{GetBacklogItems@{GetBacklogItems}!ScrumHubBackend.Controllers.BacklogItemController@{ScrumHubBackend.Controllers.BacklogItemController}}
+\doxysubsubsection{\texorpdfstring{GetBacklogItems()}{GetBacklogItems()}}
+{\footnotesize\ttfamily async Task$<$ IAction\+Result $>$ Scrum\+Hub\+Backend.\+Controllers.\+Backlog\+Item\+Controller.\+Get\+Backlog\+Items (\begin{DoxyParamCaption}\item[{\mbox{[}\+From\+Header\mbox{]} string}]{auth\+Token,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Owner,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Name,  }\item[{\mbox{[}\+From\+Query\mbox{]} int}]{page\+Number = {\ttfamily 1},  }\item[{\mbox{[}\+From\+Query\mbox{]} int}]{page\+Size = {\ttfamily 10},  }\item[{\mbox{[}\+From\+Query\mbox{]} string?}]{name\+Filter = {\ttfamily null},  }\item[{\mbox{[}\+From\+Query\mbox{]} bool?}]{finished = {\ttfamily null},  }\item[{\mbox{[}\+From\+Query\mbox{]} bool?}]{esimated = {\ttfamily null},  }\item[{\mbox{[}\+From\+Query\mbox{]} bool?}]{in\+Sprint = {\ttfamily null},  }\item[{\mbox{[}\+From\+Query\mbox{]} bool?}]{one\+Page = {\ttfamily null} }\end{DoxyParamCaption})}
+
+
+
+Gets PBIs for given repository (requires read permissions in repository) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em auth\+Token} & Authorization token of user\\
+\hline
+{\em repository\+Owner} & Owner of the repository\\
+\hline
+{\em repository\+Name} & Name of the repository\\
+\hline
+{\em page\+Number} & Page to get, default = 1\\
+\hline
+{\em page\+Size} & Size of page, default = 10\\
+\hline
+{\em name\+Filter} & Filter for name, default is empty\\
+\hline
+{\em finished} & Filter for finished PBIs, true or false\\
+\hline
+{\em esimated} & Filter for esimated PBIs, true or false\\
+\hline
+{\em in\+Sprint} & Filters for PBIs that are in a sprint, true or false\\
+\hline
+{\em one\+Page} & True if want to fetch everything as one page, false/skipped otherwise\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller_aee9c67db257390c5b91e9432102a2383}\label{class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller_aee9c67db257390c5b91e9432102a2383}} 
+\index{ScrumHubBackend.Controllers.BacklogItemController@{ScrumHubBackend.Controllers.BacklogItemController}!GetOneBacklogItem@{GetOneBacklogItem}}
+\index{GetOneBacklogItem@{GetOneBacklogItem}!ScrumHubBackend.Controllers.BacklogItemController@{ScrumHubBackend.Controllers.BacklogItemController}}
+\doxysubsubsection{\texorpdfstring{GetOneBacklogItem()}{GetOneBacklogItem()}}
+{\footnotesize\ttfamily async Task$<$ IAction\+Result $>$ Scrum\+Hub\+Backend.\+Controllers.\+Backlog\+Item\+Controller.\+Get\+One\+Backlog\+Item (\begin{DoxyParamCaption}\item[{\mbox{[}\+From\+Header\mbox{]} string}]{auth\+Token,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Owner,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Name,  }\item[{\mbox{[}\+From\+Route\mbox{]} int}]{pbi\+Id }\end{DoxyParamCaption})}
+
+
+
+Gets one PBI from the repository (requires read permissions in repository) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em auth\+Token} & Authorization token of user\\
+\hline
+{\em repository\+Owner} & Owner of the repository\\
+\hline
+{\em repository\+Name} & Name of the repository\\
+\hline
+{\em pbi\+Id} & Id of the PBI\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller_a080488483c042ac68b92fb5fb7df3d85}\label{class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller_a080488483c042ac68b92fb5fb7df3d85}} 
+\index{ScrumHubBackend.Controllers.BacklogItemController@{ScrumHubBackend.Controllers.BacklogItemController}!RemoveBacklogItem@{RemoveBacklogItem}}
+\index{RemoveBacklogItem@{RemoveBacklogItem}!ScrumHubBackend.Controllers.BacklogItemController@{ScrumHubBackend.Controllers.BacklogItemController}}
+\doxysubsubsection{\texorpdfstring{RemoveBacklogItem()}{RemoveBacklogItem()}}
+{\footnotesize\ttfamily async Task$<$ IAction\+Result $>$ Scrum\+Hub\+Backend.\+Controllers.\+Backlog\+Item\+Controller.\+Remove\+Backlog\+Item (\begin{DoxyParamCaption}\item[{\mbox{[}\+From\+Header\mbox{]} string}]{auth\+Token,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Owner,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Name,  }\item[{\mbox{[}\+From\+Route\mbox{]} int}]{pbi\+Id }\end{DoxyParamCaption})}
+
+
+
+Delete PBI for given repository (requires admin permissions in repository) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em auth\+Token} & Authorization token of user\\
+\hline
+{\em repository\+Owner} & Owner of the repository\\
+\hline
+{\em repository\+Name} & Name of the repository\\
+\hline
+{\em pbi\+Id} & Id of the PBI\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller_a33ed9df3ff4199eb9bce5ee688ec86cc}\label{class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller_a33ed9df3ff4199eb9bce5ee688ec86cc}} 
+\index{ScrumHubBackend.Controllers.BacklogItemController@{ScrumHubBackend.Controllers.BacklogItemController}!UpdateBacklogItem@{UpdateBacklogItem}}
+\index{UpdateBacklogItem@{UpdateBacklogItem}!ScrumHubBackend.Controllers.BacklogItemController@{ScrumHubBackend.Controllers.BacklogItemController}}
+\doxysubsubsection{\texorpdfstring{UpdateBacklogItem()}{UpdateBacklogItem()}}
+{\footnotesize\ttfamily async Task$<$ IAction\+Result $>$ Scrum\+Hub\+Backend.\+Controllers.\+Backlog\+Item\+Controller.\+Update\+Backlog\+Item (\begin{DoxyParamCaption}\item[{\mbox{[}\+From\+Header\mbox{]} string}]{auth\+Token,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Owner,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Name,  }\item[{\mbox{[}\+From\+Route\mbox{]} int}]{pbi\+Id,  }\item[{\mbox{[}\+From\+Body\mbox{]} \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_backlog_item_f}{Backlog\+ItemF}}}]{backlog\+Item }\end{DoxyParamCaption})}
+
+
+
+Update PBI for given repository (requires admin permissions in repository) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em auth\+Token} & Authorization token of user\\
+\hline
+{\em repository\+Owner} & Owner of the repository\\
+\hline
+{\em repository\+Name} & Name of the repository\\
+\hline
+{\em pbi\+Id} & Id of the PBI\\
+\hline
+{\em backlog\+Item} & All values (updated and not updated) of PBI\\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Scrum\+Hub\+Backend/\+Controllers/Backlog\+Item\+Controller.\+cs\end{DoxyCompactItemize}
