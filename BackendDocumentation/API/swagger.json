@@ -1,0 +1,2911 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "API",
+    "version": "v1"
+  },
+  "paths": {
+    "/api/BacklogItem/{repositoryOwner}/{repositoryName}": {
+      "get": {
+        "tags": [
+          "BacklogItem"
+        ],
+        "summary": "Gets PBIs for given repository (requires read permissions in repository)",
+        "parameters": [
+          {
+            "name": "authToken",
+            "in": "header",
+            "description": "Authorization token of user",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryOwner",
+            "in": "path",
+            "description": "Owner of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryName",
+            "in": "path",
+            "description": "Name of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page to get, default = 1",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Size of page, default = 10",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "name": "nameFilter",
+            "in": "query",
+            "description": "Filter for name, default is empty",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "finished",
+            "in": "query",
+            "description": "Filter for finished PBIs, true or false",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "esimated",
+            "in": "query",
+            "description": "Filter for esimated PBIs, true or false",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "inSprint",
+            "in": "query",
+            "description": "Filters for PBIs that are in a sprint, true or false",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "onePage",
+            "in": "query",
+            "description": "True if want to fetch everything as one page, false/skipped otherwise",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BacklogItemPaginatedList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "BacklogItem"
+        ],
+        "summary": "Add PBI for given repository (requires admin permissions in repository)",
+        "parameters": [
+          {
+            "name": "authToken",
+            "in": "header",
+            "description": "Authorization token of user",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryOwner",
+            "in": "path",
+            "description": "Owner of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryName",
+            "in": "path",
+            "description": "Name of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Item to add",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BacklogItemF"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BacklogItemF"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/BacklogItemF"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BacklogItem"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/BacklogItem/{repositoryOwner}/{repositoryName}/{pbiId}": {
+      "get": {
+        "tags": [
+          "BacklogItem"
+        ],
+        "summary": "Gets one PBI from the repository (requires read permissions in repository)",
+        "parameters": [
+          {
+            "name": "authToken",
+            "in": "header",
+            "description": "Authorization token of user",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryOwner",
+            "in": "path",
+            "description": "Owner of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryName",
+            "in": "path",
+            "description": "Name of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pbiId",
+            "in": "path",
+            "description": "Id of the PBI",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BacklogItem"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "BacklogItem"
+        ],
+        "summary": "Update PBI for given repository (requires admin permissions in repository)",
+        "parameters": [
+          {
+            "name": "authToken",
+            "in": "header",
+            "description": "Authorization token of user",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryOwner",
+            "in": "path",
+            "description": "Owner of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryName",
+            "in": "path",
+            "description": "Name of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pbiId",
+            "in": "path",
+            "description": "Id of the PBI",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "All values (updated and not updated) of PBI",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BacklogItemF"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BacklogItemF"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/BacklogItemF"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BacklogItem"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "BacklogItem"
+        ],
+        "summary": "Delete PBI for given repository (requires admin permissions in repository)",
+        "parameters": [
+          {
+            "name": "authToken",
+            "in": "header",
+            "description": "Authorization token of user",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryOwner",
+            "in": "path",
+            "description": "Owner of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryName",
+            "in": "path",
+            "description": "Name of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pbiId",
+            "in": "path",
+            "description": "Id of the PBI",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/BacklogItem/{repositoryOwner}/{repositoryName}/{pbiId}/finish": {
+      "patch": {
+        "tags": [
+          "BacklogItem"
+        ],
+        "summary": "Finish PBI for given repository (requires admin permissions in repository)",
+        "parameters": [
+          {
+            "name": "authToken",
+            "in": "header",
+            "description": "Authorization token of user",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryOwner",
+            "in": "path",
+            "description": "Owner of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryName",
+            "in": "path",
+            "description": "Name of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pbiId",
+            "in": "path",
+            "description": "Id of the PBI",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BacklogItem"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/BacklogItem/{repositoryOwner}/{repositoryName}/{pbiId}/estimate": {
+      "patch": {
+        "tags": [
+          "BacklogItem"
+        ],
+        "summary": "Estimate PBI for given repository (requires admin permissions in repository)",
+        "parameters": [
+          {
+            "name": "authToken",
+            "in": "header",
+            "description": "Authorization token of user",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryOwner",
+            "in": "path",
+            "description": "Owner of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryName",
+            "in": "path",
+            "description": "Name of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pbiId",
+            "in": "path",
+            "description": "Id of the PBI",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Estimation of the PBI",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EstimateF"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EstimateF"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/EstimateF"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BacklogItem"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/People/current": {
+      "get": {
+        "tags": [
+          "People"
+        ],
+        "summary": "Get current user",
+        "parameters": [
+          {
+            "name": "authToken",
+            "in": "header",
+            "description": "Authorization token of user",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Person"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/People/{repositoryOwner}/{repositoryName}": {
+      "get": {
+        "tags": [
+          "People"
+        ],
+        "summary": "Gets users for given repository (requires read permissions in repository)",
+        "parameters": [
+          {
+            "name": "authToken",
+            "in": "header",
+            "description": "Authorization token of user",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryOwner",
+            "in": "path",
+            "description": "Owner of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryName",
+            "in": "path",
+            "description": "Name of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonPaginatedList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Repositories": {
+      "get": {
+        "tags": [
+          "Repositories"
+        ],
+        "summary": "Gets repositories (requires read permissions in repository)",
+        "parameters": [
+          {
+            "name": "authToken",
+            "in": "header",
+            "description": "Authorization token of user",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page to get, default = 1",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Size of page, default = 10",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "name": "nameFilter",
+            "in": "query",
+            "description": "Filter for name, default is empty",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RepositoryPaginatedList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Repositories"
+        ],
+        "summary": "Adds repository to ScrumHub (requires admin permissions in repository)",
+        "parameters": [
+          {
+            "name": "authToken",
+            "in": "header",
+            "description": "Authorization token of user",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Id of repository that will be added to ScrumHub",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IdF"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IdF"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/IdF"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Repository"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Sprints/{repositoryOwner}/{repositoryName}": {
+      "get": {
+        "tags": [
+          "Sprints"
+        ],
+        "summary": "Gets sprints for given repository (requires read permissions in repository)",
+        "parameters": [
+          {
+            "name": "authToken",
+            "in": "header",
+            "description": "Authorization token of user",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryOwner",
+            "in": "path",
+            "description": "Owner of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryName",
+            "in": "path",
+            "description": "Name of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page to get, default = 1",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Size of page, default = 10",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "name": "completed",
+            "in": "query",
+            "description": "Filter for only completed or only not completed sprints",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "onePage",
+            "in": "query",
+            "description": "True if want to fetch everything as one page, false/skipped otherwise",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SprintPaginatedList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Sprints"
+        ],
+        "summary": "Add Sprint for given repository (requires admin permissions in repository)",
+        "parameters": [
+          {
+            "name": "authToken",
+            "in": "header",
+            "description": "Authorization token of user",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryOwner",
+            "in": "path",
+            "description": "Owner of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryName",
+            "in": "path",
+            "description": "Name of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Item to add",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SprintF"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SprintF"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SprintF"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Sprint"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Sprints/{repositoryOwner}/{repositoryName}/{sprintNumber}": {
+      "get": {
+        "tags": [
+          "Sprints"
+        ],
+        "summary": "Gets one sprint from the repository (requires read permissions in repository)",
+        "parameters": [
+          {
+            "name": "authToken",
+            "in": "header",
+            "description": "Authorization token of user",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryOwner",
+            "in": "path",
+            "description": "Owner of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryName",
+            "in": "path",
+            "description": "Name of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sprintNumber",
+            "in": "path",
+            "description": "Number of the sprint",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Sprint"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Sprints"
+        ],
+        "summary": "Update Sprint for given repository (requires admin permissions in repository)",
+        "parameters": [
+          {
+            "name": "authToken",
+            "in": "header",
+            "description": "Authorization token of user",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryOwner",
+            "in": "path",
+            "description": "Owner of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryName",
+            "in": "path",
+            "description": "Name of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sprintNumber",
+            "in": "path",
+            "description": "Id of the PBI",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "All values (updated and not updated) of sprint",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SprintF"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SprintF"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SprintF"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Sprint"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Sprints/{repositoryOwner}/{repositoryName}/{sprintNumber}/finish": {
+      "put": {
+        "tags": [
+          "Sprints"
+        ],
+        "summary": "Finish sprint (requires admin permissions in repository)",
+        "parameters": [
+          {
+            "name": "authToken",
+            "in": "header",
+            "description": "Authorization token of user",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryOwner",
+            "in": "path",
+            "description": "Owner of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryName",
+            "in": "path",
+            "description": "Name of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sprintNumber",
+            "in": "path",
+            "description": "Id of the PBI",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "failed",
+            "in": "query",
+            "description": "True if sprint failed, false (default) if it was successful",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Sprint"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Tasks/{repositoryOwner}/{repositoryName}": {
+      "get": {
+        "tags": [
+          "Tasks"
+        ],
+        "summary": "Gets tasks for repository (requires read permissions in repository)",
+        "parameters": [
+          {
+            "name": "authToken",
+            "in": "header",
+            "description": "Authorization token of user",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryOwner",
+            "in": "path",
+            "description": "Owner of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryName",
+            "in": "path",
+            "description": "Name of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "Page to get, default = 1",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Size of page, default = 10",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "name": "onePage",
+            "in": "query",
+            "description": "True if want to fetch everything as one page, false/skipped otherwise",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SHTaskPaginatedList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Tasks"
+        ],
+        "summary": "Adds new task in the repository (requires admin permissions in repository)",
+        "parameters": [
+          {
+            "name": "authToken",
+            "in": "header",
+            "description": "Authorization token of user",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryOwner",
+            "in": "path",
+            "description": "Owner of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryName",
+            "in": "path",
+            "description": "Name of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Information about new task",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskF"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskF"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskF"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SHTask"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Tasks/{repositoryOwner}/{repositoryName}/{taskId}": {
+      "get": {
+        "tags": [
+          "Tasks"
+        ],
+        "summary": "Gets one task (requires read permissions in repository)",
+        "parameters": [
+          {
+            "name": "authToken",
+            "in": "header",
+            "description": "Authorization token of user",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryOwner",
+            "in": "path",
+            "description": "Owner of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryName",
+            "in": "path",
+            "description": "Name of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "taskId",
+            "in": "path",
+            "description": "Id of the task",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SHTask"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Tasks/{repositoryOwner}/{repositoryName}/PBI/{pbiId}": {
+      "get": {
+        "tags": [
+          "Tasks"
+        ],
+        "summary": "Gets tasks for given PBI (or uassigned) (requires read permissions in repository)",
+        "parameters": [
+          {
+            "name": "authToken",
+            "in": "header",
+            "description": "Authorization token of user",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryOwner",
+            "in": "path",
+            "description": "Owner of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryName",
+            "in": "path",
+            "description": "Name of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pbiId",
+            "in": "path",
+            "description": "Id of the PBI or 0 for unassigned",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SHTaskPaginatedList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Tasks/{repositoryOwner}/{repositoryName}/{taskId}/assignpbi": {
+      "patch": {
+        "tags": [
+          "Tasks"
+        ],
+        "summary": "Assigns the PBI for the task (or unassigns it) (requires admin permissions in repository)",
+        "parameters": [
+          {
+            "name": "authToken",
+            "in": "header",
+            "description": "Authorization token of user",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryOwner",
+            "in": "path",
+            "description": "Owner of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryName",
+            "in": "path",
+            "description": "Name of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "taskId",
+            "in": "path",
+            "description": "Id of the task",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Id of the PBI, 0 to unassign",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IdF"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IdF"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/IdF"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SHTask"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Tasks/{repositoryOwner}/{repositoryName}/{taskId}/assignperson": {
+      "patch": {
+        "tags": [
+          "Tasks"
+        ],
+        "summary": "Assigns the person for the task (requires admin permissions in repository)",
+        "parameters": [
+          {
+            "name": "authToken",
+            "in": "header",
+            "description": "Authorization token of user",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryOwner",
+            "in": "path",
+            "description": "Owner of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryName",
+            "in": "path",
+            "description": "Name of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "taskId",
+            "in": "path",
+            "description": "Id of the task",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Login of the person",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignPersonF"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignPersonF"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignPersonF"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SHTask"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Tasks/{repositoryOwner}/{repositoryName}/{taskId}/unassignperson": {
+      "patch": {
+        "tags": [
+          "Tasks"
+        ],
+        "summary": "Unassigns the person from the task (requires admin permissions in repository)",
+        "parameters": [
+          {
+            "name": "authToken",
+            "in": "header",
+            "description": "Authorization token of user",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryOwner",
+            "in": "path",
+            "description": "Owner of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryName",
+            "in": "path",
+            "description": "Name of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "taskId",
+            "in": "path",
+            "description": "Id of the task",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Login of the person",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignPersonF"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignPersonF"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignPersonF"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SHTask"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Tasks/{repositoryOwner}/{repositoryName}/{taskId}/start": {
+      "patch": {
+        "tags": [
+          "Tasks"
+        ],
+        "summary": "Starts the task by creating a branch (requires admin permissions in repository)",
+        "parameters": [
+          {
+            "name": "authToken",
+            "in": "header",
+            "description": "Authorization token of user",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryOwner",
+            "in": "path",
+            "description": "Owner of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repositoryName",
+            "in": "path",
+            "description": "Name of the repository",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "taskId",
+            "in": "path",
+            "description": "Id of the task",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "hotFix",
+            "in": "query",
+            "description": "Should create hotfix branch? True for hotfix, false/not present for feature",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SHTask"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AssignPersonF": {
+        "type": "object",
+        "properties": {
+          "login": {
+            "type": "string",
+            "description": "Login of the person",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Login of a person to assign or unassign to the task"
+      },
+      "BacklogItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Id of the PBI",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the PBI",
+            "nullable": true
+          },
+          "finished": {
+            "type": "boolean",
+            "description": "Flag if the PBI was finished"
+          },
+          "expectedTimeInHours": {
+            "type": "number",
+            "description": "Estimation how many time will be spent on PBI",
+            "format": "double"
+          },
+          "estimated": {
+            "type": "boolean",
+            "description": "Is the PBI estimated",
+            "readOnly": true
+          },
+          "sprintNumber": {
+            "type": "integer",
+            "description": "Sprint where PBI is",
+            "format": "int64",
+            "nullable": true
+          },
+          "isInSprint": {
+            "type": "boolean",
+            "description": "Is the PBI in sprint",
+            "readOnly": true
+          },
+          "timeSpentInHours": {
+            "type": "number",
+            "description": "How many hours was spent on PBI",
+            "format": "double"
+          },
+          "priority": {
+            "type": "integer",
+            "description": "Priority of the PBI",
+            "format": "int64"
+          },
+          "acceptanceCriteria": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of acceptance criteria for the PBI",
+            "nullable": true
+          },
+          "tasks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SHTask"
+            },
+            "description": "List of tasks for PBI",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents PBI"
+      },
+      "BacklogItemF": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the PBI",
+            "nullable": true
+          },
+          "priority": {
+            "type": "integer",
+            "description": "Priority of the PBI",
+            "format": "int64"
+          },
+          "acceptanceCriteria": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of acceptance criteria for the PBI",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents PBI information from frontend"
+      },
+      "BacklogItemPaginatedList": {
+        "type": "object",
+        "properties": {
+          "pageNumber": {
+            "type": "integer",
+            "description": "Number of actual page",
+            "format": "int32"
+          },
+          "pageCount": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Size of page",
+            "format": "int32"
+          },
+          "realSize": {
+            "type": "integer",
+            "description": "Number of actually received elements",
+            "format": "int32"
+          },
+          "list": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BacklogItem"
+            },
+            "description": "Actual list of items",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "List of elements with pagination data"
+      },
+      "ErrorMessage": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Message content",
+            "nullable": true
+          },
+          "code": {
+            "type": "integer",
+            "description": "Error code",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Class representing error message"
+      },
+      "EstimateF": {
+        "type": "object",
+        "properties": {
+          "hours": {
+            "type": "integer",
+            "description": "Estimation in hours",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents estimation"
+      },
+      "IdF": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "integer",
+            "description": "Index",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents single index"
+      },
+      "Person": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of person (might be null)",
+            "nullable": true
+          },
+          "login": {
+            "type": "string",
+            "description": "Login of person",
+            "nullable": true
+          },
+          "gitHubId": {
+            "type": "integer",
+            "description": "GitHub id of person",
+            "format": "int64"
+          },
+          "avatarLink": {
+            "type": "string",
+            "description": "Link to the avatar of the person",
+            "nullable": true
+          },
+          "isCurrentUser": {
+            "type": "boolean",
+            "description": "True if this person is the current user"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents person"
+      },
+      "PersonPaginatedList": {
+        "type": "object",
+        "properties": {
+          "pageNumber": {
+            "type": "integer",
+            "description": "Number of actual page",
+            "format": "int32"
+          },
+          "pageCount": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Size of page",
+            "format": "int32"
+          },
+          "realSize": {
+            "type": "integer",
+            "description": "Number of actually received elements",
+            "format": "int32"
+          },
+          "list": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Person"
+            },
+            "description": "Actual list of items",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "List of elements with pagination data"
+      },
+      "Repository": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of repository",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the repository",
+            "nullable": true
+          },
+          "dateOfLastActivity": {
+            "type": "string",
+            "description": "Date of last user activity in format \"yyyy-MM-dd HH:mm:ss 'UTC'\" or \"No recent activity\"",
+            "nullable": true
+          },
+          "typeOfLastActivity": {
+            "type": "string",
+            "description": "Type of last user activity or \"No recent activity\"",
+            "nullable": true
+          },
+          "gitHubId": {
+            "type": "integer",
+            "description": "GitHub id of repository",
+            "format": "int64"
+          },
+          "hasAdminRights": {
+            "type": "boolean",
+            "description": "Does current user have admin rights to the repository"
+          },
+          "alreadyInScrumHub": {
+            "type": "boolean",
+            "description": "Is this repository already in ScrumHub"
+          },
+          "backlogItems": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": "List of ids of backlog items",
+            "nullable": true
+          },
+          "sprints": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": "List of numbers of sprints",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents repository"
+      },
+      "RepositoryPaginatedList": {
+        "type": "object",
+        "properties": {
+          "pageNumber": {
+            "type": "integer",
+            "description": "Number of actual page",
+            "format": "int32"
+          },
+          "pageCount": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Size of page",
+            "format": "int32"
+          },
+          "realSize": {
+            "type": "integer",
+            "description": "Number of actually received elements",
+            "format": "int32"
+          },
+          "list": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Repository"
+            },
+            "description": "Actual list of items",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "List of elements with pagination data"
+      },
+      "SHTask": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Id of the PBI",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the PBI",
+            "nullable": true
+          },
+          "status": {
+            "$ref": "#/components/schemas/SHTaskStatus"
+          },
+          "finished": {
+            "type": "boolean",
+            "description": "Flag if the PBI was finished",
+            "readOnly": true
+          },
+          "pbiId": {
+            "type": "integer",
+            "description": "PBI where the task is assigned",
+            "format": "int64",
+            "nullable": true
+          },
+          "isAssignedToPBI": {
+            "type": "boolean",
+            "description": "Is the task in PBI",
+            "readOnly": true
+          },
+          "link": {
+            "type": "string",
+            "description": "Link to the repository",
+            "nullable": true
+          },
+          "assigness": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Person"
+            },
+            "description": "People assigned to the task, \"IsCurrentUser\" is always false",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents a task"
+      },
+      "SHTaskPaginatedList": {
+        "type": "object",
+        "properties": {
+          "pageNumber": {
+            "type": "integer",
+            "description": "Number of actual page",
+            "format": "int32"
+          },
+          "pageCount": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Size of page",
+            "format": "int32"
+          },
+          "realSize": {
+            "type": "integer",
+            "description": "Number of actually received elements",
+            "format": "int32"
+          },
+          "list": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SHTask"
+            },
+            "description": "Actual list of items",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "List of elements with pagination data"
+      },
+      "SHTaskStatus": {
+        "enum": [
+          "New",
+          "InProgress",
+          "InReview",
+          "Finished"
+        ],
+        "type": "string",
+        "description": "Status of the task"
+      },
+      "Sprint": {
+        "type": "object",
+        "properties": {
+          "sprintNumber": {
+            "type": "integer",
+            "description": "Number of a sprint in the project",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string",
+            "description": "Title of the sprint",
+            "nullable": true
+          },
+          "goal": {
+            "type": "string",
+            "description": "Goal of the sprint",
+            "nullable": true
+          },
+          "backlogItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BacklogItem"
+            },
+            "description": "PBI that will be done in this sprint",
+            "nullable": true
+          },
+          "finishDate": {
+            "type": "string",
+            "description": "in format \"yyyy-MM-dd 'UTC'\"",
+            "nullable": true
+          },
+          "isCurrent": {
+            "type": "boolean",
+            "description": "True if actual sprint is current (the one with the earliest not passed finish date)"
+          },
+          "status": {
+            "$ref": "#/components/schemas/SprintStatus"
+          },
+          "isCompleted": {
+            "type": "boolean",
+            "description": "Flag if sprint is completed",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents a sprint"
+      },
+      "SprintF": {
+        "type": "object",
+        "properties": {
+          "goal": {
+            "type": "string",
+            "description": "Goal of the sprint",
+            "nullable": true
+          },
+          "pbIs": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": "Ids of PBIs in the sprint",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "description": "Title of the sprint",
+            "nullable": true
+          },
+          "finishDate": {
+            "type": "string",
+            "description": "Finish date of the sprint",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents single sprint"
+      },
+      "SprintPaginatedList": {
+        "type": "object",
+        "properties": {
+          "pageNumber": {
+            "type": "integer",
+            "description": "Number of actual page",
+            "format": "int32"
+          },
+          "pageCount": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Size of page",
+            "format": "int32"
+          },
+          "realSize": {
+            "type": "integer",
+            "description": "Number of actually received elements",
+            "format": "int32"
+          },
+          "list": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Sprint"
+            },
+            "description": "Actual list of items",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "List of elements with pagination data"
+      },
+      "SprintStatus": {
+        "enum": [
+          "NotFinished",
+          "Failed",
+          "Successful"
+        ],
+        "type": "string",
+        "description": "Status of the sprint"
+      },
+      "TaskF": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the new task",
+            "nullable": true
+          },
+          "pbiId": {
+            "type": "integer",
+            "description": "Id of PBI the task belongs to, 0 for unassigned",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents information about new task from frontend"
+      }
+    }
+  }
+}
