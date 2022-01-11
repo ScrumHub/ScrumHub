@@ -36,8 +36,8 @@ export const isPeopleFilterValid = (peopleFilter:string[]) => {
   return peopleFilter && peopleFilter.length >0;
 }
 
-export const isArrayValid = (peopleFilter:any[]) => {
-  return peopleFilter && peopleFilter.length >0;
+export const isArrayValid = (objectArray:any[]) => {
+  return objectArray && objectArray.length >0;
 }
 
 export const validateString = (val:string) => {
