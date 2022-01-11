@@ -20,12 +20,16 @@ export const canDropTask = (pbiId: number, taskId:number,oldPbiId: number) => {
   return (pbiId !== -2 && pbiId !== null && taskId !== -2 && taskId !== null && oldPbiId !== pbiId );
 }
 
-export const isNameFilterValid = (nameFilter:any) => {
+export const isNameFilterValid = (nameFilter:string) => {
   return nameFilter && nameFilter !== "";
 }
 
-export const isErrorMessageValid = (nameFilter:any) => {
-  return nameFilter && nameFilter !== "";
+export const isMessageValid = (message:string) => {
+  return message && message !== "" && message.length>0;
+}
+
+export const isStatusValid = (message:string) => {
+  return message && message !== "" && message.length>0 && message === "New";
 }
 
 export const isPeopleFilterValid = (peopleFilter:string[]) => {

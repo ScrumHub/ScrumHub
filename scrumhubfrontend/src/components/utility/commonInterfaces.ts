@@ -24,7 +24,7 @@
     //addPBI: boolean,
     editPBI: boolean,
     estimatePBI: boolean,
-    startBranch:boolean
+    startBranchId:number
   }
 
   export interface IRowIds {

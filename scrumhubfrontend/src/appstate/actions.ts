@@ -521,7 +521,7 @@ export const startTaskThunk = createAsyncThunk<
   },
   { rejectWithValue }) => {
   const response: RequestResponse<ITask, number> =
-    await Fetching.startTask(item.token, item.ownerName, item.hotfix,item.taskId);
+    await Fetching.startBranchForTask(item.token, item.ownerName, item.hotfix,item.taskId);
   if (response.code !== 200) {
     return rejectWithValue(
       response as RequestResponse<ITask, number>

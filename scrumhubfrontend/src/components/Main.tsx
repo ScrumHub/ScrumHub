@@ -15,7 +15,7 @@ import './Main.css';
 import { useSelector } from 'react-redux';
 import { ISprint, State } from '../appstate/stateInterfaces';
 import { routes } from './utility/BodyRowsAndColumns';
-import { isErrorMessageValid } from './utility/commonFunctions';
+import { isMessageValid } from './utility/commonFunctions';
 const { Header, Footer, Content, Sider } = Layout;
 const { SubMenu } = Menu;
 
@@ -102,7 +102,7 @@ export function Main(props: any) {
     }
   }
   useEffect(() => {
-    if (error.hasError && isErrorMessageValid(error.erorMessage)){
+    if (error.hasError && isMessageValid(error.erorMessage)){
       message.error(error.erorMessage, 2);
       store.dispatch(Actions.clearError());
     }

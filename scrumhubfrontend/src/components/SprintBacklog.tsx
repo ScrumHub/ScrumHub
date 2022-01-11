@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Badge, Button, Dropdown, message, Popover, Space, Tag, Typography, } from 'antd';
+import { Badge, Button, Dropdown, message, Popconfirm, Popover, Space, Tag, Typography, } from 'antd';
 import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
 import { IAddPBI, IFilters, IPeopleList, IProductBacklogItem, IProductBacklogList, ISprint, ITask, State } from '../appstate/stateInterfaces';
@@ -12,9 +12,9 @@ import "./SprintProject.css";
 import PBITableComponent from './BacklogPBITableComponent';
 import TaskTableComponent from './BacklogTaskTableComponent';
 import { taskNameCol, taskStatusCol, taskGhLinkCol, pbiProgressCol, pbiProgressCol2, backlogPriorities, backlogColors } from './utility/BodyRowsAndColumns';
-import { canDropTask } from './utility/commonFunctions';
+import { canDropTask, isStatusValid } from './utility/commonFunctions';
 import SkeletonList, { MenuWithPeopleSave } from './utility/LoadAnimations';
-import { assignPerson, updateTask } from './utility/BacklogHandlers';
+import { assignPerson, startTask, updateTask } from './utility/BacklogHandlers';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
 import { useDrop, useDrag, DndProvider } from 'react-dnd';
 import { type } from './ProductBacklog';
@@ -218,15 +218,16 @@ export function SprintBacklog() {
     key: "branch",
     width: "12%",
     align: "right" as const,
-    render: (record: ITask) => <Popover
+    render: (record: ITask) => isStatusValid(record.status) ?
+    <Popover visible={isModal.startBranchId === record.id}
     content={<><div style={{alignSelf:"center", marginBottom:"10%", textAlign:"center"}}>Start New Branch</div><Space style={{alignItems:"flex-end"}}>
-      <Button key={"hotfix"} size='small' type="primary" onClick={()=>{}}>Feature</Button>
-      <Button key={"hotfix"} size='small' type="primary" color="deeppink" onClick={() => { }}>Hotfix</Button>
-      </Space></>}
-    trigger="click"
-  >
-    <Button key={"action" + record.id} size='small' type="link"  >
-    <span>{"Start "}<BranchesOutlined/></span></Button></Popover>},taskGhLinkCol,];
+      <Popconfirm title={"Are you sure you want to start a feature branch?"} onConfirm={()=>{startTask(token, ownerName, false,record.id);setIsModal({...isModal, startBranchId:-1});}}><Button key={"hotfix"} size='small' type="primary" >Feature</Button></Popconfirm>
+      <Popconfirm title={"Are you sure you want to start a hotfix branch?"} onConfirm={()=>{startTask(token, ownerName, true,record.id);setIsModal({...isModal, startBranchId:-1});}}><Button key={"hotfix"} size='small' type="primary" color="deeppink">Hotfix</Button></Popconfirm>
+      </Space></>}trigger="click">
+    <Button key={"action" + record.id} size='small' type="link" onClick={()=>{setIsModal({...isModal, startBranchId:record.id})}}>
+    <span>{"Start "}<BranchesOutlined/></span></Button></Popover>:
+    <div><span><BranchesOutlined/> Created</span></div>
+    },taskGhLinkCol,];
   const TaskTableforPBI: React.FC<IProductBacklogItem> = (item: IProductBacklogItem) => { return (<TaskTableComponent peopleFilter={filterPBI.peopleFilter} item={item} taskColumns={taskColumns} taskComponents={nestedcomponents} />) };
   const pbiColumns = [
     {

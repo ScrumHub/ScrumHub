@@ -35,6 +35,7 @@ export interface ITask {
   pbiId: number;
   isAssignedToPBI: boolean;
   link: string;
+  status:string;
 }
 
 

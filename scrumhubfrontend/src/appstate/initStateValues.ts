@@ -11,6 +11,7 @@ export const initTask: ITask = {
   isAssignedToPBI: false,
   link: "",
   assigness: [],
+  status:""
 };
 
 

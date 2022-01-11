@@ -17,7 +17,7 @@ export const initModalVals: IModals = {
   //addPBI: false,
   editPBI: false,
   estimatePBI: false,
-  startBranch:false
+  startBranchId:-1
 }
 
 export const initRowIds: IRowIds = {

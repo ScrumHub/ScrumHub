@@ -17,13 +17,12 @@ export const taskNameCol = {
 export const taskStatusCol = {
   title: "Status",
   key: "finished",
-  dataIndex: "finished",
   width: "22%",
   align: "center" as const,
-  render: (val: boolean) => (
+  render: (record: ITask) => (
     <span>
-      <Badge size='small' status={val ? "success" : "error"} />
-      {val ? "Finished" : "In Progress"}
+      <Badge size='small' status={record.finished ? "success" : "error"} />
+      {record.status.replace("In", "In ")}
     </span>
   ),
 };
@@ -35,6 +34,7 @@ export const taskGhLinkCol = {
   align: "right" as const,
   render: (text: string) => <a href={text}>{"See on GitHub"}</a>,
 };
+
 
 export const pbiPriorityCol = {
   title: 'Priority', align: "center" as const, colSpan: 1, key: 'priority',

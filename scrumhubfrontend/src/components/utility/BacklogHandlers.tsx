@@ -9,6 +9,10 @@ export const assignPerson = (person: string, taskId: number, taskPeople: IPerson
       Actions.unassignPersonToTaskThunk({ token: token, ownerName: ownerName, login: person, taskId: taskId, }));
 }
 
+export const startTask = (token:string, ownerName:string,hotfix: boolean, taskId: number) => {
+    store.dispatch(Actions.startTaskThunk({ token: token, ownerName: ownerName, hotfix: hotfix, taskId: taskId, }));
+}
+
 export const updatePBI = (pbiId: number, oldSprintId: number, newSprintId: number, sprintPage:ISprintList, token:string, ownerName:string) => {
   if (oldSprintId !== 0) {
     const oldSprint = sprintPage.list.find((i: ISprint) => i.sprintNumber === oldSprintId);

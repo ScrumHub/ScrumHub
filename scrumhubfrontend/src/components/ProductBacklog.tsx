@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
-import { Button, Tag, message, Dropdown, Badge, Popover, Space, Divider } from 'antd';
+import { Button, Tag, message, Dropdown, Badge, Popover, Space, Divider, Popconfirm } from 'antd';
 import { useDrag, useDrop } from 'react-dnd';
 import * as Actions from '../appstate/actions';
 import { IAddPBI, IFilters, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, ISprint, ISprintList, ITask, State } from '../appstate/stateInterfaces';
@@ -15,7 +15,7 @@ import { UpdateSprintPopup } from './popups/UpdateSprintPopup';
 import { AddTaskPopup } from './popups/AddTaskPopup';
 import { initModalVals, pbiFilterVals } from './utility/commonInitValues';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
-import { dateFormat, useIsMounted, canDropPBI, canDropTask, isArrayValid, } from './utility/commonFunctions';
+import { dateFormat, useIsMounted, canDropPBI, canDropTask, isArrayValid, isMessageValid, isStatusValid, } from './utility/commonFunctions';
 import { taskStatusCol, taskGhLinkCol, taskNameCol, pbiProgressCol, backlogColors, backlogPriorities, pbiProgressCol2 } from './utility/BodyRowsAndColumns';
 import TaskTableComponent from './BacklogTaskTableComponent';
 import PBITableComponent from './BacklogPBITableComponent';
@@ -25,7 +25,8 @@ import SprintTableComponent from './BacklogSprintTableComponent';
 import { initPBIFilter } from '../appstate/initStateValues';
 import { CompleteSprintPopup } from './popups/CompleteSprint';
 import { EditPBIPopup } from './popups/EditPBIPopup';
-import { assignPerson, updatePBI, updateTask } from './utility/BacklogHandlers';
+import { assignPerson, startTask, updatePBI, updateTask } from './utility/BacklogHandlers';
+import { startBranchForTask } from '../appstate/fetching';
 export const type = 'DraggableBodyRow';
 
 export const ProductBacklog: React.FC<any> = (props: any) => {
@@ -236,15 +237,17 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
     key: "branch",
     width: "12%",
     align: "right" as const,
-    render: (record: ITask) => <Popover
+    render: (record: ITask) => isStatusValid(record.status) ?
+    <Popover visible={isModal.startBranchId === record.id}
     content={<><div style={{alignSelf:"center", marginBottom:"10%", textAlign:"center"}}>Start New Branch</div><Space style={{alignItems:"flex-end"}}>
-      <Button key={"hotfix"} size='small' type="primary" onClick={()=>{}}>Feature</Button>
-      <Button key={"hotfix"} size='small' type="primary" color="deeppink" onClick={() => { setSelectedTask(record); setIsModal({ ...isModal, startBranch: true }); }}>Hotfix</Button>
-      </Space></>}
-    trigger="click"
-  >
-    <Button key={"action" + record.id} size='small' type="link"  >
-    <span>{"Start "}<BranchesOutlined/></span></Button></Popover>}, taskGhLinkCol,];
+      <Popconfirm title={"Are you sure you want to start a feature branch?"} onConfirm={()=>{startTask(token, ownerName, false,record.id);setIsModal({...isModal, startBranchId:-1});}}><Button key={"hotfix"} size='small' type="primary" >Feature</Button></Popconfirm>
+      <Popconfirm title={"Are you sure you want to start a hotfix branch?"} onConfirm={()=>{startTask(token, ownerName, true,record.id);setIsModal({...isModal, startBranchId:-1});}}><Button key={"hotfix"} size='small' type="primary" color="deeppink">Hotfix</Button></Popconfirm>
+      </Space></>}trigger="click">
+    <Button key={"action" + record.id} size='small' type="link" onClick={()=>{setIsModal({...isModal, startBranchId:record.id})}}>
+    <span>{"Start "}<BranchesOutlined/></span></Button></Popover>:
+    <div><span><BranchesOutlined/> Created</span></div>
+    },
+     taskGhLinkCol,];
   const TaskTableforPBI: React.FC<IProductBacklogItem> = (item: IProductBacklogItem) => { return (<TaskTableComponent peopleFilter={props.peopleFilter} item={item} taskColumns={taskColumns} taskComponents={nestedcomponents} />) };
   const pbiColumns = [
     {

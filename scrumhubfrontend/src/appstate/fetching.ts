@@ -348,7 +348,7 @@ export function unassignPersonToTask(token: string, ownerName: string, login: st
   );
 }
 
-export function startTask(token: string, ownerName: string, hotfix: boolean, taskId: number
+export function startBranchForTask(token: string, ownerName: string, hotfix: boolean, taskId: number
   ): Promise<RequestResponse<ITask, number>> {
     return getResponse(
       axios.patch(
