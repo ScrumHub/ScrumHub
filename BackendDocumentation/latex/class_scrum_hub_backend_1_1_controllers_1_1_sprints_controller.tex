@@ -1,0 +1,164 @@
+\hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_sprints_controller}{}\doxysection{Scrum\+Hub\+Backend.\+Controllers.\+Sprints\+Controller Class Reference}
+\label{class_scrum_hub_backend_1_1_controllers_1_1_sprints_controller}\index{ScrumHubBackend.Controllers.SprintsController@{ScrumHubBackend.Controllers.SprintsController}}
+
+
+Controller for sprints  
+
+
+Inheritance diagram for Scrum\+Hub\+Backend.\+Controllers.\+Sprints\+Controller\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_scrum_hub_backend_1_1_controllers_1_1_sprints_controller}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_sprints_controller_a18367de29a3764cb6910738a314b7931}\label{class_scrum_hub_backend_1_1_controllers_1_1_sprints_controller_a18367de29a3764cb6910738a314b7931}} 
+{\bfseries Sprints\+Controller} (ILogger$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_sprints_controller}{Sprints\+Controller}} $>$ logger, IMediator mediator)
+\begin{DoxyCompactList}\small\item\em Constructor \end{DoxyCompactList}\item 
+async Task$<$ IAction\+Result $>$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_sprints_controller_a7a92c7aba9f585a2406b009985cc351d}{Get\+Sprints}} (\mbox{[}From\+Header\mbox{]} string auth\+Token, \mbox{[}From\+Route\mbox{]} string repository\+Owner, \mbox{[}From\+Route\mbox{]} string repository\+Name, \mbox{[}From\+Query\mbox{]} int page\+Number=1, \mbox{[}From\+Query\mbox{]} int page\+Size=10, \mbox{[}From\+Query\mbox{]} bool? completed=null, \mbox{[}From\+Query\mbox{]} bool? one\+Page=null)
+\begin{DoxyCompactList}\small\item\em Gets sprints for given repository (requires read permissions in repository) \end{DoxyCompactList}\item 
+async Task$<$ IAction\+Result $>$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_sprints_controller_adf1f3524bf920aef7c0fa953d02f6ad3}{Get\+One\+Sprint}} (\mbox{[}From\+Header\mbox{]} string auth\+Token, \mbox{[}From\+Route\mbox{]} string repository\+Owner, \mbox{[}From\+Route\mbox{]} string repository\+Name, \mbox{[}From\+Route\mbox{]} int sprint\+Number)
+\begin{DoxyCompactList}\small\item\em Gets one sprint from the repository (requires read permissions in repository) \end{DoxyCompactList}\item 
+async Task$<$ IAction\+Result $>$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_sprints_controller_a08520789e6b100402f8ae860b67daa10}{Add\+Sprint}} (\mbox{[}From\+Header\mbox{]} string auth\+Token, \mbox{[}From\+Route\mbox{]} string repository\+Owner, \mbox{[}From\+Route\mbox{]} string repository\+Name, \mbox{[}From\+Body\mbox{]} \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_sprint_f}{SprintF}} sprint)
+\begin{DoxyCompactList}\small\item\em Add Sprint for given repository (requires admin permissions in repository) \end{DoxyCompactList}\item 
+async Task$<$ IAction\+Result $>$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_sprints_controller_aa9fca8c83e91267b55ec3e5813ed082c}{Update\+Sprint}} (\mbox{[}From\+Header\mbox{]} string auth\+Token, \mbox{[}From\+Route\mbox{]} string repository\+Owner, \mbox{[}From\+Route\mbox{]} string repository\+Name, \mbox{[}From\+Route\mbox{]} int sprint\+Number, \mbox{[}From\+Body\mbox{]} \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_sprint_f}{SprintF}} sprint)
+\begin{DoxyCompactList}\small\item\em Update Sprint for given repository (requires admin permissions in repository) \end{DoxyCompactList}\item 
+async Task$<$ IAction\+Result $>$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_sprints_controller_a897cfcc6974b8778ac146e8c9e23cf55}{Finish\+Sprint}} (\mbox{[}From\+Header\mbox{]} string auth\+Token, \mbox{[}From\+Route\mbox{]} string repository\+Owner, \mbox{[}From\+Route\mbox{]} string repository\+Name, \mbox{[}From\+Route\mbox{]} int sprint\+Number, \mbox{[}From\+Query\mbox{]} bool failed)
+\begin{DoxyCompactList}\small\item\em Finish sprint (requires admin permissions in repository) \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_sprints_controller_a8f329647841287acf96a0b81c826bfee}\label{class_scrum_hub_backend_1_1_controllers_1_1_sprints_controller_a8f329647841287acf96a0b81c826bfee}} 
+readonly ILogger$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_controllers_1_1_sprints_controller}{Sprints\+Controller}} $>$ {\bfseries \+\_\+logger}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_sprints_controller_ade88f3735bbafc047ca081f8ccc018b1}\label{class_scrum_hub_backend_1_1_controllers_1_1_sprints_controller_ade88f3735bbafc047ca081f8ccc018b1}} 
+readonly IMediator {\bfseries \+\_\+mediator}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Controller for sprints 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_sprints_controller_a08520789e6b100402f8ae860b67daa10}\label{class_scrum_hub_backend_1_1_controllers_1_1_sprints_controller_a08520789e6b100402f8ae860b67daa10}} 
+\index{ScrumHubBackend.Controllers.SprintsController@{ScrumHubBackend.Controllers.SprintsController}!AddSprint@{AddSprint}}
+\index{AddSprint@{AddSprint}!ScrumHubBackend.Controllers.SprintsController@{ScrumHubBackend.Controllers.SprintsController}}
+\doxysubsubsection{\texorpdfstring{AddSprint()}{AddSprint()}}
+{\footnotesize\ttfamily async Task$<$ IAction\+Result $>$ Scrum\+Hub\+Backend.\+Controllers.\+Sprints\+Controller.\+Add\+Sprint (\begin{DoxyParamCaption}\item[{\mbox{[}\+From\+Header\mbox{]} string}]{auth\+Token,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Owner,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Name,  }\item[{\mbox{[}\+From\+Body\mbox{]} \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_sprint_f}{SprintF}}}]{sprint }\end{DoxyParamCaption})}
+
+
+
+Add Sprint for given repository (requires admin permissions in repository) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em auth\+Token} & Authorization token of user\\
+\hline
+{\em repository\+Owner} & Owner of the repository\\
+\hline
+{\em repository\+Name} & Name of the repository\\
+\hline
+{\em sprint} & Item to add\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_sprints_controller_a897cfcc6974b8778ac146e8c9e23cf55}\label{class_scrum_hub_backend_1_1_controllers_1_1_sprints_controller_a897cfcc6974b8778ac146e8c9e23cf55}} 
+\index{ScrumHubBackend.Controllers.SprintsController@{ScrumHubBackend.Controllers.SprintsController}!FinishSprint@{FinishSprint}}
+\index{FinishSprint@{FinishSprint}!ScrumHubBackend.Controllers.SprintsController@{ScrumHubBackend.Controllers.SprintsController}}
+\doxysubsubsection{\texorpdfstring{FinishSprint()}{FinishSprint()}}
+{\footnotesize\ttfamily async Task$<$ IAction\+Result $>$ Scrum\+Hub\+Backend.\+Controllers.\+Sprints\+Controller.\+Finish\+Sprint (\begin{DoxyParamCaption}\item[{\mbox{[}\+From\+Header\mbox{]} string}]{auth\+Token,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Owner,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Name,  }\item[{\mbox{[}\+From\+Route\mbox{]} int}]{sprint\+Number,  }\item[{\mbox{[}\+From\+Query\mbox{]} bool}]{failed }\end{DoxyParamCaption})}
+
+
+
+Finish sprint (requires admin permissions in repository) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em auth\+Token} & Authorization token of user\\
+\hline
+{\em repository\+Owner} & Owner of the repository\\
+\hline
+{\em repository\+Name} & Name of the repository\\
+\hline
+{\em sprint\+Number} & Id of the PBI\\
+\hline
+{\em failed} & True if sprint failed, false (default) if it was successful\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_sprints_controller_adf1f3524bf920aef7c0fa953d02f6ad3}\label{class_scrum_hub_backend_1_1_controllers_1_1_sprints_controller_adf1f3524bf920aef7c0fa953d02f6ad3}} 
+\index{ScrumHubBackend.Controllers.SprintsController@{ScrumHubBackend.Controllers.SprintsController}!GetOneSprint@{GetOneSprint}}
+\index{GetOneSprint@{GetOneSprint}!ScrumHubBackend.Controllers.SprintsController@{ScrumHubBackend.Controllers.SprintsController}}
+\doxysubsubsection{\texorpdfstring{GetOneSprint()}{GetOneSprint()}}
+{\footnotesize\ttfamily async Task$<$ IAction\+Result $>$ Scrum\+Hub\+Backend.\+Controllers.\+Sprints\+Controller.\+Get\+One\+Sprint (\begin{DoxyParamCaption}\item[{\mbox{[}\+From\+Header\mbox{]} string}]{auth\+Token,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Owner,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Name,  }\item[{\mbox{[}\+From\+Route\mbox{]} int}]{sprint\+Number }\end{DoxyParamCaption})}
+
+
+
+Gets one sprint from the repository (requires read permissions in repository) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em auth\+Token} & Authorization token of user\\
+\hline
+{\em repository\+Owner} & Owner of the repository\\
+\hline
+{\em repository\+Name} & Name of the repository\\
+\hline
+{\em sprint\+Number} & Number of the sprint\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_sprints_controller_a7a92c7aba9f585a2406b009985cc351d}\label{class_scrum_hub_backend_1_1_controllers_1_1_sprints_controller_a7a92c7aba9f585a2406b009985cc351d}} 
+\index{ScrumHubBackend.Controllers.SprintsController@{ScrumHubBackend.Controllers.SprintsController}!GetSprints@{GetSprints}}
+\index{GetSprints@{GetSprints}!ScrumHubBackend.Controllers.SprintsController@{ScrumHubBackend.Controllers.SprintsController}}
+\doxysubsubsection{\texorpdfstring{GetSprints()}{GetSprints()}}
+{\footnotesize\ttfamily async Task$<$ IAction\+Result $>$ Scrum\+Hub\+Backend.\+Controllers.\+Sprints\+Controller.\+Get\+Sprints (\begin{DoxyParamCaption}\item[{\mbox{[}\+From\+Header\mbox{]} string}]{auth\+Token,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Owner,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Name,  }\item[{\mbox{[}\+From\+Query\mbox{]} int}]{page\+Number = {\ttfamily 1},  }\item[{\mbox{[}\+From\+Query\mbox{]} int}]{page\+Size = {\ttfamily 10},  }\item[{\mbox{[}\+From\+Query\mbox{]} bool?}]{completed = {\ttfamily null},  }\item[{\mbox{[}\+From\+Query\mbox{]} bool?}]{one\+Page = {\ttfamily null} }\end{DoxyParamCaption})}
+
+
+
+Gets sprints for given repository (requires read permissions in repository) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em auth\+Token} & Authorization token of user\\
+\hline
+{\em repository\+Owner} & Owner of the repository\\
+\hline
+{\em repository\+Name} & Name of the repository\\
+\hline
+{\em page\+Number} & Page to get, default = 1\\
+\hline
+{\em page\+Size} & Size of page, default = 10\\
+\hline
+{\em completed} & Filter for only completed or only not completed sprints\\
+\hline
+{\em one\+Page} & True if want to fetch everything as one page, false/skipped otherwise\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_controllers_1_1_sprints_controller_aa9fca8c83e91267b55ec3e5813ed082c}\label{class_scrum_hub_backend_1_1_controllers_1_1_sprints_controller_aa9fca8c83e91267b55ec3e5813ed082c}} 
+\index{ScrumHubBackend.Controllers.SprintsController@{ScrumHubBackend.Controllers.SprintsController}!UpdateSprint@{UpdateSprint}}
+\index{UpdateSprint@{UpdateSprint}!ScrumHubBackend.Controllers.SprintsController@{ScrumHubBackend.Controllers.SprintsController}}
+\doxysubsubsection{\texorpdfstring{UpdateSprint()}{UpdateSprint()}}
+{\footnotesize\ttfamily async Task$<$ IAction\+Result $>$ Scrum\+Hub\+Backend.\+Controllers.\+Sprints\+Controller.\+Update\+Sprint (\begin{DoxyParamCaption}\item[{\mbox{[}\+From\+Header\mbox{]} string}]{auth\+Token,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Owner,  }\item[{\mbox{[}\+From\+Route\mbox{]} string}]{repository\+Name,  }\item[{\mbox{[}\+From\+Route\mbox{]} int}]{sprint\+Number,  }\item[{\mbox{[}\+From\+Body\mbox{]} \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_sprint_f}{SprintF}}}]{sprint }\end{DoxyParamCaption})}
+
+
+
+Update Sprint for given repository (requires admin permissions in repository) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em auth\+Token} & Authorization token of user\\
+\hline
+{\em repository\+Owner} & Owner of the repository\\
+\hline
+{\em repository\+Name} & Name of the repository\\
+\hline
+{\em sprint\+Number} & Id of the PBI\\
+\hline
+{\em sprint} & All values (updated and not updated) of sprint\\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Scrum\+Hub\+Backend/\+Controllers/Sprints\+Controller.\+cs\end{DoxyCompactItemize}

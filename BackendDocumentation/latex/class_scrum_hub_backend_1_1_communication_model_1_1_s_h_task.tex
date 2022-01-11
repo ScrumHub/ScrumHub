@@ -1,0 +1,68 @@
+\hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_s_h_task}{}\doxysection{Scrum\+Hub\+Backend.\+Communication\+Model.\+SHTask Class Reference}
+\label{class_scrum_hub_backend_1_1_communication_model_1_1_s_h_task}\index{ScrumHubBackend.CommunicationModel.SHTask@{ScrumHubBackend.CommunicationModel.SHTask}}
+
+
+Represents a task  
+
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_s_h_task_a67adde5eeebbd1fb03f477662bacfd56}\label{class_scrum_hub_backend_1_1_communication_model_1_1_s_h_task_a67adde5eeebbd1fb03f477662bacfd56}} 
+{\bfseries SHTask} ()
+\begin{DoxyCompactList}\small\item\em Constructor \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_s_h_task_a6fc6784f7eeeec0efdfa7aab21bcf39c}{SHTask}} (Octokit.\+Issue issue, \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_context}{Database\+Context}} db\+Context)
+\begin{DoxyCompactList}\small\item\em Constructor, can throw exception \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_s_h_task_a8ed9b346e028ac3941f839e7089a3550}\label{class_scrum_hub_backend_1_1_communication_model_1_1_s_h_task_a8ed9b346e028ac3941f839e7089a3550}} 
+long {\bfseries Id} = 0\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Id of the PBI \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_s_h_task_a9ca0b747d01322765f5f9a69f22ee19c}\label{class_scrum_hub_backend_1_1_communication_model_1_1_s_h_task_a9ca0b747d01322765f5f9a69f22ee19c}} 
+string {\bfseries Name} = String.\+Empty\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Name of the PBI \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_s_h_task_a7003b1cdcc94d43c6b79b21e7f584bf0}\label{class_scrum_hub_backend_1_1_communication_model_1_1_s_h_task_a7003b1cdcc94d43c6b79b21e7f584bf0}} 
+\mbox{\hyperlink{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6}{SHTask\+Status}} {\bfseries Status} = SHTask\+Status.\+New\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Status of the task \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_s_h_task_a4bc03971f5062d9483f369cde99cdb68}\label{class_scrum_hub_backend_1_1_communication_model_1_1_s_h_task_a4bc03971f5062d9483f369cde99cdb68}} 
+bool {\bfseries Finished}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Flag if the PBI was finished \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_s_h_task_a6a188ec4ef592455b476b86e39b99f5f}\label{class_scrum_hub_backend_1_1_communication_model_1_1_s_h_task_a6a188ec4ef592455b476b86e39b99f5f}} 
+long? {\bfseries PBIId} = null\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em PBI where the task is assigned \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_s_h_task_a64dfbefe27c68ca328d0d99e19b4188d}\label{class_scrum_hub_backend_1_1_communication_model_1_1_s_h_task_a64dfbefe27c68ca328d0d99e19b4188d}} 
+bool {\bfseries Is\+Assigned\+To\+PBI}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Is the task in PBI \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_s_h_task_a2c3884dc18ca325aec01a173dac42172}\label{class_scrum_hub_backend_1_1_communication_model_1_1_s_h_task_a2c3884dc18ca325aec01a173dac42172}} 
+string {\bfseries Link} = String.\+Empty\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Link to the repository \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_s_h_task_a472d4c081e4a2bf7abc2997dc91d562a}\label{class_scrum_hub_backend_1_1_communication_model_1_1_s_h_task_a472d4c081e4a2bf7abc2997dc91d562a}} 
+IEnumerable$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_person}{Person}} $>$ {\bfseries Assigness} = new List$<$\mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_person}{Person}}$>$()\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em People assigned to the task, \char`\"{}\+Is\+Current\+User\char`\"{} is always false \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents a task 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_s_h_task_a6fc6784f7eeeec0efdfa7aab21bcf39c}\label{class_scrum_hub_backend_1_1_communication_model_1_1_s_h_task_a6fc6784f7eeeec0efdfa7aab21bcf39c}} 
+\index{ScrumHubBackend.CommunicationModel.SHTask@{ScrumHubBackend.CommunicationModel.SHTask}!SHTask@{SHTask}}
+\index{SHTask@{SHTask}!ScrumHubBackend.CommunicationModel.SHTask@{ScrumHubBackend.CommunicationModel.SHTask}}
+\doxysubsubsection{\texorpdfstring{SHTask()}{SHTask()}}
+{\footnotesize\ttfamily Scrum\+Hub\+Backend.\+Communication\+Model.\+SHTask.\+SHTask (\begin{DoxyParamCaption}\item[{Octokit.\+Issue}]{issue,  }\item[{\mbox{\hyperlink{class_scrum_hub_backend_1_1_database_context}{Database\+Context}}}]{db\+Context }\end{DoxyParamCaption})}
+
+
+
+Constructor, can throw exception 
+
+
+\begin{DoxyExceptions}{Exceptions}
+{\em \mbox{\hyperlink{class_scrum_hub_backend_1_1_custom_exceptions_1_1_not_found_exception}{Custom\+Exceptions.\+Not\+Found\+Exception}}} & Issue not found in Scrum\+Hub\\
+\hline
+\end{DoxyExceptions}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Scrum\+Hub\+Backend/\+Communication\+Model/SHTask.\+cs\end{DoxyCompactItemize}

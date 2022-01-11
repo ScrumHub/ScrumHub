@@ -1,0 +1,54 @@
+\hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_get_repositories_query_handler}{}\doxysection{Scrum\+Hub\+Backend.\+CQRS.\+Repositories.\+Get\+Repositories\+Query\+Handler Class Reference}
+\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_get_repositories_query_handler}\index{ScrumHubBackend.CQRS.Repositories.GetRepositoriesQueryHandler@{ScrumHubBackend.CQRS.Repositories.GetRepositoriesQueryHandler}}
+
+
+Handler getting all repositories for an user  
+
+
+Inheritance diagram for Scrum\+Hub\+Backend.\+CQRS.\+Repositories.\+Get\+Repositories\+Query\+Handler\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_get_repositories_query_handler}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_get_repositories_query_handler_a7e7466e74a010175b997c1135bf1e99c}\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_get_repositories_query_handler_a7e7466e74a010175b997c1135bf1e99c}} 
+{\bfseries Get\+Repositories\+Query\+Handler} (ILogger$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_get_repositories_query_handler}{Get\+Repositories\+Query\+Handler}} $>$ logger, \mbox{\hyperlink{interface_scrum_hub_backend_1_1_git_hub_client_1_1_i_git_hub_client_factory}{IGit\+Hub\+Client\+Factory}} client\+Factory, IConfiguration configuration, \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_context}{Database\+Context}} db\+Context)
+\begin{DoxyCompactList}\small\item\em Constructor \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_get_repositories_query_handler_a0f91edabf8e360e296be93f17a7d1f3e}\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_get_repositories_query_handler_a0f91edabf8e360e296be93f17a7d1f3e}} 
+Task$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_common_1_1_paginated_list}{Paginated\+List}}$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_repository}{Repository}} $>$ $>$ {\bfseries Handle} (\mbox{\hyperlink{class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_get_repositories_query}{Get\+Repositories\+Query}} request, Cancellation\+Token cancellation\+Token)
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_get_repositories_query_handler_a58ad8cd13a28e53a64f6b878e4d136bc}\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_get_repositories_query_handler_a58ad8cd13a28e53a64f6b878e4d136bc}} 
+virtual \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_common_1_1_paginated_list}{Paginated\+List}}$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_repository}{Repository}} $>$ {\bfseries Filter\+And\+Paginate\+Repositories} (IEnumerable$<$ Octokit.\+Repository $>$ repositories, IRead\+Only\+List$<$ Octokit.\+Activity $>$ user\+Activities, int page\+Number, int page\+Size, string? name\+Filter)
+\begin{DoxyCompactList}\small\item\em Filters and paginates downloaded repositories and transforms them to model repositories \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_get_repositories_query_handler_ad38e182a53d44e0b729078698ca09405}\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_get_repositories_query_handler_ad38e182a53d44e0b729078698ca09405}} 
+readonly ILogger$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_get_repositories_query_handler}{Get\+Repositories\+Query\+Handler}} $>$ {\bfseries \+\_\+logger}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_get_repositories_query_handler_ad5fbd36ee95de1507a6990bbc20048ca}\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_get_repositories_query_handler_ad5fbd36ee95de1507a6990bbc20048ca}} 
+readonly \mbox{\hyperlink{interface_scrum_hub_backend_1_1_git_hub_client_1_1_i_git_hub_client_factory}{IGit\+Hub\+Client\+Factory}} {\bfseries \+\_\+git\+Hub\+Client\+Factory}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_get_repositories_query_handler_aafc5cbad36f0eecef885e00f22cb745c}\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_get_repositories_query_handler_aafc5cbad36f0eecef885e00f22cb745c}} 
+readonly \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_context}{Database\+Context}} {\bfseries \+\_\+db\+Context}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_get_repositories_query_handler_a168eb86e5e9f5eb38cf8a02d26bf972f}\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_get_repositories_query_handler_a168eb86e5e9f5eb38cf8a02d26bf972f}} 
+readonly double {\bfseries \+\_\+cache\+Timer}
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_get_repositories_query_handler_a8ba6c8c0e4904284cd34f13a7fdc0ca5}\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_get_repositories_query_handler_a8ba6c8c0e4904284cd34f13a7fdc0ca5}} 
+static readonly Dictionary$<$ long,(IRead\+Only\+List$<$ Octokit.\+Repository $>$ repositories, Date\+Time last\+Update)$>$ {\bfseries \+\_\+cached\+Repositories} = new()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Handler getting all repositories for an user 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Scrum\+Hub\+Backend/\+CQRS/\+Repositories/Get\+Repositories\+Query\+Handler.\+cs\end{DoxyCompactItemize}

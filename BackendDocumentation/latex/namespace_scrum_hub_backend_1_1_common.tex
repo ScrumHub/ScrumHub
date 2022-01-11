@@ -1,0 +1,71 @@
+\hypertarget{namespace_scrum_hub_backend_1_1_common}{}\doxysection{Scrum\+Hub\+Backend.\+Common Namespace Reference}
+\label{namespace_scrum_hub_backend_1_1_common}\index{ScrumHubBackend.Common@{ScrumHubBackend.Common}}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6}{SHTask\+Status}} \{ \mbox{\hyperlink{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6a03c2e7e41ffc181a4e84080b4710e81e}{New}}
+, \mbox{\hyperlink{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6a12d868c18cb29bf58f02b504be9033fd}{In\+Progress}}
+, \mbox{\hyperlink{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6a7852fb16e8985e33e70852e9d089e849}{In\+Review}}
+, \mbox{\hyperlink{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6a8f3d10eb21bd36347c258679eba9e92b}{Finished}}
+ \}
+\begin{DoxyCompactList}\small\item\em Status of the task \end{DoxyCompactList}\item 
+enum \mbox{\hyperlink{namespace_scrum_hub_backend_1_1_common_a0bec89b6f9f544bca58ddc66ed0eab94}{Sprint\+Status}} \{ \mbox{\hyperlink{namespace_scrum_hub_backend_1_1_common_a0bec89b6f9f544bca58ddc66ed0eab94ab8364d4c49c06e858cb156af9076049f}{Not\+Finished}}
+, \mbox{\hyperlink{namespace_scrum_hub_backend_1_1_common_a0bec89b6f9f544bca58ddc66ed0eab94ad7c8c85bf79bbe1b7188497c32c3b0ca}{Failed}}
+, \mbox{\hyperlink{namespace_scrum_hub_backend_1_1_common_a0bec89b6f9f544bca58ddc66ed0eab94a30ae8fff8898dc197acd49d9c0797d20}{Successful}}
+ \}
+\begin{DoxyCompactList}\small\item\em Status of the sprint \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6}\label{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6}} 
+\index{ScrumHubBackend.Common@{ScrumHubBackend.Common}!SHTaskStatus@{SHTaskStatus}}
+\index{SHTaskStatus@{SHTaskStatus}!ScrumHubBackend.Common@{ScrumHubBackend.Common}}
+\doxysubsubsection{\texorpdfstring{SHTaskStatus}{SHTaskStatus}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6}{Scrum\+Hub\+Backend.\+Common.\+SHTask\+Status}}}
+
+
+
+Status of the task 
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{New@{New}!ScrumHubBackend.Common@{ScrumHubBackend.Common}}\index{ScrumHubBackend.Common@{ScrumHubBackend.Common}!New@{New}}}\mbox{\Hypertarget{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6a03c2e7e41ffc181a4e84080b4710e81e}\label{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6a03c2e7e41ffc181a4e84080b4710e81e}} 
+New&New task (default for opened issue) \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{InProgress@{InProgress}!ScrumHubBackend.Common@{ScrumHubBackend.Common}}\index{ScrumHubBackend.Common@{ScrumHubBackend.Common}!InProgress@{InProgress}}}\mbox{\Hypertarget{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6a12d868c18cb29bf58f02b504be9033fd}\label{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6a12d868c18cb29bf58f02b504be9033fd}} 
+In\+Progress&Task in progress, after branch is created in Scrum\+Hub \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{InReview@{InReview}!ScrumHubBackend.Common@{ScrumHubBackend.Common}}\index{ScrumHubBackend.Common@{ScrumHubBackend.Common}!InReview@{InReview}}}\mbox{\Hypertarget{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6a7852fb16e8985e33e70852e9d089e849}\label{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6a7852fb16e8985e33e70852e9d089e849}} 
+In\+Review&Exist opened PR for branch related to issue \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Finished@{Finished}!ScrumHubBackend.Common@{ScrumHubBackend.Common}}\index{ScrumHubBackend.Common@{ScrumHubBackend.Common}!Finished@{Finished}}}\mbox{\Hypertarget{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6a8f3d10eb21bd36347c258679eba9e92b}\label{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6a8f3d10eb21bd36347c258679eba9e92b}} 
+Finished&Finished task, for closed issues \\
+\hline
+
+\end{DoxyEnumFields}
+\mbox{\Hypertarget{namespace_scrum_hub_backend_1_1_common_a0bec89b6f9f544bca58ddc66ed0eab94}\label{namespace_scrum_hub_backend_1_1_common_a0bec89b6f9f544bca58ddc66ed0eab94}} 
+\index{ScrumHubBackend.Common@{ScrumHubBackend.Common}!SprintStatus@{SprintStatus}}
+\index{SprintStatus@{SprintStatus}!ScrumHubBackend.Common@{ScrumHubBackend.Common}}
+\doxysubsubsection{\texorpdfstring{SprintStatus}{SprintStatus}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{namespace_scrum_hub_backend_1_1_common_a0bec89b6f9f544bca58ddc66ed0eab94}{Scrum\+Hub\+Backend.\+Common.\+Sprint\+Status}}}
+
+
+
+Status of the sprint 
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NotFinished@{NotFinished}!ScrumHubBackend.Common@{ScrumHubBackend.Common}}\index{ScrumHubBackend.Common@{ScrumHubBackend.Common}!NotFinished@{NotFinished}}}\mbox{\Hypertarget{namespace_scrum_hub_backend_1_1_common_a0bec89b6f9f544bca58ddc66ed0eab94ab8364d4c49c06e858cb156af9076049f}\label{namespace_scrum_hub_backend_1_1_common_a0bec89b6f9f544bca58ddc66ed0eab94ab8364d4c49c06e858cb156af9076049f}} 
+Not\+Finished&Sprint that is not finished yet \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Failed@{Failed}!ScrumHubBackend.Common@{ScrumHubBackend.Common}}\index{ScrumHubBackend.Common@{ScrumHubBackend.Common}!Failed@{Failed}}}\mbox{\Hypertarget{namespace_scrum_hub_backend_1_1_common_a0bec89b6f9f544bca58ddc66ed0eab94ad7c8c85bf79bbe1b7188497c32c3b0ca}\label{namespace_scrum_hub_backend_1_1_common_a0bec89b6f9f544bca58ddc66ed0eab94ad7c8c85bf79bbe1b7188497c32c3b0ca}} 
+Failed&Sprint marked as failed \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Successful@{Successful}!ScrumHubBackend.Common@{ScrumHubBackend.Common}}\index{ScrumHubBackend.Common@{ScrumHubBackend.Common}!Successful@{Successful}}}\mbox{\Hypertarget{namespace_scrum_hub_backend_1_1_common_a0bec89b6f9f544bca58ddc66ed0eab94a30ae8fff8898dc197acd49d9c0797d20}\label{namespace_scrum_hub_backend_1_1_common_a0bec89b6f9f544bca58ddc66ed0eab94a30ae8fff8898dc197acd49d9c0797d20}} 
+Successful&Sprint marked as success \\
+\hline
+
+\end{DoxyEnumFields}

@@ -1,0 +1,63 @@
+\hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item}{}\doxysection{Scrum\+Hub\+Backend.\+Database\+Model.\+Backlog\+Item Class Reference}
+\label{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item}\index{ScrumHubBackend.DatabaseModel.BacklogItem@{ScrumHubBackend.DatabaseModel.BacklogItem}}
+
+
+Represents one backlog element  
+
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item_a053af33f470cd01e29fe73361710e035}\label{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item_a053af33f470cd01e29fe73361710e035}} 
+{\bfseries Backlog\+Item} ()
+\begin{DoxyCompactList}\small\item\em Constructor \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item_a6d549c473d8d1c9289cbe8f5b096c47a}\label{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item_a6d549c473d8d1c9289cbe8f5b096c47a}} 
+{\bfseries Backlog\+Item} (\mbox{\hyperlink{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_add_p_b_i_command}{Add\+PBICommand}} command, long repository\+Id)
+\begin{DoxyCompactList}\small\item\em Constructor, not adding acceptance criteria \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item_a4d5abbdce8af451391b25e2a32021b08}\label{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item_a4d5abbdce8af451391b25e2a32021b08}} 
+void {\bfseries Update\+Acceptance\+Criteria} (List$<$ String $>$ new\+Criteria, \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_context}{Database\+Context}} db\+Context)
+\begin{DoxyCompactList}\small\item\em Adds or updates acceptance criteria for PBI saving changes in DB \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item_a6ad4518592b767e5256e218b422e0f8f}\label{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item_a6ad4518592b767e5256e218b422e0f8f}} 
+List$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_model_1_1_acceptance_criterium}{Acceptance\+Criterium}} $>$ {\bfseries Get\+Acceptance\+Criteria\+For\+PBI} (\mbox{\hyperlink{class_scrum_hub_backend_1_1_database_context}{Database\+Context}} db\+Context)
+\begin{DoxyCompactList}\small\item\em Gets acceptance criteria for PBI \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item_aecfdc4b20bb1e5fa74b2a61ec65c4c60}\label{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item_aecfdc4b20bb1e5fa74b2a61ec65c4c60}} 
+long {\bfseries Id}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Internal id of PBI \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item_a39984aaf3f235ad16e1dbaa766aca6f9}\label{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item_a39984aaf3f235ad16e1dbaa766aca6f9}} 
+string {\bfseries Name} = String.\+Empty\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Name of the PBI \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item_ac63a4759bf8a7802fffaa4a8fd0dad44}\label{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item_ac63a4759bf8a7802fffaa4a8fd0dad44}} 
+long {\bfseries Git\+Hub\+Label\+Id} = 0\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Id of the github label representing PBI \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item_ab2adb141541f7b14359c6c88eaf36679}\label{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item_ab2adb141541f7b14359c6c88eaf36679}} 
+bool {\bfseries Finished} = false\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Flag if the PBI was finished \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item_aee5f21d584a2d6db24f77ecd0629daac}\label{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item_aee5f21d584a2d6db24f77ecd0629daac}} 
+double {\bfseries Expected\+Time\+In\+Hours} = 0\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Estimation how many time will be spent on PBI \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item_aa4d2980bfd86bc2f5a88aa5424163c9f}\label{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item_aa4d2980bfd86bc2f5a88aa5424163c9f}} 
+double {\bfseries Time\+Spent\+In\+Hours} = 0\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em How many hours was spent on PBI \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item_a8f2d883d40663e7890e991f040466c96}\label{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item_a8f2d883d40663e7890e991f040466c96}} 
+long {\bfseries Priority} = 0\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Priority of the task \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item_ab8484b469f3ebf4f28a82eaef7dfc12f}\label{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item_ab8484b469f3ebf4f28a82eaef7dfc12f}} 
+ICollection$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_model_1_1_s_h_task}{SHTask}} $>$? {\bfseries Tasks} = null\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em List of tasks for this PBI \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item_a8296b405e33cb89e59994612343d8d7b}\label{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item_a8296b405e33cb89e59994612343d8d7b}} 
+long? {\bfseries Sprint\+Id} = null\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Id of a sprint where PBI is \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item_a4fd126fb3d6ea1e5a42ce61ee64b9298}\label{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item_a4fd126fb3d6ea1e5a42ce61ee64b9298}} 
+long? {\bfseries Repository\+Id} = null\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Id of a repository where PBI is \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents one backlog element 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Scrum\+Hub\+Backend/\+Database\+Model/Backlog\+Item.\+cs\end{DoxyCompactItemize}

@@ -1,0 +1,48 @@
+\hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_get_p_b_is_query_handler}{}\doxysection{Scrum\+Hub\+Backend.\+CQRS.\+PBI.\+Get\+PBIs\+Query\+Handler Class Reference}
+\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_get_p_b_is_query_handler}\index{ScrumHubBackend.CQRS.PBI.GetPBIsQueryHandler@{ScrumHubBackend.CQRS.PBI.GetPBIsQueryHandler}}
+
+
+Handler getting all PBIs from repository  
+
+
+Inheritance diagram for Scrum\+Hub\+Backend.\+CQRS.\+PBI.\+Get\+PBIs\+Query\+Handler\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_get_p_b_is_query_handler}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_get_p_b_is_query_handler_a9807da767cb671308bb35c7477332537}\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_get_p_b_is_query_handler_a9807da767cb671308bb35c7477332537}} 
+{\bfseries Get\+PBIs\+Query\+Handler} (ILogger$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_get_p_b_is_query_handler}{Get\+PBIs\+Query\+Handler}} $>$ logger, \mbox{\hyperlink{interface_scrum_hub_backend_1_1_git_hub_client_1_1_i_git_hub_client_factory}{IGit\+Hub\+Client\+Factory}} client\+Factory, \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_context}{Database\+Context}} db\+Context, IMediator mediator)
+\begin{DoxyCompactList}\small\item\em Constructor \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_get_p_b_is_query_handler_ab6df29e1a552b8e64eced52f321ba6cd}\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_get_p_b_is_query_handler_ab6df29e1a552b8e64eced52f321ba6cd}} 
+Task$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_common_1_1_paginated_list}{Paginated\+List}}$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item}{Backlog\+Item}} $>$ $>$ {\bfseries Handle} (\mbox{\hyperlink{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_get_p_b_is_query}{Get\+PBIs\+Query}} request, Cancellation\+Token cancellation\+Token)
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_get_p_b_is_query_handler_aa625f0d53655097ee5e713ee473095d9}\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_get_p_b_is_query_handler_aa625f0d53655097ee5e713ee473095d9}} 
+virtual \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_common_1_1_paginated_list}{Paginated\+List}}$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item}{Backlog\+Item}} $>$ {\bfseries Filter\+And\+Paginate\+PBIs} (\mbox{\hyperlink{interface_scrum_hub_backend_1_1_c_q_r_s_1_1_i_common_in_repository_request}{ICommon\+In\+Repository\+Request}} request, IEnumerable$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item}{Database\+Model.\+Backlog\+Item}} $>$ PBIs, int page\+Number, int page\+Size, string? name\+Filter, bool? finished\+Filter, bool? estimated\+Filter, bool? in\+Sprint\+Filter, bool? one\+Page)
+\begin{DoxyCompactList}\small\item\em Filters and paginates PBIs and transforms them to model repositories \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_get_p_b_is_query_handler_a035bb07c1f7c17bc12163cd82363c252}\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_get_p_b_is_query_handler_a035bb07c1f7c17bc12163cd82363c252}} 
+readonly ILogger$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_get_p_b_is_query_handler}{Get\+PBIs\+Query\+Handler}} $>$ {\bfseries \+\_\+logger}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_get_p_b_is_query_handler_aafac2d7a942c8b649b49a34b6b954a6b}\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_get_p_b_is_query_handler_aafac2d7a942c8b649b49a34b6b954a6b}} 
+readonly \mbox{\hyperlink{interface_scrum_hub_backend_1_1_git_hub_client_1_1_i_git_hub_client_factory}{IGit\+Hub\+Client\+Factory}} {\bfseries \+\_\+git\+Hub\+Client\+Factory}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_get_p_b_is_query_handler_ad2bcc4f378f2f8c2db8146de085aa3c2}\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_get_p_b_is_query_handler_ad2bcc4f378f2f8c2db8146de085aa3c2}} 
+readonly \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_context}{Database\+Context}} {\bfseries \+\_\+db\+Context}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_get_p_b_is_query_handler_a08a85cecfed6ab97fea782309dcf9047}\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_get_p_b_is_query_handler_a08a85cecfed6ab97fea782309dcf9047}} 
+readonly IMediator {\bfseries \+\_\+mediator}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Handler getting all PBIs from repository 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Scrum\+Hub\+Backend/\+CQRS/\+PBI/Get\+PBIs\+Query\+Handler.\+cs\end{DoxyCompactItemize}

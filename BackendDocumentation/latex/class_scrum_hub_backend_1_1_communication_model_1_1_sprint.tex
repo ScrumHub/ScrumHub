@@ -1,0 +1,51 @@
+\hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_sprint}{}\doxysection{Scrum\+Hub\+Backend.\+Communication\+Model.\+Sprint Class Reference}
+\label{class_scrum_hub_backend_1_1_communication_model_1_1_sprint}\index{ScrumHubBackend.CommunicationModel.Sprint@{ScrumHubBackend.CommunicationModel.Sprint}}
+
+
+Represents a sprint  
+
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_sprint_a619e43879a8a196b5c2f974b26fc2f02}\label{class_scrum_hub_backend_1_1_communication_model_1_1_sprint_a619e43879a8a196b5c2f974b26fc2f02}} 
+{\bfseries Sprint} ()
+\begin{DoxyCompactList}\small\item\em Constructor \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_sprint_a13c5957f43d614f28555556468b166a0}\label{class_scrum_hub_backend_1_1_communication_model_1_1_sprint_a13c5957f43d614f28555556468b166a0}} 
+{\bfseries Sprint} (\mbox{\hyperlink{class_scrum_hub_backend_1_1_database_model_1_1_sprint}{Database\+Model.\+Sprint}} db\+Sprint, \mbox{\hyperlink{interface_scrum_hub_backend_1_1_c_q_r_s_1_1_i_common_in_repository_request}{ICommon\+In\+Repository\+Request}} original\+Request, \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_context}{Database\+Context}} db\+Context, IMediator mediator)
+\begin{DoxyCompactList}\small\item\em Constructor \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_sprint_ade6232d978ee24632de3987f65886543}\label{class_scrum_hub_backend_1_1_communication_model_1_1_sprint_ade6232d978ee24632de3987f65886543}} 
+long {\bfseries Sprint\+Number}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Number of a sprint in the project \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_sprint_abc16c8aebf865b0a473641ad601fcd36}\label{class_scrum_hub_backend_1_1_communication_model_1_1_sprint_abc16c8aebf865b0a473641ad601fcd36}} 
+string {\bfseries Title} = String.\+Empty\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Title of the sprint \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_sprint_a130d6e5f535abcf1f8f4c9c05e15c517}\label{class_scrum_hub_backend_1_1_communication_model_1_1_sprint_a130d6e5f535abcf1f8f4c9c05e15c517}} 
+string {\bfseries Goal} = String.\+Empty\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Goal of the sprint \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_sprint_ac55ba3b511c026a2695a9574aa000f09}\label{class_scrum_hub_backend_1_1_communication_model_1_1_sprint_ac55ba3b511c026a2695a9574aa000f09}} 
+ICollection$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item}{Backlog\+Item}} $>$? {\bfseries Backlog\+Items} = null\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em PBI that will be done in this sprint \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_sprint_ac1ce1ff440cc562bf908115d98568192}\label{class_scrum_hub_backend_1_1_communication_model_1_1_sprint_ac1ce1ff440cc562bf908115d98568192}} 
+string {\bfseries Finish\+Date} = String.\+Empty\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em in format \char`\"{}yyyy-\/\+MM-\/dd \textquotesingle{}\+UTC\textquotesingle{}\char`\"{} \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_sprint_ad5952811cf5534669a052db4453c32ea}\label{class_scrum_hub_backend_1_1_communication_model_1_1_sprint_ad5952811cf5534669a052db4453c32ea}} 
+bool {\bfseries Is\+Current} = false\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em True if actual sprint is current (the one with the earliest not passed finish date) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_sprint_a250d249dcf2d92bf8a46453fc9af2ffe}\label{class_scrum_hub_backend_1_1_communication_model_1_1_sprint_a250d249dcf2d92bf8a46453fc9af2ffe}} 
+\mbox{\hyperlink{namespace_scrum_hub_backend_1_1_common_a0bec89b6f9f544bca58ddc66ed0eab94}{Sprint\+Status}} {\bfseries Status} = Sprint\+Status.\+Not\+Finished\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Status of the sprint \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_sprint_a35d7558c43f411b6245f0791adf10f6a}\label{class_scrum_hub_backend_1_1_communication_model_1_1_sprint_a35d7558c43f411b6245f0791adf10f6a}} 
+bool {\bfseries Is\+Completed}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Flag if sprint is completed \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents a sprint 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Scrum\+Hub\+Backend/\+Communication\+Model/Sprint.\+cs\end{DoxyCompactItemize}
