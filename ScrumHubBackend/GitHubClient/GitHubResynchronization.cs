@@ -27,12 +27,20 @@ namespace ScrumHubBackend.GitHubClient
         {
             var repositoryIssueRequest = new RepositoryIssueRequest
             {
+                State = ItemStateFilter.All,
+            };
+
+            var repositoryPRsRequest = new PullRequestRequest
+            {
                 State = ItemStateFilter.All
             };
 
             var issuesAndPullRequests = gitHubClient.Issue.GetAllForRepository(repository.Id, repositoryIssueRequest).Result;
             var repositoryIssues = issuesAndPullRequests.Where(iapr => iapr.PullRequest == null);
-            var repositoryPRs = issuesAndPullRequests.Where(iapr => iapr.PullRequest != null);
+            var repositoryPRsToDefaultBranch = 
+                gitHubClient.PullRequest.GetAllForRepository(repository.Id, repositoryPRsRequest)
+                    .Result.Where( pr => 
+                        pr.Base.Ref == repository.DefaultBranch);
             var repositoryBranches = gitHubClient.Repository.Branch.GetAll(repository.Id).Result;
 
             var dbRepo = dbContext.Repositories?.FirstOrDefault(repo => repo.GitHubId == repository.Id);
@@ -47,10 +55,10 @@ namespace ScrumHubBackend.GitHubClient
             // After adding tasks the list requires to be refreshed
             scrumHubTasks = dbContext.Tasks?.Where(task => task.RepositoryId == dbRepo.Id).ToList() ?? new List<DatabaseModel.SHTask>();
 
-            UpdateAndRemoveTasks(scrumHubTasks, repositoryIssues, repositoryBranches, dbContext);
+            UpdateAndRemoveTasks(repository.Id, scrumHubTasks, repositoryIssues, repositoryPRsToDefaultBranch, repositoryBranches, dbContext, gitHubClient);
         }
 
-        private static void UpdateAndRemoveTasks(IEnumerable<SHTask> scrumHubTasks, IEnumerable<Issue> repositoryIssues, IEnumerable<Branch> repositoryBranches, DatabaseContext dbContext)
+        private static void UpdateAndRemoveTasks(long repositoryId, IEnumerable<SHTask> scrumHubTasks, IEnumerable<Issue> repositoryIssues, IEnumerable<PullRequest> repositoryPRsToDefaultBranch, IEnumerable<Branch> repositoryBranches, DatabaseContext dbContext, IGitHubClient gitHubClient)
         {
             foreach (var scrumHubTask in scrumHubTasks)
             {
@@ -60,21 +68,59 @@ namespace ScrumHubBackend.GitHubClient
                 // If issues in repository contain the task - we do 'update' part
                 if (repositoryIssue != default)
                 {
-                    // Transition to 'Finished' on closed issue
-                    if(repositoryIssue.State.Value == ItemState.Closed && scrumHubTask.Status != Common.SHTaskStatus.Finished)
-                    {
-                        scrumHubTask.Status = Common.SHTaskStatus.Finished;
-                        dbContext.Update(scrumHubTask);
-                    }
+                    
 
                     // Transition to 'InProgress' if status is 'New' and proper branch exists
                     if(scrumHubTask.Status == Common.SHTaskStatus.New)
                     {
                         // Exists a branch with proper name that can be reated as a branch for this task
-                        if(repositoryBranches.Any(branch => Regex.IsMatch(branch.Name, $"^(.*)/{repositoryIssue.Number}\\..*$", RegexOptions.IgnoreCase))) {
+                        if(repositoryBranches.Any(branch => NameMatchesIssueBranchName(branch.Name, repositoryIssue.Number))) {
                             scrumHubTask.Status = Common.SHTaskStatus.InProgress;
                             dbContext.Update(scrumHubTask);
                         }
+                    }
+
+                    var relatedPRs = repositoryPRsToDefaultBranch.Where(pr => NameMatchesIssueBranchName(pr.Head.Ref, repositoryIssue.Number));
+
+                    // Transition to 'In review' if there are any open PRs from this task branch to default
+                    if (scrumHubTask.Status != Common.SHTaskStatus.Finished)
+                    {
+                        if(relatedPRs.Any(pr => pr.State.Value == ItemState.Open))
+                        {
+                            scrumHubTask.Status = Common.SHTaskStatus.InReview;
+                            dbContext.Update(scrumHubTask);
+                        }
+                    }
+
+                    // Closing the issue if we have permissions and finishing the task
+                    if(scrumHubTask.Status != Common.SHTaskStatus.Finished)
+                    {
+                        if(relatedPRs.Any(pr => pr.Merged == true))
+                        {
+                            scrumHubTask.Status = Common.SHTaskStatus.Finished;
+                            dbContext.Update(scrumHubTask);
+
+                            var issueUpdate = new IssueUpdate()
+                            {
+                                State = ItemState.Closed
+                            };
+
+                            try
+                            {
+                                gitHubClient.Issue.Update(repositoryId, repositoryIssue.Number, issueUpdate).Wait();
+                            } 
+                            catch
+                            {
+                                // If we do not have permissions, well, happens - issue will be closed some other time
+                            }
+                        }
+                    }
+
+                    // Transition to 'Finished' on closed issue
+                    if (repositoryIssue.State.Value == ItemState.Closed && scrumHubTask.Status != Common.SHTaskStatus.Finished)
+                    {
+                        scrumHubTask.Status = Common.SHTaskStatus.Finished;
+                        dbContext.Update(scrumHubTask);
                     }
                 }
                 else // If not - we should delete it in ScrumHub
@@ -85,6 +131,8 @@ namespace ScrumHubBackend.GitHubClient
 
             dbContext.SaveChanges();
         }
+
+        private static bool NameMatchesIssueBranchName(string name, long issueNumber) => Regex.IsMatch(name, $"^(.*)/{issueNumber}\\..*$", RegexOptions.IgnoreCase);
 
         private static void AddTasks(IEnumerable<SHTask> scrumHubTasks, IEnumerable<Issue> repositoryIssues, DatabaseModel.Repository dbRepo, DatabaseContext dbContext)
         {
