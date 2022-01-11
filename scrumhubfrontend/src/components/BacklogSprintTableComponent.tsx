@@ -28,7 +28,7 @@ export default function SprintTableComponent(props: any) {
       {<Table
         locale={locale}
         key={props.keys}
-        style={{ transform: "scale(0.96)", height: "auto"}}
+        style={{ transform: "scale(0.96)", height: "auto",}}
         scroll={{ x: 800 }}
         size="small"
         loading={props.loading}

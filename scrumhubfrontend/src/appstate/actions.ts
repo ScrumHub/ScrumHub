@@ -508,6 +508,28 @@ export const unassignPersonToTaskThunk = createAsyncThunk<
   return response as RequestResponse<ITask, number>;
 });
 
+export const startTaskThunk = createAsyncThunk<
+  RequestResponse<ITask, number>,
+  { token: string, ownerName: string; hotfix:boolean; taskId:number},
+  { rejectValue: RequestResponse<ITask, number> }
+>("startTaskThunk", async (
+  item: {
+    token: string;
+    ownerName: string;
+    hotfix:boolean;
+    taskId:number;
+  },
+  { rejectWithValue }) => {
+  const response: RequestResponse<ITask, number> =
+    await Fetching.startTask(item.token, item.ownerName, item.hotfix,item.taskId);
+  if (response.code !== 200) {
+    return rejectWithValue(
+      response as RequestResponse<ITask, number>
+    );
+  }
+  return response as RequestResponse<ITask, number>;
+});
+
 
 export const clearError = createAction("clearError");
 export const clearState = createAction("clearState");

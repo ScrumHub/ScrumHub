@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
-import { Button, Tag, message, Dropdown, Badge } from 'antd';
+import { Button, Tag, message, Dropdown, Badge, Popover, Space, Divider } from 'antd';
 import { useDrag, useDrop } from 'react-dnd';
 import * as Actions from '../appstate/actions';
 import { IAddPBI, IFilters, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, ISprint, ISprintList, ITask, State } from '../appstate/stateInterfaces';
@@ -20,7 +20,7 @@ import { taskStatusCol, taskGhLinkCol, taskNameCol, pbiProgressCol, backlogColor
 import TaskTableComponent from './BacklogTaskTableComponent';
 import PBITableComponent from './BacklogPBITableComponent';
 import { MenuWithPeopleSave } from './utility/LoadAnimations';
-import { CalendarOutlined, DownOutlined, EditOutlined } from '@ant-design/icons';
+import { BranchesOutlined, CalendarOutlined, DownOutlined, EditOutlined } from '@ant-design/icons';
 import SprintTableComponent from './BacklogSprintTableComponent';
 import { initPBIFilter } from '../appstate/initStateValues';
 import { CompleteSprintPopup } from './popups/CompleteSprint';
@@ -41,6 +41,7 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
   const [initialRefresh, setInitialRefresh] = useState(true);
   const [selectedPBI, setSelectedPBI] = useState({} as IProductBacklogItem);
   const [selectedSprint, setSelectedSprint] = useState({} as ISprint);
+  const [selectedTask, setSelectedTask] = useState({} as ITask);
   const [isModal, setIsModal] = useState<IModals>(initModalVals);
   const isMounted = useIsMounted();
   const navigate = useNavigate();
@@ -213,7 +214,7 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
   const nestedcomponents = { body: { row: DraggableBodyRow, }, };
   const taskColumns = [taskNameCol, taskStatusCol,
     {
-      key: "isAssignedToPBI", title: "Assignees", width: "20%",align:"center" as const,
+      key: "isAssignedToPBI", title: "Assignees", width: "22%",align:"center" as const,
       filterIcon: <></>, filters:[], filteredValue:props.peopleFilter||null, onFilter: (value:any, task:ITask) => isArrayValid(props.peopleFilter) && isArrayValid(task.assigness) ? 
       task.assigness.filter((person: IPerson) => {
         return (props.peopleFilter.includes(person.login))
@@ -231,7 +232,19 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
                 <DownOutlined />
               </span>),]} > </Dropdown.Button>)
       },
-    }, taskGhLinkCol,];
+    }, {title: "Start Branch",
+    key: "branch",
+    width: "12%",
+    align: "right" as const,
+    render: (record: ITask) => <Popover
+    content={<><div style={{alignSelf:"center", marginBottom:"10%", textAlign:"center"}}>Start New Branch</div><Space style={{alignItems:"flex-end"}}>
+      <Button key={"hotfix"} size='small' type="primary" onClick={()=>{}}>Feature</Button>
+      <Button key={"hotfix"} size='small' type="primary" color="deeppink" onClick={() => { setSelectedTask(record); setIsModal({ ...isModal, startBranch: true }); }}>Hotfix</Button>
+      </Space></>}
+    trigger="click"
+  >
+    <Button key={"action" + record.id} size='small' type="link"  >
+    <span>{"Start "}<BranchesOutlined/></span></Button></Popover>}, taskGhLinkCol,];
   const TaskTableforPBI: React.FC<IProductBacklogItem> = (item: IProductBacklogItem) => { return (<TaskTableComponent peopleFilter={props.peopleFilter} item={item} taskColumns={taskColumns} taskComponents={nestedcomponents} />) };
   const pbiColumns = [
     {

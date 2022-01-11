@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import 'antd/dist/antd.css';
 import { DatabaseOutlined, GithubOutlined, ProjectOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
-import AppRouter from '../Approuter';
+import {AppRouter} from '../Approuter';
 import { AuthContext } from '../App';
 import { store } from '../appstate/store';
 import { clearState } from '../appstate/actions';
@@ -15,6 +15,7 @@ import './Main.css';
 import { useSelector } from 'react-redux';
 import { ISprint, State } from '../appstate/stateInterfaces';
 import { routes } from './utility/BodyRowsAndColumns';
+import { isErrorMessageValid } from './utility/commonFunctions';
 const { Header, Footer, Content, Sider } = Layout;
 const { SubMenu } = Menu;
 
@@ -22,7 +23,7 @@ function ItemRender(route: any, params: any[], routes: any[], paths: any[]) {
   return (<span key={route.path}>{(route.icon ? route.icon : "")}{" " + route.breadcrumbName}</span>)
 }
 
-function Main(props: any) {
+export function Main(props: any) {
   const { state, dispatch: unAuth } = useContext(AuthContext);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [cookies, setCookie, removeCookie] = useCookies();
@@ -101,12 +102,11 @@ function Main(props: any) {
     }
   }
   useEffect(() => {
-    if (error.hasError && error.erorMessage !== "") {
+    if (error.hasError && isErrorMessageValid(error.erorMessage)){
       message.error(error.erorMessage, 2);
       store.dispatch(Actions.clearError());
     }
   }, [error]);
-
   useEffect(() => {
     if (state.isLoggedIn && !currentUser.isCurrentUser && !load) {
       setLoad(true);
@@ -114,10 +114,12 @@ function Main(props: any) {
         Actions.getCurrentUserThunk({
           token: token,
         })
-      ).then(()=>{setLoad(false);});
+      ).then((response:any)=>{if(response.payload && response.payload.code===0){message.error(response.payload.response.message, 2);setLogout(true);}else{setLoad(false);}});
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser, load, state.isLoggedIn]);
+
+  if(location.pathname === "/"&& ownerName){localStorage.removeItem("sprintID"); localStorage.removeItem("ownerName");}
 
   if(ownerName === null && location.pathname !== "/"){handleProjects();}
 
@@ -186,5 +188,3 @@ function Main(props: any) {
     </section>
   );
 }
-
-export default Main;

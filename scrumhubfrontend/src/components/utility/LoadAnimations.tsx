@@ -71,7 +71,7 @@ export function MenuWithPeople(props: any) {
 
     }, [props.peopleFilter]);
 
-    return (isNameFilterValid(props.inputFilter) && <Menu className="peopleMenu">{ppl.map((item: IPerson) => {
+    return ( <Menu hidden={!isNameFilterValid(props.inputFilter)} className="peopleMenu">{ppl.map((item: IPerson) => {
         return ((item.login.startsWith(inputFilter) || nameList.includes(item.login)) &&
             <MenuItem key={item.login} onClick={() => { handleList(item); }}>
                 <Space>
@@ -99,7 +99,7 @@ export function MenuWithSorting(props: any) {
     useEffect(() => {
         setSortedInfo(props.sortedInfo);
     }, [props.sortedInfo]);
-    return (props.sortedInfo && <Menu className="peopleMenu" selectedKeys={[]}>
+    return (<Menu hidden={!props.sortedInfo} className="peopleMenu" selectedKeys={[]}>
         <MenuItem key={"pbiPriorityDesc"} onClick={() => { handleList({ columnKey: "pbiPriority", order: "descend" }); }}>
             <Space>
                 <div style={{ minWidth: "6vw" }} >{"Priority"}</div>

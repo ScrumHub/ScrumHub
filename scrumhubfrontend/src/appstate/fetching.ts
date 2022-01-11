@@ -347,3 +347,13 @@ export function unassignPersonToTask(token: string, ownerName: string, login: st
     )
   );
 }
+
+export function startTask(token: string, ownerName: string, hotfix: boolean, taskId: number
+  ): Promise<RequestResponse<ITask, number>> {
+    return getResponse(
+      axios.patch(
+        `${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/${taskId}/start?hotFix=${hotfix}`,
+        {}, { headers: getHeader(token, config) }
+      )
+    );
+  }

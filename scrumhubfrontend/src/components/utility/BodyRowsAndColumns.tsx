@@ -11,14 +11,14 @@ export const taskNameCol = {
   title: "Name",
   align: "left" as const,
   dataIndex: "name",
-  width: "37%",
+  width: "32%",
   key: "name",
 };
 export const taskStatusCol = {
   title: "Status",
   key: "finished",
   dataIndex: "finished",
-  width: "28%",
+  width: "22%",
   align: "center" as const,
   render: (val: boolean) => (
     <span>
@@ -31,7 +31,7 @@ export const taskGhLinkCol = {
   title: "Related Link",
   dataIndex: "link",
   key: "link",
-  width: "15%",
+  width: "12%",
   align: "right" as const,
   render: (text: string) => <a href={text}>{"See on GitHub"}</a>,
 };

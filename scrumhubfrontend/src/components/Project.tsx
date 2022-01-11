@@ -16,7 +16,7 @@ import { initAddPBI, initSprint } from '../appstate/initStateValues';
 import { initFilterMenu, initFilterSortInfo } from './utility/commonInitValues';
 const { Search } = Input;
 
-export default function Project() {
+export function Project() {
   const { state } = useContext(AuthContext);
   const { token } = state;
   const pbiPage = useSelector((appState: State) => appState.pbiPage as IProductBacklogList);

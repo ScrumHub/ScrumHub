@@ -391,14 +391,14 @@ export const reducer = createReducer(initState, {
     let newState = _.cloneDeep(state);
     const pbi = payload.payload.response as IProductBacklogItem;
     if (pbi.isInSprint) {
-      if(isArrayValid(newState.sprintPage.list)){
+      if(newState.sprintPage && isArrayValid(newState.sprintPage.list)){
         const index = newState.sprintPage.list.findIndex((sprint: ISprint) => sprint.sprintNumber === pbi.sprintNumber);
         if (index !== -1) {
           const pbiIndex = newState.sprintPage.list[index].backlogItems.findIndex((pb: IProductBacklogItem) => pb.id === pbi.id);
           newState.sprintPage.list[index].backlogItems[pbiIndex] = pbi;
         }
       }
-      if(isArrayValid(newState.openSprint.backlogItems) && newState.openSprint.sprintNumber === pbi.sprintNumber){
+      if(newState.openSprint && isArrayValid(newState.openSprint.backlogItems) && newState.openSprint.sprintNumber === pbi.sprintNumber){
           const pbiIndex = newState.openSprint.backlogItems.findIndex((pb: IProductBacklogItem) => pb.id === pbi.id);
           newState.openSprint.backlogItems[pbiIndex] = pbi;
       }
@@ -914,6 +914,72 @@ export const reducer = createReducer(initState, {
     return newState;
   },
   [Actions.unassignPersonToTaskThunk.rejected.toString()]: (
+    state: State,
+    payload: PayloadAction<RequestResponse<undefined, undefined>>
+  ) => {
+    let newState = _.cloneDeep(state);
+    newState.error = getError(payload.payload);
+    newState.loading = false;
+    return newState;
+  },
+  [Actions.startTaskThunk.pending.toString()]: (
+    state: State,
+    payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
+    let newState = _.cloneDeep(state);
+    newState.loading = true;
+    return newState;
+  },
+  [Actions.startTaskThunk.fulfilled.toString()]: (
+    state: State,
+    payload: PayloadAction<RequestResponse<ITask, number>>
+  ) => {
+    let newState = _.cloneDeep(state);
+    newState.error = initError;
+    const task = payload.payload.response as ITask;
+    if(newState.openSprint && isArrayValid(newState.openSprint.backlogItems) && newState.openSprint.backlogItems.findIndex((pbi: IProductBacklogItem) => pbi.id === task.pbiId) !== -1){
+      const index = newState.openSprint.backlogItems.findIndex((pbi: IProductBacklogItem) => pbi.id === task.pbiId);
+      newState.openSprint.backlogItems[index] = {
+        ...newState.openSprint.backlogItems[index],
+        tasks: newState.openSprint.backlogItems[index].tasks.map((t: ITask) => {
+          if (t.id === task.id) {
+            return task;
+          }
+          return t;
+        })
+      };
+    }
+    else if (newState.pbiPage && isArrayValid(newState.pbiPage.list) && (task.isAssignedToPBI ? newState.pbiPage.list.findIndex((pbi: IProductBacklogItem) => pbi.id === task.pbiId) : newState.pbiPage.list.findIndex((pbi: IProductBacklogItem) => pbi.id === 0))!== -1) {
+      const index = task.isAssignedToPBI ? newState.pbiPage.list.findIndex((pbi: IProductBacklogItem) => pbi.id === task.pbiId) : newState.pbiPage.list.findIndex((pbi: IProductBacklogItem) => pbi.id === 0);
+        newState.pbiPage.list[index] = {
+          ...newState.pbiPage.list[index],
+          tasks: newState.pbiPage.list[index].tasks.map((t: ITask) => {
+            if (t.id === task.id) {
+              return task;
+            }
+            return t;
+          })
+        };
+    }
+    else if (newState.sprintPage && isArrayValid(newState.sprintPage.list.length)) {
+      newState.sprintPage.list = newState.sprintPage.list.map((sprint: ISprint) => {
+        sprint.backlogItems = sprint.backlogItems.map((item: IProductBacklogItem) => {
+          if (item.id === task.pbiId && isArrayValid(item.tasks)) {
+            item.tasks = item.tasks.map((t: ITask) => {
+              if (t.id === task.id) {
+                return task;
+              }
+              return t;
+            });
+          }
+          return item;
+        });
+        return sprint;
+      });
+    }
+    newState.loading = false;
+    return newState;
+  },
+  [Actions.startTaskThunk.rejected.toString()]: (
     state: State,
     payload: PayloadAction<RequestResponse<undefined, undefined>>
   ) => {

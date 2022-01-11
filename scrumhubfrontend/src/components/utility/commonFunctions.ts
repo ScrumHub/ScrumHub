@@ -24,6 +24,10 @@ export const isNameFilterValid = (nameFilter:any) => {
   return nameFilter && nameFilter !== "";
 }
 
+export const isErrorMessageValid = (nameFilter:any) => {
+  return nameFilter && nameFilter !== "";
+}
+
 export const isPeopleFilterValid = (peopleFilter:string[]) => {
   return peopleFilter && peopleFilter.length >0;
 }

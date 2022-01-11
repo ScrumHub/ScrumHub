@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Badge, Button, Dropdown, message, Space, Tag, Typography, } from 'antd';
+import { Badge, Button, Dropdown, message, Popover, Space, Tag, Typography, } from 'antd';
 import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
 import { IAddPBI, IFilters, IPeopleList, IProductBacklogItem, IProductBacklogList, ISprint, ITask, State } from '../appstate/stateInterfaces';
 import { AuthContext } from '../App';
 import config from '../configuration/config';
 import { useSelector } from 'react-redux';
-import { DownOutlined, EditOutlined } from '@ant-design/icons';
+import { BranchesOutlined, DownOutlined, EditOutlined } from '@ant-design/icons';
 import { store } from '../appstate/store';
 import "./SprintProject.css";
 import PBITableComponent from './BacklogPBITableComponent';
@@ -27,9 +27,8 @@ import { EstimatePBIPopup } from './popups/EstimatePBIPopup';
 import { UpdateSprintPopup } from './popups/UpdateSprintPopup';
 import moment from 'moment';
 import { useLocation } from 'react-router';
-import { initPeopleList } from '../appstate/initStateValues';
 
-export default function SprintBacklog() {
+export function SprintBacklog() {
   const { state } = useContext(AuthContext);
   const { token } = state;
   const [infos, setInfos] = useState({
@@ -201,7 +200,7 @@ export default function SprintBacklog() {
   const nestedcomponents = { body: { row: DraggableBodyRow, }, };
   const taskColumns = [taskNameCol, taskStatusCol,
     {
-      key: "isAssignedToPBI", title: "Assignees", width: "20%", align: "center" as const,
+      key: "isAssignedToPBI", title: "Assignees", width: "22%", align: "center" as const,
       render: (record: ITask) => {
         return (
           <Dropdown.Button style={{ cursor: "pointer" }} placement='bottomCenter' type="text"
@@ -215,7 +214,19 @@ export default function SprintBacklog() {
                 <DownOutlined />
               </span>),]} > </Dropdown.Button>)
       },
-    }, taskGhLinkCol,];
+    }, {title: "Start Branch",
+    key: "branch",
+    width: "12%",
+    align: "right" as const,
+    render: (record: ITask) => <Popover
+    content={<><div style={{alignSelf:"center", marginBottom:"10%", textAlign:"center"}}>Start New Branch</div><Space style={{alignItems:"flex-end"}}>
+      <Button key={"hotfix"} size='small' type="primary" onClick={()=>{}}>Feature</Button>
+      <Button key={"hotfix"} size='small' type="primary" color="deeppink" onClick={() => { }}>Hotfix</Button>
+      </Space></>}
+    trigger="click"
+  >
+    <Button key={"action" + record.id} size='small' type="link"  >
+    <span>{"Start "}<BranchesOutlined/></span></Button></Popover>},taskGhLinkCol,];
   const TaskTableforPBI: React.FC<IProductBacklogItem> = (item: IProductBacklogItem) => { return (<TaskTableComponent peopleFilter={filterPBI.peopleFilter} item={item} taskColumns={taskColumns} taskComponents={nestedcomponents} />) };
   const pbiColumns = [
     {
