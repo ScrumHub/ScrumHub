@@ -17,7 +17,7 @@ import { dateFormat } from './utility/commonFunctions';
 const { Meta } = Card;
 
 
-export default function Home() {
+export function Home() {
   const { state } = useContext(AuthContext);
   const { token, isLoggedIn } = state;
   const [filters, setFilters] = useState<IFilters>({pageNumber: config.defaultFilters.page,pageSize: config.defaultFilters.size,});

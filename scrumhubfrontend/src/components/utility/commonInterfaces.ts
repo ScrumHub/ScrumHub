@@ -24,6 +24,7 @@
     //addPBI: boolean,
     editPBI: boolean,
     estimatePBI: boolean,
+    startBranchId:number
   }
 
   export interface IRowIds {
@@ -31,4 +32,9 @@
     taskID:number;
     sprintNumber:number;
     estimated:boolean;
+  }
+
+  export interface tableKeys{
+    sprintKeys:number[],
+    pbiKeys:number[],
   }

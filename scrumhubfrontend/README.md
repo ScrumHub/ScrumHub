@@ -5,17 +5,17 @@ Request has been blocked by CORS policy: Response to preflight request doesn't p
 
 # Add client id and secret to env
 
-The .env file should look like this:\
+The .env file should look like this:
 
-REACT_APP_CLIENT_ID="ScrumHub_client_id"\
+REACT_APP_CLIENT_ID="ScrumHub_client_id"
 
-REACT_APP_CLIENT_SECRET="ScrumHub_client_secret"\
+REACT_APP_CLIENT_SECRET="ScrumHub_client_secret"
 
-REACT_APP_REDIRECT_URI=http://localhost:3000/login\
+REACT_APP_REDIRECT_URI=http://localhost:3000/login
 
-REACT_APP_PROXY_URL=http://localhost:5000/authenticate\
+REACT_APP_PROXY_URL=http://localhost:5000/authenticate
 
-REACT_APP_LOGOUT_URL=http://localhost:5000/logout\
+REACT_APP_LOGOUT_URL=http://localhost:5000/logout
 
 REACT_APP_SERVER_PORT=5000
 

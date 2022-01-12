@@ -9,19 +9,21 @@ import { isArrayValid, isNameFilterValid } from "./commonFunctions";
 import { useEffect } from "react";
 import SubMenu from "antd/lib/menu/SubMenu";
 import { backlogColors, backlogPriorities } from "./BodyRowsAndColumns";
+import { initFilteredInfo } from "./commonInitValues";
 
 export default function SkeletonList(props: any) {
     const number = props.number ? props.number : 0;
     const loading = props.loading !== null ? props.loading : true;
     return (<>
         {Array.from(Array(number).keys()).map((i: number) => {
-            return <section className="card" style={{ width: "85%", }} key={i} >
+            return <section className="card" style={{ width: props.width?"100%":"85%", }} key={i} >
                 <Skeleton loading={loading} active /></section>
         })
         }
     </>);
 
 }
+
 
 export const content = (
     <div>
@@ -69,7 +71,7 @@ export function MenuWithPeople(props: any) {
 
     }, [props.peopleFilter]);
 
-    return (isNameFilterValid(props.inputFilter) && <Menu className="peopleMenu">{ppl.map((item: IPerson) => {
+    return ( <Menu hidden={!isNameFilterValid(props.inputFilter)} className="peopleMenu">{ppl.map((item: IPerson) => {
         return ((item.login.startsWith(inputFilter) || nameList.includes(item.login)) &&
             <MenuItem key={item.login} onClick={() => { handleList(item); }}>
                 <Space>
@@ -97,34 +99,30 @@ export function MenuWithSorting(props: any) {
     useEffect(() => {
         setSortedInfo(props.sortedInfo);
     }, [props.sortedInfo]);
-    return (props.sortedInfo && <Menu className="peopleMenu">
+    return (<Menu hidden={!props.sortedInfo} className="peopleMenu" selectedKeys={[]}>
         <MenuItem key={"pbiPriorityDesc"} onClick={() => { handleList({ columnKey: "pbiPriority", order: "descend" }); }}>
             <Space>
                 <div style={{ minWidth: "6vw" }} >{"Priority"}</div>
-                <SortDescendingOutlined disabled={sortedInfo && sortedInfo.columnKey && sortedInfo.columnKey.includes("pbiPriority") &&
-                    sortedInfo.order && sortedInfo.order.includes("descend")} />
+                <SortDescendingOutlined  />
             </Space>
         </MenuItem>
         <MenuItem key={"pbiPriorityAsc"} onClick={() => { handleList({ columnKey: "pbiPriority", order: "ascend" }); }}>
             <Space>
                 <div style={{ minWidth: "6vw" }} >{"Priority"}</div>
-                <SortAscendingOutlined disabled={sortedInfo && sortedInfo.columnKey && sortedInfo.columnKey.includes("pbiPriority") &&
-                    sortedInfo.order && sortedInfo.order.includes("ascend")} />
+                <SortAscendingOutlined  />
             </Space>
 
         </MenuItem>
-        <MenuItem key={"sprintDesc"} onClick={() => { handleList({ columnKey: "sprintNumber", order: "descend" }); }}>
+        <MenuItem key={"sprintDesc"} onClick={() => { handleList({ columnKey: "isCompleted", order: "descend" }); }}>
             <Space>
                 <div style={{ minWidth: "6vw" }} >{"Sprint"}</div>
-                <SortDescendingOutlined disabled={sortedInfo && sortedInfo.columnKey && sortedInfo.columnKey.includes("sprintNumber") &&
-                    sortedInfo.order && sortedInfo.order.includes("descend")} />
+                <SortDescendingOutlined />
             </Space>
         </MenuItem>
-        <MenuItem key={"sprintAsc"} onClick={() => { handleList({ columnKey: "sprintNumber", order: "ascend" }); }}>
+        <MenuItem key={"sprintAsc"} onClick={() => { handleList({ columnKey: "isCompleted", order: "ascend" }); }}>
             <Space>
                 <div style={{ minWidth: "6vw" }} >{"Sprint"}</div>
-                <SortAscendingOutlined disabled={sortedInfo && sortedInfo.columnKey && sortedInfo.columnKey.includes("sprintNumber") &&
-                    sortedInfo.order && sortedInfo.order.includes("ascend")} />
+                <SortAscendingOutlined />
             </Space>
 
         </MenuItem>
@@ -138,55 +136,68 @@ export function MenuWithSorting(props: any) {
 }
 
 export function MenuWithFilters(props: any) {
-    const [filteredInfo, setFilteredInfo] = useState({ complete: -1, pbiPriorities: [] as number[] } as IFilters);
+    const [filteredInfo, setFilteredInfo] = useState(initFilteredInfo);
     const handleList = (item: any) => {
-        if (!filteredInfo) { props.itemSelected({ complete: -1, pbiPriorities: [] as number[] }); }
+        if (!filteredInfo) { props.itemSelected(initFilteredInfo); }
         else if (typeof(item.complete)!=="undefined" && filteredInfo) {
-            props.itemSelected({ ...filteredInfo, complete: filteredInfo.complete!==null && filteredInfo.complete === item.complete ? -1 : item.complete });
-        }
-        else if (typeof(item.pbiPriorities)!=="undefined" &&  filteredInfo) {
-            if (isArrayValid(filteredInfo.pbiPriorities)) {
+            if (isArrayValid(filteredInfo.complete)) {
                 props.itemSelected({
-                    ...filteredInfo, pbiPriorities: filteredInfo.pbiPriorities.includes(item.pbiPriorities) ?
-                        filteredInfo.pbiPriorities.filter((num: number) => num !== item.pbiPriorities) : filteredInfo.pbiPriorities.concat(item.pbiPriorities)
+                    ...filteredInfo, complete: filteredInfo.complete.includes(item.complete) ?
+                        filteredInfo.complete.filter((num: number) => num !== item.complete) : filteredInfo.complete.concat(item.complete)
                 })
             }
             else {
-                props.itemSelected({ ...filteredInfo, pbiPriorities: [item.pbiPriorities] });
+                props.itemSelected({ ...filteredInfo, complete: [item.complete] });
+            }
+        }
+        else if (typeof(item.pbiPriority)!=="undefined" &&  filteredInfo) {
+            if (isArrayValid(filteredInfo.pbiPriority)) {
+                props.itemSelected({
+                    ...filteredInfo, pbiPriority: filteredInfo.pbiPriority.includes(item.pbiPriority) ?
+                        filteredInfo.pbiPriority.filter((num: number) => num !== item.pbiPriority) : filteredInfo.pbiPriority.concat(item.pbiPriority)
+                })
+            }
+            else {
+                props.itemSelected({ ...filteredInfo, pbiPriority: [item.pbiPriority] });
             }
         }
     };
     useEffect(() => {
-        if(props.filteredInfo.complete && props.filteredInfo.pbiPriorities){
+        if(props.filteredInfo){
         setFilteredInfo(props.filteredInfo);
         }
     }, [props.filteredInfo]);
-    return (props.filteredInfo && <Menu className="peopleMenu">
-        <SubMenu title="Sprint Completeness">
-            <MenuItem key={"completed"} onClick={() => { handleList({ complete: 1 }); }}>
-                <Space>
+    return (props.filteredInfo && 
+    <Menu onMouseLeave={()=>{props.onVisibilityChange(false);}} 
+    defaultOpenKeys={[]} selectedKeys={[]}
+    mode="vertical"
+    openKeys={props.openKeys}
+    className="peopleMenu">
+        <SubMenu onTitleMouseEnter={()=>{props.setOpenKeys(["sprintComplete"]);}} title="Sprint Completeness" key="sprintComplete">
+            <MenuItem key={"completed"} onClick={() => { props.setOpenKeys(["sprintComplete"]); handleList({ complete: 1 }); }}>
+                <Space style={{ minWidth: "8.5vw" }}>
                     <div style={{ minWidth: "7vw" }} >{"Complete"}</div>
-                    {filteredInfo &&  filteredInfo.complete === 1 ? <CheckOutlined /> : <></>}
+                    {filteredInfo && isArrayValid(filteredInfo.complete) && filteredInfo.complete.includes(1) ? <CheckOutlined /> : <></>}
                 </Space>
             </MenuItem>
-            <MenuItem key={"not_completed"} onClick={() => { handleList({ complete: 0 }); }}>
-                <Space>
+            <MenuItem key={"not_completed"} onClick={() => { props.setOpenKeys(["sprintComplete"]); handleList({ complete: 0 }); }}>
+                <Space style={{ minWidth: "8.5vw" }}>
                     <div style={{ minWidth: "7vw" }} >{"Not Complete"}</div>
-                    {filteredInfo &&  filteredInfo.complete === 0 ? <CheckOutlined /> : <></>}
+                    {filteredInfo && isArrayValid(filteredInfo.complete) && filteredInfo.complete.includes(0) ? <CheckOutlined /> : <></>}
                 </Space>
             </MenuItem>
         </SubMenu>
-        <SubMenu title="Backlog Item Priority">
+        <SubMenu onTitleMouseEnter={()=>{props.setOpenKeys(["pbiPriority"]);}} title="Backlog Item Priority" key="pbiPriority">
             {backlogPriorities.map((item, key) => {
-                return (<MenuItem key={"priority" + key} onClick={() => { handleList({ "pbiPriorities": key }); }}>
-                    <Space>
-                        <div style={{ minWidth: "4vw" }} ><Tag color={backlogColors[key]}>{backlogPriorities[key]}</Tag></div>
-                        {filteredInfo && isArrayValid(filteredInfo.pbiPriorities) && filteredInfo.pbiPriorities.includes(key) ? <CheckOutlined /> : <></>}
+                return (<MenuItem key={"priority" + key} onClick={() => { handleList({ "pbiPriority": key }); }}>
+                    <Space style={{ minWidth: "6vw" }}>
+                        <div style={{ minWidth: "4.5vw", alignSelf:"start" }} ><Tag color={backlogColors[key]}>{backlogPriorities[key]}</Tag></div>
+                        {filteredInfo && isArrayValid(filteredInfo.pbiPriority) && filteredInfo.pbiPriority.includes(key) ? <CheckOutlined /> : <></>}
                     </Space>
                 </MenuItem>)
             })}
         </SubMenu>
-        <MenuItem key={"clear"} onClick={() => { props.itemSelected({ complete: -1, pbiPriorities: [] as number[] }) }}>
+        <MenuItem key={"clear"} onMouseEnter={()=>{props.setOpenKeys([]);}} onClick={() => { props.itemSelected(initFilteredInfo) }}>
             <Space>
                 <div style={{ minWidth: "7vw" }} >{"Clear All Filters"}</div>
             </Space>

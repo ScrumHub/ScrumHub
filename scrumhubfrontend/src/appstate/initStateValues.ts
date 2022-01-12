@@ -1,4 +1,5 @@
 import moment from "moment";
+import { initKeys as initTableKeys, initLoadingKeys } from "../components/utility/commonInitValues";
 import config from "../configuration/config"
 import { IAddPBI, IAssignPBI, IFilters, IPBIFilter, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, ITaskNamed, IUpdateIdSprint, State } from "./stateInterfaces";
 
@@ -10,6 +11,7 @@ export const initTask: ITask = {
   isAssignedToPBI: false,
   link: "",
   assigness: [],
+  status:""
 };
 
 
@@ -163,12 +165,12 @@ export const initRepository: IRepository = {
   typeOfLastActivity: ""
 }
 
-export const initPeople: IPerson = {
-  name: "string",
-  login: "string",
+export const initPerson: IPerson = {
+  name: "",
+  login: "",
   gitHubId: 0,
-  avatarLink: "string",
-  isCurrentUser: true
+  avatarLink: "",
+  isCurrentUser: false
 }
 
 
@@ -201,11 +203,8 @@ export const initState: State = {
   pbiPage: initProductBacklogList,
   sprintPage: initSprintList,
   taskPage: initTaskList,
-  redirect: null,
-  pages: 1,
   repositories: [],
   openSprint: null,
-  openRepository: null,
   reposLastPage: false,
   reposRequireRefresh: false,
   productLastPage: false,
@@ -217,10 +216,11 @@ export const initState: State = {
   tasks: [],
   namedPBI: [],
   repoId: -1,
-  ownerName: "",
   people: initPeopleList,
-  currentUser: null,
-  activeSprintNumber: -1
+  currentUser: initPerson,
+  activeSprintNumber: -1,
+  keys: initTableKeys,
+  loadingKeys:initLoadingKeys
 };
 export const backlogSprint: ISprint = { 
   goal: "",

@@ -20,16 +20,24 @@ export const canDropTask = (pbiId: number, taskId:number,oldPbiId: number) => {
   return (pbiId !== -2 && pbiId !== null && taskId !== -2 && taskId !== null && oldPbiId !== pbiId );
 }
 
-export const isNameFilterValid = (nameFilter:any) => {
+export const isNameFilterValid = (nameFilter:string) => {
   return nameFilter && nameFilter !== "";
+}
+
+export const isMessageValid = (message:string) => {
+  return message && message !== "" && message.length>0;
+}
+
+export const isStatusValid = (message:string) => {
+  return message && message !== "" && message.length>0 && message === "New";
 }
 
 export const isPeopleFilterValid = (peopleFilter:string[]) => {
   return peopleFilter && peopleFilter.length >0;
 }
 
-export const isArrayValid = (peopleFilter:any[]) => {
-  return peopleFilter && peopleFilter.length >0;
+export const isArrayValid = (objectArray:any[]) => {
+  return objectArray && objectArray.length >0;
 }
 
 export const validateString = (val:string) => {
@@ -59,7 +67,6 @@ export function sortAndFilterSprints (list:ISprint[], sortedInfo:{columnKey:stri
   const order = isArrayValid(list) && sortedInfo && validateString(sortedInfo.columnKey) && validateString(sortedInfo.order) && sortedInfo.columnKey.includes("sprint")
   ? (sortedInfo.order ==="ascend"?2:1):0;
   const filter = filteredInfo && filteredInfo.complete !== null ? filteredInfo.complete : -1;
-  console.log(filter);
   return filter===-1?(order === 0  ? list :( order === 1 ?
     list.slice().sort((a:ISprint, b:ISprint) => a.sprintNumber - b.sprintNumber)
     :list.slice().sort((a:ISprint, b:ISprint) => b.sprintNumber - a.sprintNumber))):
@@ -72,4 +79,22 @@ export function sortAndFilterSprints (list:ISprint[], sortedInfo:{columnKey:stri
 export function getIndex(record: ISprint) {
   return record.sprintNumber;
 }
+
+export function updateRowKeys(record: ISprint, expandedRowKeys:any[]) {
+  const rowKey = record.sprintNumber;
+  const isExpanded = expandedRowKeys.includes(rowKey);
+  let newExpandedRowKeys = [] as number[];
+  if (isExpanded) {
+    newExpandedRowKeys = expandedRowKeys.reduce((acc: number[], key: number) => {
+      if (key !== rowKey) { acc.push(key) };
+      return acc;
+    }, []);
+  } else {
+    newExpandedRowKeys = expandedRowKeys;
+    newExpandedRowKeys.push(rowKey);
+  }
+  return(newExpandedRowKeys);
+};
+
+
 
