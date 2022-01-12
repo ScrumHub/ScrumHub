@@ -1,17 +1,7 @@
 import { ISprint } from "../../appstate/stateInterfaces"
 import { useCallback, useEffect, useRef } from "react";
 import moment from 'moment';
-
-export function useIsMounted() {
-  const isMountedRef = useRef(true);
-  const isMounted = useCallback(() => isMountedRef.current, []);
-
-  useEffect(() => {
-    return () => void (isMountedRef.current = false);
-  }, []);
-
-  return isMounted;
-}
+import { isNull } from "lodash";
 
 export const canDropPBI = (pbiId: number, oldSprintId: number, newSprintId: number) => {
   return (oldSprintId !== -2 && newSprintId !== null && newSprintId !== -2 && pbiId !== -2 && newSprintId !== oldSprintId);
@@ -21,15 +11,15 @@ export const canDropTask = (pbiId: number, taskId:number,oldPbiId: number) => {
 }
 
 export const isNameFilterValid = (nameFilter:string) => {
-  return nameFilter && nameFilter !== "";
+  return !isNull(nameFilter) && nameFilter !== "";
 }
 
-export const isMessageValid = (message:string) => {
-  return message && message !== "" && message.length>0;
+export const isMessageValid = (message:string):boolean => {
+  return(!isNull(message) && message !== "" && message.length>0);
 }
 
-export const isStatusValid = (message:string) => {
-  return message && message !== "" && message.length>0 && message === "New";
+export const isBranchNotCreated = (message:string):boolean => {
+  return(!isNull(message) && message === "New");
 }
 
 export const isPeopleFilterValid = (peopleFilter:string[]) => {
@@ -63,19 +53,6 @@ export function saveDate(date:string){
   return date && temp.length > 2 ? temp[0]+"-"+temp[1]+"-"+temp[2].slice(0,2).trim():temp;
 }
 
-export function sortAndFilterSprints (list:ISprint[], sortedInfo:{columnKey:string, order:string}, filteredInfo:{complete:number, pbiPriorities:number[]}){
-  const order = isArrayValid(list) && sortedInfo && validateString(sortedInfo.columnKey) && validateString(sortedInfo.order) && sortedInfo.columnKey.includes("sprint")
-  ? (sortedInfo.order ==="ascend"?2:1):0;
-  const filter = filteredInfo && filteredInfo.complete !== null ? filteredInfo.complete : -1;
-  return filter===-1?(order === 0  ? list :( order === 1 ?
-    list.slice().sort((a:ISprint, b:ISprint) => a.sprintNumber - b.sprintNumber)
-    :list.slice().sort((a:ISprint, b:ISprint) => b.sprintNumber - a.sprintNumber))):
-    (order === 0  ? list :( order === 1 ?
-      list.slice().sort((a:ISprint, b:ISprint) => a.sprintNumber - b.sprintNumber)
-      :list.slice().sort((a:ISprint, b:ISprint) => b.sprintNumber - a.sprintNumber))).filter((c:ISprint)=> c.isCompleted ===(filteredInfo.complete===1))
-}
-
-
 export function getIndex(record: ISprint) {
   return record.sprintNumber;
 }
@@ -96,5 +73,15 @@ export function updateRowKeys(record: ISprint, expandedRowKeys:any[]) {
   return(newExpandedRowKeys);
 };
 
+export function useIsMounted() {
+  const isMountedRef = useRef(true);
+  const isMounted = useCallback(() => isMountedRef.current, []);
+
+  useEffect(() => {
+    return () => void (isMountedRef.current = false);
+  }, []);
+
+  return isMounted;
+};
 
 

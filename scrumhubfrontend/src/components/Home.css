@@ -1,49 +1,48 @@
 
 .reposGrid {
-    display: grid;
-    place-items: center;
-    margin-top: 8vh;
-    background: transparent;
-  }
-  
-  .repoCard {
-    background: white;
-    margin-bottom: 3vh;
-  }
-  
-  .calButton {
-    width: 80%;
-    overflow: hidden;
-    white-space: nowrap;
-  }
+  display: grid;
+  place-items: center;
+  margin-top: 8vh;
+  background: transparent;
+}
 
-  .cardButton {
-    width: 80%;
-    overflow: hidden;
-    white-space: nowrap;
-     /*width: 90%;*/
-  }
+.repoCard {
+  background: white;
+  margin-bottom: 3vh;
+}
 
-  .ant-popover-disabled-compatible-wrapper{
-      display:unset !important;
-      width: 100%;
-  }
+.calButton {
+  width: 80%;
+  overflow: hidden;
+  white-space: nowrap;
+}
 
-  .ant-card-actions{
-      padding-left: 24px !important;
-      padding-right: 24px !important;
-  }
+.cardButton {
+  width: 80%;
+  overflow: hidden;
+  white-space: nowrap;
+   /*width: 90%;*/
+}
 
-  .peopleMenu{
-    position: relative;
-    margin: 0;
-    padding: 4px 0;
-    text-align: left;
-    list-style-type: none;
-    background-color: #fff;
-    background-clip: padding-box;
-    border-radius: 2px;
-    outline: none;
-    box-shadow: 0 3px 6px -4px rgb(0 0 0 / 12%), 0 6px 16px 0 rgb(0 0 0 / 8%), 0 9px 28px 8px rgb(0 0 0 / 5%) !important;
-  }
+.ant-popover-disabled-compatible-wrapper{
+    display:unset !important;
+    width: 100%;
+}
 
+.ant-card-actions{
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+}
+
+.peopleMenu{
+  position: relative;
+  margin: 0;
+  padding: 4px 0;
+  text-align: left;
+  list-style-type: none;
+  background-color: #fff;
+  background-clip: padding-box;
+  border-radius: 2px;
+  outline: none;
+  box-shadow: 0 3px 6px -4px rgb(0 0 0 / 12%), 0 6px 16px 0 rgb(0 0 0 / 8%), 0 9px 28px 8px rgb(0 0 0 / 5%) !important;
+}

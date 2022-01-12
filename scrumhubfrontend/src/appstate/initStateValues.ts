@@ -1,5 +1,5 @@
 import moment from "moment";
-import { initKeys as initTableKeys, initLoadingKeys } from "../components/utility/commonInitValues";
+import { initKeys, initLoadingKeys } from "../components/utility/commonInitValues";
 import config from "../configuration/config"
 import { IAddPBI, IAssignPBI, IFilters, IPBIFilter, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, ITaskNamed, IUpdateIdSprint, State } from "./stateInterfaces";
 
@@ -219,7 +219,7 @@ export const initState: State = {
   people: initPeopleList,
   currentUser: initPerson,
   activeSprintNumber: -1,
-  keys: initTableKeys,
+  keys: initKeys,
   loadingKeys:initLoadingKeys
 };
 export const backlogSprint: ISprint = { 

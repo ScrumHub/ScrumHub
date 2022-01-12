@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
-import { Button, Tag, message, Dropdown, Badge, Popover, Space, Divider, Popconfirm } from 'antd';
+import { Button, Tag, message, Dropdown, Badge, Popover, Space, Popconfirm } from 'antd';
 import { useDrag, useDrop } from 'react-dnd';
 import * as Actions from '../appstate/actions';
 import { IAddPBI, IFilters, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, ISprint, ISprintList, ITask, State } from '../appstate/stateInterfaces';
@@ -10,12 +10,9 @@ import { store } from '../appstate/store';
 import { AuthContext } from '../App';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
-import { EstimatePBIPopup } from './popups/EstimatePBIPopup';
-import { UpdateSprintPopup } from './popups/UpdateSprintPopup';
-import { AddTaskPopup } from './popups/AddTaskPopup';
 import { initModalVals, pbiFilterVals } from './utility/commonInitValues';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
-import { dateFormat, useIsMounted, canDropPBI, canDropTask, isArrayValid, isMessageValid, isStatusValid, } from './utility/commonFunctions';
+import { dateFormat, canDropPBI, canDropTask, isArrayValid, isBranchNotCreated, } from './utility/commonFunctions';
 import { taskStatusCol, taskGhLinkCol, taskNameCol, pbiProgressCol, backlogColors, backlogPriorities, pbiProgressCol2 } from './utility/BodyRowsAndColumns';
 import TaskTableComponent from './BacklogTaskTableComponent';
 import PBITableComponent from './BacklogPBITableComponent';
@@ -23,9 +20,12 @@ import { MenuWithPeopleSave } from './utility/LoadAnimations';
 import { BranchesOutlined, CalendarOutlined, DownOutlined, EditOutlined } from '@ant-design/icons';
 import SprintTableComponent from './BacklogSprintTableComponent';
 import { initPBIFilter } from '../appstate/initStateValues';
+import { assignPerson, startTask, updatePBI, updateTask, fetchPBIsAndUnassigned } from './utility/BacklogHandlers';
+import { AddTaskPopup } from './popups/AddTaskPopup';
 import { CompleteSprintPopup } from './popups/CompleteSprint';
 import { EditPBIPopup } from './popups/EditPBIPopup';
-import { assignPerson, startTask, updatePBI, updateDragPBIs, updateTask, fetchPBIsAndUnassigned } from './utility/BacklogHandlers';
+import { EstimatePBIPopup } from './popups/EstimatePBIPopup';
+import { UpdateSprintPopup } from './popups/UpdateSprintPopup';
 export const type = 'DraggableBodyRow';
 
 export const ProductBacklog: React.FC<any> = (props: any) => {
@@ -41,9 +41,7 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
   const [initialRefresh, setInitialRefresh] = useState(true);
   const [selectedPBI, setSelectedPBI] = useState({} as IProductBacklogItem);
   const [selectedSprint, setSelectedSprint] = useState({} as ISprint);
-  const [selectedTask, setSelectedTask] = useState({} as ITask);
   const [isModal, setIsModal] = useState<IModals>(initModalVals);
-  const isMounted = useIsMounted();
   const navigate = useNavigate();
   /*SWR*/
   /*const fetcher = (url: any) => axios.get(url,
@@ -155,7 +153,7 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
         ownerName: ownerName,
         sprintNumber: Number(sprintID),
         isFailure: value
-      })).then((response)=>{setSelectedSprint({} as ISprint);});
+      })).then((response: any)=>{setSelectedSprint({} as ISprint);});
   };
 
   const DraggableBodyRow = ({ index: index_row, bodyType, record, className, style, ...restProps }: BodyRowProps) => {
@@ -231,7 +229,7 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
     key: "branch",
     width: "12%",
     align: "right" as const,
-    render: (record: ITask) => isStatusValid(record.status) ?
+    render: (record: ITask) => isBranchNotCreated(record.status) ?
     <Popover visible={isModal.startBranchId === record.id}
     content={<><div style={{alignSelf:"center", marginBottom:"10%", textAlign:"center"}}>Start New Branch</div><Space style={{alignItems:"flex-end"}}>
       <Popconfirm title={"Are you sure you want to start a feature branch?"} onConfirm={()=>{startTask(token, ownerName, false,record.id);setIsModal({...isModal, startBranchId:-1});}}><Button key={"hotfix"} size='small' type="primary" >Feature</Button></Popconfirm>
@@ -275,14 +273,14 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
   const sprintColumns = [
     { title: 'Title', width: "15%", align: "left" as const, key: 'sprintNumber',
       render: (s: ISprint) => {
-        return (s.sprintNumber === 0 ? <div style={{alignSelf:"flex-start"}} key={"sprintName" + s.sprintNumber} >{s.title}</div> : (<div key={"sprintName" + s.sprintNumber} className='link-button' onClick={() => {
+        return (s.sprintNumber === 0 ? <div style={{alignSelf:"flex-start"}} key={"sprintName" + s.sprintNumber} >{"Product Backlog"}</div> : (<div key={"sprintName" + s.sprintNumber} className='link-button' onClick={() => {
           localStorage.setItem("sprintID", JSON.stringify(s.sprintNumber));
           navigate(`/${(ownerName as string).split("/")[0]}/${(ownerName as string).split("/")[1]}/sprints/${s.sprintNumber}`, { replace: true });
-        }}>{s.title}</div>))
+        }}>{"Sprint "+s.sprintNumber}</div>))
       },
     },
     {
-      title: 'Goal', width: "30%", align: "center" as const, dataIndex: 'goal', key: 'sprintTitle',
+      title: 'Title', width: "30%", align: "center" as const, dataIndex: 'title', key: 'sprintTitle',
     },
     {
       title: 'Deadline', width: "15%", align: "center" as const, dataIndex: 'finishDate', key: 'finishDate',
@@ -315,7 +313,7 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
     }];
   return (<div className='backlogScroll' >
     <SprintTableComponent sortedInfo={props.sortedInfo ?props.sortedInfo.order:""} nameFilter={props.nameFilter} keys={0} peopleFilter={props.peopleFilter} loading={refreshRequired || initialRefresh} data={[{
-      goal: "",finishDate: "",isCurrent: false,status: "",isCompleted: false, sprintNumber: 0,title: "Product Backlog", backlogItems: pbiPage.list
+      goal: "",finishDate: "",isCurrent: false,status: "",isCompleted: false, sprintNumber: 0,title: "", backlogItems: pbiPage.list
     } as ISprint] as ISprint[]}
       components={nestedcomponents} columns={sprintColumns} PBITableforSprint={PBITableforSprint} />
     {(<SprintTableComponent sortedInfo={props.sortedInfo ?props.sortedInfo.order:""} nameFilter={props.nameFilter} keys={1} peopleFilter={props.peopleFilter} loading={sprintRefreshRequired || initialRefresh}
@@ -335,4 +333,3 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
   </div>
   );
 };
-

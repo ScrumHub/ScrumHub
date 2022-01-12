@@ -34,12 +34,12 @@ export const updatePBI = (pbiId: number, oldSprintId: number, newSprintId: numbe
     store.dispatch(Actions.updateSprintLoadingKeys([oldSprintId, newSprintId]));
     if (oldSprintId !== 0) {
       store.dispatch(Actions.updateOneSprintThunk({token: token, ownerName: ownerName, sprintNumber: oldSprintId,sprint: calculateOldSprint(sprintPage, oldSprintId, pbiId)}))
-      .then((response) => {
+      .then((response:any) => {
         if (response.payload && response.payload?.code === 200) {
           store.dispatch(Actions.updateSprintLoadingKeys([oldSprintId]))
           if (newSprintId === 0) { updateDragPBIs(true, true, ownerName, token, oldSprintId, newSprintId); }
           else {store.dispatch(Actions.updateOneSprintThunk({ token: token, ownerName: ownerName, sprintNumber: newSprintId, sprint: calculateNewSprint(sprintPage, newSprintId, pbiId) }))
-          .then((response) => {
+          .then((response:any) => {
             if (response.payload && response.payload?.code === 200) {store.dispatch(Actions.updateSprintLoadingKeys([newSprintId]));}
           });
           }
@@ -48,11 +48,11 @@ export const updatePBI = (pbiId: number, oldSprintId: number, newSprintId: numbe
     }
     if (newSprintId !== 0 && oldSprintId === 0) {
       store.dispatch(Actions.updateOneSprintThunk({token: token, ownerName: ownerName, sprintNumber: newSprintId, sprint: calculateNewSprint(sprintPage, newSprintId, pbiId)}))
-      .then((response) => {
+      .then((response:any) => {
         if (response.payload && response.payload?.code === 200) {
           store.dispatch(Actions.updateSprintLoadingKeys([newSprintId]))
           store.dispatch(Actions.fetchPBIsThunk({ownerName: ownerName, token: token, filters: { ...initPBIFilter, inSprint: false, onePage: true }}))
-          .then((response) => {
+          .then((response:any) => {
             if (response.payload && response.payload?.code === 200) {store.dispatch(Actions.updateSprintLoadingKeys([oldSprintId]));}
           })
         }
@@ -79,7 +79,7 @@ export const updateDragPBIs = (refreshRequired: boolean, shouldClearKey: boolean
     store.dispatch(Actions.fetchPBIsThunk({
       ownerName: ownerName, token: token,
       filters: { ...initPBIFilter, inSprint: false, onePage: true }
-    })).then((response) => {
+    })).then((response:any) => {
       if (response.payload && response.payload?.code === 200 && shouldClearKey) {
         store.dispatch(Actions.updateSprintLoadingKeys([0]));
       }

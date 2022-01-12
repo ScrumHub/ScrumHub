@@ -236,4 +236,3 @@ export function MenuWithPeopleSave(props: any) {
     </Menu >
     </div>);
 }
-

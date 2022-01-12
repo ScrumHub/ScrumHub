@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Badge, Button, Dropdown, message, Popconfirm, Popover, Space, Tag, Typography, } from 'antd';
 import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
-import { IAddPBI, IFilters, IPeopleList, IProductBacklogItem, IProductBacklogList, ISprint, ITask, State } from '../appstate/stateInterfaces';
+import { IAddPBI, IFilters, IPeopleList, IProductBacklogItem, ISprint, ITask, State } from '../appstate/stateInterfaces';
 import { AuthContext } from '../App';
 import config from '../configuration/config';
 import { useSelector } from 'react-redux';
@@ -12,7 +13,7 @@ import "./SprintProject.css";
 import PBITableComponent from './BacklogPBITableComponent';
 import TaskTableComponent from './BacklogTaskTableComponent';
 import { taskNameCol, taskStatusCol, taskGhLinkCol, pbiProgressCol, pbiProgressCol2, backlogPriorities, backlogColors } from './utility/BodyRowsAndColumns';
-import { canDropTask, isStatusValid } from './utility/commonFunctions';
+import { canDropTask, isBranchNotCreated } from './utility/commonFunctions';
 import SkeletonList, { MenuWithPeopleSave } from './utility/LoadAnimations';
 import { assignPerson, startTask, updateTask } from './utility/BacklogHandlers';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
@@ -20,13 +21,13 @@ import { useDrop, useDrag, DndProvider } from 'react-dnd';
 import { type } from './ProductBacklog';
 import { initModalVals } from './utility/commonInitValues';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import moment from 'moment';
+import { useLocation } from 'react-router';
 import { AddTaskPopup } from './popups/AddTaskPopup';
 import { CompleteSprintPopup } from './popups/CompleteSprint';
 import { EditPBIPopup } from './popups/EditPBIPopup';
 import { EstimatePBIPopup } from './popups/EstimatePBIPopup';
 import { UpdateSprintPopup } from './popups/UpdateSprintPopup';
-import moment from 'moment';
-import { useLocation } from 'react-router';
 
 export function SprintBacklog() {
   const { state } = useContext(AuthContext);
@@ -42,7 +43,6 @@ export function SprintBacklog() {
     pageSize: config.defaultFilters.size,
   });
   const [isModal, setIsModal] = useState<IModals>(initModalVals);
-  const tempPBIPage = useSelector((appState: State) => appState.pbiPage as IProductBacklogList);
   const loading = useSelector((appState: State) => appState.loading);
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : "";
   const sprintID = localStorage.getItem("sprintID") ? Number(localStorage.getItem("sprintID")) : -1;
@@ -213,7 +213,7 @@ export function SprintBacklog() {
     key: "branch",
     width: "12%",
     align: "right" as const,
-    render: (record: ITask) => isStatusValid(record.status) ?
+    render: (record: ITask) => isBranchNotCreated(record.status) ?
     <Popover visible={isModal.startBranchId === record.id}
     content={<><div style={{alignSelf:"center", marginBottom:"10%", textAlign:"center"}}>Start New Branch</div><Space style={{alignItems:"flex-end"}}>
       <Popconfirm title={"Are you sure you want to start a feature branch?"} onConfirm={()=>{startTask(token, ownerName, false,record.id);setIsModal({...isModal, startBranchId:-1});}}><Button key={"hotfix"} size='small' type="primary" >Feature</Button></Popconfirm>

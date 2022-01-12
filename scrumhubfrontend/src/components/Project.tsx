@@ -112,7 +112,7 @@ export function Project() {
             placement="bottomCenter"
             style={{ color: "#1890ff" }}
             overlay={<MenuWithSorting itemSelected={function (items: any): void { setInfos({...infos, sortedInfo:items}); }} sortedInfo={infos.sortedInfo}/>}
-            buttonsRender={([leftButton, rightButton]) => [
+            buttonsRender={([]) => [
               <></>,
               React.cloneElement(<Button onMouseEnter={()=>setFilterMenu(initFilterMenu)} type="primary" icon={<DownOutlined prefix='Sort' style={{ color: "white" }}></DownOutlined>}>{"Sort"}</Button>),
             ]} >
@@ -122,7 +122,7 @@ export function Project() {
             placement="bottomCenter"
             style={{ color: "#1890ff" }}
             overlay={<MenuWithPeople itemSelected={function (items: string[]): void { updatePplFilter(items); }} people={people} peopleFilter={filterPBI.peopleFilter} inputFilter={inputPplFilter}/>}
-            buttonsRender={([leftButton, rightButton]) => [
+            buttonsRender={([]) => [
               <></>,
               React.cloneElement(<Input type="search" prefix={<UserOutlined style={{ color: "#1890ff" }} />} placeholder="Input user login" style={{ width: 160 }} onChange={updateInputPplFilter} />),
             ]} >
@@ -155,4 +155,3 @@ export function Project() {
     </>
   );
 }
-

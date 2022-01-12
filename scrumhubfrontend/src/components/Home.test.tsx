@@ -2,56 +2,62 @@
  * @jest-environment jsdom
  */
 
-import React from "react";
-import { render, unmountComponentAtNode } from "react-dom";
-import { act } from "react-dom/test-utils";
-import { isNull } from "lodash";
-import { store } from "../appstate/store"
-import { Provider } from "react-redux";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import {Home} from "./Home";
+ import React from "react";
+ import { render, unmountComponentAtNode } from "react-dom";
+ import { act } from "react-dom/test-utils";
+ import { isNull } from "lodash";
+ import { Provider } from "react-redux";
+ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { AuthContext } from "../App";
 import { testAuthorizationState } from "../authstate/auth";
 import { authReducer } from "../authstate/authreducer";
-
-let container: HTMLDivElement | null = null;
-beforeEach(() => {
-  // setup a DOM element as a render target
-  container = document.createElement("div");
-  document.body.appendChild(container);
-});
-
-afterEach(() => {
-  // cleanup on exiting
-  if (!isNull(container)) {
-    unmountComponentAtNode(container);
-    container.remove();
-    container = null;
-  }
-});
-
-it("Rendered list of repos", () => {
-  act(() => {
-    render(
-
-      <Provider store={store}>
-        <AuthContext.Provider
-          value={{
-            state: testAuthorizationState,
-            dispatch: authReducer
-          }}
-        >
-          <Router>
-            <Routes>
-              <Route path="/" element={<Home />} />
-            </Routes>
-          </Router>
-        </AuthContext.Provider>
-      </Provider>,
-      container
-    );
+import { configureStore } from "@reduxjs/toolkit";
+import { reducerFunction } from "../appstate/reducer";
+import { initTestState } from "../appstate/stateTestValues";
+import { Home } from "./Home";
+ 
+describe('Main component in container', () => {
+  let container : any;
+  let store:any;
+  beforeEach(() => {
+    container = document.createElement('div');
+    document.body.appendChild(container);
+    store = configureStore({
+      reducer: reducerFunction(initTestState),
+    });
   });
-  expect(
-    container?.getElementsByClassName("container").length
-  ).toBeGreaterThanOrEqual(0);
-});
+  
+    afterEach(() => {
+      // cleanup on exiting
+      if (!isNull(container)) {
+        unmountComponentAtNode(container);
+        container.remove();
+        container = null;
+      }
+    });
+  
+    it("Rendered list of repos", async () => {
+      await act( async () =>  {
+        render(<Provider store={store}>
+          <AuthContext.Provider
+            value={{
+              state: testAuthorizationState,
+              dispatch: authReducer
+            }}
+          >
+            <Router>
+              <Routes>
+                <Route path="/" element={<Home />} />
+              </Routes>
+            </Router>
+          </AuthContext.Provider>
+        </Provider>,
+          container
+        );
+      });
+      expect(
+        container?.getElementsByClassName("container").length
+      ).toBeGreaterThanOrEqual(0);
+      expect(container.textContent).toBe("");
+    });
+  });

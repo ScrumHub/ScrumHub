@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import expect from "expect"; // You can use any testing library
 import { IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList } from "./stateInterfaces";
 import config from "../configuration/config";

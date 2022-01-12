@@ -3,12 +3,14 @@ import { createReducer, PayloadAction } from "@reduxjs/toolkit";
 import { RequestResponse } from "./response";
 import config from "../configuration/config";
 import { IAssignPBI, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, State } from "./stateInterfaces";
-import { initState, initError, unassignedPBI, initProductBacklogList } from "./initStateValues";
+import { initError, unassignedPBI } from "./initStateValues";
 import { isArrayValid } from "../components/utility/commonFunctions";
 import { getError, updateStateTasks, updateStateKeys, addStateTask, addStateUnassignedTaskToPBI, updateStatePBI } from "./stateUtilities";
 var _ = require('lodash');
 
-export const reducer = createReducer(initState, {
+export const reducerFunction=(initState:State)=>{
+
+return(createReducer(initState, {
   [Actions.clearError.type]: (state: State) => {
     let newState = _.cloneDeep(state as State);
     newState.error = {
@@ -72,7 +74,6 @@ export const reducer = createReducer(initState, {
     let newState = _.cloneDeep(state);
     const temp = expanded.payload as number[];
     newState.loadingKeys = { ...newState.loadingKeys, sprintKeys: updateStateKeys(newState.loadingKeys.sprintKeys, temp) };
-    console.log(newState.loadingKeys);
     return newState;
   },
   [Actions.updatePBILoadingKeys.type]: (state: State, expanded: any) => {
@@ -690,4 +691,5 @@ export const reducer = createReducer(initState, {
     let newState = _.cloneDeep(state);
     return { ...newState, error: getError(payload.payload), loading: false };
   },
-});
+}));
+}
