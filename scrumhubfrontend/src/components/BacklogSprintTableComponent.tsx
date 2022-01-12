@@ -7,11 +7,11 @@ import { store } from "../appstate/store";
 import { initRowIds } from "./utility/commonInitValues";
 import * as Actions from '../appstate/actions';
 import { useSelector } from "react-redux";
+import { isArrayValid } from "./utility/commonFunctions";
 
 
 export default function SprintTableComponent(props: any) {
   const keys = useSelector((appState: State) => appState.keys.sprintKeys as number[]);
-  const loading = useSelector((appState: State) => appState.loading);
   const updateExpandedRowKeys = (record: ISprint) => {
     store.dispatch(Actions.updateSprintKeys([record.sprintNumber]));
   };
@@ -29,7 +29,7 @@ export default function SprintTableComponent(props: any) {
       {<Table
         locale={locale}
         key={props.keys}
-        style={{ transform: "scale(0.96)", height: "auto",}}
+        style={{ transform: "scale(0.96)", height: "auto",visibility:!props.loading && !isArrayValid(props.data)?"hidden":"visible"}}
         scroll={{ x: 800 }}
         size="small"
         loading={props.loading}
@@ -61,4 +61,3 @@ export default function SprintTableComponent(props: any) {
         }}
       />}</DndProvider>);
 }
-

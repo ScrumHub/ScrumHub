@@ -163,4 +163,3 @@ export function updateStatePBI(newState: State, pbi: IProductBacklogItem)
   return(newState);
 }
 
-

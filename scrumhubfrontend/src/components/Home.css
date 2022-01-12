@@ -12,15 +12,13 @@
   }
   
   .calButton {
-    width: 80%;
+    width: 100%;
     overflow: hidden;
     white-space: nowrap;
   }
 
   .cardButton {
     width: 80%;
-    overflow: hidden;
-    white-space: nowrap;
      /*width: 90%;*/
   }
 

@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Badge, Button, Dropdown, message, Popconfirm, Popover, Space, Tag, Typography, } from 'antd';
 import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
-import { IAddPBI, IFilters, IPeopleList, IProductBacklogItem, IProductBacklogList, ISprint, ITask, State } from '../appstate/stateInterfaces';
+import { IAddPBI, IFilters, IPeopleList, IProductBacklogItem, ISprint, ITask, State } from '../appstate/stateInterfaces';
 import { AuthContext } from '../App';
 import config from '../configuration/config';
 import { useSelector } from 'react-redux';
@@ -20,13 +21,13 @@ import { useDrop, useDrag, DndProvider } from 'react-dnd';
 import { type } from './ProductBacklog';
 import { initModalVals } from './utility/commonInitValues';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import moment from 'moment';
+import { useLocation } from 'react-router';
 import { AddTaskPopup } from './popups/AddTaskPopup';
 import { CompleteSprintPopup } from './popups/CompleteSprint';
 import { EditPBIPopup } from './popups/EditPBIPopup';
 import { EstimatePBIPopup } from './popups/EstimatePBIPopup';
 import { UpdateSprintPopup } from './popups/UpdateSprintPopup';
-import moment from 'moment';
-import { useLocation } from 'react-router';
 
 export function SprintBacklog() {
   const { state } = useContext(AuthContext);
@@ -42,7 +43,6 @@ export function SprintBacklog() {
     pageSize: config.defaultFilters.size,
   });
   const [isModal, setIsModal] = useState<IModals>(initModalVals);
-  const tempPBIPage = useSelector((appState: State) => appState.pbiPage as IProductBacklogList);
   const loading = useSelector((appState: State) => appState.loading);
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : "";
   const sprintID = localStorage.getItem("sprintID") ? Number(localStorage.getItem("sprintID")) : -1;

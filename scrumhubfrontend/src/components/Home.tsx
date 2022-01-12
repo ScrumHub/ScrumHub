@@ -5,7 +5,7 @@ import 'antd/dist/antd.css';
 import './Home.css';
 import { IFilters, IRepository, State } from '../appstate/stateInterfaces';
 import { AuthContext } from '../App';
-import { Navigate, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import config from '../configuration/config';
 import { useSelector } from 'react-redux';
@@ -13,7 +13,7 @@ import { CalendarOutlined, FolderAddOutlined, InfoCircleOutlined } from '@ant-de
 import { store } from '../appstate/store';
 import { clearReposList } from '../appstate/actions';
 import SkeletonList, { CantAddToShButton, InShButton } from './utility/LoadAnimations';
-import { dateFormat } from './utility/commonFunctions';
+import { dateFormat, isArrayValid } from './utility/commonFunctions';
 const { Meta } = Card;
 
 
@@ -92,7 +92,7 @@ export function Home() {
           token: token,
         }) //filters
       )
-      .catch((error)=>{console.error("Failed to fetch the pbis: ", error);
+      .catch((error: any)=>{console.error("Failed to fetch the pbis: ", error);
       setDisplayId(-1);
       return({});})
       .then(()=>setDisplayId(-1));
@@ -106,13 +106,13 @@ export function Home() {
   return (
     <section className="container">
       <InfiniteScroll
-      dataLength={repos ? repos.length : 0}
+      dataLength={isArrayValid(repos) ? repos.length : 0}
       scrollThreshold={0.7}
       next={fetchMore}
       hasMore={!lastPage && !fetching}
       loader={<></>}>
       <div className="reposGrid">
-        {repos.map((rep: IRepository) => {
+        {isArrayValid(repos) && repos.map((rep: IRepository) => {
           return (<section className="card" style={{ width: "85%" }} key={rep.gitHubId} >
             <Card loading={rep.gitHubId===displayId &&loading } className='repoCard' type="inner" actions=
               {[!rep.hasAdminRights ? <CantAddToShButton/>:(rep.alreadyInScrumHub ? <InShButton/>:

@@ -1,4 +1,4 @@
-import { BorderOutlined, CheckCircleOutlined, CheckOutlined, CheckSquareOutlined, CloseCircleOutlined, CloseSquareOutlined, SortAscendingOutlined, SortDescendingOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, CheckOutlined, CloseCircleOutlined, SortAscendingOutlined, SortDescendingOutlined } from "@ant-design/icons";
 import 'antd/dist/antd.css';
 import { Avatar, Button, Menu, Popover, Skeleton, Space, Tag } from "antd";
 import MenuItem from "antd/lib/menu/MenuItem";
@@ -236,4 +236,3 @@ export function MenuWithPeopleSave(props: any) {
     </Menu >
     </div>);
 }
-

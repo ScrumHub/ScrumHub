@@ -42,7 +42,6 @@ export function Main(props: any) {
   const activeSprintNumber = useSelector((appState: State) => appState.activeSprintNumber);
   const sprintID = localStorage.getItem("sprintID") ? localStorage.getItem("sprintID") as string : "";
   const sprintPage = useSelector((appState: State) => appState.openSprint as ISprint);
-  const loading = useSelector((appState: State) => appState.loading);
   useEffect(() => {
     if (logout || (!isLoggedIn)) {
       var cookies = document.cookie.split(";");
@@ -161,7 +160,7 @@ export function Main(props: any) {
             <Content style={ownerName === "" ? {} : { padding: '0 50px' }}>
               <div style={{ minHeight: "90vh", margin: 0 }}>
                 {ownerName !== "" && <PageHeader className="pageHeader"
-                  title={<div style={{ fontWeight: "bold", lineHeight: 1.25, paddingTop: 0, marginTop: 0, }}>{sprintID && sprintID !== "0" && sprintPage && sprintPage.title && Number(sprintID)===sprintPage.sprintNumber?sprintPage.title: location.pathname.includes("Sprint")?"":"Product Backlog"}</div>}
+                  title={<div style={{ fontWeight: "bold", lineHeight: 1.25, paddingTop: 0, marginTop: 0, }}>{sprintID && sprintID !== "0" && sprintPage && sprintPage.title && Number(sprintID)===sprintPage.sprintNumber?sprintPage.title: location.pathname.includes("sprint")?"":"Product Backlog"}</div>}
                   breadcrumb={<Breadcrumb style={{ marginTop: 0, marginBottom: 0, }} itemRender={ItemRender} routes={routes(ownerName, sprintID, location)} />}
                 >
                 </PageHeader>}

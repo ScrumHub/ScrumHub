@@ -2,17 +2,6 @@ import { ISprint } from "../../appstate/stateInterfaces"
 import { useCallback, useEffect, useRef } from "react";
 import moment from 'moment';
 
-export function useIsMounted() {
-  const isMountedRef = useRef(true);
-  const isMounted = useCallback(() => isMountedRef.current, []);
-
-  useEffect(() => {
-    return () => void (isMountedRef.current = false);
-  }, []);
-
-  return isMounted;
-}
-
 export const canDropPBI = (pbiId: number, oldSprintId: number, newSprintId: number) => {
   return (oldSprintId !== -2 && newSprintId !== null && newSprintId !== -2 && pbiId !== -2 && newSprintId !== oldSprintId);
 }
@@ -29,7 +18,7 @@ export const isMessageValid = (message:string) => {
 }
 
 export const isStatusValid = (message:string) => {
-  return message && message !== "" && message.length>0 && message === "New";
+  return message && message === "New";
 }
 
 export const isPeopleFilterValid = (peopleFilter:string[]) => {
@@ -97,4 +86,13 @@ export function updateRowKeys(record: ISprint, expandedRowKeys:any[]) {
 };
 
 
+export function useIsMounted() {
+  const isMountedRef = useRef(true);
+  const isMounted = useCallback(() => isMountedRef.current, []);
 
+  useEffect(() => {
+    return () => void (isMountedRef.current = false);
+  }, []);
+
+  return isMounted;
+};

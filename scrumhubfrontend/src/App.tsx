@@ -7,7 +7,9 @@ import { initialAuthorizationState } from './authstate/auth';
 import {Main} from './components/Main';
 export const AuthContext = React.createContext<any>({} as any);
 
-export function App() {
+
+
+function App() {
   const [state, dispatch] = useReducer(authReducer, initialAuthorizationState);
   return (
     <AuthContext.Provider
@@ -22,3 +24,5 @@ export function App() {
     </AuthContext.Provider>
   );
 }
+
+export default App;
