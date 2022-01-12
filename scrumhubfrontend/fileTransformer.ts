@@ -1,8 +1,8 @@
 // fileTransformer.js
-const path = require("path");
+import path from "path";
 
 module.exports = {
-  process(src, filename, config, options) {
+  process(src: any, filename: string, config: any, options: any) {
     return "module.exports = " + JSON.stringify(path.basename(filename)) + ";";
   },
 };

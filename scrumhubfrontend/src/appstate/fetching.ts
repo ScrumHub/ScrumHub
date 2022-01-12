@@ -267,7 +267,7 @@ export function fetchPBITasks(token: string, ownerName: string, pbiId: number,
   );
 }
 
-export function addTasksToPBI(token: string, ownerName: string, pbiId: number,
+export function addUnassignedTasksToPBI(token: string, ownerName: string, pbiId: number,
 ): Promise<RequestResponse<ITaskList, number>> {
   return getResponse(
     axios.get(
@@ -347,3 +347,13 @@ export function unassignPersonToTask(token: string, ownerName: string, login: st
     )
   );
 }
+
+export function startBranchForTask(token: string, ownerName: string, hotfix: boolean, taskId: number
+  ): Promise<RequestResponse<ITask, number>> {
+    return getResponse(
+      axios.patch(
+        `${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/${taskId}/start?hotFix=${hotfix}`,
+        {}, { headers: getHeader(token, config) }
+      )
+    );
+  }

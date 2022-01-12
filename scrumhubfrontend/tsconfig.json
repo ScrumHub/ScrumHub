@@ -23,6 +23,6 @@
   },
   "include": [
     "src",
-    "fileTransformer.js"
+    "fileTransformer.ts"
   ]
 }

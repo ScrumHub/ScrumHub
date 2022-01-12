@@ -9,7 +9,7 @@
  import { store } from "../appstate/store"
  import { Provider } from "react-redux";
  import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
- import Login from "./Login";
+ import {Login} from "./Login";
 import { AuthContext } from "../App";
 import { testAuthorizationState } from "../authstate/auth";
 import { authReducer } from "../authstate/authreducer";

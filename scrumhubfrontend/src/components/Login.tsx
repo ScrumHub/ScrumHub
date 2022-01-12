@@ -5,11 +5,9 @@ import logo from './scrum.jpg';
 import {useNavigate} from "react-router";
 import { useCookies } from "react-cookie";
 import config from "../configuration/config";
-import * as Actions from '../appstate/actions';
-import { store } from "../appstate/store";
 import { Wrapper } from "./LoginWrapper";
 
-export default function Login(props:any) {
+export function Login(props:any) {
   const { state, dispatch: auth, token } = useContext(AuthContext);
   const [cookies, setCookie, removeCookie] = useCookies();
   const [data, setData] = useState({ errorMessage: "", isLoading: false });
