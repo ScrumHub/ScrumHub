@@ -96,8 +96,5 @@ export function updateRowKeys(record: ISprint, expandedRowKeys:any[]) {
   return(newExpandedRowKeys);
 };
 
-export function updateKeys(oldKeys:number[], newKeys:number[]) {
-   //remove unexpanded
-  return((oldKeys.filter((key:number)=>!newKeys.includes(key))).concat(newKeys.filter((key:number)=>!oldKeys.includes(key))));
-};
+
 

@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import * as Actions from '../appstate/actions';
 import { store } from "../appstate/store";
 import { useSelector } from "react-redux";
+import { isArrayValid } from "./utility/commonFunctions";
 
 export default function PBITableComponent(props: any) {
   const keys = useSelector((appState: State) => appState.keys.pbiKeys as number[]);
+  const loadingKeys = useSelector((appState: State) => appState.loadingKeys.sprintKeys as number[]);
+  console.log(loadingKeys);
   const updateExpandedRowKeys = (record: IProductBacklogItem) => {
     store.dispatch(Actions.updatePBIKeys([record.id]));
   };
@@ -25,17 +28,12 @@ export default function PBITableComponent(props: any) {
       else{
         props.sortSelected(initSortedInfo);}
     }
-    console.log('Various parameters', pagination, filters, sorter);
   };
-  /*useEffect(() => {
-    if (expandedRowKeys && expandedRowKeys.length > 1) {
-      setExpandedRowKeys(expandedRowKeys);
-    }
-  }, [props.sortedInfo]);*/
   return (
     <Table
       size="small"
       showHeader={true}
+      loading={isArrayValid(loadingKeys) && props.item && loadingKeys.includes(props.item.sprintNumber)}
       //scroll={{x:800,scrollToFirstRowOnChange:true }}
       columns={props.pbiColumns}
       rowKey={(record: IProductBacklogItem) => record.id}
@@ -51,7 +49,7 @@ export default function PBITableComponent(props: any) {
       }}
       components={props.nestedcomponents}
       onChange={(pagination: any, filters: any, sorter: any)=>{handleChange(pagination, filters, sorter)}}
-      dataSource={props.item.backlogItems}//:item.backlogItems.filter((item:IProductBacklogItem)=>{item.name.startsWith(filterPBI.nameFilter as string)})}
+      dataSource={props.item.backlogItems}
       pagination={false}
       onRow={(row, id) => {
         const index = row.id;

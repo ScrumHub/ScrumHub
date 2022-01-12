@@ -188,11 +188,8 @@ export interface IRepositoryList {
 export type State = {
   loading: boolean;
   error: Error;
-  redirect: string | null;
-  pages: number;
   pbiPage: IProductBacklogList;
   repositories: IRepositoryList | any;
-  openRepository: IRepository | null;
   reposLastPage: boolean;
   reposRequireRefresh: boolean;
   productLastPage: boolean;
@@ -206,10 +203,10 @@ export type State = {
   tasks: ITask[] | ITaskNamed[];
   openSprint: ISprint | null;
   repoId: number;
-  ownerName: string;
   namedPBI: IAssignPBI[];
   people: IPeopleList;
   activeSprintNumber:number;
   currentUser: IPerson;
   keys:tableKeys;
+  loadingKeys:tableKeys;
 };

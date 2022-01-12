@@ -100,10 +100,8 @@ export function SprintBacklog() {
       store.dispatch(Actions.deletePBIThunk({ ownerName: ownerName, token: token, pbiId: item.id as number }))
         .then((response: any) => {
           if (response.payload && response.payload.code === 204) {
-            if (item.isInSprint) { store.dispatch(Actions.clearSprintList()) }
-            else {store.dispatch(Actions.clearPBIsList());
-            }setSelectedPBI({} as IProductBacklogItem);
-            setInitialRefresh(true);
+            store.dispatch(Actions.fetchOneSprintThunk({ token: token, ownerName: ownerName, sprintNumber: sprintID }));
+            setSelectedPBI({} as IProductBacklogItem);
           }
         })
     } 
@@ -144,9 +142,6 @@ export function SprintBacklog() {
     } catch (err) { console.error("Failed to add the pbis: ", err); }
     finally {
         setSelectedPBI({} as IProductBacklogItem);
-        if(selectedPBI.isInSprint && selectedPBI.sprintNumber !== 0 ){store.dispatch(Actions.clearSprintList())}
-        else{store.dispatch(Actions.clearPBIsList())}
-        setInitialRefresh(true);
     }
   };
   const [selectedPBI, setSelectedPBI] = useState({} as IProductBacklogItem);

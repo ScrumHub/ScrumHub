@@ -4,8 +4,8 @@ import { RequestResponse } from "./response";
 import config from "../configuration/config";
 import { IAssignPBI, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, State } from "./stateInterfaces";
 import { initState, initError, unassignedPBI, initProductBacklogList } from "./initStateValues";
-import { isArrayValid, updateKeys } from "../components/utility/commonFunctions";
-import { getError } from "./stateUtilities";
+import { isArrayValid } from "../components/utility/commonFunctions";
+import { getError, updateStateTasks, updateStateKeys, addStateTask, addStateUnassignedTaskToPBI, updateStatePBI } from "./stateUtilities";
 var _ = require('lodash');
 
 export const reducer = createReducer(initState, {
@@ -40,7 +40,6 @@ export const reducer = createReducer(initState, {
     newState.pbiPage.list = [];
     newState.productRequireRefresh = true;
     newState.reposLastPage = false;
-    newState.pages = 1;
     return newState;
   },
   [Actions.clearSprintList.type]: (state: State) => {
@@ -48,7 +47,6 @@ export const reducer = createReducer(initState, {
     newState.sprintPage.list = [];
     newState.sprintRequireRefresh = true;
     newState.sprintLastPage = false;
-    newState.pages = 1;
     return newState;
   },
   [Actions.clearSprint.type]: (state: State) => {
@@ -56,28 +54,38 @@ export const reducer = createReducer(initState, {
     newState.openSprint = null;
     newState.sprintRequireRefresh = true;
     newState.sprintLastPage = false;
-    newState.pages = 1;
     return newState;
   },
   [Actions.updateSprintKeys.type]: (state: State, expanded: any) => {
     let newState = _.cloneDeep(state);
     const temp = expanded.payload as number[];
-    newState.keys = {...newState.keys, sprintKeys:updateKeys(newState.keys.sprintKeys,temp)};
+    newState.keys = { ...newState.keys, sprintKeys: updateStateKeys(newState.keys.sprintKeys, temp) };
     return newState;
   },
   [Actions.updatePBIKeys.type]: (state: State, expanded: any) => {
     let newState = _.cloneDeep(state);
     const temp = expanded.payload as number[];
-    newState.keys = {...newState.keys, pbiKeys:updateKeys(newState.keys.pbiKeys,temp)};
+    newState.keys = { ...newState.keys, pbiKeys: updateStateKeys(newState.keys.pbiKeys, temp) };
+    return newState;
+  },
+  [Actions.updateSprintLoadingKeys.type]: (state: State, expanded: any) => {
+    let newState = _.cloneDeep(state);
+    const temp = expanded.payload as number[];
+    newState.loadingKeys = { ...newState.loadingKeys, sprintKeys: updateStateKeys(newState.loadingKeys.sprintKeys, temp) };
+    console.log(newState.loadingKeys);
+    return newState;
+  },
+  [Actions.updatePBILoadingKeys.type]: (state: State, expanded: any) => {
+    let newState = _.cloneDeep(state);
+    const temp = expanded.payload as number[];
+    newState.loadingKeys = { ...newState.loadingKeys, pbiKeys: updateStateKeys(newState.loadingKeys.pbiKeys, temp) };
     return newState;
   },
   //REPOS
   [Actions.fetchRepositoriesThunk.pending.toString()]: (
-    state: State,
-    payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
+    state: State, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
     let newState = _.cloneDeep(state);
-    newState.loading = true;
-    return newState;
+    return { ...newState, loading: true };
   },
   [Actions.fetchRepositoriesThunk.fulfilled.toString()]: (
     state: State,
@@ -104,7 +112,6 @@ export const reducer = createReducer(initState, {
         .concat(repos.list)
         .slice(0, (pageNumber + 1) * pageSize);
     }
-
     // if response is shorter than default size - it means end is reached.
     newState.reposLastPage = repos.list.length < pageSize;
     newState.reposRequireRefresh = false;
@@ -112,20 +119,15 @@ export const reducer = createReducer(initState, {
     return newState;
   },
   [Actions.fetchRepositoriesThunk.rejected.toString()]: (
-    state: State,
-    payload: PayloadAction<RequestResponse<undefined, undefined>>
+    state: State, payload: PayloadAction<RequestResponse<undefined, undefined>>
   ) => {
     let newState = _.cloneDeep(state);
-    newState.error = getError(payload.payload);
-    newState.loading = false;
-    return newState;
+    return { ...newState, error: getError(payload.payload), loading: false };
   },
   [Actions.addRepositoryThunk.pending.toString()]: (
-    state: State,
-    payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
+    state: State, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
     let newState = _.cloneDeep(state);
-    newState.loading = true;
-    return newState;
+    return { ...newState, loading: true };
   },
   [Actions.addRepositoryThunk.fulfilled.toString()]: (
     state: State,
@@ -137,56 +139,34 @@ export const reducer = createReducer(initState, {
     return newState;
   },
   [Actions.addRepositoryThunk.rejected.toString()]: (
-    state: State,
-    payload: PayloadAction<RequestResponse<undefined, undefined>>
+    state: State, payload: PayloadAction<RequestResponse<undefined, undefined>>
   ) => {
     let newState = _.cloneDeep(state);
-    newState.error = getError(payload.payload);
-    newState.loading = false;
-    return newState;
+    return { ...newState, error: getError(payload.payload), loading: false };
   },//PBIS
   [Actions.finishPBIThunk.pending.toString()]: (
-    state: State,
-    payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
+    state: State, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
     let newState = _.cloneDeep(state);
-    newState.loading = true;
-    return newState;
+    return { ...newState, loading: true };
   },
   [Actions.finishPBIThunk.fulfilled.toString()]: (
     state: State,
     payload: PayloadAction<RequestResponse<IProductBacklogItem, number>>) => {
-    let newState = _.cloneDeep(state);
-    const pbi = payload.payload.response as IProductBacklogItem;
-    if (pbi.isInSprint) {
-      const index = newState.sprintPage.list.findIndex((sprint: ISprint) => sprint.sprintNumber === pbi.sprintNumber);
-      if (index !== -1) {
-        const pbiIndex = newState.sprintPage.list[index].backlogItems.findIndex((pb: IProductBacklogItem) => pb.id === pbi.id);
-        newState.sprintPage.list[index].backlogItems[pbiIndex] = pbi;
-      }
-    }
-    else {
-      const index = newState.pbiPage.list.findIndex((pb: IProductBacklogItem) => pb.id === pbi.id);
-      newState.pbiPage.list[index] = pbi;
-    }
-    newState.error = initError;
-    newState.loading = false;
-    return newState;
+      let newState = _.cloneDeep(state);
+      const pbi = payload.payload.response as IProductBacklogItem;
+      return updateStatePBI(newState,pbi);
   },
   [Actions.finishPBIThunk.rejected.toString()]: (
     state: State,
     payload: PayloadAction<RequestResponse<undefined, undefined>>
   ) => {
     let newState = _.cloneDeep(state);
-    newState.error = getError(payload.payload);
-    newState.loading = false;
-    return newState;
+    return { ...newState, error: getError(payload.payload), loading: false };
   },
   [Actions.addPBIThunk.pending.toString()]: (
-    state: State,
-    payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
+    state: State, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
     let newState = _.cloneDeep(state);
-    newState.loading = true;
-    return newState;
+    return { ...newState, loading: true };
   },
   [Actions.addPBIThunk.fulfilled.toString()]: (
     state: State,
@@ -208,16 +188,12 @@ export const reducer = createReducer(initState, {
     payload: PayloadAction<RequestResponse<undefined, undefined>>
   ) => {
     let newState = _.cloneDeep(state);
-    newState.error = getError(payload.payload);
-    newState.loading = false;
-    return newState;
+    return { ...newState, error: getError(payload.payload), loading: false };
   },
   [Actions.deletePBIThunk.pending.toString()]: (
-    state: State,
-    payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
+    state: State, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
     let newState = _.cloneDeep(state);
-    newState.loading = true;
-    return newState;
+    return { ...newState, loading: true };
   },
   [Actions.deletePBIThunk.fulfilled.toString()]: (
     state: State,
@@ -231,27 +207,25 @@ export const reducer = createReducer(initState, {
     payload: PayloadAction<RequestResponse<undefined, undefined>>
   ) => {
     let newState = _.cloneDeep(state);
-    newState.error = getError(payload.payload);
-    newState.loading = false;
-    return newState;
+    return { ...newState, error: getError(payload.payload), loading: false };
   },
   [Actions.fetchPBIsThunk.pending.toString()]: (
-    state: State,
-    payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
+    state: State, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
     let newState = _.cloneDeep(state);
-    newState.loading = true;
-    return newState;
+    return { ...newState, loading: true };
   },
   [Actions.fetchPBIsThunk.fulfilled.toString()]: (
     state: State,
     payload: PayloadAction<RequestResponse<IProductBacklogList, number>>
   ) => {
     let newState = _.cloneDeep(state);
-    newState.ownerName = localStorage.getItem("ownerName")?localStorage.getItem("ownerName"):"";
-    newState.openRepository = newState.repositories.find((e: IRepository) => e.name === newState.ownerName) as IRepository;
-    newState.error = initError;
     const pbisList = payload.payload.response as IProductBacklogList;
-    newState.pbiPage = {...pbisList,list:[unassignedPBI].concat(pbisList.list) };
+    if(newState.pbiPage && isArrayValid(newState.pbiPage.list) && newState.pbiPage.list[0].id===0){
+      newState.pbiPage = { ...pbisList, list: [newState.pbiPage.list[0]].concat(pbisList.list) };
+    }
+    else{
+      newState.pbiPage = { ...pbisList, list: [unassignedPBI].concat(pbisList.list) };
+    }
     newState.loading = false;
     return newState;
   },
@@ -260,16 +234,12 @@ export const reducer = createReducer(initState, {
     payload: PayloadAction<RequestResponse<undefined, undefined>>
   ) => {
     let newState = _.cloneDeep(state);
-    newState.error = getError(payload.payload);
-    newState.loading = false;
-    return newState;
+    return { ...newState, error: getError(payload.payload), loading: false };
   },
   [Actions.fetchPeopleThunk.pending.toString()]: (
-    state: State,
-    payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
+    state: State, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
     let newState = _.cloneDeep(state);
-    newState.loading = true;
-    return newState;
+    return { ...newState, loading: true };
   },
   [Actions.fetchPeopleThunk.fulfilled.toString()]: (
     state: State,
@@ -286,16 +256,12 @@ export const reducer = createReducer(initState, {
     payload: PayloadAction<RequestResponse<undefined, undefined>>
   ) => {
     let newState = _.cloneDeep(state);
-    newState.error = getError(payload.payload);
-    newState.loading = false;
-    return newState;
+    return { ...newState, error: getError(payload.payload), loading: false };
   },
   [Actions.getCurrentUserThunk.pending.toString()]: (
-    state: State,
-    payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
+    state: State, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
     let newState = _.cloneDeep(state);
-    newState.loading = true;
-    return newState;
+    return { ...newState, loading: true };
   },
   [Actions.getCurrentUserThunk.fulfilled.toString()]: (
     state: State,
@@ -312,16 +278,12 @@ export const reducer = createReducer(initState, {
     payload: PayloadAction<RequestResponse<undefined, undefined>>
   ) => {
     let newState = _.cloneDeep(state);
-    newState.error = getError(payload.payload);
-    newState.loading = false;
-    return newState;
+    return { ...newState, error: getError(payload.payload), loading: false };
   },
   [Actions.getPBINamesThunk.pending.toString()]: (
-    state: State,
-    payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
+    state: State, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
     let newState = _.cloneDeep(state);
-    newState.loading = true;
-    return newState;
+    return { ...newState, loading: true };
   },
   [Actions.getPBINamesThunk.fulfilled.toString()]: (
     state: State,
@@ -338,94 +300,50 @@ export const reducer = createReducer(initState, {
     payload: PayloadAction<RequestResponse<undefined, undefined>>
   ) => {
     let newState = _.cloneDeep(state);
-    newState.error = getError(payload.payload);
-    newState.loading = false;
-    return newState;
+    return { ...newState, error: getError(payload.payload), loading: false };
   },
   [Actions.estimatePBIThunk.pending.toString()]: (
-    state: State,
-    payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
+    state: State, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
     let newState = _.cloneDeep(state);
-    newState.loading = true;
-    return newState;
+    return { ...newState, loading: true };
   },
   [Actions.estimatePBIThunk.fulfilled.toString()]: (
     state: State,
     payload: PayloadAction<RequestResponse<IProductBacklogItem, number>>) => {
     let newState = _.cloneDeep(state);
     const pbi = payload.payload.response as IProductBacklogItem;
-    if (pbi.isInSprint) {
-      const index = newState.sprintPage.list.findIndex((sprint: ISprint) => sprint.sprintNumber === pbi.sprintNumber);
-      if (index !== -1) {
-        const pbiIndex = newState.sprintPage.list[index].backlogItems.findIndex((pb: IProductBacklogItem) => pb.id === pbi.id);
-        newState.sprintPage.list[index].backlogItems[pbiIndex] = pbi;
-      }
-    }
-    else {
-      const index = newState.pbiPage.list.findIndex((pb: IProductBacklogItem) => pb.id === pbi.id);
-      newState.pbiPage.list[index] = pbi;
-    }
-    newState.error = initError;
-    newState.loading = false;
-    return newState;
+    return updateStatePBI(newState,pbi);
   },
   [Actions.estimatePBIThunk.rejected.toString()]: (
     state: State,
     payload: PayloadAction<RequestResponse<undefined, undefined>>
   ) => {
     let newState = _.cloneDeep(state);
-    newState.error = getError(payload.payload);
-    newState.loading = false;
-    return newState;
+    return { ...newState, error: getError(payload.payload), loading: false };
   },
   [Actions.editPBIThunk.pending.toString()]: (
-    state: State,
-    payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
+    state: State, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
     let newState = _.cloneDeep(state);
-    newState.loading = true;
-    return newState;
+    return { ...newState, loading: true };
   },
   [Actions.editPBIThunk.fulfilled.toString()]: (
     state: State,
     payload: PayloadAction<RequestResponse<IProductBacklogItem, number>>) => {
     let newState = _.cloneDeep(state);
     const pbi = payload.payload.response as IProductBacklogItem;
-    if (pbi.isInSprint) {
-      if(newState.sprintPage && isArrayValid(newState.sprintPage.list)){
-        const index = newState.sprintPage.list.findIndex((sprint: ISprint) => sprint.sprintNumber === pbi.sprintNumber);
-        if (index !== -1) {
-          const pbiIndex = newState.sprintPage.list[index].backlogItems.findIndex((pb: IProductBacklogItem) => pb.id === pbi.id);
-          newState.sprintPage.list[index].backlogItems[pbiIndex] = pbi;
-        }
-      }
-      if(newState.openSprint && isArrayValid(newState.openSprint.backlogItems) && newState.openSprint.sprintNumber === pbi.sprintNumber){
-          const pbiIndex = newState.openSprint.backlogItems.findIndex((pb: IProductBacklogItem) => pb.id === pbi.id);
-          newState.openSprint.backlogItems[pbiIndex] = pbi;
-      }
-    }
-    else {
-      const index = newState.pbiPage.list.findIndex((pb: IProductBacklogItem) => pb.id === pbi.id);
-      newState.pbiPage.list[index] = pbi;
-    }
-    newState.error = initError;
-    newState.loading = false;
-    return newState;
+    return updateStatePBI(newState,pbi);
   },
   [Actions.editPBIThunk.rejected.toString()]: (
     state: State,
     payload: PayloadAction<RequestResponse<undefined, undefined>>
   ) => {
     let newState = _.cloneDeep(state);
-    newState.error = getError(payload.payload);
-    newState.loading = false;
-    return newState;
+    return { ...newState, error: getError(payload.payload), loading: false };
   },//SPRINTS
   [Actions.fetchSprintsThunk.pending.toString()]: (
-    state: State,
-    payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
+    state: State, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
     let newState = _.cloneDeep(state);
-    newState.loading = true;
-    return newState;
+    return { ...newState, loading: true };
   },
   [Actions.fetchSprintsThunk.fulfilled.toString()]: (
     state: State,
@@ -446,16 +364,12 @@ export const reducer = createReducer(initState, {
     payload: PayloadAction<RequestResponse<undefined, undefined>>
   ) => {
     let newState = _.cloneDeep(state);
-    newState.error = getError(payload.payload);
-    newState.loading = false;
-    return newState;
+    return { ...newState, error: getError(payload.payload), loading: false };
   },
   [Actions.fetchOneSprintThunk.pending.toString()]: (
-    state: State,
-    payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
+    state: State, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
     let newState = _.cloneDeep(state);
-    newState.loading = true;
-    return newState;
+    return { ...newState, loading: true };
   },
   [Actions.fetchOneSprintThunk.fulfilled.toString()]: (
     state: State,
@@ -474,16 +388,12 @@ export const reducer = createReducer(initState, {
     payload: PayloadAction<RequestResponse<undefined, undefined>>
   ) => {
     let newState = _.cloneDeep(state);
-    newState.error = getError(payload.payload);
-    newState.loading = false;
-    return newState;
+    return { ...newState, error: getError(payload.payload), loading: false };
   },
   [Actions.updateOneSprintThunk.pending.toString()]: (
-    state: State,
-    payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
+    state: State, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
     let newState = _.cloneDeep(state);
-    newState.loading = true;
-    return newState;
+    return { ...newState, loading: true };
   },
   [Actions.updateOneSprintThunk.fulfilled.toString()]: (
     state: State,
@@ -503,16 +413,12 @@ export const reducer = createReducer(initState, {
     payload: PayloadAction<RequestResponse<undefined, undefined>>
   ) => {
     let newState = _.cloneDeep(state);
-    newState.error = getError(payload.payload);
-    newState.loading = false;
-    return newState;
+    return { ...newState, error: getError(payload.payload), loading: false };
   },
   [Actions.completeOneSprintThunk.pending.toString()]: (
-    state: State,
-    payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
+    state: State, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
     let newState = _.cloneDeep(state);
-    newState.loading = true;
-    return newState;
+    return { ...newState, loading: true };
   },
   [Actions.completeOneSprintThunk.fulfilled.toString()]: (
     state: State,
@@ -532,25 +438,20 @@ export const reducer = createReducer(initState, {
     payload: PayloadAction<RequestResponse<undefined, undefined>>
   ) => {
     let newState = _.cloneDeep(state);
-    newState.error = getError(payload.payload);
-    newState.loading = false;
-    return newState;
+    return { ...newState, error: getError(payload.payload), loading: false };
   },
   [Actions.addSprintThunk.pending.toString()]: (
-    state: State,
-    payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
+    state: State, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
     let newState = _.cloneDeep(state);
-    newState.loading = true;
-    return newState;
+    return { ...newState, loading: true };
   },
   [Actions.addSprintThunk.fulfilled.toString()]: (
     state: State,
     payload: PayloadAction<RequestResponse<ISprint, undefined>>) => {
     let newState = _.cloneDeep(state);
     const sprint = payload.payload.response as ISprint;
-    if (isArrayValid(sprint.backlogItems) && newState.pbiPage && isArrayValid(newState.pbiPage.list)){
-      newState.pbiPage = {...newState.pbiPage, 
-        list:newState.pbiPage.list.filter((pbi:IProductBacklogItem)=>!sprint.backlogItems.filter((pbi2:IProductBacklogItem)=>pbi.id===pbi2.id).length)};
+    if (isArrayValid(sprint.backlogItems) && newState.pbiPage && isArrayValid(newState.pbiPage.list)) {
+      newState.pbiPage = {...newState.pbiPage,list: newState.pbiPage.list.filter((pbi: IProductBacklogItem) => !sprint.backlogItems.filter((pbi2: IProductBacklogItem) => pbi.id === pbi2.id).length) };
     }
     if (newState.sprintPage && isArrayValid(newState.sprintPage.list)) {
       newState.sprintPage.list = newState.sprintPage.list.concat([sprint]);
@@ -568,35 +469,21 @@ export const reducer = createReducer(initState, {
     payload: PayloadAction<RequestResponse<undefined, undefined>>
   ) => {
     let newState = _.cloneDeep(state);
-    newState.error = getError(payload.payload);
-    newState.loading = false;
-    return newState;
+    return { ...newState, error: getError(payload.payload), loading: false };
   },
   //TASKS
   [Actions.fetchTasksThunk.pending.toString()]: (
-    state: State,
-    payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
+    state: State, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
     let newState = _.cloneDeep(state);
-    newState.loading = true;
-    return newState;
+    return { ...newState, loading: true };
   },
   [Actions.fetchTasksThunk.fulfilled.toString()]: (
     state: State,
     payload: PayloadAction<RequestResponse<ITaskList, number>>
   ) => {
     let newState = _.cloneDeep(state);
-    // if page filter not specified - set to default
-    const pageNumber = _.get(
-      payload,
-      ["meta", "arg", "filters", "pageNumber"],
-      config.defaultFilters.page
-    );
-    // if size filter not specified - set pageSize to default
-    const pageSize = _.get(
-      payload,
-      ["meta", "arg", "filters", "pageSize"],
-      config.defaultFilters.size
-    );
+    const pageNumber = _.get(payload,["meta", "arg", "filters", "pageNumber"],config.defaultFilters.page);
+    const pageSize = _.get( payload,["meta", "arg", "filters", "pageSize"],config.defaultFilters.size);
     const tasks = payload.payload.response as ITaskList;
     if (newState.taskPage !== null && pageNumber !== 1) {
       newState.taskPage.pageSize = tasks.pageSize;
@@ -609,7 +496,6 @@ export const reducer = createReducer(initState, {
     } else {
       newState.taskPage = tasks;
     }
-    // if response is shorter than default size - it means end is reached.
     newState.taskLastPage = tasks.list.length < pageSize;
     newState.taskRequireRefresh = false;
     newState.error = initError;
@@ -621,30 +507,22 @@ export const reducer = createReducer(initState, {
     payload: PayloadAction<RequestResponse<undefined, undefined>>
   ) => {
     let newState = _.cloneDeep(state);
-    newState.error = getError(payload.payload);
-    newState.loading = false;
-    return newState;
+    return { ...newState, error: getError(payload.payload), loading: false };
   },
   [Actions.fetchPBITasksThunk.pending.toString()]: (
-    state: State,
-    payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
+    state: State, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
     let newState = _.cloneDeep(state);
-    newState.loading = true;
-    return newState;
+    return { ...newState, loading: true };
   },
   [Actions.fetchPBITasksThunk.fulfilled.toString()]: (
     state: State,
     payload: PayloadAction<RequestResponse<ITaskList, number>>
   ) => {
     let newState = _.cloneDeep(state);
-    // if page filter not specified - set to default
-    // if size filter not specified - set pageSize to default
     const tasks = payload.payload.response as ITaskList;
     if (newState.tasks !== null && tasks.list) {
       newState.tasks = tasks.list;
     }
-    // if response is shorter than default size - it means end is reached.
-    //newState.taskLastPage = tasks.length < pageSize;
     newState.taskRequireRefresh = false;
     newState.error = initError;
     newState.loading = false;
@@ -655,16 +533,12 @@ export const reducer = createReducer(initState, {
     payload: PayloadAction<RequestResponse<undefined, undefined>>
   ) => {
     let newState = _.cloneDeep(state);
-    newState.error = getError(payload.payload);
-    newState.loading = false;
-    return newState;
+    return { ...newState, error: getError(payload.payload), loading: false };
   },
   [Actions.addUnassignedTasksToPBI.pending.toString()]: (
-    state: State,
-    payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
+    state: State, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
     let newState = _.cloneDeep(state);
-    newState.loading = true;
-    return newState;
+    return { ...newState, loading: true };
   },
   [Actions.addUnassignedTasksToPBI.fulfilled.toString()]: (
     state: State,
@@ -672,42 +546,19 @@ export const reducer = createReducer(initState, {
   ) => {
     let newState = _.cloneDeep(state);
     const tasks = payload.payload.response as ITaskList;
-    const pbisList = [unassignedPBI] as IProductBacklogItem[];
-    if (tasks && tasks.list.length > 0) {
-      if (!newState.pbiPage || !isArrayValid(newState.pbiPage.list)) {
-        newState.pbiPage = initProductBacklogList;
-      }
-      else if (newState.pbiPage.list.findIndex((pbi:IProductBacklogItem)=>pbi.id===0)===-1) {
-        newState.pbiPage.list = pbisList.concat(newState.pbiPage.list);//add empty pbi that holds unassigned tasks
-      }
-      newState.pbiPage = {...newState.pbiPage, list:newState.pbiPage.list.map((item: IProductBacklogItem) => {
-        if (item.id === 0 && isArrayValid(tasks.list)) {
-          return { ...item, tasks: tasks.list };
-        }
-        return item;
-      })
-    };
-    }
-    newState.productRequireRefresh = false;
-    newState.error = initError;
-    newState.loading = false;
-    return newState;
+    return addStateUnassignedTaskToPBI(newState, tasks);
   },
   [Actions.addUnassignedTasksToPBI.rejected.toString()]: (
     state: State,
     payload: PayloadAction<RequestResponse<undefined, undefined>>
   ) => {
     let newState = _.cloneDeep(state);
-    newState.error = getError(payload.payload);
-    newState.loading = false;
-    return newState;
+    return { ...newState, error: getError(payload.payload), loading: false };
   },
   [Actions.addTasksToSprintThunk.pending.toString()]: (
-    state: State,
-    payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
+    state: State, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
     let newState = _.cloneDeep(state);
-    newState.loading = true;
-    return newState;
+    return { ...newState, loading: true };
   },
   [Actions.addTasksToSprintThunk.fulfilled.toString()]: (
     state: State,
@@ -737,40 +588,31 @@ export const reducer = createReducer(initState, {
     payload: PayloadAction<RequestResponse<undefined, undefined>>
   ) => {
     let newState = _.cloneDeep(state);
-    newState.error = getError(payload.payload);
-    newState.loading = false;
-    return newState;
+    return { ...newState, error: getError(payload.payload), loading: false };
   },
   [Actions.addTaskThunk.pending.toString()]: (
-    state: State,
-    payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
+    state: State, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
     let newState = _.cloneDeep(state);
-    newState.loading = true;
-    return newState;
+    return { ...newState, loading: true };
   },
   [Actions.addTaskThunk.fulfilled.toString()]: (
     state: State,
     payload: PayloadAction<RequestResponse<ITask, number>>) => {
     let newState = _.cloneDeep(state);
-    newState.error = initError;
-    newState.loading = false;
-    return newState;
+    const task = payload.payload.response as ITask;
+    return addStateTask(newState, task);
   },
   [Actions.addTaskThunk.rejected.toString()]: (
     state: State,
     payload: PayloadAction<RequestResponse<undefined, undefined>>
   ) => {
     let newState = _.cloneDeep(state);
-    newState.error = getError(payload.payload);
-    newState.loading = false;
-    return newState;
+    return { ...newState, error: getError(payload.payload), loading: false };
   },
   [Actions.assignTaskToPBIThunk.pending.toString()]: (
-    state: State,
-    payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
+    state: State, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
     let newState = _.cloneDeep(state);
-    newState.loading = true;
-    return newState;
+    return { ...newState, loading: true };
   },
   [Actions.assignTaskToPBIThunk.fulfilled.toString()]: (
     state: State,
@@ -786,206 +628,66 @@ export const reducer = createReducer(initState, {
     payload: PayloadAction<RequestResponse<undefined, undefined>>
   ) => {
     let newState = _.cloneDeep(state);
-    newState.error = getError(payload.payload);
-    newState.loading = false;
-    return newState;
+    return { ...newState, error: getError(payload.payload), loading: false };
   },
   [Actions.assignPersonToTaskThunk.pending.toString()]: (
-    state: State,
-    payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
+    state: State, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
     let newState = _.cloneDeep(state);
-    newState.loading = true;
-    return newState;
+    return { ...newState, loading: true };
   },
   [Actions.assignPersonToTaskThunk.fulfilled.toString()]: (
     state: State,
     payload: PayloadAction<RequestResponse<ITask, number>>
   ) => {
     let newState = _.cloneDeep(state);
-    newState.error = initError;
     const task = payload.payload.response as ITask;
-    if(newState.openSprint && isArrayValid(newState.openSprint.backlogItems) && newState.openSprint.backlogItems.findIndex((pbi: IProductBacklogItem) => pbi.id === task.pbiId) !== -1){
-      const index = newState.openSprint.backlogItems.findIndex((pbi: IProductBacklogItem) => pbi.id === task.pbiId);
-      newState.openSprint.backlogItems[index] = {
-        ...newState.openSprint.backlogItems[index],
-        tasks: newState.openSprint.backlogItems[index].tasks.map((t: ITask) => {
-          if (t.id === task.id) {
-            return task;
-          }
-          return t;
-        })
-      };
-    }
-    else if (newState.pbiPage && isArrayValid(newState.pbiPage.list) && (task.isAssignedToPBI ? newState.pbiPage.list.findIndex((pbi: IProductBacklogItem) => pbi.id === task.pbiId) : newState.pbiPage.list.findIndex((pbi: IProductBacklogItem) => pbi.id === 0))!== -1) {
-      const index = task.isAssignedToPBI ? newState.pbiPage.list.findIndex((pbi: IProductBacklogItem) => pbi.id === task.pbiId) : newState.pbiPage.list.findIndex((pbi: IProductBacklogItem) => pbi.id === 0);
-        newState.pbiPage.list[index] = {
-          ...newState.pbiPage.list[index],
-          tasks: newState.pbiPage.list[index].tasks.map((t: ITask) => {
-            if (t.id === task.id) {
-              return task;
-            }
-            return t;
-          })
-        };
-    }
-    else if (newState.sprintPage && isArrayValid(newState.sprintPage.list.length)) {
-      newState.sprintPage.list = newState.sprintPage.list.map((sprint: ISprint) => {
-        sprint.backlogItems = sprint.backlogItems.map((item: IProductBacklogItem) => {
-          if (item.id === task.pbiId && isArrayValid(item.tasks)) {
-            item.tasks = item.tasks.map((t: ITask) => {
-              if (t.id === task.id) {
-                return task;
-              }
-              return t;
-            });
-          }
-          return item;
-        });
-        return sprint;
-      });
-    }
-    newState.loading = false;
-    return newState;
+    return updateStateTasks(newState, task);
   },
   [Actions.assignPersonToTaskThunk.rejected.toString()]: (
     state: State,
     payload: PayloadAction<RequestResponse<undefined, undefined>>
   ) => {
     let newState = _.cloneDeep(state);
-    newState.error = getError(payload.payload);
-    newState.loading = false;
-    return newState;
+    return { ...newState, error: getError(payload.payload), loading: false };
   },
   [Actions.unassignPersonToTaskThunk.pending.toString()]: (
-    state: State,
-    payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
+    state: State, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
     let newState = _.cloneDeep(state);
-    newState.loading = true;
-    return newState;
+    return { ...newState, loading: true };
   },
   [Actions.unassignPersonToTaskThunk.fulfilled.toString()]: (
     state: State,
     payload: PayloadAction<RequestResponse<ITask, number>>
   ) => {
     let newState = _.cloneDeep(state);
-    newState.error = initError;
     const task = payload.payload.response as ITask;
-    if(newState.openSprint && isArrayValid(newState.openSprint.backlogItems) && newState.openSprint.backlogItems.findIndex((pbi: IProductBacklogItem) => pbi.id === task.pbiId) !== -1){
-      const index = newState.openSprint.backlogItems.findIndex((pbi: IProductBacklogItem) => pbi.id === task.pbiId);
-      newState.openSprint.backlogItems[index] = {
-        ...newState.openSprint.backlogItems[index],
-        tasks: newState.openSprint.backlogItems[index].tasks.map((t: ITask) => {
-          if (t.id === task.id) {
-            return task;
-          }
-          return t;
-        })
-      };
-    }
-    else if (newState.pbiPage && isArrayValid(newState.pbiPage.list) && (task.isAssignedToPBI ? newState.pbiPage.list.findIndex((pbi: IProductBacklogItem) => pbi.id === task.pbiId) : newState.pbiPage.list.findIndex((pbi: IProductBacklogItem) => pbi.id === 0))!== -1) {
-      const index = task.isAssignedToPBI ? newState.pbiPage.list.findIndex((pbi: IProductBacklogItem) => pbi.id === task.pbiId) : newState.pbiPage.list.findIndex((pbi: IProductBacklogItem) => pbi.id === 0);
-        newState.pbiPage.list[index] = {
-          ...newState.pbiPage.list[index],
-          tasks: newState.pbiPage.list[index].tasks.map((t: ITask) => {
-            if (t.id === task.id) {
-              return task;
-            }
-            return t;
-          })
-        };
-    }
-    else if (newState.sprintPage && isArrayValid(newState.sprintPage.list.length)) {
-      newState.sprintPage.list = newState.sprintPage.list.map((sprint: ISprint) => {
-        sprint.backlogItems = sprint.backlogItems.map((item: IProductBacklogItem) => {
-          if (item.id === task.pbiId && isArrayValid(item.tasks)) {
-            item.tasks = item.tasks.map((t: ITask) => {
-              if (t.id === task.id) {
-                return task;
-              }
-              return t;
-            });
-          }
-          return item;
-        });
-        return sprint;
-      });
-    }
-    newState.loading = false;
-    return newState;
+    return updateStateTasks(newState, task);
   },
   [Actions.unassignPersonToTaskThunk.rejected.toString()]: (
     state: State,
     payload: PayloadAction<RequestResponse<undefined, undefined>>
   ) => {
     let newState = _.cloneDeep(state);
-    newState.error = getError(payload.payload);
-    newState.loading = false;
-    return newState;
+    return { ...newState, error: getError(payload.payload), loading: false };
   },
   [Actions.startTaskThunk.pending.toString()]: (
-    state: State,
-    payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
+    state: State, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
     let newState = _.cloneDeep(state);
-    newState.loading = true;
-    return newState;
+    return { ...newState, loading: true };
   },
   [Actions.startTaskThunk.fulfilled.toString()]: (
     state: State,
     payload: PayloadAction<RequestResponse<ITask, number>>
   ) => {
     let newState = _.cloneDeep(state);
-    newState.error = initError;
     const task = payload.payload.response as ITask;
-    if(newState.openSprint && isArrayValid(newState.openSprint.backlogItems) && newState.openSprint.backlogItems.findIndex((pbi: IProductBacklogItem) => pbi.id === task.pbiId) !== -1){
-      const index = newState.openSprint.backlogItems.findIndex((pbi: IProductBacklogItem) => pbi.id === task.pbiId);
-      newState.openSprint.backlogItems[index] = {
-        ...newState.openSprint.backlogItems[index],
-        tasks: newState.openSprint.backlogItems[index].tasks.map((t: ITask) => {
-          if (t.id === task.id) {
-            return task;
-          }
-          return t;
-        })
-      };
-    }
-    else if (newState.pbiPage && isArrayValid(newState.pbiPage.list) && (task.isAssignedToPBI ? newState.pbiPage.list.findIndex((pbi: IProductBacklogItem) => pbi.id === task.pbiId) : newState.pbiPage.list.findIndex((pbi: IProductBacklogItem) => pbi.id === 0))!== -1) {
-      const index = task.isAssignedToPBI ? newState.pbiPage.list.findIndex((pbi: IProductBacklogItem) => pbi.id === task.pbiId) : newState.pbiPage.list.findIndex((pbi: IProductBacklogItem) => pbi.id === 0);
-        newState.pbiPage.list[index] = {
-          ...newState.pbiPage.list[index],
-          tasks: newState.pbiPage.list[index].tasks.map((t: ITask) => {
-            if (t.id === task.id) {
-              return task;
-            }
-            return t;
-          })
-        };
-    }
-    else if (newState.sprintPage && isArrayValid(newState.sprintPage.list.length)) {
-      newState.sprintPage.list = newState.sprintPage.list.map((sprint: ISprint) => {
-        sprint.backlogItems = sprint.backlogItems.map((item: IProductBacklogItem) => {
-          if (item.id === task.pbiId && isArrayValid(item.tasks)) {
-            item.tasks = item.tasks.map((t: ITask) => {
-              if (t.id === task.id) {
-                return task;
-              }
-              return t;
-            });
-          }
-          return item;
-        });
-        return sprint;
-      });
-    }
-    newState.loading = false;
-    return newState;
+    return updateStateTasks(newState, task);
   },
   [Actions.startTaskThunk.rejected.toString()]: (
     state: State,
     payload: PayloadAction<RequestResponse<undefined, undefined>>
   ) => {
     let newState = _.cloneDeep(state);
-    newState.error = getError(payload.payload);
-    newState.loading = false;
-    return newState;
+    return { ...newState, error: getError(payload.payload), loading: false };
   },
 });

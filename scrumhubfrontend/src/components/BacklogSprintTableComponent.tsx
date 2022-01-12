@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 
 export default function SprintTableComponent(props: any) {
   const keys = useSelector((appState: State) => appState.keys.sprintKeys as number[]);
+  const loading = useSelector((appState: State) => appState.loading);
   const updateExpandedRowKeys = (record: ISprint) => {
     store.dispatch(Actions.updateSprintKeys([record.sprintNumber]));
   };

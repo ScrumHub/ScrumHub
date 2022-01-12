@@ -1,5 +1,5 @@
 import moment from "moment";
-import { initKeys as initTableKeys } from "../components/utility/commonInitValues";
+import { initKeys as initTableKeys, initLoadingKeys } from "../components/utility/commonInitValues";
 import config from "../configuration/config"
 import { IAddPBI, IAssignPBI, IFilters, IPBIFilter, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, ITaskNamed, IUpdateIdSprint, State } from "./stateInterfaces";
 
@@ -203,11 +203,8 @@ export const initState: State = {
   pbiPage: initProductBacklogList,
   sprintPage: initSprintList,
   taskPage: initTaskList,
-  redirect: null,
-  pages: 1,
   repositories: [],
   openSprint: null,
-  openRepository: null,
   reposLastPage: false,
   reposRequireRefresh: false,
   productLastPage: false,
@@ -219,11 +216,11 @@ export const initState: State = {
   tasks: [],
   namedPBI: [],
   repoId: -1,
-  ownerName: "",
   people: initPeopleList,
   currentUser: initPerson,
   activeSprintNumber: -1,
-  keys: initTableKeys
+  keys: initTableKeys,
+  loadingKeys:initLoadingKeys
 };
 export const backlogSprint: ISprint = { 
   goal: "",

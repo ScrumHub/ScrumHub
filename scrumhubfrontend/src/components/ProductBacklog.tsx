@@ -25,8 +25,7 @@ import SprintTableComponent from './BacklogSprintTableComponent';
 import { initPBIFilter } from '../appstate/initStateValues';
 import { CompleteSprintPopup } from './popups/CompleteSprint';
 import { EditPBIPopup } from './popups/EditPBIPopup';
-import { assignPerson, startTask, updatePBI, updateTask } from './utility/BacklogHandlers';
-import { startBranchForTask } from '../appstate/fetching';
+import { assignPerson, startTask, updatePBI, updateDragPBIs, updateTask, fetchPBIsAndUnassigned } from './utility/BacklogHandlers';
 export const type = 'DraggableBodyRow';
 
 export const ProductBacklog: React.FC<any> = (props: any) => {
@@ -64,11 +63,8 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialRefresh]);
   useEffect(() => {
-    if (refreshRequired && ownerName && ownerName !== "") {
-      store.dispatch(Actions.fetchPBIsThunk({ownerName: ownerName, token: token,filters: {...initPBIFilter, inSprint: false,onePage: true}})).then((response: any) => { if (response.payload && response.payload.code === 200) {
-        store.dispatch(Actions.addUnassignedTasksToPBI({ token: token, ownerName: ownerName, pbiId: 0 }));
-      }});
-    } // eslint-disable-next-line react-hooks/exhaustive-deps
+    fetchPBIsAndUnassigned(refreshRequired,ownerName,token);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshRequired]);
   useEffect(() => {
     if (sprintRefreshRequired && ownerName && ownerName !== "") {
@@ -83,8 +79,6 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
     } catch (err) { console.error("Failed to add the pbis: ", err); }
     finally {
         setSelectedPBI({} as IProductBacklogItem);
-        if(selectedPBI.isInSprint && selectedPBI.sprintNumber !== 0 ){store.dispatch(Actions.clearSprintList())}
-        else{store.dispatch(Actions.clearPBIsList())}
     }
   };
   const estimatePBI = (pbi: IProductBacklogItem) => {

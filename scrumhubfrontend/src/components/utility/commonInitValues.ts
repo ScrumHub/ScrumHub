@@ -56,3 +56,8 @@ export const initKeys: tableKeys = {
   sprintKeys: [0],
   pbiKeys: []
 }
+
+export const initLoadingKeys: tableKeys = {
+  sprintKeys: [],
+  pbiKeys: []
+}
