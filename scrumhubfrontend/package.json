@@ -2,6 +2,7 @@
   "name": "scrumhubspa",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
@@ -29,7 +30,7 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "concurrently \"cd server && npx --experimental-modules nodemon index.mjs \" \"react-scripts --openssl-legacy-provider start\" ",
+    "start": "concurrently \"set NODE_OPTIONS='--no-warnings --loader ts-node/esm' && nodemon -e ts,tsx --exec node --loader ts-node/esm server/index.ts \" \"react-scripts --openssl-legacy-provider start\" ",
     "startWeb": "react-scripts --openssl-legacy-provider start",
     "build": "react-scripts --openssl-legacy-provider build",
     "test": "react-scripts test",

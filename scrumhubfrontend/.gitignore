@@ -12,6 +12,7 @@
 /build
 
 # misc
+.nodemon.json
 .env
 .DS_Store
 .env.local

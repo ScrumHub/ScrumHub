@@ -15,7 +15,7 @@ export const isNameFilterValid = (nameFilter:string) => {
 }
 
 export const isMessageValid = (message:string):boolean => {
-  return(!isNull(message) && message !== "" && message.length>0);
+  return(!isNull(message) && typeof(message)!== "undefined" && message !== "" && message.length>0);
 }
 
 export const isBranchNotCreated = (message:string):boolean => {
