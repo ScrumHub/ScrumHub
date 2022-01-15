@@ -521,6 +521,7 @@ return(createReducer(initState, {
   ) => {
     let newState = _.cloneDeep(state);
     const tasks = payload.payload.response as ITaskList;
+    //console.log(payload.payload);
     if (newState.tasks !== null && tasks.list) {
       newState.tasks = tasks.list;
     }

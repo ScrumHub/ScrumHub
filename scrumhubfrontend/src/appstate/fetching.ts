@@ -4,6 +4,7 @@ import config from "../configuration/config";
 import axios, { AxiosResponse } from "axios";
 import { IAddPBI, IFilters, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList } from "./stateInterfaces";
 import { getHeader, getHeaderAcceptAll, getHeaderWithContent } from "./stateUtilities";
+import { isNull } from "lodash";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function getResponse<T, K>(
@@ -258,14 +259,14 @@ export function fetchTasks(token: string, ownerName: string, filters: IFilters,
 }
 
 export function fetchPBITasks(token: string, ownerName: string, pbiId: number,
-): Promise<RequestResponse<ITaskList, number>> {
-  return getResponse(
-    axios.get(
-      `${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/PBI/${pbiId}`,
-      { headers: getHeader(token, config) }
-    )
-  );
-}
+  ): Promise<RequestResponse<ITaskList, number>> {
+    return getResponse(
+      axios.get(
+        `${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/PBI/${isNull(pbiId)?0:pbiId}`,
+        { headers: getHeader(token, config) }
+      )
+    );
+  }
 
 export function addUnassignedTasksToPBI(token: string, ownerName: string, pbiId: number,
 ): Promise<RequestResponse<ITaskList, number>> {

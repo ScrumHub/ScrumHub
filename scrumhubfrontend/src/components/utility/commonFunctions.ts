@@ -30,6 +30,10 @@ export const isArrayValid = (objectArray:any[]) => {
   return objectArray && objectArray.length >0;
 }
 
+export const isItemDefined = (item:any) => {
+  return typeof(item) !== "undefined";
+}
+
 export const validateString = (val:string) => {
   return val && val !== ""? val:"";
 }

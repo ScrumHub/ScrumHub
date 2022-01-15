@@ -26,7 +26,6 @@
     "react-router": "^6.0.2",
     "react-scripts": "4.0.3",
     "serve": "^13.0.2",
-    "swr": "^1.1.2",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
@@ -76,6 +75,7 @@
     "react-redux": "^7.2.6",
     "react-router-dom": "^6.0.2",
     "styled-components": "^5.3.3",
+    "swr": "^1.1.2",
     "ts-node": "^10.4.0",
     "typedoc": "^0.22.10",
     "typescript": "^4.5.2"

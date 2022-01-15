@@ -11578,9 +11578,9 @@
   "version" "2.0.0"
 
 "selfsigned@^1.10.8":
-  "integrity" "sha512-aVmbPOfViZqOZPgRBT0+3u4yZFHpmnIghLMlAcb5/xhp5ZtB/RVnKhz5vl2M32CLXAqR4kha9zfhNg0Lf/sxKA=="
-  "resolved" "https://registry.npmjs.org/selfsigned/-/selfsigned-1.10.11.tgz"
-  "version" "1.10.11"
+  "integrity" "sha512-lkjaiAye+wBZDCBsu5BGi0XiLRxeUlsGod5ZP924CRSEoGuZAw/f7y9RKu28rwTfiHVhdavhB0qH0INV6P1lEA=="
+  "resolved" "https://registry.npmjs.org/selfsigned/-/selfsigned-1.10.14.tgz"
+  "version" "1.10.14"
   dependencies:
     "node-forge" "^0.10.0"
 
