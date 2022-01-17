@@ -2,101 +2,87 @@
   border-bottom: 1px solid #f0f0f0;
   transition: background 0.3s;
 }
-  .ant-table table {
-    border-radius: 1px;
-    margin:0;
-    padding:0;
-    border-collapse: separate;
-    
-  }
-  .ant-table-tbody {
-    border-collapse: collapse;
-    border-radius: 1px;
-    border-color:transparent;
-  }
+.ant-table table {
+  border-radius: 1px;
+  margin: 0;
+  padding: 0;
+  border-collapse: separate;
+}
+.ant-table-tbody {
+  border-collapse: collapse;
+  border-radius: 1px;
+  border-color: transparent;
+}
 
-  .ant-table-tbody > tr  {
-    border-collapse: collapse;
-    border-radius: 1px;
-    border-color: #f0f2f5;
-  }
+.ant-table-tbody > tr {
+  border-collapse: collapse;
+  border-radius: 1px;
+  border-color: #f0f2f5;
+}
 
-  .ant-table-cell > ant-table-cell-row-hover > td  {
-    border-collapse: collapse;
-    border-radius: 1px;
-    border-color: #f0f2f5;
-  }
-  
-  .ant-table-tbody > tr > expanded-row:hover > td {
-    border-collapse: collapse;
-    border-radius: 1px;
-    background:"none";
-    background-color:#f0f2f5;
-  }
-  tr.ant-table-expanded-row > td,
-   tr.ant-table-expanded-row:hover > td {
-    background:"none";
-    background-color:#f0f2f5;
-  }
-  .ant-input-number-input {
-    align-self: center;
-    text-align: center;
-  }
-  
-.backlogScroll{
+.ant-table-cell > ant-table-cell-row-hover > td {
+  border-collapse: collapse;
+  border-radius: 1px;
+  border-color: #f0f2f5;
+}
+
+.ant-table-tbody > tr > expanded-row:hover > td {
+  border-collapse: collapse;
+  border-radius: 1px;
+  background: "none";
+  background-color: #f0f2f5;
+}
+tr.ant-table-expanded-row > td,
+tr.ant-table-expanded-row:hover > td {
+  background: "none";
+  background-color: #f0f2f5;
+}
+.ant-input-number-input {
+  align-self: center;
+  text-align: center;
+}
+
+.backlogScroll {
   z-index: 99;
   min-height: 5vh;
-    max-height:60vh;
-    overflow-y:overlay;
-    
+  max-height: 60vh;
+  overflow-y: overlay;
+}
 
-  }
+.baccklogScroll {
+  transform: scaleX(0.96);
+}
 
-  .baccklogScroll{
-    transform: scaleX(0.96);
-    
+.backlogScroll::-webkit-scrollbar {
+  width: 8px;
+  background-color: transparent;
+  padding-bottom: 2px;
+}
 
-  }
+.backlogScroll::-webkit-scrollbar-track {
+  background-color: transparent;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
 
+.backlogScroll::-webkit-scrollbar-thumb {
+  background-color: rgb(117, 117, 117);
+  border-radius: 2%;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
 
-  
-  .backlogScroll::-webkit-scrollbar {
-    width: 8px;
-    background-color: transparent;
-    padding-bottom: 2px;
-  }
+.baccklogScroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 
-  .backlogScroll::-webkit-scrollbar-track {
-    background-color: transparent;
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
-  }
-
-  .backlogScroll::-webkit-scrollbar-thumb {
-    background-color: rgb(117, 117, 117);
-    border-radius: 2%;
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
-  }
-  
-  .baccklogScroll {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-
-
-  /*::-webkit-scrollbar { 
-    overflow-y: hidden !important;   
-    overflow-x: scroll !important;   
-  }*/
-  
-  /* Hide scrollbar for IE, Edge and Firefox */
-  .backlogNestScroll {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
-  }
-  .backlogHorScroll {
-    overflow-x: scroll;
-    width: 800;
-  }
-
+/* Hide scrollbar for IE, Edge and Firefox */
+.backlogNestScroll {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.backlogHorScroll {
+  overflow-x: scroll;
+  width: 800;
+}

@@ -2,7 +2,6 @@ import { Table } from "antd";
 import { IProductBacklogItem, IState } from "../appstate/stateInterfaces";
 import { initRowIds, initSortedInfo } from "./utility/commonInitValues";
 import { IRowIds } from "./utility/commonInterfaces";
-//import "./ProductBacklog.css"
 import * as Actions from '../appstate/actions';
 import { store } from "../appstate/store";
 import { useSelector } from "react-redux";

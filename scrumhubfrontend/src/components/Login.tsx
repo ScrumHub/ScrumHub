@@ -1,20 +1,18 @@
 import { useState, useEffect } from "react";
 import { GithubOutlined } from "@ant-design/icons";
-import logo from '../logo.png';
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import * as Actions from '../appstate/actions';
 import { Wrapper } from "./LoginWrapper";
 import { store } from "../appstate/store";
 import { loginData } from "./utility/commonInitValues";
 import { useSelector } from "react-redux";
 import { IState } from "../appstate/stateInterfaces";
-import { clearProjectLocalStorage, isMessageValid, setLocalStorage as setLoginStateLocalStorage } from "./utility/commonFunctions";
+import { setLocalStorage as setLoginStateLocalStorage } from "./utility/commonFunctions";
 import { handleLogin } from "./utility/LoginAndMainHandlers";
 
 export function Login(props: any) {
   const loginState = useSelector((appState: IState) => appState.loginState);
   const [data, setData] = useState({ errorMessage: "", isLoading: false });
-  const location = useLocation();
   const navigate = useNavigate();
   useEffect(() => {
     const url = window.location.href;
@@ -26,7 +24,6 @@ export function Login(props: any) {
       const requestData = {
         code: newUrl[1]
       };
-      // Use code parameter and other parameters to make POST request to proxy_server
       fetch(loginState.proxy_url as string, {
         method: "POST",
         body: JSON.stringify(requestData)

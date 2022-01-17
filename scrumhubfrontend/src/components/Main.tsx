@@ -33,19 +33,14 @@ export function Main(props: any) {
 
   useEffect(() => {
     if (logout || (!isLoggedIn)) {
-      console.log("dd");
       setLogout(false);
       store.dispatch(Actions.logout());
       clearLocalStorage();
-      if (!isLoggedIn) {
-        navigate("/login", { replace: true });
-      }
+      if (!isLoggedIn) { navigate("/login", { replace: true });}
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [logout, isLoggedIn]);
-  const handleLogout = () => {
-    setLogout(true);
-  }
+  const handleLogout = () => { setLogout(true);}
   const handleProjects = () => {
     store.dispatch(Actions.clearProject());
     clearProjectLocalStorage();
@@ -53,16 +48,13 @@ export function Main(props: any) {
       navigate("/", { replace: true });
       //store.dispatch(clearReposList());
     }
-
   }
   const [selectedSiderKey, setSelectedSiderKey] = useState('2');
   const handlePBacklog = () => {
     if (ownerName && ownerName !== "") {
       const newPath = `/${ownerName.split("/")[0]}/${ownerName.split("/")[1]}`;
       if (location.pathname !== newPath) {
-        //localStorage.removeItem("sprintID");
         setSelectedSiderKey('ProductBacklog');
-        //return(<Link to={newPath} replace={true}/>);
         navigate(newPath, { replace: true });
       }
     }
@@ -85,7 +77,7 @@ export function Main(props: any) {
       store.dispatch(Actions.clearError());
     }
   }, [error]);
-  
+
   useEffect(() => {
     if (isLoggedIn && !currentUser.isCurrentUser && !load) {
       setLoad(true);
@@ -98,9 +90,9 @@ export function Main(props: any) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser, load, isLoggedIn]);
 
-  if (location.pathname === "/" && ownerName) {console.log("bb"); clearProjectLocalStorage(); }
-
-  if (ownerName === null && location.pathname !== "/") { console.log("cc");handleProjects(); }
+  if (location.pathname === "/" && ownerName) { console.log("bb"); clearProjectLocalStorage(); }
+  if (ownerName === null && location.pathname !== "/") { console.log("cc"); handleProjects(); }
+  
   return (
     <section className="container" >
       <Layout id="scrollableDiv" className={'scrollDiv'}>
@@ -117,20 +109,15 @@ export function Main(props: any) {
           </Menu>
         </Header>
         <Content className="content">
-          <Layout className="site-layout-background" style={{/*padding: ownerName === "" ? '':'24px 0' */ }}>
+          <Layout className="site-layout-background">
             <Sider hidden={ownerName === ""} theme="light" collapsedWidth={40} style={{ marginTop: "5vh", height: 'auto', backgroundColor: "white", borderColor: "transparent" }} onCollapse={() => setIsCollapsed(!isCollapsed)} collapsible={true} collapsed={isCollapsed} className="site-layout-background" width={200}>
-              <Menu
-                mode="inline"
-                style={{ position: "fixed", width: isCollapsed ? 40 : 200 }}
-                defaultSelectedKeys={[selectedSiderKey]}
-              >
+              <Menu mode="inline" style={{ position: "fixed", width: isCollapsed ? 40 : 200 }} defaultSelectedKeys={[selectedSiderKey]}>
                 {/*<Menu.Item key="1" icon={<ProjectOutlined />}>
                   <span>Project Details</span></Menu.Item>
                 */}<Menu.Item key="ProductBacklog" onClick={() => handlePBacklog()} icon={<DatabaseOutlined />}>
                   <span>Product Backlog</span></Menu.Item>
-                {<Menu.Item key="ActiveSprint" onClick={() => handleActiveSprint()} disabled={activeSprintNumber === -1} icon={<ProjectOutlined />}>
+                <Menu.Item key="ActiveSprint" onClick={() => handleActiveSprint()} disabled={activeSprintNumber === -1} icon={<ProjectOutlined />}>
                   <span>Active Sprint</span></Menu.Item>
-                }
               </Menu>
             </Sider>
             <Content style={ownerName === "" ? {} : { padding: '0 50px' }}>

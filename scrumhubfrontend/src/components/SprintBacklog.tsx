@@ -54,8 +54,7 @@ export function SprintBacklog() {
       store.dispatch(Actions.fetchPeopleThunk({ownerName,token}));
       //}
       setInitialRefresh(false);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    }// eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialRefresh,location]);
   const estimatePBI = (pbi: IProductBacklogItem) => {
     try {
@@ -85,7 +84,7 @@ export function SprintBacklog() {
             ownerName: ownerName,
             token: token,
             pbiId: item.id
-          }) //filters
+          })
         );
       } catch (err) { console.error("Failed to finish the pbis: ", err); }
       finally {

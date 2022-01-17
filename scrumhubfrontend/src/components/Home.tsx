@@ -49,7 +49,7 @@ export function Home() {
               pageNumber: config.defaultFilters.page,
             },
             token: token,
-          }) //filters
+          })
         );
       } catch (err) {
         console.error("Failed to fetch the repos: ", err);
@@ -72,7 +72,7 @@ export function Home() {
               pageNumber: filters.pageNumber,
             },
             token: token,
-          }) //filters
+          }) 
         );
       } catch (err) {
         console.error("Failed to fetch the repos: ", err);
@@ -89,7 +89,7 @@ export function Home() {
         Actions.addRepositoryThunk({
           id: projId,
           token: token,
-        }) //filters
+        })
       )
       .catch((error: any)=>{console.error("Failed to fetch the pbis: ", error);
       setDisplayId(-1);

@@ -40,7 +40,7 @@ export const Project = React.memo((props: any) => {
           ownerName: ownerName,
           token: token,
           pbi: pbi
-        }) //filters
+        }) 
       );
     } catch (err) { console.error("Failed to add the pbis: ", err); }
     finally {
@@ -56,7 +56,7 @@ export const Project = React.memo((props: any) => {
           token: token as string,
           ownerName: ownerName as string,
           sprint: { "title": sprint.title, "finishDate": sprint.finishDate, "goal": sprint.goal, "pbIs": ids }
-        }) //filters
+        })
       );
     } catch (err) {
       console.error("Failed to add the sprint: ", err);

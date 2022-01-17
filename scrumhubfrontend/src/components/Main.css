@@ -1,5 +1,4 @@
 .mainMenu {
-  /*font-size:'auto';*/
   width: 100%;
   break-after: auto;
   max-height: 5vh;
@@ -20,7 +19,6 @@
 .mainMenuItem {
   max-height: 5vh;
   padding-bottom: 1vh;
-  /*color: rgba(255, 255, 255, 1);*/
   opacity: 100;
 }
 .ant-menu-vertical.ant-menu-sub,
@@ -64,12 +62,3 @@
 .ant-breadcrumb + .ant-page-header-heading {
   margin-top: 0px !important;
 }
-
-/*style={{
-    breakAfter:"auto",
-    position: 'relative',
-    display:'flex',
-    justifyContent: 'right',
-    height:"inherit",
-    verticalAlign:"text-top"
-  }}*/

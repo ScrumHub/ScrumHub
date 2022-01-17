@@ -93,7 +93,6 @@ describe('Project component in container', () => {
       </Router>
     </Provider>)});
     const instance = (createdComp as any).root;
-    console.log(instance);
     /*const button = instance?.findByProps();
     button.props.onClick();
     expect(button.props.children).toBe("PROCEED TO CHECKOUT");*/

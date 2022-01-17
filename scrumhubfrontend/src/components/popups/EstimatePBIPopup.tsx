@@ -134,7 +134,6 @@ export const EstimatePBIPopup: React.FC<CollectionCreateFormProps> = ({
           style={{ width: "100%", display: "flex" }}
           rules={[{ required: true, message: 'Please input the story points estimation in hours of the new backlog item!' }]}
         >
-          {/*<InputNumber type="number" min={0} />*/}
           <InputNumber
             min={0}
             max={999}

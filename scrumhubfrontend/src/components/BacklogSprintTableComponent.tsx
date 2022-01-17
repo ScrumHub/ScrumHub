@@ -17,7 +17,7 @@ export const SprintTableComponent = React.memo((props: any) =>{
     store.dispatch(Actions.updateSprintKeys([record.sprintNumber]));
   };
   const handleChange = (pagination: any, filters: any, sorter: any, data:any) => {
-    console.log('Various parameters', pagination, filters, sorter, data);
+    //console.log('Various parameters', pagination, filters, sorter, data);
   };
   let locales = {
     emptyText: ()=>{return(!props.loading?<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={"No Sprints"} />:"")}

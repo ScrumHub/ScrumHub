@@ -14,7 +14,6 @@ export const initModalVals: IModals = {
   assgnPpl: false,
   completeSprint: false,
   updateSprint: false,
-  //addPBI: false,
   editPBI: false,
   estimatePBI: false,
   startBranchId:-1

@@ -6,7 +6,6 @@ import { HomeOutlined } from "@ant-design/icons";
 export const backlogPriorities = ["Could", "Should", "Must"];
 export const backlogColors = ["green", "blue", "red"];
 
-//tassk columns
 export const taskNameCol = {
   title: "Name",
   align: "left" as const,

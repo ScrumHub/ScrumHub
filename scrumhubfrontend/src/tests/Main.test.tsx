@@ -1,12 +1,9 @@
 /**
  * @jest-environment jsdom
  */
-
-//import { store } from "../appstate/store"
 import { Provider } from "react-redux";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Main } from "../components/Main";
-//import configureStore from 'redux-mock-store';
 import { initTestState } from "../appstate/stateTestValues";
 import { reducerFunction } from "../appstate/reducer";
 import { configureStore } from "@reduxjs/toolkit";
@@ -65,7 +62,6 @@ describe('Main component in container', () => {
     });
     button = container.querySelector(".mainMenu");
     expect(button2).toBe(button);
-    //expect(document.title).toBe('You clicked 1 times');
   });
 
   it('main component rendered is the same as snapshot', () => {
@@ -88,15 +84,11 @@ describe('Main component in container', () => {
           </Router>
         </Provider>,
     )}) as any;
-    //console.log(main);
     //main = (isNull(main)||typeof(main)=="undefined"?<></>:main )as HTMLDivElement;
-    //console.log(main);
     //expect(main.getElementsByClassName(
      // "ant-menu-overflow ant-menu ant-menu-root ant-menu-horizontal ant-menu-light mainMenu"))
      // .toBe(main!==<></>?[]:"");
     //expect(getByRole("menu")).toBe("");
-    //"ant-menu-overflow ant-menu ant-menu-root ant-menu-horizontal ant-menu-light mainMenu"
-
     //fireEvent.keyDown(getByLabelText("menu"));
   //let tree = container.toJSON();
   //fireEvent.keyDown(tree);

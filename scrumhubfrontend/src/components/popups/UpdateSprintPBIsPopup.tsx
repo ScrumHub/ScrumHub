@@ -26,12 +26,10 @@ export const UpdateSprintPBIsPopup: React.FC<CollectionCreateFormProps> = ({
   onCreate,
   onCancel,
 }) => {
-  //TO DO
-  //DELETE after backend is fixed
+  //TO DO, delete after backend is fixed
   const [form] = Form.useForm();
   const filteredData = pbiData.filter((item) => item.estimated !== false && item.id !== 0);
   const [temp, setTemp] = useState(filteredData);
-
   const id = data.sprintNumber !== null ? data.sprintNumber : localStorage.getItem("sprintID")?.toString() as unknown as number;
   return (
     <Modal

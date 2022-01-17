@@ -35,8 +35,8 @@ export const getError = (errorResponse: any) => {
   })
 }
 
+/*removes duplicate key and concates expanded keys arrays*/
 export function updateStateKeys(oldKeys: number[], newKeys: number[]) {
-  //remove unexpanded
   return ((oldKeys.filter((key: number) => !newKeys.includes(key))).concat(newKeys.filter((key: number) => !oldKeys.includes(key))));
 };
 

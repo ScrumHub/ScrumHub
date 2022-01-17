@@ -550,7 +550,6 @@ export const reducerFunction = (initState: IState) => {
       payload: PayloadAction<RequestResponse<ITaskList, number>>
     ) => {
       let newState = _.cloneDeep(state);
-      console.log("here");
       const tasks = payload.payload.response as ITaskList;
       return updateTasksSWR(newState, tasks);
     },
