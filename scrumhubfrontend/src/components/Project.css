@@ -1,0 +1,34 @@
+.projectDiv {
+  margin-top: 0.25%;
+  margin-bottom: 1%;
+}
+.projectSpace {
+  transform: scale(0.96);
+  margin-top: 0;
+  margin-bottom: 0.25%;
+  display: flex;
+}
+.projectDropBtn {
+  color: #1890ff;
+}
+.projectWhIcon {
+  color: white;
+}
+.projectColIcon {
+  color: #1890ff;
+}
+
+.projectInputPpl {
+  width: 160;
+}
+
+.projectCurUserDiv{
+cursor: "pointer"; 
+border-radius: "50%";  
+}
+
+.projectCurUserShadowDiv{
+  cursor: "pointer"; 
+  border-radius: "50%";  
+  box-shadow:white 0px 0px 0.1px 0.05em;
+  }

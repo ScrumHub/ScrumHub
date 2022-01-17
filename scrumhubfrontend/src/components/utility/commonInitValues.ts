@@ -61,3 +61,8 @@ export const initLoadingKeys: tableKeys = {
   sprintKeys: [],
   pbiKeys: []
 }
+
+export const loginData = {
+  isLoading: false,
+  errorMessage: "Sorry! Login failed"
+}

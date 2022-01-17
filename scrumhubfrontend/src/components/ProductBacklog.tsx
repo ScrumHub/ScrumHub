@@ -1,24 +1,22 @@
-import React, { useState, useRef, useContext, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button, Tag, message, Dropdown, Badge, Popover, Space, Popconfirm } from 'antd';
 import { useDrag, useDrop } from 'react-dnd';
 import * as Actions from '../appstate/actions';
-import { IAddPBI, IFilters, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, ISprint, ISprintList, ITask, State } from '../appstate/stateInterfaces';
+import { IAddPBI, IFilters, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, ISprint, ISprintList, ITask, IState } from '../appstate/stateInterfaces';
 import 'antd/dist/antd.css';
 import moment from 'moment';
 import './ProductBacklog.css';
 import { store } from '../appstate/store';
-import { AuthContext } from '../App';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { initModalVals, pbiFilterVals } from './utility/commonInitValues';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
 import { dateFormat, canDropPBI, canDropTask, isArrayValid, isBranchNotCreated, } from './utility/commonFunctions';
 import { taskStatusCol, taskGhLinkCol, taskNameCol, pbiProgressCol, backlogColors, backlogPriorities, pbiProgressCol2 } from './utility/BodyRowsAndColumns';
-import TaskTableComponent from './BacklogTaskTableComponent';
-import PBITableComponent from './BacklogPBITableComponent';
+import {PBITableComponent} from './BacklogPBITableComponent';
 import { MenuWithPeopleSave } from './utility/LoadAnimations';
 import { BranchesOutlined, CalendarOutlined, DownOutlined, EditOutlined } from '@ant-design/icons';
-import SprintTableComponent from './BacklogSprintTableComponent';
+import {SprintTableComponent} from './BacklogSprintTableComponent';
 import { initPBIFilter } from '../appstate/initStateValues';
 import { assignPerson, startTask, updatePBI, updateTask, fetchPBIsAndUnassigned } from './utility/BacklogHandlers';
 import { AddTaskPopup } from './popups/AddTaskPopup';
@@ -26,18 +24,20 @@ import { CompleteSprintPopup } from './popups/CompleteSprint';
 import { EditPBIPopup } from './popups/EditPBIPopup';
 import { EstimatePBIPopup } from './popups/EstimatePBIPopup';
 import { UpdateSprintPopup } from './popups/UpdateSprintPopup';
+import { TaskTableComponent } from './BacklogTaskTableComponent';
 export const type = 'DraggableBodyRow';
 
-export const ProductBacklog: React.FC<any> = (props: any) => {
-  const { state } = useContext(AuthContext);
-  const { token } = state;
+export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
+  const token = useSelector((appState: IState) => appState.loginState.token);
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : "";
-  const sprintPage = useSelector((state: State) => state.sprintPage as ISprintList);
-  const loading = useSelector((appState: State) => appState.loading as boolean);
-  const pbiPage = useSelector((appState: State) => appState.pbiPage as IProductBacklogList);
-  const people = useSelector((appState: State) => appState.people as IPeopleList);
-  const refreshRequired = useSelector((appState: State) => appState.productRequireRefresh as boolean);
-  const sprintRefreshRequired = useSelector((appState: State) => appState.sprintRequireRefresh as boolean);
+  const sprintPage = useSelector((state: IState) => state.sprintPage as ISprintList);
+  const loading = useSelector((appState: IState) => appState.loading as boolean);
+  const pbiPage = useSelector((appState: IState) => appState.pbiPage as IProductBacklogList);
+  const people = useSelector((appState: IState) => appState.people as IPeopleList);
+  const keys = useSelector((appState: IState) => appState.keys.pbiKeys as number[]);
+  const refreshRequired = useSelector((appState: IState) => appState.productRequireRefresh as boolean);
+  const sprintRefreshRequired = useSelector((appState: IState) => appState.sprintRequireRefresh as boolean);
+  //console.log(sprintRefreshRequired);
   const [initialRefresh, setInitialRefresh] = useState(true);
   const [selectedPBI, setSelectedPBI] = useState({} as IProductBacklogItem);
   const [selectedSprint, setSelectedSprint] = useState({} as ISprint);
@@ -240,7 +240,15 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
     <div><span><BranchesOutlined/> Created</span></div>
     },
      taskGhLinkCol,];
-  const TaskTableforPBI: React.FC<IProductBacklogItem> = (item: IProductBacklogItem) => { return (<TaskTableComponent peopleFilter={props.peopleFilter} item={item} taskColumns={taskColumns} taskComponents={nestedcomponents} />) };
+     //console.log(isModal.startBranchId);
+     //const fetcher = (item: string) => 
+     //axios.get(item, { headers: { "Accept": "application/vnd.github.v3+json", "Authorization": "token " + token } })
+     //  .then((response: any) => isItemDefined(response.data) && isItemDefined(response.data.rate) && isItemDefined(response.data.rate.used)?response.data.rate.used:0);
+     //const { data } = useSWR(`https://api.github.com/rate_limit`, fetcher, { refreshInterval: 1000 });
+     //console.log(data);
+     const TaskTableforPBI: React.FC<IProductBacklogItem> = (item: IProductBacklogItem) => 
+     { return (<TaskTableComponent peopleFilter={props.peopleFilter} item={item} 
+     taskColumns={taskColumns} taskComponents={nestedcomponents} />) };
   const pbiColumns = [
     {
       title: 'Name', width: "25%", sorter:  (a: IProductBacklogItem, b: IProductBacklogItem) => a.name.length - b.name.length, sortOrder: props.sortedInfo && props.sortedInfo.columnKey === 'name' && props.sortedInfo.order,
@@ -311,7 +319,8 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
           {"Update"}</Button> : <></>)
       },
     }];
-  return (<div className='backlogScroll' >
+
+  return (<div className='baccklogScroll' >
     <SprintTableComponent sortedInfo={props.sortedInfo ?props.sortedInfo.order:""} nameFilter={props.nameFilter} keys={0} peopleFilter={props.peopleFilter} loading={refreshRequired || initialRefresh} data={[{
       goal: "",finishDate: "",isCurrent: false,status: "",isCompleted: false, sprintNumber: 0,title: "", backlogItems: pbiPage.list
     } as ISprint] as ISprint[]}
@@ -332,4 +341,4 @@ export const ProductBacklog: React.FC<any> = (props: any) => {
       onCancel={() => { setIsModal({ ...isModal, completeSprint: false }); }} />}
   </div>
   );
-};
+});

@@ -3,15 +3,13 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Badge, Button, Dropdown, message, Popconfirm, Popover, Space, Tag, Typography, } from 'antd';
 import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
-import { IAddPBI, IFilters, IPeopleList, IProductBacklogItem, ISprint, ITask, State } from '../appstate/stateInterfaces';
-import { AuthContext } from '../App';
+import { IAddPBI, IFilters, IPeopleList, IProductBacklogItem, ISprint, ITask, IState } from '../appstate/stateInterfaces';
 import config from '../configuration/config';
 import { useSelector } from 'react-redux';
 import { BranchesOutlined, DownOutlined, EditOutlined } from '@ant-design/icons';
 import { store } from '../appstate/store';
-import "./SprintProject.css";
-import PBITableComponent from './BacklogPBITableComponent';
-import TaskTableComponent from './BacklogTaskTableComponent';
+import {PBITableComponent} from './BacklogPBITableComponent';
+import {TaskTableComponent} from './BacklogTaskTableComponent';
 import { taskNameCol, taskStatusCol, taskGhLinkCol, pbiProgressCol, pbiProgressCol2, backlogPriorities, backlogColors } from './utility/BodyRowsAndColumns';
 import { canDropTask, isBranchNotCreated } from './utility/commonFunctions';
 import SkeletonList, { MenuWithPeopleSave } from './utility/LoadAnimations';
@@ -30,24 +28,23 @@ import { EstimatePBIPopup } from './popups/EstimatePBIPopup';
 import { UpdateSprintPopup } from './popups/UpdateSprintPopup';
 
 export function SprintBacklog() {
-  const { state } = useContext(AuthContext);
-  const { token } = state;
+  const token = useSelector((appState: IState) => appState.loginState.token);
   const [infos, setInfos] = useState({
     filteredInfo: { complete: -1, pbiPriorities: [] as number[] },
     sortedInfo: { order: '', columnKey: '', },
   });
   const [filterPBI, setFiltersPBI] = useState<IFilters>({ nameFilter: "", peopleFilter: [] });
-  const people = useSelector((appState: State) => appState.people as IPeopleList);
+  const people = useSelector((appState: IState) => appState.people as IPeopleList);
   const [filters, setFilters] = useState<IFilters>({
     pageNumber: config.defaultFilters.page,
     pageSize: config.defaultFilters.size,
   });
   const [isModal, setIsModal] = useState<IModals>(initModalVals);
-  const loading = useSelector((appState: State) => appState.loading);
+  const loading = useSelector((appState: IState) => appState.loading);
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : "";
   const sprintID = localStorage.getItem("sprintID") ? Number(localStorage.getItem("sprintID")) : -1;
   const [initialRefresh, setInitialRefresh] = useState(true);
-  const sprintPage = useSelector((appState: State) => appState.openSprint as ISprint);
+  const sprintPage = useSelector((appState: IState) => appState.openSprint as ISprint);
 
   const location = useLocation();
   useEffect(() => {

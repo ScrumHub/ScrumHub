@@ -1,33 +1,65 @@
 .mainMenu {
   /*font-size:'auto';*/
-  width:100%;
+  width: 100%;
   break-after: auto;
   max-height: 5vh;
   line-height: 5vh;
-  position:relative;
-  display:flex;
+  position: relative;
+  display: flex;
   justify-content: flex-end;
   border: 0;
   border-bottom: 0px;
   box-shadow: 0 5px 3em lightgray;
-  opacity:100;
+  opacity: 100;
 }
 .header {
   height: inherit;
   min-width: 100%;
   background-color: #fff;
 }
-.mainMenuItem{
+.mainMenuItem {
   max-height: 5vh;
   padding-bottom: 1vh;
   /*color: rgba(255, 255, 255, 1);*/
-  opacity:100;
+  opacity: 100;
 }
-.ant-menu-vertical.ant-menu-sub, .ant-menu-vertical-left.ant-menu-sub, .ant-menu-vertical-right.ant-menu-sub {
-   min-width: 0;
+.ant-menu-vertical.ant-menu-sub,
+.ant-menu-vertical-left.ant-menu-sub,
+.ant-menu-vertical-right.ant-menu-sub {
+  min-width: 0;
 }
-.pageHeader{
-  margin-top: 5vh; padding-left: 2%; margin-bottom: 0; padding-bottom: 0
+.scrollDiv {
+  z-index: 99;
+  min-height: 100vh;
+  max-height: 100vh;
+  overflow-y: overlay;
+}
+.scrollDiv::-webkit-scrollbar {
+  margin-top: 5vh;
+  width: 0.75vw;
+  background-color: transparent;
+}
+
+.scrollDiv::-webkit-scrollbar-track {
+  margin-top: 5vh;
+  background-color: transparent;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
+
+.scrollDiv::-webkit-scrollbar-thumb {
+  margin-top: 5vh;
+  background-color: rgb(117, 117, 117);
+  border-radius: 2%;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
+
+.pageHeader {
+  margin-top: 5vh;
+  padding-left: 2%;
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 .ant-breadcrumb + .ant-page-header-heading {
   margin-top: 0px !important;

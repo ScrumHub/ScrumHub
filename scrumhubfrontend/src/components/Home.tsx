@@ -1,10 +1,9 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Card } from 'antd';
 import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
 import './Home.css';
-import { IFilters, IRepository, State } from '../appstate/stateInterfaces';
-import { AuthContext } from '../App';
+import { IFilters, IRepository, IState } from '../appstate/stateInterfaces';
 import { useNavigate } from 'react-router';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import config from '../configuration/config';
@@ -18,18 +17,18 @@ const { Meta } = Card;
 
 
 export function Home() {
-  const { state } = useContext(AuthContext);
-  const { token, isLoggedIn } = state;
+  const isLoggedIn = useSelector((appState: IState) => appState.loginState.isLoggedIn);
+  const token = useSelector((appState: IState) => appState.loginState.token);
   const [filters, setFilters] = useState<IFilters>({pageNumber: config.defaultFilters.page,pageSize: config.defaultFilters.size,});
-  const lastPage = useSelector((state: State) => state.reposLastPage);
+  const lastPage = useSelector((state: IState) => state.reposLastPage);
   const [displayId, setDisplayId] = useState(-1);
   const [fetching, setFetching] = useState(false);
-  const loading = useSelector((state: State) => state.loading);
+  const loading = useSelector((state: IState) => state.loading);
   const refreshRequired = useSelector(
-    (appState: State) => appState.reposRequireRefresh as boolean
+    (appState: IState) => appState.reposRequireRefresh as boolean
   );
   const repos = useSelector(
-    (state: State) => state.repositories as IRepository[]
+    (state: IState) => state.repositories as IRepository[]
   );
   const navigate = useNavigate();
   const [initialRefresh, setInitialRefresh] = useState(true);
@@ -104,8 +103,9 @@ export function Home() {
   };
 
   return (
-    <section className="container">
+    <div>
       <InfiniteScroll
+      scrollableTarget="scrollableDiv"
       dataLength={isArrayValid(repos) ? repos.length : 0}
       scrollThreshold={0.7}
       next={fetchMore}
@@ -134,6 +134,6 @@ export function Home() {
         <SkeletonList loading={loading  || refreshRequired} number={repos.length < 1?5:1} />
       </div>
     </InfiniteScroll>
-    </section >
+    </div >
   );
 }

@@ -1,16 +1,17 @@
 import { Table } from "antd";
-import { IProductBacklogItem, State } from "../appstate/stateInterfaces";
+import { IProductBacklogItem, IState } from "../appstate/stateInterfaces";
 import { initRowIds, initSortedInfo } from "./utility/commonInitValues";
 import { IRowIds } from "./utility/commonInterfaces";
-import "./ProductBacklog.css"
+//import "./ProductBacklog.css"
 import * as Actions from '../appstate/actions';
 import { store } from "../appstate/store";
 import { useSelector } from "react-redux";
 import { isArrayValid } from "./utility/commonFunctions";
+import React from "react";
 
-export default function PBITableComponent(props: any) {
-  const keys = useSelector((appState: State) => appState.keys.pbiKeys as number[]);
-  const loadingKeys = useSelector((appState: State) => appState.loadingKeys.sprintKeys as number[]);
+export const PBITableComponent = React.memo((props: any) =>{
+  const keys = useSelector((appState: IState) => appState.keys.pbiKeys as number[]);
+  const loadingKeys = useSelector((appState: IState) => appState.loadingKeys.sprintKeys as number[]);
   const updateExpandedRowKeys = (record: IProductBacklogItem) => {
     store.dispatch(Actions.updatePBIKeys([record.id]));
   };
@@ -59,4 +60,4 @@ export default function PBITableComponent(props: any) {
         }) as any;
       }}
     />);
-}
+});

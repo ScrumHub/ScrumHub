@@ -184,8 +184,16 @@ export interface IRepositoryList {
   realSize: number;
   list: IRepository[];
 }
-
-export type State = {
+export interface ILoginState {
+  isLoggedIn: boolean,
+  token: string,
+  client_id: string,
+  redirect_uri: string,
+  client_secret: string,
+  proxy_url:string
+}
+export interface IState {
+  loginState:ILoginState;
   loading: boolean;
   error: Error;
   pbiPage: IProductBacklogList;
@@ -209,4 +217,5 @@ export type State = {
   currentUser: IPerson;
   keys:tableKeys;
   loadingKeys:tableKeys;
+  rateLimitLeft:number;
 };

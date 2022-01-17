@@ -11,7 +11,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 
-export const config = {
+export const githubConfig = {
   client_id: process.env.REACT_APP_CLIENT_ID,
   redirect_uri: process.env.REACT_APP_REDIRECT_URI,
   client_secret: process.env.REACT_APP_CLIENT_SECRET,
@@ -27,7 +27,7 @@ const envVarsSchema = joi.object({
   logout_url: joi.string().required(),
 });
 
-const { error } = envVarsSchema.validate(config);
+const { error } = envVarsSchema.validate(githubConfig);
 if (error) {
   throw new Error(`Config validation error: ${error.message}`);
 }
@@ -44,10 +44,9 @@ app.use((req: any, res: any, next: NextFunction) => {
 
 app.post("/authenticate", (req: any, res: any) => {
   const { code } = req.body;
-  console.log(config);
   const data = {
-    client_id: config.client_id, client_secret: config.client_secret,
-    code: code, redirect_uri: config.redirect_uri
+    client_id: githubConfig.client_id, client_secret: githubConfig.client_secret,
+    code: code, redirect_uri: githubConfig.redirect_uri
   };
   fetch(`https://github.com/login/oauth/access_token`, {
     method: "POST",
@@ -55,7 +54,6 @@ app.post("/authenticate", (req: any, res: any) => {
     headers: {
       'Content-Type': 'application/json',
       "Access-Control-Allow-Origin": "*",
-      "Accept": "application/json"
     }
   })
     .then((response: any) => response.text())
@@ -66,23 +64,6 @@ app.post("/authenticate", (req: any, res: any) => {
       return res.status(400).json(error);
     });
 });
-
-app.get("/authenticate", (req: any, res: any) => {
-  console.log("", req, res);
-})
-
-app.get("/logout", (req: any, res: any) => {
-  //const { token } = req.headers.authorization;
-  res.clearCookie('ai_user', { path: '/login' });
-  var cookies = document.cookie.split(";");
-  for (var i = 0; i < cookies.length; i++) {
-    var cookie = cookies[i];
-    var eqPos = cookie.indexOf("=");
-    var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-  }
-})
-
 
 const PORT = process.env.REACT_APP_SERVER_PORT || 5000;
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));

@@ -2,11 +2,11 @@
  * @jest-environment jsdom
  */
 import expect from "expect"; // You can use any testing library
-import { IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList } from "./stateInterfaces";
+import { IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList } from "../appstate/stateInterfaces";
 import config from "../configuration/config";
-import * as Fetching from "./fetching";
-import { RequestResponse } from "./response";
-import { initAddPBI, initSprint } from "./initStateValues";
+import * as Fetching from "../appstate/fetching";
+import { RequestResponse } from "../appstate/response";
+import { initAddPBI, initSprint } from "../appstate/initStateValues";
 
 jest.mock("axios");
 

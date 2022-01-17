@@ -2,7 +2,7 @@
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit"
 import type { RequestResponse } from "./response";
 import * as Fetching from "./fetching";
-import { IAddPBI, IFilters, IFiltersAndToken, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, ITaskNamed, IUpdateIdSprint } from "./stateInterfaces";
+import { IAddPBI, IFilters, IFiltersAndToken, ILoginState, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, ITaskNamed, IUpdateIdSprint } from "./stateInterfaces";
 
 export const fetchRepositoriesThunk = createAsyncThunk<
   RequestResponse<IRepositoryList, number>,
@@ -280,7 +280,17 @@ export const startTaskThunk = createAsyncThunk<
   return response as RequestResponse<ITask, number>;
 });
 
+export const getRateLimitThunk = createAsyncThunk<
+  RequestResponse<any, any>,{token:string,url:string},
+  { rejectValue: RequestResponse<any, any> }
+>("getRateLimit", async (item:{token:string,url:string,}, { rejectWithValue }) => {
+  const response: RequestResponse<any, any> = await Fetching.getRateLimit(item.token, item.url);
+  if (response.code !== 200) { return rejectWithValue(response as RequestResponse<any, any>); }
+  return response as RequestResponse<any, any>;
+});
 
+export const login = createAction<any>("login");
+export const logout = createAction("logout");
 export const clearError = createAction("clearError");
 export const clearState = createAction("clearState");
 export const clearProject = createAction("clearProject");

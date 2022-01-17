@@ -1,7 +1,10 @@
 import moment from "moment";
 import { initKeys, initLoadingKeys } from "../components/utility/commonInitValues";
 import config from "../configuration/config"
-import { IAddPBI, IAssignPBI, IFilters, IPBIFilter, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, ITaskNamed, IUpdateIdSprint, State } from "./stateInterfaces";
+import { IAddPBI, IAssignPBI, IFilters, ILoginState, IPBIFilter, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, ITaskNamed, IUpdateIdSprint, IState } from "./stateInterfaces";
+import { validateUri } from "./stateUtilities";
+const path = require("path");
+require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
 
 export const initTask: ITask = {
   id: 0,
@@ -197,7 +200,26 @@ export const initError = {
 
 }
 
-export const initState: State = {
+export const initLoginState:ILoginState = {
+  isLoggedIn: localStorage.getItem('isLoggedIn') === "undefined" ? false : JSON.parse(localStorage.getItem("isLoggedIn") as string) || false,
+  token: localStorage.getItem('token') === "undefined" ? "" : JSON.parse(localStorage.getItem("token") as string) || "",
+  client_id: validateUri(process.env.REACT_APP_CLIENT_ID),
+  redirect_uri: validateUri(process.env.REACT_APP_REDIRECT_URI),
+  client_secret: validateUri(process.env.REACT_APP_CLIENT_SECRET),
+  proxy_url: validateUri(process.env.REACT_APP_PROXY_URL)
+}
+
+export const loggedOutLoginState :ILoginState = {
+  isLoggedIn: false,
+  token: "",
+  client_id: validateUri(process.env.REACT_APP_CLIENT_ID),
+  redirect_uri: validateUri(process.env.REACT_APP_REDIRECT_URI),
+  client_secret: validateUri(process.env.REACT_APP_CLIENT_SECRET),
+  proxy_url: validateUri(process.env.REACT_APP_PROXY_URL)
+}
+
+export const initState: IState = {
+  loginState: initLoginState,
   loading: false,
   error: initError,
   pbiPage: initProductBacklogList,
@@ -220,7 +242,8 @@ export const initState: State = {
   currentUser: initPerson,
   activeSprintNumber: -1,
   keys: initKeys,
-  loadingKeys:initLoadingKeys
+  loadingKeys: initLoadingKeys,
+  rateLimitLeft: 5000
 };
 export const backlogSprint: ISprint = { 
   goal: "",

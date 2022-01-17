@@ -1,4 +1,3 @@
-
 .reposGrid {
   display: grid;
   place-items: center;
@@ -21,20 +20,20 @@
   width: 80%;
   overflow: hidden;
   white-space: nowrap;
-   /*width: 90%;*/
+  /*width: 90%;*/
 }
 
-.ant-popover-disabled-compatible-wrapper{
-    display:unset !important;
-    width: 100%;
+.ant-popover-disabled-compatible-wrapper {
+  display: unset !important;
+  width: 100%;
 }
 
-.ant-card-actions{
-    padding-left: 24px !important;
-    padding-right: 24px !important;
+.ant-card-actions {
+  padding-left: 24px !important;
+  padding-right: 24px !important;
 }
 
-.peopleMenu{
+.peopleMenu {
   position: relative;
   margin: 0;
   padding: 4px 0;
@@ -44,5 +43,32 @@
   background-clip: padding-box;
   border-radius: 2px;
   outline: none;
-  box-shadow: 0 3px 6px -4px rgb(0 0 0 / 12%), 0 6px 16px 0 rgb(0 0 0 / 8%), 0 9px 28px 8px rgb(0 0 0 / 5%) !important;
+  box-shadow: 0 3px 6px -4px rgb(0 0 0 / 12%), 0 6px 16px 0 rgb(0 0 0 / 8%),
+    0 9px 28px 8px rgb(0 0 0 / 5%) !important;
+}
+
+.scrollDivMain {
+  z-index: 99;
+  max-height: 90%;
+  overflow-y: overlay;
+}
+.scrollDivMain::-webkit-scrollbar {
+  margin-top: 5vh;
+  width: 0.75vw;
+  background-color: transparent;
+}
+
+.scrollDivMain::-webkit-scrollbar-track {
+  margin-top: 5vh;
+  background-color: transparent;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
+
+.scrollDivMain::-webkit-scrollbar-thumb {
+  margin-top: 5vh;
+  background-color: rgb(117, 117, 117);
+  border-radius: 2%;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
 }
