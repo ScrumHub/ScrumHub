@@ -33,10 +33,8 @@ export const formItemLayoutWithOutLabel = {
   },
 };
 export const initFilteredInfo = { complete: [] as number[], pbiPriority: [] as number[] };
-export const initSortedInfo = {
-  order: '',
-  columnKey: '',
-};
+export const initSortedInfo = {order: '',columnKey: '',};
+
 export const initFilterSortInfo =  {
   filteredInfo: initFilteredInfo,
   sortedInfo: initSortedInfo

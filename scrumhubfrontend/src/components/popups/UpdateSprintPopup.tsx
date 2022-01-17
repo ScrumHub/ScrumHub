@@ -1,25 +1,13 @@
 import React from 'react';
 import { Modal, Form, DatePicker, Input } from 'antd';
-import { IProductBacklogItem, ISprint, IUpdateIdSprint } from '../../appstate/stateInterfaces';
+import { ISprint } from '../../appstate/stateInterfaces';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import TextArea from 'antd/lib/input/TextArea';
 import { disabledDate } from '../utility/commonFunctions';
-import moment, { Moment } from 'moment';
-interface Values {
-  goal: string;
-  backlogItems?: IProductBacklogItem[];
-  title: string;
-  finishDate: Date | string | Moment
-}
+import moment from 'moment';
+import { IUpdateSprintCollectionCreateFormProps, IUpdateSprintValues } from './popupInterfaces';
 
-interface CollectionCreateFormProps {
-  data: ISprint;
-  visible: boolean;
-  onCreate: (values: ISprint | Values) => void;
-  onCancel: () => void;
-}
-
-export const UpdateSprintPopup: React.FC<CollectionCreateFormProps> = ({
+export const UpdateSprintPopup: React.FC<IUpdateSprintCollectionCreateFormProps> = ({
   data,
   visible,
   onCreate,
@@ -38,7 +26,7 @@ export const UpdateSprintPopup: React.FC<CollectionCreateFormProps> = ({
       onOk={() => {
         form
           .validateFields()
-          .then((values: ISprint | Values) => {
+          .then((values: ISprint | IUpdateSprintValues) => {
             form.resetFields();
             onCreate({ ...values, backlogItems: data.backlogItems, });
           })

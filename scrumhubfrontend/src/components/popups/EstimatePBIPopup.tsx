@@ -1,23 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Form, InputNumber, Slider, Progress, List } from 'antd';
-import { IFilters, IProductBacklogItem, ITask } from '../../appstate/stateInterfaces';
+import { IFilters, ITask } from '../../appstate/stateInterfaces';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import { NumberOutlined } from '@ant-design/icons';
 import VirtualList from 'rc-virtual-list';
 import "../ProductBacklog.css";
+import { IEstimatePBICollectionCreateFormProps } from './popupInterfaces';
 
-interface Values {
-  expectedTimeInHours: number
-}
-
-interface CollectionCreateFormProps {
-  data: IProductBacklogItem;
-  visible: boolean;
-  onCreate: (values: Values) => void;
-  onCancel: () => void;
-}
-
-export const EstimatePBIPopup: React.FC<CollectionCreateFormProps> = ({
+export const EstimatePBIPopup: React.FC<IEstimatePBICollectionCreateFormProps> = ({
   data,
   visible,
   onCreate,
@@ -32,18 +22,10 @@ export const EstimatePBIPopup: React.FC<CollectionCreateFormProps> = ({
     else {
       setSlicedData(data.acceptanceCriteria.slice(0, slicedData.length + 2).map((data, key) => { return { "key": key, "acceptanceCriteria": data } }));
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const [value, setValue] = useState(data.expectedTimeInHours);
-  const marks = {
-    0: 0,
-    1: 1,
-    2: 2,
-    3: 3,
-    5: 5,
-    8: 8,
-    13: 13,
-    20: 20
-  };
+  const marks = {0: 0,1: 1, 2: 2,3: 3, 5: 5,8: 8,13: 13,20: 20};
   return (
     <Modal
       centered={true}
@@ -57,7 +39,7 @@ export const EstimatePBIPopup: React.FC<CollectionCreateFormProps> = ({
       onOk={() => {
         form
           .validateFields()
-          .then((values: Values) => {
+          .then((values: {expectedTimeInHours: number}) => {
             form.resetFields();
             onCreate({ expectedTimeInHours: value });
           })
@@ -72,14 +54,12 @@ export const EstimatePBIPopup: React.FC<CollectionCreateFormProps> = ({
         name="form_in_modal"
         initialValues={{ modifier: 'public' }}
       >
-
         <FormItemLabel prefixCls="progress" label="Tasks Progress" required={true} />
         <Form.Item
           name="progress"
           key="progress"
           style={{ width: "87%" }}
         >  <>
-
             <Progress percent={data.tasks && data.tasks.length > 0 ? (100 * data.tasks.filter((item: ITask) => !item.assigness || item.assigness.length < 1).length / data.tasks.length) : 100}
               format={percent => `${data.tasks && data.tasks.length > 0 ? data.tasks.filter((item: ITask) => !item.assigness || item.assigness.length < 1).length : 0} Assigned`} ></Progress>
             <br />
@@ -123,7 +103,6 @@ export const EstimatePBIPopup: React.FC<CollectionCreateFormProps> = ({
             max={20}
             onChange={(e) => { setValue(e); form.setFieldsValue({ "expectedTimeInHours": e }) }}
             value={(typeof value) === 'number' ? value : 0}
-
           />
         </Form.Item>
         <FormItemLabel prefixCls="expectedTimeInHours" label="Estimate Story Points" required={true} />
@@ -142,8 +121,6 @@ export const EstimatePBIPopup: React.FC<CollectionCreateFormProps> = ({
             onChange={(e) => { setValue(e); form.setFieldsValue({ "expectedTimeInHours": e }) }}
           />
         </Form.Item>
-
-
       </Form>
     </Modal >
   );

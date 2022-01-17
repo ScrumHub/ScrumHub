@@ -77,7 +77,6 @@ export function Main(props: any) {
       store.dispatch(Actions.clearError());
     }
   }, [error]);
-
   useEffect(() => {
     if (isLoggedIn && !currentUser.isCurrentUser && !load) {
       setLoad(true);
@@ -90,8 +89,8 @@ export function Main(props: any) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser, load, isLoggedIn]);
 
-  if (location.pathname === "/" && ownerName) { console.log("bb"); clearProjectLocalStorage(); }
-  if (ownerName === null && location.pathname !== "/") { console.log("cc"); handleProjects(); }
+  if (location.pathname === "/" && ownerName) { clearProjectLocalStorage(); }
+  if (ownerName === null && location.pathname !== "/") { handleProjects(); }
   
   return (
     <section className="container" >
@@ -129,7 +128,7 @@ export function Main(props: any) {
                 </PageHeader>}
                 <AppRouter />
               </div>
-              <Footer hidden={!isLoggedIn} style={{ margin: 0, lineHeight: "5vh !important", padding: 0, textAlign: 'center', height: "5vh", verticalAlign: "bottom" }}>
+              <Footer hidden={location.pathname.includes("login")} style={{ margin: 0, lineHeight: "5vh !important", padding: 0, textAlign: 'center', height: "5vh", verticalAlign: "bottom" }}>
                 {<a
                   href="http://github.com/ScrumHub/ScrumHub"
                   target="_blank"

@@ -1,4 +1,3 @@
-import  { Moment } from "moment";
 import { tableKeys } from "../components/utility/commonInterfaces";
 
 export type Error = {
@@ -36,17 +35,6 @@ export interface ITask {
   isAssignedToPBI: boolean;
   link: string;
   status:string;
-}
-
-
-export interface ITaskNamed {
-  id: number;
-  name: string;
-  finished: boolean;
-  pbiId: number;
-  pbiName: string;
-  isAssignedtoPBI: boolean;
-  link: string;
 }
 
 export interface ITaskList {
@@ -95,13 +83,6 @@ export interface IAssignPBI {
   id: number;
   isInSprint:boolean;
 }
-
-export interface ICheckedAssignPBI extends IAssignPBI {
-  name: string;
-  id: number;
-  
-  checked: boolean;
-}
 export interface IPBIFilter {
   pageNumber: number;
   pageSize: number;
@@ -129,13 +110,6 @@ export interface ISprint {
   status: string;
   isCompleted: boolean;
 }
-export interface IUpdateIdSprint {
-  goal: string;
-  pbIs: string[];
-  finishDate: string|Date|Moment;
-  title:string;
-}
-
 
 export interface ISprintList {
   pageNumber: 1,
@@ -144,7 +118,6 @@ export interface ISprintList {
   realSize: 10,
   list: ISprint[];
 }
-
 
 export interface IRepository {
   name: string;
@@ -208,7 +181,7 @@ export interface IState {
   taskLastPage: boolean;
   taskRequireRefresh: boolean;
   taskPage: ITaskList;
-  tasks: ITask[] | ITaskNamed[];
+  tasks: ITask[];
   openSprint: ISprint | null;
   repoId: number;
   namedPBI: IAssignPBI[];

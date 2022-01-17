@@ -1,20 +1,14 @@
 
 import React from 'react';
 import { Modal, Form, Typography, Progress, Timeline, Button, message, Popconfirm } from 'antd';
-import { IProductBacklogItem, ISprint } from '../../appstate/stateInterfaces';
+import { IProductBacklogItem } from '../../appstate/stateInterfaces';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import { getDate, isArrayValid, validateString } from '../utility/commonFunctions';
 import moment from 'moment';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import { ICompleteSprintCollectionCreateFormProps } from './popupInterfaces';
 
-interface CollectionCreateFormProps {
-  data: ISprint;
-  visible: boolean;
-  onComplete: (isFailure: boolean) => void;
-  onCancel: () => void;
-}
-
-export const CompleteSprintPopup: React.FC<CollectionCreateFormProps> = ({
+export const CompleteSprintPopup: React.FC<ICompleteSprintCollectionCreateFormProps> = ({
   data,
   visible,
   onComplete,
@@ -67,7 +61,6 @@ export const CompleteSprintPopup: React.FC<CollectionCreateFormProps> = ({
           key="progress"
           style={{ width: "87%" }}
         >  <>
-
             <Progress percent={isArrayValid(data.backlogItems) ? (100 * data.backlogItems.filter((item: IProductBacklogItem) => !item.estimated).length / data.backlogItems.length) : 100}
               format={percent => `${isArrayValid(data.backlogItems) ? data.backlogItems.filter((item: IProductBacklogItem) => !item.estimated).length : 0} Estimated`} ></Progress>
             <br />
@@ -112,7 +105,6 @@ export const CompleteSprintPopup: React.FC<CollectionCreateFormProps> = ({
           <Typography
           >{data.goal}</Typography>
         </Form.Item>
-
       </Form>
     </Modal>
   );

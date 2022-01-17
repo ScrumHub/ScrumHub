@@ -1,24 +1,13 @@
 import React from 'react';
 import { Button, Modal, Form, Input, Radio, Tag } from 'antd';
-import { IAddPBI } from '../../appstate/stateInterfaces';
 import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import { backlogColors, backlogPriorities } from '../utility/BodyRowsAndColumns';
 import { formItemLayoutWithOutLabel } from '../utility/commonInitValues';
-interface Values {
-  name: string;
-  priority: number;
-  acceptanceCriteria: string[];
-}
+import { IAddPBICollectionCreateFormProps } from './popupInterfaces';
+import { IAddPBI } from '../../appstate/stateInterfaces';
 
-interface CollectionCreateFormProps {
-  data: IAddPBI;
-  visible: boolean;
-  onCreate: (values: Values) => void;
-  onCancel: () => void;
-}
-
-export const AddPBIPopup: React.FC<CollectionCreateFormProps> = ({
+export const AddPBIPopup: React.FC<IAddPBICollectionCreateFormProps> = ({
   data,
   visible,
   onCreate,
@@ -37,7 +26,7 @@ export const AddPBIPopup: React.FC<CollectionCreateFormProps> = ({
       onOk={() => {
         form
           .validateFields()
-          .then((values: Values) => {
+          .then((values: IAddPBI) => {
             form.resetFields();
             onCreate(values);
           })

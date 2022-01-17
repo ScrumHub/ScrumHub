@@ -1,6 +1,6 @@
  import moment from "moment"
  import { initSprint, initTask } from "../appstate/initStateValues"
- import { canDropPBI, canDropTask, disabledDate, getIndex, isArrayValid, isBranchNotCreated, isMessageValid, isNameFilterValid, isPeopleFilterValid, updateRowKeys, validateString } from "../components/utility/commonFunctions"
+ import { canDropPBI, canDropTask, disabledDate, getIndex, isArrayValid, isBranchNotCreated, isMessageValid, isNameFilterValid, updateRowKeys, validateString } from "../components/utility/commonFunctions"
  
  test('can drop pbi', () => {
      expect(canDropPBI(11,12,13)).toBe(true);
@@ -40,14 +40,6 @@
  
  test('cannot create a branch', () => {
  expect(isBranchNotCreated("")).toBe(false)
- })
- 
- test('can filter by people', () => {
-   expect(isPeopleFilterValid(["New"])).toBe(true)
- })
- 
- test('cannot filter by people', () => {
- expect(isPeopleFilterValid([])).toBe(false)
  })
  
  test('array is valid', () => {

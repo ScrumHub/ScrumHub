@@ -20,7 +20,7 @@ import { SprintTableComponent } from './BacklogSprintTableComponent';
 import { initPBIFilter } from '../appstate/initStateValues';
 import { assignPerson, startTask, updatePBI, updateTask, fetchPBIsAndUnassigned } from './utility/BacklogHandlers';
 import { AddTaskPopup } from './popups/AddTaskPopup';
-import { CompleteSprintPopup } from './popups/CompleteSprint';
+import { CompleteSprintPopup } from './popups/CompleteSprintPopup';
 import { EditPBIPopup } from './popups/EditPBIPopup';
 import { EstimatePBIPopup } from './popups/EstimatePBIPopup';
 import { UpdateSprintPopup } from './popups/UpdateSprintPopup';

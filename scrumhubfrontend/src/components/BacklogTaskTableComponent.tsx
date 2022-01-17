@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import { ITask, IState } from "../appstate/stateInterfaces";
 import { initRowIds } from "./utility/commonInitValues";
 import { IRowIds } from "./utility/commonInterfaces";
-import { getTimeFromDate, isItemDefined } from "./utility/commonFunctions";
 import axios from "axios";
 import * as Actions from "../appstate/actions";
 import { store } from "../appstate/store";
@@ -14,7 +13,6 @@ import _ from "lodash";
 import React from "react";
 
 export const TaskTableComponent = React.memo((props: any) => {
-  const keys = useSelector((appState: IState) => appState.keys.pbiKeys as number[]);
   const token = useSelector((appState: IState) => appState.loginState.token);
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : "";
   useEffect(() => {

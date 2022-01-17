@@ -15,7 +15,6 @@ import SkeletonList, { CantAddToShButton, InShButton } from './utility/LoadAnima
 import { dateFormat, isArrayValid } from './utility/commonFunctions';
 const { Meta } = Card;
 
-
 export function Home() {
   const isLoggedIn = useSelector((appState: IState) => appState.loginState.isLoggedIn);
   const token = useSelector((appState: IState) => appState.loginState.token);

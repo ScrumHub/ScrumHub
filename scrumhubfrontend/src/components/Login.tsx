@@ -13,6 +13,7 @@ import { handleLogin } from "./utility/LoginAndMainHandlers";
 export function Login(props: any) {
   const loginState = useSelector((appState: IState) => appState.loginState);
   const [data, setData] = useState({ errorMessage: "", isLoading: false });
+  const error = useSelector((appState: IState) => appState.error);
   const navigate = useNavigate();
   useEffect(() => {
     const url = window.location.href;
@@ -43,12 +44,15 @@ export function Login(props: any) {
         })
         .catch((error:any) => {
           setData(loginData);
-
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loginState.isLoggedIn,loginState.token, data, loginState.proxy_url]);
-
+  useEffect(() => {
+    if (error.hasError) {
+      setData(loginData);
+    }
+  }, [error.hasError]);
   return (
     <Wrapper>
       <section className="container">

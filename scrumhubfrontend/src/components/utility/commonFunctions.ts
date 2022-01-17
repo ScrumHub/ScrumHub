@@ -22,10 +22,6 @@ export const isBranchNotCreated = (message: string): boolean => {
   return (!isNull(message) && message === "New");
 }
 
-export const isPeopleFilterValid = (peopleFilter: string[]) => {
-  return peopleFilter && peopleFilter.length > 0;
-}
-
 export const isArrayValid = (objectArray: any[]) => {
   return objectArray && objectArray.length > 0;
 }
@@ -33,7 +29,6 @@ export const isArrayValid = (objectArray: any[]) => {
 export const isItemDefined = (item: any) => {
   return typeof (item) !== "undefined";
 }
-
 
 export const validateString = (val: string) => {
   return val && val !== "" ? val : "";

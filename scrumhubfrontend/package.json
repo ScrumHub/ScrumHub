@@ -33,7 +33,9 @@
     "startWeb": "react-scripts --openssl-legacy-provider start",
     "build": "react-scripts --openssl-legacy-provider build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "docs": "typedoc --out ../FrontendDocumentation --entryPointStrategy expand ./src",
+    "coverage": "set SKIP_PREFLIGHT_CHECK=true && set CI=true && react-scripts test --coverage"
   },
   "eslintConfig": {
     "extends": [

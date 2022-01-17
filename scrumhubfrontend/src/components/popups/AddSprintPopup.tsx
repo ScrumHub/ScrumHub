@@ -1,22 +1,14 @@
 
 import React, { useState } from 'react';
 import { Modal, Form, Typography, Checkbox, Input, DatePicker } from 'antd';
-import { IProductBacklogItem, ISprint } from '../../appstate/stateInterfaces';
+import { ISprint } from '../../appstate/stateInterfaces';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import TextArea from 'antd/lib/input/TextArea';
 import _ from 'lodash';
 import { disabledDate } from '../utility/commonFunctions';
+import { IAddSprintCollectionCreateFormProps } from './popupInterfaces';
 
-interface CollectionCreateFormProps {
-  data: ISprint;
-  error: string;
-  pbiData: IProductBacklogItem[];
-  visible: boolean;
-  onCreate: (values: ISprint) => void;
-  onCancel: () => void;
-}
-
-export const AddSprintPopup: React.FC<CollectionCreateFormProps> = ({
+export const AddSprintPopup: React.FC<IAddSprintCollectionCreateFormProps> = ({
   data,
   error,
   pbiData,

@@ -47,7 +47,6 @@ export const updateStringList = (items: string[], item: string) => {
         const list = items.includes(item) ? items.filter((name: string) => name !== item) : items.concat(item);
         return (list);
     }
-
 };
 
 export function MenuWithPeople(props: any) {
@@ -62,7 +61,6 @@ export function MenuWithPeople(props: any) {
             setList(list);
             props.itemSelected(list);
         }
-
     };
     useEffect(() => {
         setList(props.peopleFilter);
@@ -87,6 +85,7 @@ export function MenuWithPeople(props: any) {
 }
 
 export function MenuWithSorting(props: any) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [sortedInfo, setSortedInfo] = useState([] as IFilters);
     const handleList = (item: any) => {
         if (item.columnKey === props.sortedInfo.columnKey && item.order === props.sortedInfo.order) {
@@ -109,7 +108,6 @@ export function MenuWithSorting(props: any) {
                 <div style={{ minWidth: "6vw" }} >{"Priority"}</div>
                 <SortAscendingOutlined />
             </Space>
-
         </MenuItem>
         <MenuItem key={"sprintDesc"} onClick={() => { handleList({ columnKey: "isCompleted", order: "descend" }); }}>
             <Space>
@@ -161,9 +159,7 @@ export function MenuWithFilters(props: any) {
         }
     };
     useEffect(() => {
-        if (props.filteredInfo) {
-            setFilteredInfo(props.filteredInfo);
-        }
+        if (props.filteredInfo) {setFilteredInfo(props.filteredInfo);  }
     }, [props.filteredInfo]);
     return (props.filteredInfo &&
         <Menu onMouseLeave={() => { props.onVisibilityChange(false); }}
@@ -208,7 +204,6 @@ export function MenuWithFilters(props: any) {
 export function MenuWithPeopleSave(props: any) {
     const ppl = props.people && props.people.list && props.people.list.length > 0 ? props.people.list : [] as IPerson[];
     const [nameList, setList] = useState(props.taskPeople.map((item: IPerson) => { return (item.login) }));
-
     const handleList = (item: IPerson) => {
         if (!nameList || nameList.length < 1) { setList([item.login]); props.itemSelected(item.login); }
         else {
@@ -216,9 +211,7 @@ export function MenuWithPeopleSave(props: any) {
             setList(list);
             props.itemSelected(item.login);
         }
-
     };
-
     return (<div><Menu className="peopleMenu">{ppl.map((item: IPerson) => {
         return (
             <MenuItem key={item.login} onClick={() => { handleList(item); }}>

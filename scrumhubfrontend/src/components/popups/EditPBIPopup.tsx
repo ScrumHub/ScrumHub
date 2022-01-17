@@ -1,27 +1,13 @@
 import React from 'react';
 import { Button, Modal, Form, Input, Popconfirm, message, Radio, Tag } from 'antd';
-import { IAddPBI } from '../../appstate/stateInterfaces';
 import { MinusCircleOutlined, PlusCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import { backlogColors, backlogPriorities } from '../utility/BodyRowsAndColumns';
 import { formItemLayoutWithOutLabel } from '../utility/commonInitValues';
+import { IEditPBICollectionCreateFormProps } from './popupInterfaces';
+import { IAddPBI } from '../../appstate/stateInterfaces';
 
-interface Values {
-  name: string;
-  priority: string;
-  acceptanceCriteria: string[];
-}
-
-interface CollectionCreateFormProps {
-  data: IAddPBI;
-  visible: boolean;
-  onCreate: (values: Values) => void;
-  onCancel: () => void;
-  onDelete: () => void;
-  onFinish: () => void;
-}
-
-export const EditPBIPopup: React.FC<CollectionCreateFormProps> = ({
+export const EditPBIPopup: React.FC<IEditPBICollectionCreateFormProps> = ({
   data,
   visible,
   onCreate,
@@ -63,7 +49,7 @@ export const EditPBIPopup: React.FC<CollectionCreateFormProps> = ({
         <Button key="SaveInEditPopup" type="primary" onClick={() => {
           form
             .validateFields()
-            .then((values: Values) => {
+            .then((values: IAddPBI) => {
               form.resetFields();
               onCreate(values);
             })
