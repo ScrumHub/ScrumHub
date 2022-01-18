@@ -6,4 +6,4 @@ COPY package-lock.json ./
 RUN npm install
 COPY . ./
 RUN npm run build
-CMD concurrently "cd server && npx --experimental-modules nodemon index.mjs" "node_modules/.bin/serve -s build"
+CMD concurrently "set NODE_OPTIONS='--no-warnings --loader ts-node/esm' && nodemon -e ts,tsx --exec node --loader ts-node/esm server/index.ts" "node_modules/.bin/serve -s build"
