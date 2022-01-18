@@ -26,12 +26,11 @@ export const TaskTableComponent = React.memo((props: any) => {
           //.then((response: any) => console.log("", getTimeFromDate(new Date()), isItemDefined(response.data) && isItemDefined(response.data.rate) && isItemDefined(response.data.rate.used) ? response.data.rate.used : 0))
           ;/*RATE LIMIT*/
         if (!_.isEqual(res.list, props.item.tasks)) {
-          clearInterval(timer);
-          store.dispatch(Actions.fetchPBITasksThunk({ token: token, ownerName: ownerName, pbiId: props.item && props.item.id ? props.item.id : 0 }));
+          store.dispatch(Actions.updateTasks({ ...props.item, tasks: res.list }));
         }
       }, 10000);
     return () => clearInterval(timer);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (<Table
     size="small"

@@ -300,6 +300,11 @@ export const reducerFunction = (initState: IState) => {
       let newState = _.cloneDeep(state);
       return updateTasksSWR(newState, payload.payload.response as ITaskList);
     },
+    [Actions.updateTasks.type]: (state: IState, payload: PayloadAction<any>) => {
+      let newState = _.cloneDeep(state);
+      const item = payload.payload as IProductBacklogItem;
+      return updateStatePBI(newState, item);
+    },
     [Actions.fetchPBITasksThunk.rejected.toString()]: (state: IState, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
       let newState = _.cloneDeep(state);
       return { ...newState, error: getError(payload.payload), loading: false };
