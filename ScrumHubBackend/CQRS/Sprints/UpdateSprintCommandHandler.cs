@@ -84,7 +84,9 @@ namespace ScrumHubBackend.CQRS.Sprints
             _dbContext.Update(dbSprint);
             _dbContext.SaveChanges();
 
-            return Task.FromResult(new Sprint(dbSprint, request, _dbContext, _mediator));
+#pragma warning disable CS8604 // For some reason VS complains that request can be null - but it is checked before
+            return Task.FromResult(new Sprint(dbSprint,  request, _dbContext, _mediator, true));
+#pragma warning restore CS8604
         }
     }
 }

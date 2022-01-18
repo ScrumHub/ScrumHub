@@ -58,7 +58,7 @@ namespace ScrumHubBackend.CQRS.Sprints
             _dbContext.Update(dbSprint);
             _dbContext.SaveChanges();
 
-            return Task.FromResult(new Sprint(dbSprint, request, _dbContext, _mediator));
+            return Task.FromResult(new Sprint(dbSprint, request, _dbContext, _mediator, true));
         }
     }
 }

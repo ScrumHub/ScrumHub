@@ -58,7 +58,7 @@ namespace ScrumHubBackend.CQRS.PBI
 
             pbi.UpdateAcceptanceCriteria(request.AcceptanceCriteria ?? new List<string>(), _dbContext);
 
-            return Task.FromResult(new CommunicationModel.BacklogItem(pbi.Id, request, _dbContext, _mediator));
+            return Task.FromResult(new CommunicationModel.BacklogItem(pbi.Id, request, _dbContext, _mediator, true));
         }
     }
 }

@@ -57,7 +57,7 @@ namespace ScrumHubBackend.CommunicationModel
         /// <summary>
         /// Constructor
         /// </summary>
-        public Sprint(DatabaseModel.Sprint dbSprint, ICommonInRepositoryRequest originalRequest, DatabaseContext dbContext, IMediator mediator)
+        public Sprint(DatabaseModel.Sprint dbSprint, ICommonInRepositoryRequest originalRequest, DatabaseContext dbContext, IMediator mediator, bool fillTasks)
         {
             SprintNumber = dbSprint.SprintNumber;
             Goal = dbSprint.Goal;
@@ -66,7 +66,7 @@ namespace ScrumHubBackend.CommunicationModel
             Status = dbSprint.Status;
 
             var relatedDbBacklogItem = dbContext.BacklogItems?.Where(pbi => pbi.SprintId == dbSprint.SprintNumber && pbi.RepositoryId == dbSprint.RepositoryId).ToList();
-            BacklogItems = relatedDbBacklogItem?.Select(pbi => new BacklogItem(pbi, originalRequest, dbContext, mediator)).ToList() ?? new List<BacklogItem>();
+            BacklogItems = relatedDbBacklogItem?.Select(pbi => new BacklogItem(pbi, originalRequest, dbContext, mediator, fillTasks)).ToList() ?? new List<BacklogItem>();
             IsCurrent = dbContext.Sprints?
                 .Where(
                     sprint => sprint.RepositoryId == dbSprint.RepositoryId &&

@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using ScrumHubBackend.CommunicationModel;
 using ScrumHubBackend.CommunicationModel.Common;
+using ScrumHubBackend.CQRS.Tasks;
 using ScrumHubBackend.CustomExceptions;
 using ScrumHubBackend.GitHubClient;
 
@@ -46,6 +47,24 @@ namespace ScrumHubBackend.CQRS.Sprints
             var sprintsForRepository = dbRepository.GetSprintsForRepository(_dbContext);
 
             var result = FilterAndPaginateSprints(request, sprintsForRepository ?? new List<DatabaseModel.Sprint>(), request.PageNumber, request.PageSize, request.CompletedFilter, request.OnePage);
+
+            var allPBIs = result.List.Aggregate((IEnumerable<BacklogItem>)new List<BacklogItem>(), (list, sprint) => list.Concat(sprint.BacklogItems ?? new List<BacklogItem>()));
+
+            var fillTasksCommand = new FillPBIsWithTasksCommand()
+            {
+                GitHubClient = gitHubClient,
+                Repository = repository,
+                DbRepository = dbRepository,
+                BacklogItems = allPBIs
+            };
+
+            var pbiTasks = _mediator.Send(fillTasksCommand, cancellationToken).Result;
+
+            foreach(var pbi in allPBIs)
+            {
+                pbi.AddTasks(pbiTasks[pbi.Id]);
+            }
+
             return Task.FromResult(result);
         }
 
@@ -64,10 +83,10 @@ namespace ScrumHubBackend.CQRS.Sprints
             int startIndex = pageSize * (pageNumber - 1);
             int endIndex = Math.Min(startIndex + pageSize, sortedSprints.Count());
             var paginatedSprints = sortedSprints.Take(new Range(startIndex, endIndex));
-            var transformedSprints = paginatedSprints.Select(sprint => new Sprint(sprint, request, _dbContext, _mediator));
+            var transformedSprints = paginatedSprints.Select(sprint => new Sprint(sprint, request, _dbContext, _mediator, false));
 
             int pagesCount = (int)Math.Ceiling(sortedSprints.Count() / (double)pageSize);
-            return new PaginatedList<Sprint>(transformedSprints, pageNumber, pageSize, pagesCount);
+            return new PaginatedList<Sprint>(transformedSprints.ToList(), pageNumber, pageSize, pagesCount);
         }
     }
 }
