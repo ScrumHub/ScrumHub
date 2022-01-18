@@ -20,26 +20,36 @@
 </a>
 <p>In the project directory, you can run:</p>
 
-<a href="#yarn-start" id="yarn-start" style="color: inherit; text-decoration: none;">
-  <h3><code>yarn start</code></h3>
+<a href="#npm-start" id="npm-start" style="color: inherit; text-decoration: none;">
+  <h3><code>npm start</code></h3>
 </a>
-<p>Runs the app in the development mode.<br>Open <a href="http://localhost:3000">http://localhost:3000</a> to view it in the browser.</p>
+<p>Runs the app in the development mode.<br>Open <a href="http://localhost:3000">http://localhost:3000</a> (unless REACT_APP_REDIRECT_URI was changed) to view it in the browser.</p>
 <p>The page will reload if you make edits.<br>You will also see any lint errors in the console.</p>
 
-<a href="#yarn-test" id="yarn-test" style="color: inherit; text-decoration: none;">
-  <h3><code>yarn test</code></h3>
+<a href="#npm-test" id="npm-test" style="color: inherit; text-decoration: none;">
+  <h3><code>npm test</code></h3>
 </a>
 <p>Launches the test runner in the interactive watch mode.<br>See the section about <a href="https://facebook.github.io/create-react-app/docs/running-tests">running tests</a> for more information.</p>
 
-<a href="#yarn-build" id="yarn-build" style="color: inherit; text-decoration: none;">
-  <h3><code>yarn build</code></h3>
+<a href="#npm-run-coverage" id="npm-run-coverage" style="color: inherit; text-decoration: none;">
+  <h3><code>npm run coverage</code></h3>
+</a>
+<p>Generates test coverage documentation in <code>coverage</code> directory.<br>In order to see the documentation, it is enough to open <code>index.html</code> file in the <code>lcov-report</code> subdirectory.<br>If the test runner was not launched, it is necessary to use <code>npm test -- --coverage --watchAll=false</code> instead of <code>npm run coverage</code>. Otherwise, running <code>npm run coverage</code> is enough to generate current documentation.</p>
+
+<a href="#npm-run-docs" id="npm-run-docs" style="color: inherit; text-decoration: none;">
+  <h3><code>npm run docs</code></h3>
+</a>
+<p>Generates documentation for the frontend in the <code>FrontendDocumentation</code> directory.<br>In order to see the documentation, it is enough to open <code>index.html</code> file using any browser.</p>
+
+<a href="#npm-build" id="npm-build" style="color: inherit; text-decoration: none;">
+  <h3><code>npm build</code></h3>
 </a>
 <p>Builds the app for production to the <code>build</code> folder.<br>It correctly bundles React in production mode and optimizes the build for the best performance.</p>
 <p>The build is minified and the filenames include the hashes.<br>Your app is ready to be deployed!</p>
 <p>See the section about <a href="https://facebook.github.io/create-react-app/docs/deployment">deployment</a> for more information.</p>
 
-<a href="#yarn-eject" id="yarn-eject" style="color: inherit; text-decoration: none;">
-  <h3><code>yarn eject</code></h3>
+<a href="#npm-eject" id="npm-eject" style="color: inherit; text-decoration: none;">
+  <h3><code>npm eject</code></h3>
 </a>
 <p><strong>Note: this is a one-way operation. Once you <code>eject</code>, you can’t go back!</strong></p>
 <p>If you aren’t satisfied with the build tool and configuration choices, you can <code>eject</code> at any time. This command will remove the single build dependency from your project.</p>
