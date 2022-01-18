@@ -1,5 +1,5 @@
 import { Empty, Table } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { ISprint, IState } from "../appstate/stateInterfaces";
@@ -12,7 +12,6 @@ import React from "react";
 
 export const SprintTableComponent = React.memo((props: any) =>{
   const keys = useSelector((appState: IState) => appState.keys.sprintKeys as number[]);
-  const [invisible, setInvisible] = useState(false);
   const updateExpandedRowKeys = (record: ISprint) => {
     store.dispatch(Actions.updateSprintKeys([record.sprintNumber]));
   };
@@ -27,7 +26,7 @@ export const SprintTableComponent = React.memo((props: any) =>{
   },[props.peopleFilter,props.nameFilter]);
   return (
     <DndProvider backend={HTML5Backend} key={"dnd"+props.keys}>
-      {!invisible && <Table
+       <Table
         locale={locales}
         key={props.keys}
         style={{ height: "auto",visibility:!props.loading && !isArrayValid(props.data)?"hidden":"visible"}}
@@ -60,5 +59,5 @@ export const SprintTableComponent = React.memo((props: any) =>{
             bodyType
           }) as any;
         }}
-      />}</DndProvider>);
+      /></DndProvider>);
 });

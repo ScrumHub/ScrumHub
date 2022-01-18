@@ -37,11 +37,7 @@ export interface ITask {
   status:string;
 }
 
-export interface ITaskList {
-  pageNumber: number;
-  pageCount: number;
-  pageSize: number;
-  realSize: number;
+export interface ITaskList extends IFetchedList {
   list: ITask[];
 }
 
@@ -92,11 +88,14 @@ export interface IPBIFilter {
   inSprint?: boolean;
 }
 
-export interface IProductBacklogList {
+export interface IFetchedList {
   pageNumber: number;
   pageCount: number;
   pageSize: number;
   realSize: number;
+}
+
+export interface IProductBacklogList extends IFetchedList{
   list: IProductBacklogItem[];
 }
 
@@ -111,11 +110,7 @@ export interface ISprint {
   isCompleted: boolean;
 }
 
-export interface ISprintList {
-  pageNumber: 1,
-  pageCount: 1,
-  pageSize: 10,
-  realSize: 10,
+export interface ISprintList extends IFetchedList{
   list: ISprint[];
 }
 
@@ -139,22 +134,12 @@ export interface IPerson {
   name: string|null;
 }
 
-
-
-export interface IPeopleList {
-  pageNumber: number;
-  pageCount: number;
-  pageSize: number;
-  realSize: number;
+export interface IPeopleList extends IFetchedList{
   list: IPerson[];
 }
 
 export type BodyRowTypes = ISprint | IProductBacklogItem | ITask;
-export interface IRepositoryList {
-  pageNumber: number;
-  pageCount: number;
-  pageSize: number;
-  realSize: number;
+export interface IRepositoryList extends IFetchedList{
   list: IRepository[];
 }
 export interface ILoginState {
@@ -190,5 +175,4 @@ export interface IState {
   currentUser: IPerson;
   keys:tableKeys;
   loadingKeys:tableKeys;
-  rateLimitLeft:number;
 };

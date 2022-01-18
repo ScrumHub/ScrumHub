@@ -5,6 +5,16 @@ import { validateUri } from "./stateUtilities";
 const path = require("path");
 require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
 
+export const errorObject = {
+  code: 0,
+  response: {
+    data: null,
+    message: "Connection error",
+    successful: false,
+    metadata: null,
+  },
+};
+
 export const initTask: ITask = {
   id: 0,
   name: "",
@@ -22,7 +32,7 @@ export const initTaskList: ITaskList = {
   realSize: 5,
   list: [],
 };
-export const initProductBacklogItem: IProductBacklogItem = {
+export const initPBItem: IProductBacklogItem = {
   id: 0,
   name: "Item",
   finished: false,
@@ -92,7 +102,7 @@ export const initSprint: ISprint = {
   sprintNumber: 1,
   title: "",
   goal: "",
-  backlogItems: [initProductBacklogItem],
+  backlogItems: [initPBItem],
   finishDate: "",
   isCurrent: false,
   status: "New",
@@ -120,7 +130,7 @@ export const initRepository: IRepository = {
   gitHubId: 0,
   hasAdminRights: true,
   alreadyInScrumHub: true,
-  backlogItems: [initProductBacklogItem],
+  backlogItems: [initPBItem],
   sprints: [initSprint],
   description: "",
   dateOfLastActivity: null,
@@ -203,5 +213,4 @@ export const initState: IState = {
   activeSprintNumber: -1,
   keys: initKeys,
   loadingKeys: initLoadingKeys,
-  rateLimitLeft: 5000
 };

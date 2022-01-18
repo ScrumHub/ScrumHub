@@ -4,12 +4,12 @@ import type { RequestResponse } from "./response";
 import * as Fetching from "./fetching";
 import { IAddPBI, IFilters, IFiltersAndToken, ILoginState, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList } from "./stateInterfaces";
 
-export const fetchRepositoriesThunk = createAsyncThunk<
+export const fetchReposThunk = createAsyncThunk<
   RequestResponse<IRepositoryList, number>,
   { filters: IFilters; token: string },
   { rejectValue: RequestResponse<IRepositoryList, number> }
->("fetchRepositories", async (item: IFiltersAndToken, { rejectWithValue }) => {
-  const response: RequestResponse<IRepositoryList, number> = await Fetching.fetchRepositories(item.filters, item.token);
+>("fetchRepos", async (item: IFiltersAndToken, { rejectWithValue }) => {
+  const response: RequestResponse<IRepositoryList, number> = await Fetching.fetchRepos(item.filters, item.token);
   if (response.code !== 200) { return rejectWithValue(response as RequestResponse<IRepositoryList, number>); }
   return response as RequestResponse<IRepositoryList, number>;
 });
@@ -19,7 +19,7 @@ export const fetchPeopleThunk = createAsyncThunk<
   { ownerName: string; token: string },
   { rejectValue: RequestResponse<IPeopleList, number> }
 >("fetchPeople", async (item: { ownerName: string; token: string }, { rejectWithValue }) => {
-  const response: RequestResponse<IRepositoryList, number> = await Fetching.fetchPeople(item.ownerName, item.token);
+  const response: RequestResponse<IPeopleList, number> = await Fetching.fetchPeople(item.ownerName, item.token);
   if (response.code !== 200) { return rejectWithValue(response as RequestResponse<IPeopleList, number>); }
   return response as RequestResponse<IPeopleList, number>;
 });
@@ -29,7 +29,7 @@ export const getCurrentUserThunk = createAsyncThunk<
   { token: string },
   { rejectValue: RequestResponse<IPeopleList, number> }
 >("getCurrentUser", async (item: { token: string }, { rejectWithValue }) => {
-  const response: RequestResponse<IRepositoryList, number> = await Fetching.getCurrentUser(item.token);
+  const response: RequestResponse<IPeopleList, number> = await Fetching.getCurrentUser(item.token);
   if (response.code !== 200) { return rejectWithValue(response as RequestResponse<IPeopleList, number>); }
   return response as RequestResponse<IPeopleList, number>;
 });
@@ -44,7 +44,7 @@ export const addRepositoryThunk = createAsyncThunk<
     token: string;
   }, { rejectWithValue }
 ) => {
-  const response: RequestResponse<IRepository, number> = await Fetching.addRepository(repoWithToken.id, repoWithToken.token);
+  const response: RequestResponse<IRepository, number> = await Fetching.addRepo(repoWithToken.id, repoWithToken.token);
   if (response.code !== 201) { return rejectWithValue(response as RequestResponse<IRepository, number>); }
   return response as RequestResponse<IRepository, number>;
 });
@@ -176,16 +176,6 @@ export const addSprintThunk = createAsyncThunk<
 });
 
 //TASKS
-export const fetchTasksThunk = createAsyncThunk<
-  RequestResponse<ITaskList, number>,
-  { token: string, ownerName: string; filters: IFilters; },
-  { rejectValue: RequestResponse<ITaskList, number> }
->("fetchTasks", async (item: { token: string; ownerName: string; filters: IFilters; }, { rejectWithValue }) => {
-  const response: RequestResponse<ITaskList, number> = await Fetching.fetchTasks(item.token, item.ownerName, item.filters,);
-  if (response.code !== 200) { return rejectWithValue(response as RequestResponse<ITaskList, number>); }
-  return response as RequestResponse<ITaskList, number>;
-});
-
 export const fetchPBITasksThunk = createAsyncThunk<
   RequestResponse<ITaskList, number>,
   { token: string, ownerName: string; pbiId: number; },
@@ -202,16 +192,6 @@ export const addUnassignedTasksToPBI = createAsyncThunk<
   { rejectValue: RequestResponse<ITaskList, number> }
 >("addUnassignedTasksToPBI", async (item: { token: string; ownerName: string; pbiId: number; }, { rejectWithValue }) => {
   const response: RequestResponse<ITaskList, number> = await Fetching.addUnassignedTasksToPBI(item.token, item.ownerName, item.pbiId);
-  if (response.code !== 200) { return rejectWithValue(response as RequestResponse<ITaskList, number>); }
-  return response as RequestResponse<ITaskList, number>;
-});
-
-export const addTasksToSprintThunk = createAsyncThunk<
-  RequestResponse<ITaskList, number>,
-  { token: string, ownerName: string; pbiId: number; },
-  { rejectValue: RequestResponse<ITaskList, number> }
->("addTasksToSprint", async (item: { token: string; ownerName: string; pbiId: number; }, { rejectWithValue }) => {
-  const response: RequestResponse<ITaskList, number> = await Fetching.addTasksToSprint(item.token, item.ownerName, item.pbiId);
   if (response.code !== 200) { return rejectWithValue(response as RequestResponse<ITaskList, number>); }
   return response as RequestResponse<ITaskList, number>;
 });
@@ -250,22 +230,12 @@ export const assignTaskToPBIThunk = createAsyncThunk<
   return response as RequestResponse<ITask, number>;
 });
 
-export const assignPersonToTaskThunk = createAsyncThunk<
+export const updatePersonInTaskThunk = createAsyncThunk<
   RequestResponse<ITask, number>,
-  { token: string, ownerName: string; login: string; taskId: number },
+  { token: string, ownerName: string; login: string; taskId: number, isAssign:boolean },
   { rejectValue: RequestResponse<ITask, number> }
->("assignPersonToTaskThunk", async (item: { token: string; ownerName: string; login: string; taskId: number; }, { rejectWithValue }) => {
-  const response: RequestResponse<ITask, number> = await Fetching.assignPersonToTask(item.token, item.ownerName, item.login, item.taskId);
-  if (response.code !== 200) { return rejectWithValue(response as RequestResponse<ITask, number>); }
-  return response as RequestResponse<ITask, number>;
-});
-
-export const unassignPersonToTaskThunk = createAsyncThunk<
-  RequestResponse<ITask, number>,
-  { token: string, ownerName: string; login: string; taskId: number },
-  { rejectValue: RequestResponse<ITask, number> }
->("unassignPersonToTaskThunk", async (item: { token: string; ownerName: string; login: string; taskId: number; }, { rejectWithValue }) => {
-  const response: RequestResponse<ITask, number> = await Fetching.unassignPersonToTask(item.token, item.ownerName, item.login, item.taskId);
+>("updatePersonInTaskThunk", async (item: { token: string; ownerName: string; login: string; taskId: number;isAssign:boolean; }, { rejectWithValue }) => {
+  const response: RequestResponse<ITask, number> = await Fetching.updatePersonInTask(item.token, item.ownerName, item.login, item.taskId,item.isAssign);
   if (response.code !== 200) { return rejectWithValue(response as RequestResponse<ITask, number>); }
   return response as RequestResponse<ITask, number>;
 });
@@ -278,15 +248,6 @@ export const startTaskThunk = createAsyncThunk<
   const response: RequestResponse<ITask, number> = await Fetching.startBranchForTask(item.token, item.ownerName, item.hotfix, item.taskId);
   if (response.code !== 200) { return rejectWithValue(response as RequestResponse<ITask, number>); }
   return response as RequestResponse<ITask, number>;
-});
-
-export const getRateLimitThunk = createAsyncThunk<
-  RequestResponse<any, any>,{token:string,url:string},
-  { rejectValue: RequestResponse<any, any> }
->("getRateLimit", async (item:{token:string,url:string,}, { rejectWithValue }) => {
-  const response: RequestResponse<any, any> = await Fetching.getRateLimit(item.token, item.url);
-  if (response.code !== 200) { return rejectWithValue(response as RequestResponse<any, any>); }
-  return response as RequestResponse<any, any>;
 });
 
 export const login = createAction<any>("login");

@@ -6,9 +6,8 @@ import { isArrayValid } from "./commonFunctions";
 
 export const assignPerson = (person: string, taskId: number, taskPeople: IPerson[], token: string, ownerName: string) => {
   const names = taskPeople.map((item: IPerson) => { return (item.login) });
-  store.dispatch(taskPeople.length < 1 || !names.includes(person) ?
-    Actions.assignPersonToTaskThunk({ token: token, ownerName: ownerName, login: person, taskId: taskId, }) :
-    Actions.unassignPersonToTaskThunk({ token: token, ownerName: ownerName, login: person, taskId: taskId, }));
+  store.dispatch(Actions.updatePersonInTaskThunk({ token: token, ownerName: ownerName, login: person, taskId: taskId,
+    isAssign:taskPeople.length < 1 || !names.includes(person) })); 
 }
 
 export const startTask = (token: string, ownerName: string, hotfix: boolean, taskId: number) => {

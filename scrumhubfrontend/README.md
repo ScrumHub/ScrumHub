@@ -22,7 +22,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
-### ``npm start`
+### `npm start`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) (unless REACT_APP_REDIRECT_URI was changed) to view it in the browser.
@@ -35,13 +35,13 @@ You will also see any lint errors in the console.
 Launches the test runner in the interactive watch mode.\
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm coverage`
+### `npm run coverage`
 
 Generates test coverage documentation in `coverage` directory.\
 In order to see the documentation, it is enough to open `index.html` file in the `lcov-report` subdirectory.\
-If the test runner was not launched, it is necessary to use `npm test -- --coverage --watchAll=false` instead of `npm coverage`. Otherwise, running `npm coverage` is enough to generate current documentation.
+If the test runner was not launched, it is necessary to use `npm test -- --coverage --watchAll=false` instead of `npm run coverage`. Otherwise, running `npm run coverage` is enough to generate current documentation.
 
-### `npm docs`
+### `npm run docs`
 
 Generates documentation for the frontend in the `FrontendDocumentation` directory.\
 In order to see the documentation, it is enough to open `index.html` file using any browser.

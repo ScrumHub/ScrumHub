@@ -2,9 +2,10 @@ import type { APIResponse, RequestResponse } from "./response";
 import config from "../configuration/config";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import axios, { AxiosResponse } from "axios";
-import { IAddPBI, IFilters, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList } from "./stateInterfaces";
+import { IAddPBI, IFilters, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList } from "./stateInterfaces";
 import { filterUrlString, getHeader, getHeaderAcceptAll, getHeaderWithContent } from "./stateUtilities";
 import { isNull } from "lodash";
+import { errorObject } from "./initStateValues";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function getResponse<T, K>(
@@ -18,17 +19,8 @@ export async function getResponse<T, K>(
     };
   } catch (error: any) {
     if (error instanceof TypeError || error.message === "Network Error") {
-      return {
-        code: 0,
-        response: {
-          message: "Connection error",
-          successful: false,
-          data: null,
-          metadata: null,
-        },
-      };
+      return errorObject;
     }
-
     let response_1 = error.response;
     return {
       code: response_1.status,
@@ -37,7 +29,7 @@ export async function getResponse<T, K>(
   }
 }
 
-export function fetchRepositories(filters: IFilters, token: string
+export function fetchRepos(filters: IFilters, token: string
 ): Promise<RequestResponse<IRepositoryList, number>> {
   return getResponse(
     axios.get(
@@ -47,7 +39,7 @@ export function fetchRepositories(filters: IFilters, token: string
   );
 }
 
-export function addRepository(id: number, token: string,
+export function addRepo(id: number, token: string,
 ): Promise<RequestResponse<IRepository, number>> {
   return getResponse(
     axios.post(
@@ -58,18 +50,8 @@ export function addRepository(id: number, token: string,
   );
 }
 
-export function fetchPBIs(ownerName: any, token: string, filters: IFilters
-): Promise<RequestResponse<IProductBacklogList, number>> {
-  return getResponse(
-    axios.get(
-      `${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}?${filterUrlString(filters)}`,
-      { headers: getHeader(token, config) }
-    )
-  );
-}
-
 export function fetchPeople(ownerName: string, token: string
-): Promise<RequestResponse<IProductBacklogList, number>> {
+): Promise<RequestResponse<IPeopleList, number>> {
   return getResponse(
     axios.get(
       `${config.backend.ip}:${config.backend.port}/api/People/${ownerName}`,
@@ -91,11 +73,21 @@ export function getCurrentUser(token: string
   );
 }
 
-export function finishPBI(ownerName: string, token: string, pbild: number
+export function fetchPBIs(ownerName: any, token: string, filters: IFilters
+): Promise<RequestResponse<IProductBacklogList, number>> {
+  return getResponse(
+    axios.get(
+      `${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}?${filterUrlString(filters)}`,
+      { headers: getHeader(token, config) }
+    )
+  );
+}
+
+export function finishPBI(ownerName: string, token: string, pbiId: number
 ): Promise<RequestResponse<IProductBacklogItem, number>> {
   return getResponse(
     axios.patch(
-      `${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}/${pbild}/finish`,
+      `${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}/${pbiId}/finish`,
       {}, { headers: getHeader(token, config) }
     )
   );
@@ -176,7 +168,6 @@ export function fetchOneSprint(token: string, ownerName: string, sprintNumber: n
   );
 }
 
-
 export function updateOneSprint(token: string, ownerName: string, sprintNumber: number, sprint: any
 ): Promise<RequestResponse<ISprint, number>> {
   return getResponse(
@@ -206,19 +197,8 @@ export function addSprint(token: string, ownerName: string, sprint: any
     )
   );
 }
-
 //TASKS
-export function fetchTasks(token: string, ownerName: string, filters: IFilters,
-): Promise<RequestResponse<ITaskList, number>> {
-  return getResponse(
-    axios.get(
-      `${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}?${filterUrlString(filters)}`,
-      { headers: getHeader(token, config) }
-    )
-  );
-}
-
-export function fetchPBITasks(token: string, ownerName: string, pbiId: number,
+export function fetchPBITasks(token: string, ownerName: string, pbiId: number|null,
 ): Promise<RequestResponse<ITaskList, number>> {
   return getResponse(
     axios.get(
@@ -229,16 +209,6 @@ export function fetchPBITasks(token: string, ownerName: string, pbiId: number,
 }
 
 export function addUnassignedTasksToPBI(token: string, ownerName: string, pbiId: number,
-): Promise<RequestResponse<ITaskList, number>> {
-  return getResponse(
-    axios.get(
-      `${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/PBI/${pbiId}`,
-      { headers: getHeader(token, config) }
-    )
-  );
-}
-
-export function addTasksToSprint(token: string, ownerName: string, pbiId: number,
 ): Promise<RequestResponse<ITaskList, number>> {
   return getResponse(
     axios.get(
@@ -262,7 +232,7 @@ export function addTask(token: string, ownerName: string, pbiId: number, name: s
 }
 
 export function getPBINames(ownerName: any, token: string, filters: IFilters
-): Promise<RequestResponse<IProductBacklogList[], number>> {
+): Promise<RequestResponse<IProductBacklogList, number>> {
   return getResponse(
     axios.get(
       `${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}?${filterUrlString(filters)}`,
@@ -271,7 +241,7 @@ export function getPBINames(ownerName: any, token: string, filters: IFilters
   );
 }
 
-export function assignTaskToPBI(token: string, ownerName: string, pbiId: number, taskId: number
+export function assignTaskToPBI(token: string, ownerName: string, pbiId: number|null, taskId: number
 ): Promise<RequestResponse<ITask, number>> {
   return getResponse(
     axios.patch(
@@ -280,21 +250,11 @@ export function assignTaskToPBI(token: string, ownerName: string, pbiId: number,
     )
   );
 }
-export function assignPersonToTask(token: string, ownerName: string, login: string, taskId: number
+export function updatePersonInTask(token: string, ownerName: string, login: string, taskId: number, isAssign: boolean
 ): Promise<RequestResponse<ITask, number>> {
   return getResponse(
     axios.patch(
-      `${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/${taskId}/assignperson`,
-      { "login": login }, { headers: getHeader(token, config) }
-    )
-  );
-}
-
-export function unassignPersonToTask(token: string, ownerName: string, login: string, taskId: number
-): Promise<RequestResponse<ITask, number>> {
-  return getResponse(
-    axios.patch(
-      `${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/${taskId}/unassignperson`,
+      `${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/${taskId}/${isAssign ? "" : "un"}assignperson`,
       { "login": login }, { headers: getHeader(token, config) }
     )
   );
@@ -308,8 +268,4 @@ export function startBranchForTask(token: string, ownerName: string, hotfix: boo
       {}, { headers: getHeader(token, config) }
     )
   );
-}
-
-export function getRateLimit(token: string, url: string): Promise<RequestResponse<any, any>> {
-  return getResponse(axios.get(url, { headers: { "Accept": "application/vnd.github.v3+json", "Authorization": "token " + token } }));
 }

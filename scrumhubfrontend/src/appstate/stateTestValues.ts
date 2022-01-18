@@ -1,10 +1,11 @@
 
 import { initKeys, initLoadingKeys } from "../components/utility/commonInitValues";
-import { initError, initPeopleList, initPerson, initProductBacklogList, initRepository, initRepositoryList, initSprint, initSprintList, initTaskList } from "./initStateValues";
-import { ILoginState, IRepositoryList, IState } from "./stateInterfaces";
+import config from "../configuration/config";
+import { initError, initPeopleList, initPerson, initPBItem, initProductBacklogList, initRepository, initRepositoryList, initSprint, initSprintList, initTaskList, initTask } from "./initStateValues";
+import { IFetchedList, ILoginState, IProductBacklogList, IRepositoryList, ISprint, ISprintList, IState, ITaskList } from "./stateInterfaces";
 import { validateUri } from "./stateUtilities";
 
-export const testLoginState:ILoginState = {
+export const testLoginState: ILoginState = {
   isLoggedIn: false,
   token: "",
   client_id: validateUri(process.env.REACT_APP_CLIENT_ID),
@@ -13,7 +14,7 @@ export const testLoginState:ILoginState = {
   proxy_url: validateUri(process.env.REACT_APP_PROXY_URL)
 }
 
-export const initTestState : IState= {
+export const initTestState: IState = {
   loading: false,
   error: initError,
   pbiPage: initProductBacklogList,
@@ -38,13 +39,66 @@ export const initTestState : IState= {
   keys: initKeys,
   loadingKeys: initLoadingKeys,
   loginState: testLoginState,
-  rateLimitLeft: 5000
 };
 
-  export const testRepositoryList: IRepositoryList = {
-    pageNumber: 1,
-    pageCount: 1,
-    pageSize: 10,
-    realSize: 0,
-    list: [initRepository],
-  }
+export const testRepositoryList: IRepositoryList  = {
+  pageNumber: 1,
+  pageCount: 1,
+  pageSize: 10,
+  realSize: 0,
+  list: [initRepository],
+}
+
+export const testPBIList: IProductBacklogList = {
+  pageNumber: 1,
+  pageCount: 1,
+  pageSize: 10,
+  realSize: 0,
+  list: [initPBItem],
+}
+
+export const testSprintList: ISprintList = {
+  pageNumber: 1,
+  pageCount: 1,
+  pageSize: 10,
+  realSize: 0,
+  list: [initSprint],
+}
+
+export const testTaskList: ITaskList = {
+  pageNumber: 1,
+  pageCount: 1,
+  pageSize: 10,
+  realSize: 0,
+  list: [initTask],
+}
+
+export const tstConf = {
+  ownerName:"ownerName",
+  url: `${config.backend.ip}:${config.backend.port}/api`,
+  pbiId:0,
+  sprintNr:0,
+  hours:2,
+  editedPBI:{
+    "name": initPBItem.name,
+    "priority": initPBItem.priority,
+    "acceptanceCriteria": initPBItem.acceptanceCriteria
+  },
+  name:"taskName",
+  taskId:0,
+  login:"userLogin",
+  isAssign:true,
+  hotfix:true
+}
+
+export const testConnectionError = {
+  "code": 0,
+  "response": {
+    "data": null,
+    "message": "Connection error",
+    "metadata": null,
+    "successful": false,
+  },
+}
+
+export const testFilters = { pageSize: config.defaultFilters.page, pageNumber: config.defaultFilters.size }

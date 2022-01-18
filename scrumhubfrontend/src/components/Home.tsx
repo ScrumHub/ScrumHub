@@ -42,7 +42,7 @@ export function Home() {
     if (isLoggedIn && refreshRequired) {
       try {
         store.dispatch(
-          Actions.fetchRepositoriesThunk({
+          Actions.fetchReposThunk({
             filters: {
               pageSize: config.defaultFilters.size,
               pageNumber: config.defaultFilters.page,
@@ -65,7 +65,7 @@ export function Home() {
       setFetching(true);
       try {
         store.dispatch(
-          Actions.fetchRepositoriesThunk({
+          Actions.fetchReposThunk({
             filters: {
               ...filters,
               pageNumber: filters.pageNumber,
