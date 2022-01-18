@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using ScrumHubBackend.CommunicationModel;
 using ScrumHubBackend.CommunicationModel.Common;
+using ScrumHubBackend.CQRS.Tasks;
 using ScrumHubBackend.CustomExceptions;
 using ScrumHubBackend.GitHubClient;
 
@@ -45,6 +46,21 @@ namespace ScrumHubBackend.CQRS.PBI
 
             var paginatedPBIs = FilterAndPaginatePBIs(request, _dbContext.BacklogItems?.Where(pbi => pbi.RepositoryId == dbRepository.Id).ToList() ?? new List<DatabaseModel.BacklogItem>(), request.PageNumber, request.PageSize, request.NameFilter, request.FinishedFilter, request.EstimatedFilter, request.InSprintFilter, request.OnePage);
 
+            var fillTasksCommand = new FillPBIsWithTasksCommand()
+            {
+                GitHubClient = gitHubClient,
+                Repository = repository,
+                DbRepository = dbRepository,
+                BacklogItems = paginatedPBIs.List
+            };
+
+            var pbiTasks = _mediator.Send(fillTasksCommand, cancellationToken).Result;
+
+            foreach (var pbi in paginatedPBIs.List)
+            {
+                pbi.AddTasks(pbiTasks[pbi.Id]);
+            }
+
             return Task.FromResult(paginatedPBIs);
         }
 
@@ -66,10 +82,10 @@ namespace ScrumHubBackend.CQRS.PBI
             int startIndex = pageSize * (pageNumber - 1);
             int endIndex = Math.Min(startIndex + pageSize, sortedPBIs.Count());
             var paginatedPBIs = sortedPBIs.Take(new Range(startIndex, endIndex));
-            var transformedPBIs = paginatedPBIs.Select(pbi => new BacklogItem(pbi.Id, request, _dbContext, _mediator));
+            var transformedPBIs = paginatedPBIs.Select(pbi => new BacklogItem(pbi.Id, request, _dbContext, _mediator, false));
 
             int pagesCount = (int)Math.Ceiling(sortedPBIs.Count() / (double)pageSize);
-            return new PaginatedList<BacklogItem>(transformedPBIs, pageNumber, pageSize, pagesCount);
+            return new PaginatedList<BacklogItem>(transformedPBIs.ToList(), pageNumber, pageSize, pagesCount);
         }
     }
 }

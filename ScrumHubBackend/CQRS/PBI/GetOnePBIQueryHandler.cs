@@ -47,7 +47,7 @@ namespace ScrumHubBackend.CQRS.PBI
             if (pbi == null || pbi?.RepositoryId != dbRepository.Id)
                 throw new NotFoundException("Backlog item not found in ScrumHub");
 
-            return Task.FromResult(new BacklogItem(pbi.Id, request, _dbContext, _mediator));
+            return Task.FromResult(new BacklogItem(pbi.Id, request, _dbContext, _mediator, true));
         }
     }
 }

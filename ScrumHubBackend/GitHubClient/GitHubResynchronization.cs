@@ -14,7 +14,7 @@ namespace ScrumHubBackend.GitHubClient
         /// Resynchronizes issued between GitHub and ScrumHub
         /// </summary>
         /// <exception cref="CustomExceptions.NotFoundException">Repository not found</exception>
-        void ResynchronizeIssues(Octokit.Repository repo, IGitHubClient gitHubClient, DatabaseContext dbContext);
+        void ResynchronizeIssues(Octokit.Repository repo, IEnumerable<Issue> repositoryIssues, IGitHubClient gitHubClient, DatabaseContext dbContext);
     }
 
     /// <summary>
@@ -23,20 +23,13 @@ namespace ScrumHubBackend.GitHubClient
     public class GitHubResynchronization : IGitHubResynchronization
     {
         /// <inheritdoc/>
-        public void ResynchronizeIssues(Octokit.Repository repository, IGitHubClient gitHubClient, DatabaseContext dbContext)
+        public void ResynchronizeIssues(Octokit.Repository repository, IEnumerable<Issue> repositoryIssues, IGitHubClient gitHubClient, DatabaseContext dbContext)
         {
-            var repositoryIssueRequest = new RepositoryIssueRequest
-            {
-                State = ItemStateFilter.All,
-            };
-
             var repositoryPRsRequest = new PullRequestRequest
             {
                 State = ItemStateFilter.All
             };
 
-            var issuesAndPullRequests = gitHubClient.Issue.GetAllForRepository(repository.Id, repositoryIssueRequest).Result;
-            var repositoryIssues = issuesAndPullRequests.Where(iapr => iapr.PullRequest == null);
             var repositoryPRsToDefaultBranch = 
                 gitHubClient.PullRequest.GetAllForRepository(repository.Id, repositoryPRsRequest)
                     .Result.Where( pr => 

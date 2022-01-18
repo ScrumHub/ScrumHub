@@ -51,6 +51,14 @@ namespace ScrumHubBackendTests.CQRS.Sprints
                     )
                 );
 
+            mediatorMock.Setup(
+                m => m.Send(It.IsAny<FillPBIsWithTasksCommand>(), It.IsAny<CancellationToken>())
+                ).Returns(
+                    Task.FromResult(
+                        new Dictionary<long, IEnumerable<ScrumHubBackend.CommunicationModel.SHTask>>()
+                    )
+                );
+
             var query = new GetSprintsQuery()
             {
 
@@ -58,10 +66,12 @@ namespace ScrumHubBackendTests.CQRS.Sprints
 
             var handler = new GetSprintsQueryHandler(loggerMock.Object, gitHubClientFactoryMock.Object, dbContextMock.Object, mediatorMock.Object);
 
-            var res1 = handler.FilterAndPaginateSprints(query, sprintsData, 1, 3, null, null);
-            var res2 = handler.FilterAndPaginateSprints(query, sprintsData, 2, 3, null, null);
-            var res3 = handler.FilterAndPaginateSprints(query, sprintsData, 3, 3, null, null);
-            var res4 = handler.FilterAndPaginateSprints(query, sprintsData, 4, 3, null, null);
+#pragma warning disable CS8625 // Skipping warning on nulls passed to variables not marked with ? since their ussage is mocked
+            var res1 = handler.FilterAndPaginateSprints(query, sprintsData, 1, 3, null, null, null, null, null);
+            var res2 = handler.FilterAndPaginateSprints(query, sprintsData, 2, 3, null, null, null, null, null);
+            var res3 = handler.FilterAndPaginateSprints(query, sprintsData, 3, 3, null, null, null, null, null);
+            var res4 = handler.FilterAndPaginateSprints(query, sprintsData, 4, 3, null, null, null, null, null);
+#pragma warning restore CS8625
 
             Assert.Equal(3, res1.RealSize);
             Assert.Equal(3, res2.RealSize);
@@ -78,6 +88,7 @@ namespace ScrumHubBackendTests.CQRS.Sprints
             Assert.Equal(6, res2.List.ElementAt(2).SprintNumber);
 
             Assert.Empty(res4.List);
+            
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using MediatR;
+using Octokit;
 using ScrumHubBackend.Common;
 using ScrumHubBackend.CQRS;
+using ScrumHubBackend.CQRS.Tasks;
 
 namespace ScrumHubBackend.CommunicationModel
 {
@@ -57,7 +59,7 @@ namespace ScrumHubBackend.CommunicationModel
         /// <summary>
         /// Constructor
         /// </summary>
-        public Sprint(DatabaseModel.Sprint dbSprint, ICommonInRepositoryRequest originalRequest, DatabaseContext dbContext, IMediator mediator)
+        public Sprint(DatabaseModel.Sprint dbSprint, IGitHubClient gitHubClient, Octokit.Repository repository, DatabaseModel.Repository dbRepository, ICommonInRepositoryRequest originalRequest, DatabaseContext dbContext, IMediator mediator, bool fillTasks)
         {
             SprintNumber = dbSprint.SprintNumber;
             Goal = dbSprint.Goal;
@@ -66,7 +68,26 @@ namespace ScrumHubBackend.CommunicationModel
             Status = dbSprint.Status;
 
             var relatedDbBacklogItem = dbContext.BacklogItems?.Where(pbi => pbi.SprintId == dbSprint.SprintNumber && pbi.RepositoryId == dbSprint.RepositoryId).ToList();
-            BacklogItems = relatedDbBacklogItem?.Select(pbi => new BacklogItem(pbi, originalRequest, dbContext, mediator)).ToList() ?? new List<BacklogItem>();
+            BacklogItems = relatedDbBacklogItem?.Select(pbi => new BacklogItem(pbi, originalRequest, dbContext, mediator, false)).ToList() ?? new List<BacklogItem>();
+
+            if(fillTasks)
+            {
+                var fillTasksCommand = new FillPBIsWithTasksCommand()
+                {
+                    GitHubClient = gitHubClient,
+                    Repository = repository,
+                    DbRepository = dbRepository,
+                    BacklogItems = BacklogItems
+                };
+
+                var pbiTasks = mediator.Send(fillTasksCommand).Result;
+
+                foreach (var pbi in BacklogItems)
+                {
+                    pbi.AddTasks(pbiTasks[pbi.Id]);
+                }
+            }
+
             IsCurrent = dbContext.Sprints?
                 .Where(
                     sprint => sprint.RepositoryId == dbSprint.RepositoryId &&

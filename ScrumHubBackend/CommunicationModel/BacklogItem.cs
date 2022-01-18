@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using ScrumHubBackend.CQRS;
 using ScrumHubBackend.CQRS.Tasks;
+using System.Linq;
 
 namespace ScrumHubBackend.CommunicationModel
 {
@@ -62,7 +63,16 @@ namespace ScrumHubBackend.CommunicationModel
         /// <summary>
         /// List of tasks for PBI
         /// </summary>
-        public IList<SHTask>? Tasks { get; set; } = new List<SHTask>();
+        public List<SHTask>? Tasks { get; set; } = new List<SHTask>();
+
+        /// <summary>
+        /// Adds tasks to the PBI
+        /// </summary>
+        /// <param name="tasks">Tasks to add</param>
+        public void AddTasks(IEnumerable<SHTask> tasks)
+        {
+            Tasks?.AddRange(tasks);
+        }
 
         /// <summary>
         /// Constructor
@@ -72,14 +82,14 @@ namespace ScrumHubBackend.CommunicationModel
         /// <summary>
         /// Constructor
         /// </summary>
-        public BacklogItem(long dbId, ICommonInRepositoryRequest originalRequst, DatabaseContext dbContext, IMediator mediator) : this(dbContext.BacklogItems?.Find(dbId), originalRequst, dbContext, mediator)
+        public BacklogItem(long dbId, ICommonInRepositoryRequest originalRequst, DatabaseContext dbContext, IMediator mediator, bool fillTasks) : this(dbContext.BacklogItems?.Find(dbId), originalRequst, dbContext, mediator, fillTasks)
         {
         }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public BacklogItem(DatabaseModel.BacklogItem? dbPBI, ICommonInRepositoryRequest originalRequst, DatabaseContext dbContext, IMediator mediator)
+        public BacklogItem(DatabaseModel.BacklogItem? dbPBI, ICommonInRepositoryRequest originalRequst, DatabaseContext dbContext, IMediator mediator, bool fillTasks)
         {
             Id = dbPBI?.Id ?? 0;
             Name = dbPBI?.Name ?? String.Empty;
@@ -92,15 +102,18 @@ namespace ScrumHubBackend.CommunicationModel
 
             SprintNumber = dbPBI?.SprintId ?? null;
 
-            var tasksQuery = new GetTasksForPBIQuery()
+            if(fillTasks)
             {
-                AuthToken = originalRequst.AuthToken,
-                RepositoryOwner = originalRequst.RepositoryOwner,
-                RepositoryName = originalRequst.RepositoryName,
-                PBIId = Id
-            };
-
-            Tasks = mediator.Send(tasksQuery).Result.List.ToList();
+                var tasksQuery = new GetTasksForPBIQuery()
+                {
+                    AuthToken = originalRequst.AuthToken,
+                    RepositoryOwner = originalRequst.RepositoryOwner,
+                    RepositoryName = originalRequst.RepositoryName,
+                    PBIId = Id
+                };
+                Tasks = mediator.Send(tasksQuery).Result.List.ToList();
+            }
+            
         }
     }
 }
