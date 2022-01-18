@@ -1,23 +1,9 @@
 import React from 'react';
-import { Button, Modal, Form, Input, InputNumber, Space } from 'antd';
-import { IFilters } from '../../appstate/stateInterfaces';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Modal, Form, Input } from 'antd';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
+import { IAddTaskCollectionCreateFormProps } from './popupInterfaces';
 
-interface Values {
-  title: string;
-  description: string;
-  modifier: string;
-}
-
-interface CollectionCreateFormProps {
-  data: IFilters;
-  visible: boolean;
-  onCreate: (values: Values) => void;
-  onCancel: () => void;
-}
-
-export const AddTaskPopup: React.FC<CollectionCreateFormProps> = ({
+export const AddTaskPopup: React.FC<IAddTaskCollectionCreateFormProps> = ({
   data,
   visible,
   onCreate,
@@ -36,7 +22,7 @@ export const AddTaskPopup: React.FC<CollectionCreateFormProps> = ({
       onOk={() => {
         form
           .validateFields()
-          .then((values: Values) => {
+          .then((values: {name:string}) => {
             form.resetFields();
             onCreate(values);
           })

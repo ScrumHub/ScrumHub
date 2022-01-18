@@ -1,37 +1,22 @@
 import React, { useState } from 'react';
 import { Modal, Form, Checkbox, DatePicker, Input } from 'antd';
-import { IProductBacklogItem, ISprint } from '../../appstate/stateInterfaces';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import TextArea from 'antd/lib/input/TextArea';
 import _ from 'lodash';
 import { disabledDate } from '../utility/commonFunctions';
+import { IUpdateSprintPBIsCollectionCreateFormProps, IUpdateSprintPBIsValues } from './popupInterfaces';
 
-interface Values {
-  goal: string;
-  backlogItems: IProductBacklogItem[];
-}
-
-interface CollectionCreateFormProps {
-  data: ISprint;
-  pbiData: IProductBacklogItem[];
-  visible: boolean;
-  onCreate: (values: Values) => void;
-  onCancel: () => void;
-}
-
-export const UpdateSprintPBIsPopup: React.FC<CollectionCreateFormProps> = ({
+export const UpdateSprintPBIsPopup: React.FC<IUpdateSprintPBIsCollectionCreateFormProps> = ({
   data,
   pbiData,
   visible,
   onCreate,
   onCancel,
 }) => {
-  //TO DO
-  //DELETE after backend is fixed
+  //TO DO, delete after backend is fixed
   const [form] = Form.useForm();
   const filteredData = pbiData.filter((item) => item.estimated !== false && item.id !== 0);
   const [temp, setTemp] = useState(filteredData);
-
   const id = data.sprintNumber !== null ? data.sprintNumber : localStorage.getItem("sprintID")?.toString() as unknown as number;
   return (
     <Modal
@@ -45,7 +30,7 @@ export const UpdateSprintPBIsPopup: React.FC<CollectionCreateFormProps> = ({
       onOk={() => {
         form
           .validateFields()
-          .then((values: Values) => {
+          .then((values: IUpdateSprintPBIsValues) => {
             form.resetFields();
             onCreate({ ...values, backlogItems: temp });
           })

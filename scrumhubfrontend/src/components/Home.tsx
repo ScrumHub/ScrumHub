@@ -1,11 +1,10 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Card } from 'antd';
 import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
 import './Home.css';
-import { IFilters, IRepository, State } from '../appstate/stateInterfaces';
-import { AuthContext } from '../App';
-import { Navigate, useNavigate } from 'react-router';
+import { IFilters, IRepository, IState } from '../appstate/stateInterfaces';
+import { useNavigate } from 'react-router';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import config from '../configuration/config';
 import { useSelector } from 'react-redux';
@@ -13,23 +12,22 @@ import { CalendarOutlined, FolderAddOutlined, InfoCircleOutlined } from '@ant-de
 import { store } from '../appstate/store';
 import { clearReposList } from '../appstate/actions';
 import SkeletonList, { CantAddToShButton, InShButton } from './utility/LoadAnimations';
-import { dateFormat } from './utility/commonFunctions';
+import { dateFormat, isArrayValid } from './utility/commonFunctions';
 const { Meta } = Card;
 
-
 export function Home() {
-  const { state } = useContext(AuthContext);
-  const { token, isLoggedIn } = state;
+  const isLoggedIn = useSelector((appState: IState) => appState.loginState.isLoggedIn);
+  const token = useSelector((appState: IState) => appState.loginState.token);
   const [filters, setFilters] = useState<IFilters>({pageNumber: config.defaultFilters.page,pageSize: config.defaultFilters.size,});
-  const lastPage = useSelector((state: State) => state.reposLastPage);
+  const lastPage = useSelector((state: IState) => state.reposLastPage);
   const [displayId, setDisplayId] = useState(-1);
   const [fetching, setFetching] = useState(false);
-  const loading = useSelector((state: State) => state.loading);
+  const loading = useSelector((state: IState) => state.loading);
   const refreshRequired = useSelector(
-    (appState: State) => appState.reposRequireRefresh as boolean
+    (appState: IState) => appState.reposRequireRefresh as boolean
   );
   const repos = useSelector(
-    (state: State) => state.repositories as IRepository[]
+    (state: IState) => state.repositories as IRepository[]
   );
   const navigate = useNavigate();
   const [initialRefresh, setInitialRefresh] = useState(true);
@@ -44,13 +42,13 @@ export function Home() {
     if (isLoggedIn && refreshRequired) {
       try {
         store.dispatch(
-          Actions.fetchRepositoriesThunk({
+          Actions.fetchReposThunk({
             filters: {
               pageSize: config.defaultFilters.size,
               pageNumber: config.defaultFilters.page,
             },
             token: token,
-          }) //filters
+          })
         );
       } catch (err) {
         console.error("Failed to fetch the repos: ", err);
@@ -67,13 +65,13 @@ export function Home() {
       setFetching(true);
       try {
         store.dispatch(
-          Actions.fetchRepositoriesThunk({
+          Actions.fetchReposThunk({
             filters: {
               ...filters,
               pageNumber: filters.pageNumber,
             },
             token: token,
-          }) //filters
+          }) 
         );
       } catch (err) {
         console.error("Failed to fetch the repos: ", err);
@@ -90,9 +88,9 @@ export function Home() {
         Actions.addRepositoryThunk({
           id: projId,
           token: token,
-        }) //filters
+        })
       )
-      .catch((error)=>{console.error("Failed to fetch the pbis: ", error);
+      .catch((error: any)=>{console.error("Failed to fetch the pbis: ", error);
       setDisplayId(-1);
       return({});})
       .then(()=>setDisplayId(-1));
@@ -104,15 +102,16 @@ export function Home() {
   };
 
   return (
-    <section className="container">
+    <div>
       <InfiniteScroll
-      dataLength={repos ? repos.length : 0}
+      scrollableTarget="scrollableDiv"
+      dataLength={isArrayValid(repos) ? repos.length : 0}
       scrollThreshold={0.7}
       next={fetchMore}
       hasMore={!lastPage && !fetching}
       loader={<></>}>
       <div className="reposGrid">
-        {repos.map((rep: IRepository) => {
+        {isArrayValid(repos) && repos.map((rep: IRepository) => {
           return (<section className="card" style={{ width: "85%" }} key={rep.gitHubId} >
             <Card loading={rep.gitHubId===displayId &&loading } className='repoCard' type="inner" actions=
               {[!rep.hasAdminRights ? <CantAddToShButton/>:(rep.alreadyInScrumHub ? <InShButton/>:
@@ -134,6 +133,6 @@ export function Home() {
         <SkeletonList loading={loading  || refreshRequired} number={repos.length < 1?5:1} />
       </div>
     </InfiniteScroll>
-    </section >
+    </div >
   );
 }

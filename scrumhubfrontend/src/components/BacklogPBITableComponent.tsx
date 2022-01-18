@@ -1,18 +1,16 @@
 import { Table } from "antd";
-import { IProductBacklogItem, ISprint, State } from "../appstate/stateInterfaces";
+import { IProductBacklogItem, IState } from "../appstate/stateInterfaces";
 import { initRowIds, initSortedInfo } from "./utility/commonInitValues";
 import { IRowIds } from "./utility/commonInterfaces";
-import "./ProductBacklog.css"
-import { useEffect, useState } from "react";
 import * as Actions from '../appstate/actions';
 import { store } from "../appstate/store";
 import { useSelector } from "react-redux";
 import { isArrayValid } from "./utility/commonFunctions";
+import React from "react";
 
-export default function PBITableComponent(props: any) {
-  const keys = useSelector((appState: State) => appState.keys.pbiKeys as number[]);
-  const loadingKeys = useSelector((appState: State) => appState.loadingKeys.sprintKeys as number[]);
-  console.log(loadingKeys);
+export const PBITableComponent = React.memo((props: any) =>{
+  const keys = useSelector((appState: IState) => appState.keys.pbiKeys as number[]);
+  const loadingKeys = useSelector((appState: IState) => appState.loadingKeys.sprintKeys as number[]);
   const updateExpandedRowKeys = (record: IProductBacklogItem) => {
     store.dispatch(Actions.updatePBIKeys([record.id]));
   };
@@ -34,24 +32,23 @@ export default function PBITableComponent(props: any) {
       size="small"
       showHeader={true}
       loading={isArrayValid(loadingKeys) && props.item && loadingKeys.includes(props.item.sprintNumber)}
-      //scroll={{x:800,scrollToFirstRowOnChange:true }}
       columns={props.pbiColumns}
       rowKey={(record: IProductBacklogItem) => record.id}
       expandable={{
         expandedRowRender: props.TaskTableforPBI,
         expandedRowKeys: keys,
         defaultExpandAllRows:props.sortedInfo,
-        onExpand: (expanded, record) => {
+        onExpand: (expanded: any, record: IProductBacklogItem) => {
           updateExpandedRowKeys(record);
         },
-        rowExpandable: record => record.tasks && record.tasks.length > 0,
+        rowExpandable: (record: any) => record.tasks && record.tasks.length > 0,
 
       }}
       components={props.nestedcomponents}
       onChange={(pagination: any, filters: any, sorter: any)=>{handleChange(pagination, filters, sorter)}}
       dataSource={props.item.backlogItems}
       pagination={false}
-      onRow={(row, id) => {
+      onRow={(row: { id: any; estimated: any; }, id: any) => {
         const index = row.id;
         const record = { ...initRowIds, sprintNumber: props.item.sprintNumber, pbiID: row.id, estimated: row.estimated } as IRowIds;
         const bodyType = "IProductBacklogItem";
@@ -62,4 +59,4 @@ export default function PBITableComponent(props: any) {
         }) as any;
       }}
     />);
-}
+});

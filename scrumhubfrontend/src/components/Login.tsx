@@ -1,82 +1,64 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { GithubOutlined } from "@ant-design/icons";
-import { AuthContext } from "../App";
-import logo from './scrum.jpg';
-import {useNavigate} from "react-router";
-import { useCookies } from "react-cookie";
-import config from "../configuration/config";
+import { useNavigate } from "react-router";
+import * as Actions from '../appstate/actions';
 import { Wrapper } from "./LoginWrapper";
+import { store } from "../appstate/store";
+import { loginData } from "./utility/commonInitValues";
+import { useSelector } from "react-redux";
+import { IState } from "../appstate/stateInterfaces";
+import { setLocalStorage as setLoginStateLocalStorage } from "./utility/commonFunctions";
+import { handleLogin } from "./utility/LoginAndMainHandlers";
 
-export function Login(props:any) {
-  const { state, dispatch: auth, token } = useContext(AuthContext);
-  const [cookies, setCookie, removeCookie] = useCookies();
+export function Login(props: any) {
+  const loginState = useSelector((appState: IState) => appState.loginState);
   const [data, setData] = useState({ errorMessage: "", isLoading: false });
-  let navigate = useNavigate();
-  const { client_id, redirect_uri, proxy_url} = state;
+  const error = useSelector((appState: IState) => appState.error);
+  const navigate = useNavigate();
   useEffect(() => {
-    // After requesting Github access, Github redirects back to your app with a code parameter
     const url = window.location.href;
     const hasCode = url.includes("?code=");
-
-    // If Github API returns the code parameter
-    if (hasCode) {
+    if (hasCode && loginState.proxy_url!=="") {
       const newUrl = url.split("?code=");
       window.history.pushState({}, "", newUrl[0]);
       setData({ ...data, isLoading: true });
       const requestData = {
         code: newUrl[1]
       };
-
-      // Use code parameter and other parameters to make POST request to proxy_server
-      fetch(proxy_url, {
+      fetch(loginState.proxy_url as string, {
         method: "POST",
         body: JSON.stringify(requestData)
       })
-      .then (response => response.json())
+        .then(response => response.json())
         .then(response => {
-            let params = new URLSearchParams(response);
-            const access_token = params.get("access_token");
-            if (access_token){ 
-            setCookie(config.token, access_token, { path: "/" });
-            auth({
-              type: "LOGIN",
-              payload: { token: access_token, isLoggedIn: true }
-            }); }
-            else{
-              setData({
-            isLoading: false,
-            errorMessage: "Sorry! Login failed"
-          });
+          let params = new URLSearchParams(response);
+          const access_token = params.get("access_token");
+          if (access_token) {
+            store.dispatch(Actions.login({ token: access_token, isLoggedIn: true }));
+            setLoginStateLocalStorage(access_token);
+            handleLogin(access_token, navigate);
+          }
+          else {
+            setData(loginData);
           }
         })
-        .catch(error => {
-          setData({
-            isLoading: false,
-            errorMessage: "Sorry! Login failed"
-          });
-          
+        .catch((error:any) => {
+          setData(loginData);
         });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state, auth, data, proxy_url]);
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loginState.isLoggedIn,loginState.token, data, loginState.proxy_url]);
   useEffect(() => {
-  if (state.isLoggedIn)
-  {
-    localStorage.removeItem("ownerName");
-    localStorage.removeItem("sprintID");
-    navigate("/", { replace: true });
-  }
-// eslint-disable-next-line react-hooks/exhaustive-deps
-},[navigate, state, token]);
-
-
+    if (error.hasError) {
+      setData(loginData);
+    }
+  }, [error.hasError]);
   return (
     <Wrapper>
       <section className="container">
-        <div style={{height:"60vh",width:"50vh"}}>
+        <div style={{ height: "60vh", width: "50vh" }}>
           <h1>ScrumHub</h1>
-          <img src={logo} alt="Logo" style={{width:"20vh"}}/>
+          <img src={process.env.PUBLIC_URL+"logo.png"} alt="Logo" style={{ width: "20vh" }} />
           <span>{data.errorMessage}</span>
           <div className="login-container">
             {data.isLoading ? (
@@ -85,18 +67,15 @@ export function Login(props:any) {
               </div>
             ) : (
               <>
-                {
-                  // Link to request GitHub access
-                }
                 <a
                   className="login-link"
-                  href={`http://github.com/login/oauth/authorize?scope=repo&client_id=${client_id}&redirect_uri=${redirect_uri}`}
+                  href={`http://github.com/login/oauth/authorize?scope=repo&client_id=${loginState.client_id}&redirect_uri=${loginState.redirect_uri}`}
                   onClick={() => {
                     setData({ ...data, errorMessage: "" });
                   }}
                 >
                   <GithubOutlined />
-                  <span>{state.isLoggedIn ?"Successful login":"Login with GitHub"}</span>
+                  <span>{loginState.isLoggedIn ? "Successful login" : "Login with GitHub"}</span>
                 </a>
               </>
             )}

@@ -2,34 +2,34 @@ import { Empty, Table } from "antd";
 import { useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { ISprint, State } from "../appstate/stateInterfaces";
+import { ISprint, IState } from "../appstate/stateInterfaces";
 import { store } from "../appstate/store";
 import { initRowIds } from "./utility/commonInitValues";
 import * as Actions from '../appstate/actions';
 import { useSelector } from "react-redux";
+import { isArrayValid } from "./utility/commonFunctions";
+import React from "react";
 
-
-export default function SprintTableComponent(props: any) {
-  const keys = useSelector((appState: State) => appState.keys.sprintKeys as number[]);
-  const loading = useSelector((appState: State) => appState.loading);
+export const SprintTableComponent = React.memo((props: any) =>{
+  const keys = useSelector((appState: IState) => appState.keys.sprintKeys as number[]);
   const updateExpandedRowKeys = (record: ISprint) => {
     store.dispatch(Actions.updateSprintKeys([record.sprintNumber]));
   };
-  const handleChange = (pagination: any, filters: any, sorter: any) => {
-    console.log('Various parameters', pagination, filters, sorter);
+  const handleChange = (pagination: any, filters: any, sorter: any, data:any) => {
+    //console.log('Various parameters', pagination, filters, sorter, data);
   };
-  let locale = {
-    emptyText: ()=>{return !props.loading?<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={"No Sprints"} />:""}
+  let locales = {
+    emptyText: ()=>{return(!props.loading?<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={"No Sprints"} />:"")}
   };
   useEffect(() => {
     
   },[props.peopleFilter,props.nameFilter]);
   return (
     <DndProvider backend={HTML5Backend} key={"dnd"+props.keys}>
-      {<Table
-        locale={locale}
+       <Table
+        locale={locales}
         key={props.keys}
-        style={{ transform: "scale(0.96)", height: "auto",}}
+        style={{ height: "auto",visibility:!props.loading && !isArrayValid(props.data)?"hidden":"visible"}}
         scroll={{ x: 800 }}
         size="small"
         loading={props.loading}
@@ -37,7 +37,7 @@ export default function SprintTableComponent(props: any) {
         bordered={false}
         pagination={false}
         dataSource={props.data}
-        onChange={(pagination: any, filters: any, sorter: any)=>{handleChange(pagination, filters, sorter)}}
+        onChange={(pagination: any, filters: any, sorter: any, data:any)=>{handleChange(pagination, filters, sorter, data)}}
         columns={props.columns}
         components={props.components}
         rowKey={(record: ISprint) => record.sprintNumber}
@@ -59,6 +59,5 @@ export default function SprintTableComponent(props: any) {
             bodyType
           }) as any;
         }}
-      />}</DndProvider>);
-}
-
+      /></DndProvider>);
+});

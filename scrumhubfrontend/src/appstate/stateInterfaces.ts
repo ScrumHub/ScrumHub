@@ -1,4 +1,3 @@
-import  { Moment } from "moment";
 import { tableKeys } from "../components/utility/commonInterfaces";
 
 export type Error = {
@@ -38,22 +37,7 @@ export interface ITask {
   status:string;
 }
 
-
-export interface ITaskNamed {
-  id: number;
-  name: string;
-  finished: boolean;
-  pbiId: number;
-  pbiName: string;
-  isAssignedtoPBI: boolean;
-  link: string;
-}
-
-export interface ITaskList {
-  pageNumber: number;
-  pageCount: number;
-  pageSize: number;
-  realSize: number;
+export interface ITaskList extends IFetchedList {
   list: ITask[];
 }
 
@@ -95,13 +79,6 @@ export interface IAssignPBI {
   id: number;
   isInSprint:boolean;
 }
-
-export interface ICheckedAssignPBI extends IAssignPBI {
-  name: string;
-  id: number;
-  
-  checked: boolean;
-}
 export interface IPBIFilter {
   pageNumber: number;
   pageSize: number;
@@ -111,11 +88,14 @@ export interface IPBIFilter {
   inSprint?: boolean;
 }
 
-export interface IProductBacklogList {
+export interface IFetchedList {
   pageNumber: number;
   pageCount: number;
   pageSize: number;
   realSize: number;
+}
+
+export interface IProductBacklogList extends IFetchedList{
   list: IProductBacklogItem[];
 }
 
@@ -129,22 +109,10 @@ export interface ISprint {
   status: string;
   isCompleted: boolean;
 }
-export interface IUpdateIdSprint {
-  goal: string;
-  pbIs: string[];
-  finishDate: string|Date|Moment;
-  title:string;
-}
 
-
-export interface ISprintList {
-  pageNumber: 1,
-  pageCount: 1,
-  pageSize: 10,
-  realSize: 10,
+export interface ISprintList extends IFetchedList{
   list: ISprint[];
 }
-
 
 export interface IRepository {
   name: string;
@@ -166,26 +134,24 @@ export interface IPerson {
   name: string|null;
 }
 
-
-
-export interface IPeopleList {
-  pageNumber: number;
-  pageCount: number;
-  pageSize: number;
-  realSize: number;
+export interface IPeopleList extends IFetchedList{
   list: IPerson[];
 }
 
 export type BodyRowTypes = ISprint | IProductBacklogItem | ITask;
-export interface IRepositoryList {
-  pageNumber: number;
-  pageCount: number;
-  pageSize: number;
-  realSize: number;
+export interface IRepositoryList extends IFetchedList{
   list: IRepository[];
 }
-
-export type State = {
+export interface ILoginState {
+  isLoggedIn: boolean,
+  token: string,
+  client_id: string,
+  redirect_uri: string,
+  client_secret: string,
+  proxy_url:string
+}
+export interface IState {
+  loginState:ILoginState;
   loading: boolean;
   error: Error;
   pbiPage: IProductBacklogList;
@@ -200,7 +166,7 @@ export type State = {
   taskLastPage: boolean;
   taskRequireRefresh: boolean;
   taskPage: ITaskList;
-  tasks: ITask[] | ITaskNamed[];
+  tasks: ITask[];
   openSprint: ISprint | null;
   repoId: number;
   namedPBI: IAssignPBI[];

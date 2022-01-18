@@ -1,15 +1,29 @@
+import { PayloadAction } from "@reduxjs/toolkit";
+import _ from "lodash";
 import { isArrayValid } from "../components/utility/commonFunctions";
+import config from "../configuration/config";
 import { initError, initProductBacklogList, unassignedPBI } from "./initStateValues";
-import { IError, IFilters, IProductBacklogItem, ISprint, ITask, ITaskList, State } from "./stateInterfaces";
+import { RequestResponse } from "./response";
+import { IError, IFilters, IProductBacklogItem, ISprint, ITask, ITaskList, IState, IRepositoryList, IRepository } from "./stateInterfaces";
 
+/**
+ * returns a header
+ * @param {String} token User validation
+ * @param {Object} config Configuration of port and id, can be in Production or Development
+ */
 export const getHeader = (token: string, config: any) => {
   return ({
     'Accept': "application/json",
     'authToken': token,
     'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
   });
-}
+};
 
+/**
+ * returns a header with "application/json" content type
+ * @param {String} token User validation
+ * @param {Object} config Configuration of port and id, can be in Production or Development
+ */
 export const getHeaderWithContent = (token: string, config: any) => {
   return ({
     'authToken': token,
@@ -17,30 +31,53 @@ export const getHeaderWithContent = (token: string, config: any) => {
     'contentType': "application/json",
     'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
   } as IFilters);
-}
+};
 
+/**
+ * returns a header that accepts all responses type
+ * @param {String} token User validation
+ * @param {Object} config Configuration of port and id, can be in Production or Development
+ */
 export const getHeaderAcceptAll = (token: string, config: any) => {
   return ({
     'authToken': token,
     'Accept': "*/*",
     'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
   } as IFilters);
+};
+
+/**
+ * @returns error object after validation
+ */
+export const getError = (res: any) => { return ({hasError: true,errorCode: res ? res.code : -1, erorMessage: res ? (res.response as IError).Message : "", })};
+
+/**
+ * @param {String|undefined} uri Uri to validate
+ * @returns {String} Empty string on undefined uri
+ */
+export function validateUri(uri: string | undefined) { return (typeof (uri) === "undefined" ? "" : uri);}
+
+/**
+ * @param {IFilters} filters Filters to validate and concatenate into string
+ * @returns {String} stringWithFilters 
+ */
+export function filterUrlString(filters: IFilters) {
+  return (typeof (filters) === "undefined" ? ""
+    : Object.keys(filters)
+      .map((filterName: string) => {
+        const value = String(filters[filterName]).trim();
+        return value && value !== "null" && value !== "undefined" ? `${filterName}=${value}` : "";
+      })
+      .filter((x) => x !== "")
+      .join("&"));
 }
 
-export const getError = (errorResponse: any) => {
-  return ({
-    hasError: true,
-    errorCode: errorResponse ? errorResponse.code : -1,
-    erorMessage: errorResponse ? (errorResponse.response as IError).Message : "",
-  })
-}
-
+/*removes duplicate key and concates expanded keys arrays*/
 export function updateStateKeys(oldKeys: number[], newKeys: number[]) {
-  //remove unexpanded
   return ((oldKeys.filter((key: number) => !newKeys.includes(key))).concat(newKeys.filter((key: number) => !oldKeys.includes(key))));
 };
 
-export function updateStateTasks(newState: State, task: ITask) {
+export function updateStateTasks(newState: IState, task: ITask) {
   newState.error = initError;
   if (newState.openSprint && isArrayValid(newState.openSprint.backlogItems) && newState.openSprint.backlogItems.findIndex((pbi: IProductBacklogItem) => pbi.id === task.pbiId) !== -1) {
     const index = newState.openSprint.backlogItems.findIndex((pbi: IProductBacklogItem) => pbi.id === task.pbiId);
@@ -86,7 +123,7 @@ export function updateStateTasks(newState: State, task: ITask) {
   return (newState)
 };
 
-export function addStateTask(newState: State, task: ITask) {
+export function addStateTask(newState: IState, task: ITask) {
   newState.error = initError;
   if (newState.openSprint && isArrayValid(newState.openSprint.backlogItems) && newState.openSprint.backlogItems.findIndex((pbi: IProductBacklogItem) => pbi.id === task.pbiId) !== -1) {
     const index = newState.openSprint.backlogItems.findIndex((pbi: IProductBacklogItem) => pbi.id === task.pbiId);
@@ -115,7 +152,7 @@ export function addStateTask(newState: State, task: ITask) {
   return (newState)
 };
 
-export function addStateUnassignedTaskToPBI(newState: State, tasks: ITaskList) {
+export function addStateUnassignedTaskToPBI(newState: IState, tasks: ITaskList) {
   const pbisList = [unassignedPBI] as IProductBacklogItem[];
   if (tasks && tasks.list.length > 0) {
     if (!newState.pbiPage || !isArrayValid(newState.pbiPage.list)) {
@@ -132,15 +169,45 @@ export function addStateUnassignedTaskToPBI(newState: State, tasks: ITaskList) {
         return item;
       })
     };
-  } 
+  }
   newState.productRequireRefresh = false;
   newState.error = initError;
   newState.loading = false;
-  return(newState);
+  return (newState);
 }
 
-export function updateStatePBI(newState: State, pbi: IProductBacklogItem)
-{
+export function updateTasksSWR(newState: IState, tasks: ITaskList) {
+  newState.error = initError;
+  if (tasks && isArrayValid(tasks.list)) {
+    const pbiIndex = tasks.list.at(0)?.isAssignedToPBI ? tasks.list.at(0)?.pbiId as number : 0;
+    if (newState.openSprint && isArrayValid(newState.openSprint.backlogItems) && newState.openSprint.backlogItems.findIndex((pbi: IProductBacklogItem) => pbi.id === pbiIndex) !== -1) {
+      const index = newState.openSprint.backlogItems.findIndex((pbi: IProductBacklogItem) => pbi.id === pbiIndex);
+      newState.openSprint.backlogItems[index] = { ...newState.openSprint.backlogItems[index], tasks: tasks.list };
+    }
+    if (newState.pbiPage && isArrayValid(newState.pbiPage.list) && (newState.pbiPage.list.findIndex((pbi: IProductBacklogItem) => pbi.id === pbiIndex)) !== -1) {
+      const index = newState.pbiPage.list.findIndex((pbi: IProductBacklogItem) => pbi.id === pbiIndex);
+      newState.pbiPage.list[index] = { ...newState.pbiPage.list[index], tasks: tasks.list };
+    }
+    else if (newState.sprintPage && isArrayValid(newState.sprintPage.list)) {
+      newState.sprintPage.list = newState.sprintPage.list.map((sprint: ISprint) => {
+        sprint.backlogItems = sprint.backlogItems.map((item: IProductBacklogItem) => {
+          if (item.id === pbiIndex) {
+            item.tasks = tasks.list;
+          }
+          return item;
+        });
+        return sprint;
+      });
+    }
+  }
+  newState.productRequireRefresh = false;
+  newState.error = initError;
+  newState.loading = false;
+  return (newState);
+
+}
+
+export function updateStatePBI(newState: IState, pbi: IProductBacklogItem) {
   if (pbi.isInSprint) {
     if (newState.sprintPage && isArrayValid(newState.sprintPage.list)) {
       const index = newState.sprintPage.list.findIndex((sprint: ISprint) => sprint.sprintNumber === pbi.sprintNumber);
@@ -160,7 +227,69 @@ export function updateStatePBI(newState: State, pbi: IProductBacklogItem)
   }
   newState.error = initError;
   newState.loading = false;
+  return (newState);
+}
+
+export function fetchStateRepos(newState: IState, payload: PayloadAction<RequestResponse<IRepositoryList, number>>) {
+  const pageNumber = _.get(payload, ["meta", "arg", "filters", "pageNumber"], config.defaultFilters.page);
+  const pageSize = _.get(payload, ["meta", "arg", "filters", "pageSize"], config.defaultFilters.size);
+  const repos = payload.payload.response as IRepositoryList;
+  if (newState.repositories == null || pageNumber === 1) {
+    newState.repositories = (repos.list).slice(0, (pageNumber + 1) * pageSize);
+  } else if (newState.repositories !== repos.list) {
+    newState.repositories = newState.repositories
+      .concat(repos.list)
+      .slice(0, (pageNumber + 1) * pageSize);
+  }
+  // if response is shorter than default size - it means end is reached.
+  newState.reposLastPage = repos.list.length < pageSize;
+  newState.reposRequireRefresh = false;
+  newState.error = initError;
+  newState.loading = false;
+  return (newState);
+}
+
+export function updateStateOneSprint(newState: IState, sprint: ISprint) {
+  const objIndex = newState.sprintPage.list.findIndex((s: ISprint) => s.sprintNumber === sprint.sprintNumber);
+  if (objIndex !== -1) { newState.sprintPage.list[objIndex] = sprint };
+  if (sprint.isCurrent) { newState.activeSprintNumber = sprint.sprintNumber };
+  if (newState.openSprint && newState.openSprint.sprintNumber === sprint.sprintNumber) { newState.openSprint = sprint; }
+  newState.loading = false;
+  newState.error = initError;
+  return (newState);
+}
+
+export function addStateRepo(newState: IState, repo: IRepository) {
+  if (isArrayValid(newState.repositories)) {
+    const index = newState.repositories.findIndex((el: IRepository) => el.gitHubId === repo.gitHubId);
+    if (index !== -1) { newState.repositories[index] = repo; }
+  }
+  newState.loading = false;
+  newState.error = initError;
+  return (newState);
+}
+export function addStatePBI(newState: IState, pbi: IProductBacklogItem) {
+  if (newState.pbiPage && isArrayValid(newState.pbiPage.list)) {
+    newState.pbiPage.list = newState.pbiPage.list.concat([pbi]);
+  } else {newState.pbiPage.list = [pbi];}
+  newState.loading = false;
+  newState.error = initError;
+  return (newState);
+}
+
+export function addStateSprint(newState:IState, sprint:ISprint){
+  if (isArrayValid(sprint.backlogItems) && newState.pbiPage && isArrayValid(newState.pbiPage.list)) {
+    newState.pbiPage = { ...newState.pbiPage, list: newState.pbiPage.list.filter((pbi: IProductBacklogItem) => !sprint.backlogItems.filter((pbi2: IProductBacklogItem) => pbi.id === pbi2.id).length) };
+  }
+  if (newState.sprintPage && isArrayValid(newState.sprintPage.list)) {newState.sprintPage.list = newState.sprintPage.list.concat([sprint]);
+  }
+  else {newState.sprintPage.list = [sprint];}
+  if (sprint.isCurrent) { newState.activeSprintNumber = sprint.sprintNumber };
+  newState.error = initError;
+  newState.loading = false;
   return(newState);
 }
+
+
 
 

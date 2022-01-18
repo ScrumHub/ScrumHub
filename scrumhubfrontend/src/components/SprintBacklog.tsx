@@ -1,18 +1,17 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Badge, Button, Dropdown, message, Popconfirm, Popover, Space, Tag, Typography, } from 'antd';
 import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
-import { IAddPBI, IFilters, IPeopleList, IProductBacklogItem, IProductBacklogList, ISprint, ITask, State } from '../appstate/stateInterfaces';
-import { AuthContext } from '../App';
+import { IAddPBI, IFilters, IPeopleList, IProductBacklogItem, ISprint, ITask, IState } from '../appstate/stateInterfaces';
 import config from '../configuration/config';
 import { useSelector } from 'react-redux';
 import { BranchesOutlined, DownOutlined, EditOutlined } from '@ant-design/icons';
 import { store } from '../appstate/store';
-import "./SprintProject.css";
-import PBITableComponent from './BacklogPBITableComponent';
-import TaskTableComponent from './BacklogTaskTableComponent';
+import {PBITableComponent} from './BacklogPBITableComponent';
+import {TaskTableComponent} from './BacklogTaskTableComponent';
 import { taskNameCol, taskStatusCol, taskGhLinkCol, pbiProgressCol, pbiProgressCol2, backlogPriorities, backlogColors } from './utility/BodyRowsAndColumns';
-import { canDropTask, isStatusValid } from './utility/commonFunctions';
+import { canDropTask, isBranchNotCreated } from './utility/commonFunctions';
 import SkeletonList, { MenuWithPeopleSave } from './utility/LoadAnimations';
 import { assignPerson, startTask, updateTask } from './utility/BacklogHandlers';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
@@ -20,34 +19,32 @@ import { useDrop, useDrag, DndProvider } from 'react-dnd';
 import { type } from './ProductBacklog';
 import { initModalVals } from './utility/commonInitValues';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import moment from 'moment';
+import { useLocation } from 'react-router';
 import { AddTaskPopup } from './popups/AddTaskPopup';
-import { CompleteSprintPopup } from './popups/CompleteSprint';
+import { CompleteSprintPopup } from './popups/CompleteSprintPopup';
 import { EditPBIPopup } from './popups/EditPBIPopup';
 import { EstimatePBIPopup } from './popups/EstimatePBIPopup';
 import { UpdateSprintPopup } from './popups/UpdateSprintPopup';
-import moment from 'moment';
-import { useLocation } from 'react-router';
 
 export function SprintBacklog() {
-  const { state } = useContext(AuthContext);
-  const { token } = state;
+  const token = useSelector((appState: IState) => appState.loginState.token);
   const [infos, setInfos] = useState({
     filteredInfo: { complete: -1, pbiPriorities: [] as number[] },
     sortedInfo: { order: '', columnKey: '', },
   });
   const [filterPBI, setFiltersPBI] = useState<IFilters>({ nameFilter: "", peopleFilter: [] });
-  const people = useSelector((appState: State) => appState.people as IPeopleList);
+  const people = useSelector((appState: IState) => appState.people as IPeopleList);
   const [filters, setFilters] = useState<IFilters>({
     pageNumber: config.defaultFilters.page,
     pageSize: config.defaultFilters.size,
   });
   const [isModal, setIsModal] = useState<IModals>(initModalVals);
-  const tempPBIPage = useSelector((appState: State) => appState.pbiPage as IProductBacklogList);
-  const loading = useSelector((appState: State) => appState.loading);
+  const loading = useSelector((appState: IState) => appState.loading);
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : "";
   const sprintID = localStorage.getItem("sprintID") ? Number(localStorage.getItem("sprintID")) : -1;
   const [initialRefresh, setInitialRefresh] = useState(true);
-  const sprintPage = useSelector((appState: State) => appState.openSprint as ISprint);
+  const sprintPage = useSelector((appState: IState) => appState.openSprint as ISprint);
 
   const location = useLocation();
   useEffect(() => {
@@ -57,8 +54,7 @@ export function SprintBacklog() {
       store.dispatch(Actions.fetchPeopleThunk({ownerName,token}));
       //}
       setInitialRefresh(false);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    }// eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialRefresh,location]);
   const estimatePBI = (pbi: IProductBacklogItem) => {
     try {
@@ -88,7 +84,7 @@ export function SprintBacklog() {
             ownerName: ownerName,
             token: token,
             pbiId: item.id
-          }) //filters
+          })
         );
       } catch (err) { console.error("Failed to finish the pbis: ", err); }
       finally {
@@ -213,7 +209,7 @@ export function SprintBacklog() {
     key: "branch",
     width: "12%",
     align: "right" as const,
-    render: (record: ITask) => isStatusValid(record.status) ?
+    render: (record: ITask) => isBranchNotCreated(record.status) ?
     <Popover visible={isModal.startBranchId === record.id}
     content={<><div style={{alignSelf:"center", marginBottom:"10%", textAlign:"center"}}>Start New Branch</div><Space style={{alignItems:"flex-end"}}>
       <Popconfirm title={"Are you sure you want to start a feature branch?"} onConfirm={()=>{startTask(token, ownerName, false,record.id);setIsModal({...isModal, startBranchId:-1});}}><Button key={"hotfix"} size='small' type="primary" >Feature</Button></Popconfirm>

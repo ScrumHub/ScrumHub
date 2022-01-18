@@ -2,12 +2,9 @@
   export interface BodyRowProps {
     index: any;
     bodyType:string;
-    //row :ISprint|IProductBacklogItem|ITask;
     record:IRowIds;
     className: any;
     style: any;
-     //IDs?:any[];
-    //setIDs?:any|any[];
     "data-row-key":number;
     restProps: {
       [x: string]: any;
@@ -19,9 +16,7 @@
     assgnTask: boolean,
     assgnPpl: boolean,
     completeSprint:boolean,
-    //addSprint: boolean,
     updateSprint: boolean,
-    //addPBI: boolean,
     editPBI: boolean,
     estimatePBI: boolean,
     startBranchId:number

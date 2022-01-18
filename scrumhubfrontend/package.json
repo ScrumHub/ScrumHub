@@ -2,6 +2,7 @@
   "name": "scrumhubspa",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
@@ -25,15 +26,16 @@
     "react-router": "^6.0.2",
     "react-scripts": "4.0.3",
     "serve": "^13.0.2",
-    "swr": "^1.1.2",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "concurrently \"cd server && npx --experimental-modules nodemon index.mjs \" \"react-scripts --openssl-legacy-provider start\" ",
+    "start": "concurrently \"set NODE_OPTIONS='--no-warnings --loader ts-node/esm' && nodemon -e ts,tsx --exec node --loader ts-node/esm server/index.ts \" \"react-scripts --openssl-legacy-provider start\" ",
     "startWeb": "react-scripts --openssl-legacy-provider start",
     "build": "react-scripts --openssl-legacy-provider build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "docs": "typedoc --out ../FrontendDocumentation --entryPointStrategy expand ./src",
+    "coverage": "set SKIP_PREFLIGHT_CHECK=true && set CI=true && react-scripts test --coverage"
   },
   "eslintConfig": {
     "extends": [
@@ -58,6 +60,8 @@
     "@babel/core": "^7.16.0",
     "@babel/preset-env": "^7.16.4",
     "@reduxjs/toolkit": "^1.6.2",
+    "@testing-library/react-hooks": "^7.0.2",
+    "@types/axios-mock-adapter": "^1.10.0",
     "@types/body-parser": "^1.19.2",
     "@types/dragula": "^3.7.1",
     "@types/express": "^4.17.13",
@@ -65,8 +69,10 @@
     "@types/node": "^16.11.11",
     "@types/react": "^17.0.37",
     "@types/react-highlight-words": "^0.16.3",
+    "@types/react-test-renderer": "^17.0.1",
     "@types/styled-components": "^5.1.15",
     "antd": "^4.17.2",
+    "axios-mock-adapter": "^1.20.0",
     "concurrently": "^6.4.0",
     "enzyme": "^3.11.0",
     "nodemon": "^2.0.15",
@@ -74,7 +80,9 @@
     "react-highlight-words": "^0.17.0",
     "react-redux": "^7.2.6",
     "react-router-dom": "^6.0.2",
+    "react-test-renderer": "^17.0.2",
     "styled-components": "^5.3.3",
+    "swr": "^1.1.2",
     "ts-node": "^10.4.0",
     "typedoc": "^0.22.10",
     "typescript": "^4.5.2"

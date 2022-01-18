@@ -14,7 +14,6 @@ export const initModalVals: IModals = {
   assgnPpl: false,
   completeSprint: false,
   updateSprint: false,
-  //addPBI: false,
   editPBI: false,
   estimatePBI: false,
   startBranchId:-1
@@ -34,10 +33,8 @@ export const formItemLayoutWithOutLabel = {
   },
 };
 export const initFilteredInfo = { complete: [] as number[], pbiPriority: [] as number[] };
-export const initSortedInfo = {
-  order: '',
-  columnKey: '',
-};
+export const initSortedInfo = {order: '',columnKey: '',};
+
 export const initFilterSortInfo =  {
   filteredInfo: initFilteredInfo,
   sortedInfo: initSortedInfo
@@ -60,4 +57,9 @@ export const initKeys: tableKeys = {
 export const initLoadingKeys: tableKeys = {
   sprintKeys: [],
   pbiKeys: []
+}
+
+export const loginData = {
+  isLoading: false,
+  errorMessage: "Sorry! Login failed"
 }
