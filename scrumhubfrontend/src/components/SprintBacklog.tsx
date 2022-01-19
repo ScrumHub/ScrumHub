@@ -6,12 +6,12 @@ import 'antd/dist/antd.css';
 import { IAddPBI, IFilters, IPeopleList, IProductBacklogItem, ISprint, ITask, IState } from '../appstate/stateInterfaces';
 import config from '../configuration/config';
 import { useSelector } from 'react-redux';
-import { BranchesOutlined, DownOutlined, EditOutlined } from '@ant-design/icons';
+import { BranchesOutlined, CalendarOutlined, DownOutlined, EditOutlined } from '@ant-design/icons';
 import { store } from '../appstate/store';
 import {PBITableComponent} from './BacklogPBITableComponent';
 import {TaskTableComponent} from './BacklogTaskTableComponent';
 import { taskNameCol, taskStatusCol, taskGhLinkCol, pbiProgressCol, pbiProgressCol2, backlogPriorities, backlogColors } from './utility/BodyRowsAndColumns';
-import { canDropTask, isBranchNotCreated } from './utility/commonFunctions';
+import { canDropTask, dateFormat, isBranchNotCreated, isSprintLoaded } from './utility/commonFunctions';
 import SkeletonList, { MenuWithPeopleSave } from './utility/LoadAnimations';
 import { assignPerson, startTask, updateTask } from './utility/BacklogHandlers';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
@@ -26,6 +26,7 @@ import { CompleteSprintPopup } from './popups/CompleteSprintPopup';
 import { EditPBIPopup } from './popups/EditPBIPopup';
 import { EstimatePBIPopup } from './popups/EstimatePBIPopup';
 import { UpdateSprintPopup } from './popups/UpdateSprintPopup';
+import { date } from 'joi';
 
 export function SprintBacklog() {
   const token = useSelector((appState: IState) => appState.loginState.token);
@@ -251,13 +252,15 @@ export function SprintBacklog() {
     },];
   return (
     <div style={{ marginLeft: "2%", marginRight: "2%", marginTop: 0, marginBottom: "1%" }}>
-      <SkeletonList width={true} loading={sprintPage == null || (sprintID!==-1 && sprintPage && sprintID !== sprintPage.sprintNumber)} number={2} />
+      <SkeletonList width={true} loading={sprintPage == null || isSprintLoaded(sprintID, sprintPage,false)} number={2} />
       <Space>
-        <Typography>{sprintPage !== null  && sprintID === sprintPage.sprintNumber? sprintPage.goal : ""}</Typography>
-        <Button key="1" type="link" onClick={() => { setIsModal({ ...isModal, updateSprint: true }); }}>{sprintPage !== null&& sprintID === sprintPage.sprintNumber ?  "Update Sprint":""} </Button>
+        <Typography>{isSprintLoaded(sprintID, sprintPage,true)? sprintPage.goal : ""}</Typography>
+        </Space><br/><Space>
+        {isSprintLoaded(sprintID, sprintPage,true) && <span><CalendarOutlined style={{color:moment().endOf('day') <= moment(sprintPage.finishDate)?(moment(sprintPage.finishDate).diff(moment().endOf('day'),'day')<4?"red":"darkorange"):"green"}}></CalendarOutlined>{" " + dateFormat(sprintPage.finishDate as unknown as Date)}</span>}
+        <Button key="1" type="link" onClick={() => { setIsModal({ ...isModal, updateSprint: true }); }}>{isSprintLoaded(sprintID, sprintPage,true) ?  "Update Sprint":""} </Button>
       </Space>
       <DndProvider backend={HTML5Backend} key={"dnd_sprint"}>
-        {sprintPage && sprintPage.backlogItems  && (sprintID !==-1 && sprintPage && sprintID === sprintPage.sprintNumber) && <PBITableComponent loading={loading || initialRefresh} sortedInfo={infos.sortedInfo} TaskTableforPBI={TaskTableforPBI} nameFilter={filters.nameFilter} peopleFilter={filters.peopleFilter}
+        {sprintPage && sprintPage.backlogItems  && isSprintLoaded(sprintID, sprintPage,true) && <PBITableComponent loading={loading || initialRefresh} sortedInfo={infos.sortedInfo} TaskTableforPBI={TaskTableforPBI} nameFilter={filters.nameFilter} peopleFilter={filters.peopleFilter}
           item={sprintPage} pbiColumns={pbiColumns} nestedcomponents={nestedcomponents} />}
       </DndProvider>
       {isModal.editPBI && selectedPBI && selectedPBI.id && <EditPBIPopup data={selectedPBI as IAddPBI} visible={isModal.editPBI}

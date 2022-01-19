@@ -76,3 +76,9 @@
 .ant-breadcrumb + .ant-page-header-heading {
   margin-top: 0px !important;
 }
+
+.transparentItem{
+  color:transparent;
+  background-color: transparent;
+  border-color: transparent;
+}

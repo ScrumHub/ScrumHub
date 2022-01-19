@@ -248,12 +248,12 @@ export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
       title: 'Priority', sorter: (a: IProductBacklogItem, b: IProductBacklogItem) => a.priority - b.priority, align: "center" as const, width: "20%", key: 'pbiPriority',
       filteredValue: props.filteredInfo.pbiPriority || null, filters: pbiFilterVals, onFilter: (value: any, item: IProductBacklogItem) => props.filteredInfo && isArrayValid(props.filteredInfo.pbiPriority) ? props.filteredInfo.pbiPriority.includes(item.priority) : item.priority === value,
       sortOrder: props.sortedInfo && props.sortedInfo.columnKey === 'pbiPriority' && props.sortedInfo.order,
-      render: (item: IProductBacklogItem) => item.id !== 0 ? <Tag style={{ cursor: "pointer" }} color={backlogColors[item.priority % 3]}>{backlogPriorities[item.priority % 3]}</Tag> : <Tag style={{ color: "transparent", backgroundColor: "transparent", borderColor: "transparent" }} color={backlogColors[0]}>{backlogPriorities[0]}</Tag>
+      render: (item: IProductBacklogItem) => item.id !== 0 ? <Tag style={{ cursor: "pointer",marginRight:"15%" }} color={backlogColors[item.priority % 3]}>{backlogPriorities[item.priority % 3]}</Tag> : <Tag className="transparentItem">{backlogPriorities[0]}</Tag>
     },
     {
       title: 'Story Points', sortOrder: props.sortedInfo && props.sortedInfo.columnKey === 'storyPoints' && props.sortedInfo.order, sorter: (a: IProductBacklogItem, b: IProductBacklogItem) => a.expectedTimeInHours - b.expectedTimeInHours, width: "15%", key: 'storyPoints', align: "center" as const, render: (item: IProductBacklogItem) => {
         return (item.id !== 0 ? <Tag style={{ cursor: "pointer" }} color={item.estimated ? (item.expectedTimeInHours > 10 ? "red" : "green") : "purple"} onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, estimatePBI: true }); }}>
-          {item.estimated ? (item.expectedTimeInHours + " SP ") : "Not estimated "}{<EditOutlined />}</Tag> : <Tag style={{ color: "transparent", backgroundColor: "transparent", borderColor: "transparent" }} color={backlogColors[0]}>{"Not estimated "}{<EditOutlined />}</Tag>)
+          {item.estimated ? (item.expectedTimeInHours + " SP ") : "Not estimated "}{<EditOutlined />}</Tag> : <Tag className='transparentItem' color={backlogColors[0]}>{"Not estimated "}{<EditOutlined />}</Tag>)
       }
     },
     {
@@ -278,11 +278,11 @@ export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
       },
     },
     {
-      title: 'Title', width: "30%", align: "center" as const, dataIndex: 'title', key: 'sprintTitle',
+      title: 'Title', width: "30%", align: "center" as const, dataIndex: 'title', key: 'sprintTitle', ellipsis:true
     },
     {
       title: 'Deadline', width: "15%", align: "center" as const, dataIndex: 'finishDate', key: 'finishDate',
-      render: (date: string) => date ? <span><CalendarOutlined></CalendarOutlined>{" " + dateFormat(date as unknown as Date)}</span> : ""
+      render: (date: string) => <span hidden={!date}><CalendarOutlined></CalendarOutlined>{ " " + (date?dateFormat(date as unknown as Date):"")}</span>
     },
     {
       title: 'Story Points', width: "15%", align: "center" as const, key: 'finishDate',

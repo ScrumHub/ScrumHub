@@ -1,15 +1,17 @@
 import { Table } from "antd";
-import { IProductBacklogItem, IState } from "../appstate/stateInterfaces";
+import { IProductBacklogItem, ISprint, IState } from "../appstate/stateInterfaces";
 import { initRowIds, initSortedInfo } from "./utility/commonInitValues";
 import { IRowIds } from "./utility/commonInterfaces";
 import * as Actions from '../appstate/actions';
 import { store } from "../appstate/store";
 import { useSelector } from "react-redux";
-import { isArrayValid } from "./utility/commonFunctions";
-import React from "react";
+import { isArrayValid, isNameFilterValid, useIsMounted } from "./utility/commonFunctions";
+import React, { useEffect, useState } from "react";
+import _ from "lodash";
 
 export const PBITableComponent = React.memo((props: any) =>{
-  const keys = useSelector((appState: IState) => appState.keys.pbiKeys as number[]);
+  let keys = useSelector((appState: IState) => appState.keys.pbiKeys as number[]);
+  const [wait, setWait] = useState(false);
   const loadingKeys = useSelector((appState: IState) => appState.loadingKeys.sprintKeys as number[]);
   const updateExpandedRowKeys = (record: IProductBacklogItem) => {
     store.dispatch(Actions.updatePBIKeys([record.id]));
@@ -27,6 +29,16 @@ export const PBITableComponent = React.memo((props: any) =>{
         props.sortSelected(initSortedInfo);}
     }
   };
+  const mounted = useIsMounted();
+
+  useEffect(() => {
+    if(!wait && isArrayValid(props.peopleFilter)){
+
+      setWait(true);
+      keys = isArrayValid(props.peopleFilter) && props.item && isArrayValid(props.item.backlogItems) ?props.item.backlogItems.map((item:IProductBacklogItem)=>{return(item.id)}):keys;
+    }
+  },[props.peopleFilter, wait]);
+
   return (
     <Table
       size="small"
@@ -37,7 +49,6 @@ export const PBITableComponent = React.memo((props: any) =>{
       expandable={{
         expandedRowRender: props.TaskTableforPBI,
         expandedRowKeys: keys,
-        defaultExpandAllRows:props.sortedInfo,
         onExpand: (expanded: any, record: IProductBacklogItem) => {
           updateExpandedRowKeys(record);
         },

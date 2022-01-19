@@ -1,7 +1,9 @@
 import { Badge, Progress, Tag } from "antd";
 import { IProductBacklogItem, ITask } from "../../appstate/stateInterfaces";
 import "../Home.css";
+import "../Main.css";
 import { HomeOutlined } from "@ant-design/icons";
+import { isArrayValid } from "./commonFunctions";
 
 export const backlogPriorities = ["Could", "Should", "Must"];
 export const backlogColors = ["green", "blue", "red"];
@@ -34,26 +36,23 @@ export const taskGhLinkCol = {
   render: (text: string) => <a href={text}>{"See on GitHub"}</a>,
 };
 
+export const priorityPBItem =(item:IProductBacklogItem)=>{
+  return( item.id !== 0 ? <Tag style={{ cursor: "pointer" }} color={backlogColors[item.priority % 3]}>{backlogPriorities[item.priority % 3]}</Tag> : <Tag className='transparentItem' color={backlogColors[0]}>{backlogPriorities[0]}</Tag>);
+}
 
-export const pbiPriorityCol = {
-  title: 'Priority', align: "center" as const, colSpan: 1, key: 'priority',
-  render: (item: IProductBacklogItem) => item.id !== 0 ?
-    <Tag color={backlogColors[item.priority % 3]}>{backlogPriorities[item.priority % 3]}</Tag>
-    : <></>
-
-};
 export const pbiProgressCol = {
   title: 'Progress', width: "20%", key: 'progressBar', align: "center" as const, render: (item: IProductBacklogItem) => {
     return (<span><Progress width={25} size='small' type="line" showInfo={false} percent={item.tasks && item.tasks.length > 0 ? 100 * (item.tasks.filter((item: ITask) => item.finished).length / item.tasks.length) : 100}
-     /*format={percent => `${item.tasks?item.tasks.filter((item: ITask) => item.finished).length:0}`}*/ ></Progress></span>
+      ></Progress></span>
     )
   }
 };
 export const pbiProgressCol2 = {
   title: 'Tasks To Do', width: "15%", key: 'tasks', align: "center" as const, render: (item: IProductBacklogItem) => {
+    const filtered = isArrayValid(item.tasks) ? item.tasks.filter((item: ITask) => !item.finished).length :0;
     return (
-      <Progress width={25} percent={100} size='small' type="dashboard" status={`${item.tasks && item.tasks.length > 0 ? (item.tasks.filter((item: ITask) => item.finished).length / item.tasks.length) !== 0 ? "success" : "exception" : "success"}`}
-        format={() => `${item.tasks ? item.tasks.length : 0}`} />)
+      <Progress width={25} percent={100} size='small' type="dashboard" status={`${filtered === 0 ? "success":"exception"}`}
+        format={() => `${filtered}`} />)
   }
 };
 
