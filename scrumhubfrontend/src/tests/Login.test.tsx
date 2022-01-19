@@ -10,7 +10,7 @@ import { Login } from "../components/Login";
 import { configureStore } from "@reduxjs/toolkit";
 import renderer from 'react-test-renderer';
 import { reducerFunction } from "../appstate/reducer";
-import { initTestState } from "../appstate/stateTestValues";
+import { initTestState } from "./stateTestValues";
 import { Home } from "../components/Home";
 
 describe('Login component rendered in container', () => {

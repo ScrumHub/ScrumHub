@@ -108,6 +108,13 @@ export function getTimeFromDate(date:Date){
   return(date.getHours()+":"+(date.getMinutes()<10?"0":"")+date.getMinutes()+":"+(date.getSeconds()<10?"0":"")+date.getSeconds());
 }
 
+export function getFetchBodyData(url:string){
+  const newUrl = url.split("?code=");
+  window.history.pushState({}, "", newUrl[0]);
+  return({code: newUrl[1]});
+}
 
-
+export function hasGithubResponseCode(url:string){
+ return(isNameFilterValid(url)&& url.includes("?code="));
+}
 

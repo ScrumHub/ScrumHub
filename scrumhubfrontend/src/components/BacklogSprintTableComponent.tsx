@@ -8,6 +8,7 @@ import { initRowIds } from "./utility/commonInitValues";
 import * as Actions from '../appstate/actions';
 import { useSelector } from "react-redux";
 import { isArrayValid } from "./utility/commonFunctions";
+import { TouchBackend } from 'react-dnd-touch-backend';
 import React from "react";
 
 export const SprintTableComponent = React.memo((props: any) =>{
@@ -24,6 +25,7 @@ export const SprintTableComponent = React.memo((props: any) =>{
   useEffect(() => {
     
   },[props.peopleFilter,props.nameFilter]);
+
   return (
     <DndProvider backend={HTML5Backend} key={"dnd"+props.keys}>
        <Table

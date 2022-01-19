@@ -1,4 +1,5 @@
 import { IFilters } from "../../appstate/stateInterfaces";
+import config from "../../configuration/config";
 import { backlogPriorities } from "./BodyRowsAndColumns";
 import { IModals, IRowIds, tableKeys } from "./commonInterfaces";
 
@@ -61,5 +62,10 @@ export const initLoadingKeys: tableKeys = {
 
 export const loginData = {
   isLoading: false,
-  errorMessage: "Sorry! Login failed"
+  errorMessage: "Error! Login failed"
+}
+
+export const initReposFilters = {
+  pageSize: config.defaultFilters.size,
+  pageNumber: config.defaultFilters.page,
 }

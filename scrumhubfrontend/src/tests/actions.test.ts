@@ -2,15 +2,164 @@
  * @jest-environment jsdom
  */
 import expect from "expect"; // You can use any testing library
-import { IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList } from "../appstate/stateInterfaces";
-import config from "../configuration/config";
-import * as Fetching from "../appstate/fetching";
-import { RequestResponse } from "../appstate/response";
-import { initPerson, initPBItem, initRepository, initSprint, initTask, initPBIFilter, initError, errorObject } from "../appstate/initStateValues";
-import axios, { AxiosResponse } from 'axios';
-import MockAdapter from 'axios-mock-adapter';
-import { tstConf, testFilters, testPBIList, testRepositoryList, testSprintList, testTaskList } from "./stateTestValues";
-import { filterUrlString, getHeader } from "../appstate/stateUtilities";
+import { configureStore } from '@reduxjs/toolkit';
+import axios from 'axios';
+import { reducerFunction } from "../appstate/reducer";
+import { initTestState, testFetchReposVals, testFilters, testRepositoryList, tstConf } from "./stateTestValues";
+import * as Actions from "../appstate/actions";
+import { fetchStateRepos, filterUrlString } from "../appstate/stateUtilities";
+import MockAdapter from "axios-mock-adapter";
+
+//describe('67087596', () => {
+  test('should pass', async () => {
+    const mock = new MockAdapter(axios);
+  mock.onGet(`${tstConf.url}/Repositories?${filterUrlString(testFilters)}`).reply(200, testRepositoryList);
+    //const axiosSpy = jest.spyOn(axios, 'get').mockResolvedValueOnce(fetchStateRepos(initTestState,testRepositoryList,1,10));
+    const store = configureStore({
+      reducer: reducerFunction(initTestState),
+    });
+    await store.dispatch(Actions.fetchReposThunk(testFetchReposVals)).then((response)=>{console.log(response)});
+    //expect(axiosSpy).toBeCalledWith(`${tstConf.url}/Repositories?${filterUrlString(testFilters)}`,{ headers: getHeader(config.token, config), });
+    const state = store.getState();
+    expect(state).toEqual(fetchStateRepos(initTestState,testRepositoryList,1,10,10));
+  });
+//});
+
+/*describe('67087596', () => {
+  it('should pass', async () => {
+    const nameAndEmail = {
+      name: 'John Smith',
+      email: '123@123.com',
+    };
+    const postSpy = jest.spyOn(axios, 'post').mockResolvedValueOnce({ data: { id: '1' } });
+    const store = configureStore({
+      reducer: reducerFunction(initTestState),
+    });
+    await store.dispatch(Actions.fetchReposThunk(testFetchReposVals));
+    expect(postSpy).toBeCalledWith(`${tstConf.url}/Repositories?${filterUrlString(testFilters)}`, nameAndEmail);
+    const state = store.getState();
+    expect(state).toEqual('1');
+  });
+});*/
+
+/*const middlewares = [thunk]
+export const mockStore = configureMockStore(middlewares);
+describe('ACTION TESTS', () => {
+it('should fetchRepos', () => {
+  const temp = {id: 1, name: 'John', age: 20}
+  const expectedActions = [
+       {
+          type: fetchReposThunk.pending.type
+       },
+       {
+          type: fetchReposThunk.rejected.type,
+          payload: initError
+       },
+       {
+          type: fetchReposThunk.fulfilled.type,
+          payload: initRepository
+        }
+    ];
+  const store = mockStore({});
+// mock API returns
+  jest.spyOn(importFile,'getUserById').mockImplementation(() =>        
+   Promise.resolve(temp));
+   return store.dispatch(fetchUser({id: 1})).then(() => {
+      expect(store.getActions().map(action => 
+       ({
+         type: action.type, 
+         payload: action.payload
+       })
+      )).toEqual(expectedActions)
+   })
+})
+
+it('should fetchUser: age < 18', () => {
+  const user = {id: 2, name: 'Jack', age: 16}
+  const expectedActions = [
+       {
+          type: fetchUser.pending.type
+       },
+       {
+          type: fetchUser.fulfilled.type,
+          payload: user
+        }
+    ];
+  const store = mockStore({});
+// mock API returns
+  jest.spyOn(importFile,'getUserById').mockImplementation(() =>        
+   Promise.resolve(user));
+   return store.dispatch(fetchUser({id: 2})).then(() => {
+      expect(store.getActions().map(action => 
+       ({
+         type: action.type, 
+         payload: action.payload
+       })
+      )).toEqual(expectedActions)
+   })
+})
+
+})
+
+jest.mock('./api');
+jest.mock('./hooks')
+
+describe('Account Thunks', () => {
+  let api: jest.Mocked<typeof apiModule>;
+  let hooks: jest.Mocked<typeof hookModule>
+
+  beforeAll(() => {
+    api = apiModule as any;
+    hooks = hookModule as any;
+  });
+
+  // Clean up after yourself.
+  // Do you want bugs? Because that's how you get bugs.
+  afterAll(() => {
+    jest.unmock('./api');
+    jest.unmock('./hooks');
+  });
+
+  describe('register', () => {
+
+    // We're going to be using the same argument, so we're defining it here
+    // The 3 types are <What's Returned, Argument, Thunk Config>
+    let action: AsyncThunkAction<void, IRegisterProps, {}>;
+    
+    let dispatch: Dispatch;        // Create the "spy" properties
+    let getState: () => unknown;
+
+    let arg: IRegisterProps;
+    let result: IAuthSuccess;
+
+    beforeEach(() => {
+      // initialize new spies
+      dispatch = jest.fn();
+      getState = jest.fn();
+
+      api.register.mockClear();
+      api.register.mockResolvedValue(result);
+
+      arg = { email: 'me@myemail.com', password: 'yeetmageet123' };
+      result = { accessToken: 'access token', refreshToken: 'refresh token' };
+
+      action = thunks.registerNewAccount(arg);
+    });
+
+    // Test that our thunk is calling the API using the arguments we expect
+    it('calls the api correctly', async () => {
+      await action(dispatch, getState, undefined);
+      expect(api.register).toHaveBeenCalledWith(arg);
+    });
+
+    // Confirm that a success dispatches an action that we anticipate
+    it('triggers auth success', async () => {
+      const call = actions.authSuccess(result);
+      await action(dispatch, getState, undefined);
+      expect(dispatch).toHaveBeenCalledWith(call);
+    });
+  });
+
 
 test("getResponseResultsInNetworkError", async () => {
   const mock = new MockAdapter(axios);
@@ -34,7 +183,7 @@ test("getResponseResultsInOtherError", async () => {
 
 test("getResponseResultsInSuccess", async () => {
   const mock = new MockAdapter(axios);
-  mock.onGet(`${config.backend.ip}:${config.backend.port}/api/Repositories?${filterUrlString(initPBIFilter)}`).reply(200,testRepositoryList);
+  const p = mock.onGet(`${config.backend.ip}:${config.backend.port}/api/Repositories?${filterUrlString(initPBIFilter)}`).reply(200,testRepositoryList);
   const response = axios.get(
       `${config.backend.ip}:${config.backend.port}/api/Repositories?${filterUrlString(initPBIFilter)}`,
       { headers: getHeader(config.token, config), }
@@ -247,4 +396,4 @@ test("startFeatureBranchForTaskIsSuccessful", async () => {
   const response: RequestResponse<ITask, number> =
     await Fetching.startBranchForTask(config.token,tstConf.ownerName, !tstConf.hotfix,tstConf.taskId, );
   expect(response).toEqual({ code: 200, response: initTask });
-});
+});*/

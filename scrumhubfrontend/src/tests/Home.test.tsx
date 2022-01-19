@@ -10,7 +10,7 @@ import { Provider } from "react-redux";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { configureStore } from "@reduxjs/toolkit";
 import { reducerFunction } from "../appstate/reducer";
-import { initTestState } from "../appstate/stateTestValues";
+import { initTestState } from "./stateTestValues";
 import renderer from 'react-test-renderer';
 import { Home } from "../components/Home";
 
