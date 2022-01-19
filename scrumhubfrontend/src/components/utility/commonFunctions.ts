@@ -2,6 +2,7 @@ import { ISprint } from "../../appstate/stateInterfaces"
 import { useCallback, useEffect, useRef } from "react";
 import moment from 'moment';
 import { isNull } from "lodash";
+import { number } from "joi";
 
 export const canDropPBI = (pbiId: number, oldSprintId: number, newSprintId: number) => {
   return (oldSprintId !== -2 && newSprintId !== null && newSprintId !== -2 && pbiId !== -2 && newSprintId !== oldSprintId);
@@ -27,7 +28,7 @@ export const isArrayValid = (objectArray: any[]) => {
 }
 
 export const isItemDefined = (item: any) => {
-  return typeof (item) !== "undefined";
+  return typeof (item) !== "undefined" && !isNull(item);
 }
 
 export const validateString = (val: string) => {
@@ -108,6 +109,17 @@ export function getTimeFromDate(date:Date){
   return(date.getHours()+":"+(date.getMinutes()<10?"0":"")+date.getMinutes()+":"+(date.getSeconds()<10?"0":"")+date.getSeconds());
 }
 
+export function getFetchBodyData(url:string){
+  const newUrl = url.split("?code=");
+  window.history.pushState({}, "", newUrl[0]);
+  return({code: newUrl[1]});
+}
 
+export function hasGithubResponseCode(url:string){
+ return(isNameFilterValid(url)&& url.includes("?code="));
+}
 
+export function isSprintLoaded(sprintID:number, sprintPage:ISprint, shouldBeEqual:boolean){
+  return(sprintID!==-1 && isItemDefined(sprintPage) && shouldBeEqual ===(sprintID === sprintPage.sprintNumber));
+}
 

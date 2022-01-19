@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import { Provider } from "react-redux";
-import { initTestState } from "../appstate/stateTestValues";
+import { initTestState } from "./stateTestValues";
 import { reducerFunction } from "../appstate/reducer";
 import { configureStore } from "@reduxjs/toolkit";
 import { act } from "react-dom/test-utils";

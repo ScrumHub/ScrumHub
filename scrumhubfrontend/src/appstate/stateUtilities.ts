@@ -1,6 +1,6 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import _ from "lodash";
-import { isArrayValid } from "../components/utility/commonFunctions";
+import { isArrayValid, isItemDefined } from "../components/utility/commonFunctions";
 import config from "../configuration/config";
 import { initError, initProductBacklogList, unassignedPBI } from "./initStateValues";
 import { RequestResponse } from "./response";
@@ -49,13 +49,13 @@ export const getHeaderAcceptAll = (token: string, config: any) => {
 /**
  * @returns error object after validation
  */
-export const getError = (res: any) => { return ({hasError: true,errorCode: res ? res.code : -1, erorMessage: res ? (res.response as IError).Message : "", })};
+export const getError = (res: any) => { return ({ hasError: true, errorCode: res ? res.code : -1, erorMessage: isItemDefined(res) && isItemDefined(res.response)? (res.response as IError).Message : "", }) };
 
 /**
  * @param {String|undefined} uri Uri to validate
  * @returns {String} Empty string on undefined uri
  */
-export function validateUri(uri: string | undefined) { return (typeof (uri) === "undefined" ? "" : uri);}
+export function validateUri(uri: string | undefined) { return (typeof (uri) === "undefined" ? "" : uri); }
 
 /**
  * @param {IFilters} filters Filters to validate and concatenate into string
@@ -123,7 +123,8 @@ export function updateStateTasks(newState: IState, task: ITask) {
   return (newState)
 };
 
-export function addStateTask(newState: IState, task: ITask) {
+export function addStateTask(state: IState, task: ITask) {
+  let newState = state;
   newState.error = initError;
   if (newState.openSprint && isArrayValid(newState.openSprint.backlogItems) && newState.openSprint.backlogItems.findIndex((pbi: IProductBacklogItem) => pbi.id === task.pbiId) !== -1) {
     const index = newState.openSprint.backlogItems.findIndex((pbi: IProductBacklogItem) => pbi.id === task.pbiId);
@@ -152,7 +153,8 @@ export function addStateTask(newState: IState, task: ITask) {
   return (newState)
 };
 
-export function addStateUnassignedTaskToPBI(newState: IState, tasks: ITaskList) {
+export function addStateUnassignedTaskToPBI(state: IState, tasks: ITaskList) {
+  let newState = state;
   const pbisList = [unassignedPBI] as IProductBacklogItem[];
   if (tasks && tasks.list.length > 0) {
     if (!newState.pbiPage || !isArrayValid(newState.pbiPage.list)) {
@@ -176,7 +178,8 @@ export function addStateUnassignedTaskToPBI(newState: IState, tasks: ITaskList) 
   return (newState);
 }
 
-export function updateTasksSWR(newState: IState, tasks: ITaskList) {
+export function updateTasksSWR(state: IState, tasks: ITaskList) {
+  let newState = state;
   newState.error = initError;
   if (tasks && isArrayValid(tasks.list)) {
     const pbiIndex = tasks.list.at(0)?.isAssignedToPBI ? tasks.list.at(0)?.pbiId as number : 0;
@@ -207,7 +210,8 @@ export function updateTasksSWR(newState: IState, tasks: ITaskList) {
 
 }
 
-export function updateStatePBI(newState: IState, pbi: IProductBacklogItem) {
+export function updateStatePBI(state: IState, pbi: IProductBacklogItem) {
+  let newState = state;
   if (pbi.isInSprint) {
     if (newState.sprintPage && isArrayValid(newState.sprintPage.list)) {
       const index = newState.sprintPage.list.findIndex((sprint: ISprint) => sprint.sprintNumber === pbi.sprintNumber);
@@ -230,19 +234,15 @@ export function updateStatePBI(newState: IState, pbi: IProductBacklogItem) {
   return (newState);
 }
 
-export function fetchStateRepos(newState: IState, payload: PayloadAction<RequestResponse<IRepositoryList, number>>) {
-  const pageNumber = _.get(payload, ["meta", "arg", "filters", "pageNumber"], config.defaultFilters.page);
-  const pageSize = _.get(payload, ["meta", "arg", "filters", "pageSize"], config.defaultFilters.size);
-  const repos = payload.payload.response as IRepositoryList;
-  if (newState.repositories == null || pageNumber === 1) {
-    newState.repositories = (repos.list).slice(0, (pageNumber + 1) * pageSize);
+export function fetchStateRepos(newState: IState, repos: IRepositoryList, pageNumber: number, pageSize: number, pageCount:number) {
+  if (newState.repositories == null || !isArrayValid(newState.repositories)|| pageNumber === 1) {
+    newState = { ...newState, repositories: (repos.list).slice(0, (pageNumber + 1) * pageSize) };
   } else if (newState.repositories !== repos.list) {
-    newState.repositories = newState.repositories
+    newState = { ...newState, repositories: newState.repositories
       .concat(repos.list)
-      .slice(0, (pageNumber + 1) * pageSize);
+      .slice(0, (pageNumber + 1) * pageSize)};
   }
-  // if response is shorter than default size - it means end is reached.
-  newState.reposLastPage = repos.list.length < pageSize;
+  newState.reposLastPage = repos.list.length < pageSize ||  (isItemDefined(pageCount) && pageCount===1);
   newState.reposRequireRefresh = false;
   newState.error = initError;
   newState.loading = false;
@@ -271,23 +271,24 @@ export function addStateRepo(newState: IState, repo: IRepository) {
 export function addStatePBI(newState: IState, pbi: IProductBacklogItem) {
   if (newState.pbiPage && isArrayValid(newState.pbiPage.list)) {
     newState.pbiPage.list = newState.pbiPage.list.concat([pbi]);
-  } else {newState.pbiPage.list = [pbi];}
+  } else { newState.pbiPage.list = [pbi]; }
   newState.loading = false;
   newState.error = initError;
   return (newState);
 }
 
-export function addStateSprint(newState:IState, sprint:ISprint){
+export function addStateSprint(newState: IState, sprint: ISprint) {
   if (isArrayValid(sprint.backlogItems) && newState.pbiPage && isArrayValid(newState.pbiPage.list)) {
     newState.pbiPage = { ...newState.pbiPage, list: newState.pbiPage.list.filter((pbi: IProductBacklogItem) => !sprint.backlogItems.filter((pbi2: IProductBacklogItem) => pbi.id === pbi2.id).length) };
   }
-  if (newState.sprintPage && isArrayValid(newState.sprintPage.list)) {newState.sprintPage.list = newState.sprintPage.list.concat([sprint]);
+  if (newState.sprintPage && isArrayValid(newState.sprintPage.list)) {
+    newState.sprintPage.list = newState.sprintPage.list.concat([sprint]);
   }
-  else {newState.sprintPage.list = [sprint];}
+  else { newState.sprintPage.list = [sprint]; }
   if (sprint.isCurrent) { newState.activeSprintNumber = sprint.sprintNumber };
   newState.error = initError;
   newState.loading = false;
-  return(newState);
+  return (newState);
 }
 
 

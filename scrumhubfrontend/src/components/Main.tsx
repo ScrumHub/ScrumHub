@@ -2,7 +2,7 @@ import { Avatar, Breadcrumb, Layout, Menu, message, PageHeader } from 'antd';
 import { useLocation, useNavigate } from 'react-router';
 import 'antd/dist/antd.css';
 import { DatabaseOutlined, GithubOutlined, ProjectOutlined } from '@ant-design/icons';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { AppRouter } from '../Approuter';
 import { store } from '../appstate/store';
 import * as Actions from '../appstate/actions';
@@ -13,6 +13,7 @@ import { ISprint, IState } from '../appstate/stateInterfaces';
 import { routes } from './utility/BodyRowsAndColumns';
 import { clearLocalStorage, clearProjectLocalStorage, isMessageValid } from './utility/commonFunctions';
 import { ItemRender } from './utility/LoginAndMainHandlers';
+import { isNull } from 'lodash';
 const { Header, Footer, Content, Sider } = Layout;
 const { SubMenu } = Menu;
 
@@ -36,15 +37,15 @@ export function Main(props: any) {
       setLogout(false);
       store.dispatch(Actions.logout());
       clearLocalStorage();
-      if (!isLoggedIn) { navigate("/login", { replace: true });}
+      if (!isLoggedIn) { navigate("/login", { replace: true }); }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [logout, isLoggedIn]);
-  const handleLogout = () => { setLogout(true);}
+  const handleLogout = () => { setLogout(true); }
   const handleProjects = () => {
-    store.dispatch(Actions.clearProject());
-    clearProjectLocalStorage();
     if (location.pathname !== "/") {
+      store.dispatch(Actions.clearProject());
+      clearProjectLocalStorage();
       navigate("/", { replace: true });
       //store.dispatch(clearReposList());
     }
@@ -88,14 +89,65 @@ export function Main(props: any) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser, load, isLoggedIn]);
+  let stop = true, y_pos = -1, old_pos = -1, down = false,start=false;
+  document.ondragover = () => { };
+  document.ondragenter = () => { };
+  const scroll = (step:number) => {
+    var elmnt = document.getElementById("scrollableDiv");
+    if (!isNull(elmnt)) {
+      if (y_pos > 1 * window.innerHeight / 2 && y_pos > old_pos && down) {elmnt.scrollTop += step;}
+      else if (y_pos <= 9 * window.outerHeight / 10 &&y_pos <= old_pos && down) {elmnt.scrollTop -= step;}
+      start = true;
+    }
+  }
+  function handleMouseDragOver(event:any) {
+    event = event || window.event;
+    if (event.clientY !== y_pos && down) {
+      stop = false;
+      y_pos = event.clientY;
+    }
+  }
+  function handleMouseDragEnter(event:any) {
+    event = event || window.event;
+    if (old_pos === -1) { old_pos = event.clientY; }
+  }
+  const handleDragEnter = (e:any) => {
+    document.ondragenter = handleMouseDragEnter;
+    document.ondragover = handleMouseDragOver;
+  }
+  const handleDragOver = (e:any) => {
+    down = true;
+    scroll(5);
+  }
 
+  const handleDragLeave = (e:any) => {
+    down = false;
+    start = false;
+    stop = true;
+    y_pos = -1;
+    old_pos = -1;
+    document.ondragover = () => { };
+    document.ondragenter = () => { };
+  }
+  useEffect(() => {
+    let timer;
+    if (!stop && start) {
+       timer = setTimeout(function () {
+        scroll(5)
+      }, 50
+      );
+    }
+    if(!start && stop){
+    return () => clearInterval(timer);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stop, start]);
   if (location.pathname === "/" && ownerName) { clearProjectLocalStorage(); }
   if (ownerName === null && location.pathname !== "/") { handleProjects(); }
-  
   return (
-    <section className="container" >
-      <Layout id="scrollableDiv" className={'scrollDiv'}>
-        <Header hidden={location.pathname.includes("login")} className="clearfix" style={{ position: 'fixed', zIndex: 100, padding: 0, height: "5vh", lineHeight: "5vh", width: "100%", backgroundColor: "#f0f0f0" }}>
+    <section id="parentSection" className="container" >
+      <Layout id="scrollableDiv" onDragStart={handleDragEnter} onDragOver={handleDragOver} onDragEnd={handleDragLeave} className={'scrollDiv'}>
+        {!location.pathname.includes("login")&&<Header  className="clearfix" style={{ position: 'fixed', zIndex: 100, padding: 0, height: "5vh", lineHeight: "5vh", width: "100%", backgroundColor: "#f0f0f0" }}>
           <Menu mode="horizontal" theme="light" className="mainMenu" >
             <SubMenu style={{ float: "unset" }} key="SubMenu0" title={currentUser.isCurrentUser ? currentUser.login : ""} icon={
               currentUser.isCurrentUser ? <Avatar style={{ transform: "scale(0.8)", marginBottom: "0.4vh" }} size="small" src={`${currentUser.avatarLink}`} ></Avatar> : <></>}>
@@ -106,10 +158,10 @@ export function Main(props: any) {
             <Menu.Item className='mainMenuItem' key="proj" onClick={() => handleProjects()}><span style={{ maxHeight: "1vh" }}>Projects</span></Menu.Item>
             <Menu.Item className='mainMenuItem' key="logout" onClick={() => handleLogout()} >Logout</Menu.Item>
           </Menu>
-        </Header>
+        </Header>}
         <Content className="content">
           <Layout className="site-layout-background">
-            <Sider hidden={ownerName === ""} theme="light" collapsedWidth={40} style={{ marginTop: "5vh", height: 'auto', backgroundColor: "white", borderColor: "transparent" }} onCollapse={() => setIsCollapsed(!isCollapsed)} collapsible={true} collapsed={isCollapsed} className="site-layout-background" width={200}>
+          {!location.pathname.includes("login")&&<Sider hidden={location.pathname.includes("login") || ownerName === ""} theme="light" collapsedWidth={40} style={{ marginTop: "5vh", height: 'auto', backgroundColor: "white", borderColor: "transparent" }} onCollapse={() => setIsCollapsed(!isCollapsed)} collapsible={true} collapsed={isCollapsed} className="site-layout-background" width={200}>
               <Menu mode="inline" style={{ position: "fixed", width: isCollapsed ? 40 : 200 }} defaultSelectedKeys={[selectedSiderKey]}>
                 {/*<Menu.Item key="1" icon={<ProjectOutlined />}>
                   <span>Project Details</span></Menu.Item>
@@ -118,34 +170,36 @@ export function Main(props: any) {
                 <Menu.Item key="ActiveSprint" onClick={() => handleActiveSprint()} disabled={activeSprintNumber === -1} icon={<ProjectOutlined />}>
                   <span>Active Sprint</span></Menu.Item>
               </Menu>
-            </Sider>
-            <Content style={ownerName === "" ? {} : { padding: '0 50px' }}>
+            </Sider>}
+            <Content style={location.pathname.includes("login")||ownerName === "" ? {} : { padding: '0 50px' }}>
               <div style={{ minHeight: "90vh", margin: 0, }}>
                 {ownerName !== "" && <PageHeader className="pageHeader"
-                  title={<div style={{ fontWeight: "bold", lineHeight: 1.25, paddingTop: 0, marginTop: 0, }}>{sprintID && sprintID !== "0" && sprintPage && sprintPage.title && Number(sprintID) === sprintPage.sprintNumber ? sprintPage.title : location.pathname.includes("sprint") ? "" : "Product Backlog"}</div>}
+                  title={<div style={{ fontWeight: "bold", textOverflow:"ellipsis", whiteSpace:"nowrap",overflow:"clip", width:"85vw", lineHeight: 1.25, paddingTop: 0, marginTop: 0, }}>{sprintID && sprintID !== "0" && sprintPage && sprintPage.title && Number(sprintID) === sprintPage.sprintNumber ? sprintPage.title : location.pathname.includes("sprint") ? "" : "Product Backlog"}</div>}
                   breadcrumb={<Breadcrumb style={{ marginTop: 0, marginBottom: 0, }} itemRender={ItemRender} routes={routes(ownerName, sprintID, location)} />}
                 >
                 </PageHeader>}
                 <AppRouter />
               </div>
-              <Footer hidden={location.pathname.includes("login")} style={{ margin: 0, lineHeight: "5vh !important", padding: 0, textAlign: 'center', height: "5vh", verticalAlign: "bottom" }}>
-                {<a
+              <Footer className={location.pathname.includes("login")?"loginFooter":"mainFooter"}>
+                <a
                   href="http://github.com/ScrumHub/ScrumHub"
                   target="_blank"
                   rel="noreferrer"
                   className="GithubFooter"
                 >
-                  <GithubOutlined style={{ marginLeft: "5px" }} />
+                  <GithubOutlined />
                   {" ScrumHub"}
-                </a>}{"  © Created in 2021"}
-
+                </a>{"  © Created in 2021  "}
+                <a className="GithubFooter" href="https://www.flaticon.com/free-icons/agile">
+                  {"Logo"}</a>
+                {"  © Created by BomSymbols"}
               </Footer>
             </Content>
 
           </Layout>
         </Content>
 
-      </Layout>
-    </section>
+      </Layout >
+    </section >
   );
 }

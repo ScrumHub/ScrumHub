@@ -52,7 +52,21 @@
   -webkit-border-radius: 10px;
   border-radius: 10px;
 }
-
+.loginFooter{
+  background-color: white;
+  margin: 0;  padding: 0;  
+  text-align: center;  
+  vertical-align: center;
+  height:5vh !important;
+}
+.mainFooter{
+  margin: 0;  padding: 0;  
+  text-align: center;  
+  line-height: 4vh !important; 
+   height: 4vh !important;  
+   margin-bottom: 1vh; 
+   vertical-align: center;
+}
 .pageHeader {
   margin-top: 5vh;
   padding-left: 2%;
@@ -61,4 +75,10 @@
 }
 .ant-breadcrumb + .ant-page-header-heading {
   margin-top: 0px !important;
+}
+
+.transparentItem{
+  color:transparent;
+  background-color: transparent;
+  border-color: transparent;
 }

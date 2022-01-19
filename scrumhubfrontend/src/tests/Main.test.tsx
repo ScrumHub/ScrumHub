@@ -4,7 +4,7 @@
 import { Provider } from "react-redux";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Main } from "../components/Main";
-import { initTestState } from "../appstate/stateTestValues";
+import { initTestState } from "./stateTestValues";
 import { reducerFunction } from "../appstate/reducer";
 import { configureStore } from "@reduxjs/toolkit";
 import { act } from "react-dom/test-utils";

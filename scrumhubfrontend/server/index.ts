@@ -19,7 +19,7 @@ export const githubConfig = {
   logout_url: process.env.REACT_APP_LOGOUT_URL
 };
 
-const envVarsSchema = joi.object({
+const validateGithubConfig = joi.object({
   client_id: joi.string().required(),
   redirect_uri: joi.string().required(),
   client_secret: joi.string().required(),
@@ -27,16 +27,15 @@ const envVarsSchema = joi.object({
   logout_url: joi.string().required(),
 });
 
-const { error } = envVarsSchema.validate(githubConfig);
+const { error } = validateGithubConfig.validate(githubConfig);
 if (error) {
-  throw new Error(`Config validation error: ${error.message}`);
+  throw new Error(`Config validation error.`);
 }
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.json({ type: "text/*" }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-//By-passing CORS error
 app.use((req: any, res: any, next: NextFunction) => {
   res.header("Access-Control-Allow-Origin", "*");
   next();

@@ -13,12 +13,13 @@ import { store } from '../appstate/store';
 import { clearReposList } from '../appstate/actions';
 import SkeletonList, { CantAddToShButton, InShButton } from './utility/LoadAnimations';
 import { dateFormat, isArrayValid } from './utility/commonFunctions';
+import { initReposFilters } from './utility/commonInitValues';
 const { Meta } = Card;
 
 export function Home() {
   const isLoggedIn = useSelector((appState: IState) => appState.loginState.isLoggedIn);
   const token = useSelector((appState: IState) => appState.loginState.token);
-  const [filters, setFilters] = useState<IFilters>({pageNumber: config.defaultFilters.page,pageSize: config.defaultFilters.size,});
+  const [filters, setFilters] = useState<IFilters>(initReposFilters);
   const lastPage = useSelector((state: IState) => state.reposLastPage);
   const [displayId, setDisplayId] = useState(-1);
   const [fetching, setFetching] = useState(false);
@@ -43,10 +44,7 @@ export function Home() {
       try {
         store.dispatch(
           Actions.fetchReposThunk({
-            filters: {
-              pageSize: config.defaultFilters.size,
-              pageNumber: config.defaultFilters.page,
-            },
+            filters: initReposFilters,
             token: token,
           })
         );

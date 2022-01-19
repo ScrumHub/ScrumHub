@@ -6,6 +6,7 @@ import { initError, loggedOutLoginState, unassignedPBI } from "./initStateValues
 import { isArrayValid } from "../components/utility/commonFunctions";
 import { getError, updateStateTasks, updateStateKeys, addStateTask, addStateUnassignedTaskToPBI, updateStatePBI, updateTasksSWR, fetchStateRepos, updateStateOneSprint, addStateRepo, addStatePBI, addStateSprint } from "./stateUtilities";
 import { isNull } from "lodash";
+import config from "../configuration/config";
 var _ = require('lodash');
 
 export const reducerFunction = (initState: IState) => {
@@ -26,7 +27,7 @@ export const reducerFunction = (initState: IState) => {
     },
     [Actions.clearProject.type]: (state: IState) => {
       let newState = _.cloneDeep(state) as IState;
-      return { ...initState, repositories: newState.repositories, currentUser: newState.currentUser };
+      return { ...initState, repositories: newState.repositories, loginState:newState.loginState, currentUser: newState.currentUser };
     },
     [Actions.clearPBIsList.type]: (state: IState) => {
       let newState = _.cloneDeep(state);
@@ -76,13 +77,14 @@ export const reducerFunction = (initState: IState) => {
     },
     [Actions.logout.type]: (state: IState) => { return ({ ...initState, loginState: loggedOutLoginState }); },
     /*REPOS*/
-    [Actions.fetchReposThunk.pending.toString()]: (state: IState, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
+    [Actions.fetchReposThunk.pending.toString()]: (state: IState) => {
       let newState = _.cloneDeep(state);
       return { ...newState, loading: true };
     },
     [Actions.fetchReposThunk.fulfilled.toString()]: (state: IState, payload: PayloadAction<RequestResponse<IRepositoryList, number>>) => {
       let newState = _.cloneDeep(state);
-      return fetchStateRepos(newState, payload);
+      return fetchStateRepos(newState, payload.payload.response as IRepositoryList, _.get(payload, ["meta", "arg", "filters", "pageNumber"], config.defaultFilters.page),
+       _.get(payload, ["meta", "arg", "filters", "pageSize"], config.defaultFilters.size),_.get(payload.payload.response, ["pageCount"], 1));
     },
     [Actions.fetchReposThunk.rejected.toString()]: (state: IState, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
       let newState = _.cloneDeep(state);

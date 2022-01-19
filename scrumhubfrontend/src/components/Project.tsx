@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Avatar, Badge, Button, Dropdown, Input, Space, } from 'antd';
 import 'antd/dist/antd.css';
 import "./Project.css";
@@ -14,6 +14,7 @@ import { AddPBIPopup } from './popups/AddPBIPopup';
 import { AddSprintPopup } from './popups/AddSprintPopup';
 import { initAddPBI, initSprint } from '../appstate/initStateValues';
 import { initFilterMenu, initFilterSortInfo } from './utility/commonInitValues';
+import { isNull } from 'lodash';
 const { Search } = Input;
 
 export const Project = React.memo((props: any) => {
@@ -86,8 +87,9 @@ export const Project = React.memo((props: any) => {
       }
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ownerName, initialRefresh]);
+
   return (
-    <div className='projectDiv'>
+    <div id="projectDiv" className='projectDiv' >
       <Space wrap direction="horizontal" split={true} onMouseLeave={() => setFilterMenu(initFilterMenu)}
         className='projectSpace'>
         <Button onClick={() => { setIsAddSprint(true); }}>{"Create Sprint"}</Button>
