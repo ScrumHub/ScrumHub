@@ -49,7 +49,6 @@ export function Login(props: any) {
       setData(loginData);
     }
   }, [error.hasError]);
-  console.log(useLocation().pathname);
   return (
       <section className="loginContainer">
         <div className="loginDiv">

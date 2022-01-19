@@ -84,7 +84,7 @@ export const reducerFunction = (initState: IState) => {
     [Actions.fetchReposThunk.fulfilled.toString()]: (state: IState, payload: PayloadAction<RequestResponse<IRepositoryList, number>>) => {
       let newState = _.cloneDeep(state);
       return fetchStateRepos(newState, payload.payload.response as IRepositoryList, _.get(payload, ["meta", "arg", "filters", "pageNumber"], config.defaultFilters.page),
-       _.get(payload, ["meta", "arg", "filters", "pageSize"], config.defaultFilters.size),_.get(payload, ["meta", "arg", "filters", "pageCount"], 1));
+       _.get(payload, ["meta", "arg", "filters", "pageSize"], config.defaultFilters.size),_.get(payload.payload.response, ["pageCount"], 1));
     },
     [Actions.fetchReposThunk.rejected.toString()]: (state: IState, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
       let newState = _.cloneDeep(state);

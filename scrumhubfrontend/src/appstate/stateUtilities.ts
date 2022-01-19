@@ -242,9 +242,7 @@ export function fetchStateRepos(newState: IState, repos: IRepositoryList, pageNu
       .concat(repos.list)
       .slice(0, (pageNumber + 1) * pageSize)};
   }
-  console.log("lastPage", repos.list.length, pageSize, pageCount, pageNumber);
-  // if response is shorter than default size - it means end is reached.
-  newState.reposLastPage = repos.list.length < pageSize || pageCount>pageNumber;
+  newState.reposLastPage = repos.list.length < pageSize ||  (isItemDefined(pageCount) && pageCount===1);
   newState.reposRequireRefresh = false;
   newState.error = initError;
   newState.loading = false;
