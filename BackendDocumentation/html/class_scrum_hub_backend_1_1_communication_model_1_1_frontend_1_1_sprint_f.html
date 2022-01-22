@@ -9,6 +9,10 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -23,6 +27,7 @@
   <td id="projectalign">
    <div id="projectname">ScrumHubBackend
    </div>
+   <div id="projectbrief">Agile development platform integrated with GitHub. Engineering thesis of A. Kołakowska and A. Litkowski.</div>
   </td>
  </tr>
  </tbody>
@@ -46,6 +51,23 @@ $(function() {
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_sprint_f.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -60,11 +82,6 @@ $(function() {
 </iframe>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="namespace_scrum_hub_backend.html">ScrumHubBackend</a></li><li class="navelem"><a class="el" href="namespace_scrum_hub_backend_1_1_communication_model.html">CommunicationModel</a></li><li class="navelem"><a class="el" href="namespace_scrum_hub_backend_1_1_communication_model_1_1_frontend.html">Frontend</a></li><li class="navelem"><a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_sprint_f.html">SprintF</a></li>  </ul>
-</div>
-</div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#properties">Properties</a> &#124;
@@ -78,32 +95,133 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
-<tr class="memitem:a3e20f124cfeca6330d9aa0bd2708dba7"><td class="memItemLeft" align="right" valign="top"><a id="a3e20f124cfeca6330d9aa0bd2708dba7" name="a3e20f124cfeca6330d9aa0bd2708dba7"></a>
-string&#160;</td><td class="memItemRight" valign="bottom"><b>Goal</b> = String.Empty<code> [get, set]</code></td></tr>
-<tr class="memdesc:a3e20f124cfeca6330d9aa0bd2708dba7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Goal of the sprint <br /></td></tr>
+<tr class="memitem:a3e20f124cfeca6330d9aa0bd2708dba7"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_sprint_f.html#a3e20f124cfeca6330d9aa0bd2708dba7">Goal</a> = String.Empty<code> [get, set]</code></td></tr>
+<tr class="memdesc:a3e20f124cfeca6330d9aa0bd2708dba7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Goal of the sprint  <a href="class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_sprint_f.html#a3e20f124cfeca6330d9aa0bd2708dba7">More...</a><br /></td></tr>
 <tr class="separator:a3e20f124cfeca6330d9aa0bd2708dba7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9345a871c50f3008e142b7b623453a37"><td class="memItemLeft" align="right" valign="top"><a id="a9345a871c50f3008e142b7b623453a37" name="a9345a871c50f3008e142b7b623453a37"></a>
-List&lt; long &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>PBIs</b> = new List&lt;long&gt;()<code> [get, set]</code></td></tr>
-<tr class="memdesc:a9345a871c50f3008e142b7b623453a37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ids of PBIs in the sprint <br /></td></tr>
+<tr class="memitem:a9345a871c50f3008e142b7b623453a37"><td class="memItemLeft" align="right" valign="top">List&lt; long &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_sprint_f.html#a9345a871c50f3008e142b7b623453a37">PBIs</a> = new List&lt;long&gt;()<code> [get, set]</code></td></tr>
+<tr class="memdesc:a9345a871c50f3008e142b7b623453a37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ids of PBIs in the sprint  <a href="class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_sprint_f.html#a9345a871c50f3008e142b7b623453a37">More...</a><br /></td></tr>
 <tr class="separator:a9345a871c50f3008e142b7b623453a37"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac4dbcf2ad1ac55dde701c2abe40449d2"><td class="memItemLeft" align="right" valign="top"><a id="ac4dbcf2ad1ac55dde701c2abe40449d2" name="ac4dbcf2ad1ac55dde701c2abe40449d2"></a>
-string&#160;</td><td class="memItemRight" valign="bottom"><b>Title</b> = String.Empty<code> [get, set]</code></td></tr>
-<tr class="memdesc:ac4dbcf2ad1ac55dde701c2abe40449d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Title of the sprint <br /></td></tr>
+<tr class="memitem:ac4dbcf2ad1ac55dde701c2abe40449d2"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_sprint_f.html#ac4dbcf2ad1ac55dde701c2abe40449d2">Title</a> = String.Empty<code> [get, set]</code></td></tr>
+<tr class="memdesc:ac4dbcf2ad1ac55dde701c2abe40449d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Title of the sprint  <a href="class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_sprint_f.html#ac4dbcf2ad1ac55dde701c2abe40449d2">More...</a><br /></td></tr>
 <tr class="separator:ac4dbcf2ad1ac55dde701c2abe40449d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b16c0156f1a59e3642bb8cd948bc7dc"><td class="memItemLeft" align="right" valign="top"><a id="a4b16c0156f1a59e3642bb8cd948bc7dc" name="a4b16c0156f1a59e3642bb8cd948bc7dc"></a>
-DateTime&#160;</td><td class="memItemRight" valign="bottom"><b>FinishDate</b><code> [get, set]</code></td></tr>
-<tr class="memdesc:a4b16c0156f1a59e3642bb8cd948bc7dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finish date of the sprint <br /></td></tr>
+<tr class="memitem:a4b16c0156f1a59e3642bb8cd948bc7dc"><td class="memItemLeft" align="right" valign="top">DateTime&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_sprint_f.html#a4b16c0156f1a59e3642bb8cd948bc7dc">FinishDate</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a4b16c0156f1a59e3642bb8cd948bc7dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finish date of the sprint  <a href="class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_sprint_f.html#a4b16c0156f1a59e3642bb8cd948bc7dc">More...</a><br /></td></tr>
 <tr class="separator:a4b16c0156f1a59e3642bb8cd948bc7dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Represents single sprint </p>
-</div><hr/>The documentation for this class was generated from the following file:<ul>
-<li>ScrumHubBackend/CommunicationModel/Frontend/SprintF.cs</li>
+</div><h2 class="groupheader">Property Documentation</h2>
+<a id="a4b16c0156f1a59e3642bb8cd948bc7dc" name="a4b16c0156f1a59e3642bb8cd948bc7dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b16c0156f1a59e3642bb8cd948bc7dc">&#9670;&nbsp;</a></span>FinishDate</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">DateTime ScrumHubBackend.CommunicationModel.Frontend.SprintF.FinishDate</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Finish date of the sprint </p>
+<p >2022-01-22T10:17:34.147Z</p>
+
+</div>
+</div>
+<a id="a3e20f124cfeca6330d9aa0bd2708dba7" name="a3e20f124cfeca6330d9aa0bd2708dba7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e20f124cfeca6330d9aa0bd2708dba7">&#9670;&nbsp;</a></span>Goal</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string ScrumHubBackend.CommunicationModel.Frontend.SprintF.Goal = String.Empty</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Goal of the sprint </p>
+<p ><a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_sprint.html" title="Represents a sprint">Sprint</a> view consists of sprint list. Then in each element we should see all PBIs together with assigned tasks.</p>
+
+</div>
+</div>
+<a id="a9345a871c50f3008e142b7b623453a37" name="a9345a871c50f3008e142b7b623453a37"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9345a871c50f3008e142b7b623453a37">&#9670;&nbsp;</a></span>PBIs</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">List&lt;long&gt; ScrumHubBackend.CommunicationModel.Frontend.SprintF.PBIs = new List&lt;long&gt;()</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Ids of PBIs in the sprint </p>
+<p >[1, 2, 4]</p>
+
+</div>
+</div>
+<a id="ac4dbcf2ad1ac55dde701c2abe40449d2" name="ac4dbcf2ad1ac55dde701c2abe40449d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4dbcf2ad1ac55dde701c2abe40449d2">&#9670;&nbsp;</a></span>Title</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string ScrumHubBackend.CommunicationModel.Frontend.SprintF.Title = String.Empty</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Title of the sprint </p>
+<p >Make sprint view</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>CommunicationModel/Frontend/SprintF.cs</li>
 </ul>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_scrum_hub_backend.html">ScrumHubBackend</a></li><li class="navelem"><a class="el" href="namespace_scrum_hub_backend_1_1_communication_model.html">CommunicationModel</a></li><li class="navelem"><a class="el" href="namespace_scrum_hub_backend_1_1_communication_model_1_1_frontend.html">Frontend</a></li><li class="navelem"><a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_sprint_f.html">SprintF</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3 </li>
+  </ul>
+</div>
 </body>
 </html>

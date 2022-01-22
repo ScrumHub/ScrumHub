@@ -3,10 +3,16 @@
 \doxysubsection*{Enumerations}
 \begin{DoxyCompactItemize}
 \item 
-enum \mbox{\hyperlink{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6}{SHTask\+Status}} \{ \mbox{\hyperlink{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6a03c2e7e41ffc181a4e84080b4710e81e}{New}}
+enum \mbox{\hyperlink{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6}{SHTask\+Status}} \{ \newline
+\mbox{\hyperlink{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6a03c2e7e41ffc181a4e84080b4710e81e}{New}}
 , \mbox{\hyperlink{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6a12d868c18cb29bf58f02b504be9033fd}{In\+Progress}}
 , \mbox{\hyperlink{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6a7852fb16e8985e33e70852e9d089e849}{In\+Review}}
 , \mbox{\hyperlink{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6a8f3d10eb21bd36347c258679eba9e92b}{Finished}}
+, \newline
+\mbox{\hyperlink{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6a933efec8f71a4d634f68abdac5c15860}{New\+WBranch}}
+, \mbox{\hyperlink{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6a33b9a43e86e1f433313301e1223f999b}{In\+Progress\+WBranch}}
+, \mbox{\hyperlink{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6aa60bef12a889a53e9daffae7b94abe06}{In\+Review\+WBranch}}
+, \mbox{\hyperlink{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6ae066a849cc5a4e3954329895c15020f5}{Finished\+WBranch}}
  \}
 \begin{DoxyCompactList}\small\item\em Status of the task \end{DoxyCompactList}\item 
 enum \mbox{\hyperlink{namespace_scrum_hub_backend_1_1_common_a0bec89b6f9f544bca58ddc66ed0eab94}{Sprint\+Status}} \{ \mbox{\hyperlink{namespace_scrum_hub_backend_1_1_common_a0bec89b6f9f544bca58ddc66ed0eab94ab8364d4c49c06e858cb156af9076049f}{Not\+Finished}}
@@ -42,6 +48,22 @@ In\+Review&Exist opened PR for branch related to issue \\
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{Finished@{Finished}!ScrumHubBackend.Common@{ScrumHubBackend.Common}}\index{ScrumHubBackend.Common@{ScrumHubBackend.Common}!Finished@{Finished}}}\mbox{\Hypertarget{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6a8f3d10eb21bd36347c258679eba9e92b}\label{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6a8f3d10eb21bd36347c258679eba9e92b}} 
 Finished&Finished task, for closed issues \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NewWBranch@{NewWBranch}!ScrumHubBackend.Common@{ScrumHubBackend.Common}}\index{ScrumHubBackend.Common@{ScrumHubBackend.Common}!NewWBranch@{NewWBranch}}}\mbox{\Hypertarget{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6a933efec8f71a4d634f68abdac5c15860}\label{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6a933efec8f71a4d634f68abdac5c15860}} 
+New\+WBranch&New task, but matching branch exists in repo \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{InProgressWBranch@{InProgressWBranch}!ScrumHubBackend.Common@{ScrumHubBackend.Common}}\index{ScrumHubBackend.Common@{ScrumHubBackend.Common}!InProgressWBranch@{InProgressWBranch}}}\mbox{\Hypertarget{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6a33b9a43e86e1f433313301e1223f999b}\label{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6a33b9a43e86e1f433313301e1223f999b}} 
+In\+Progress\+WBranch&Task in progress, after branch is created in Scrum\+Hub, but matching branch exists in repo \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{InReviewWBranch@{InReviewWBranch}!ScrumHubBackend.Common@{ScrumHubBackend.Common}}\index{ScrumHubBackend.Common@{ScrumHubBackend.Common}!InReviewWBranch@{InReviewWBranch}}}\mbox{\Hypertarget{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6aa60bef12a889a53e9daffae7b94abe06}\label{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6aa60bef12a889a53e9daffae7b94abe06}} 
+In\+Review\+WBranch&Exist opened PR for branch related to issue, but matching branch exists in repo \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FinishedWBranch@{FinishedWBranch}!ScrumHubBackend.Common@{ScrumHubBackend.Common}}\index{ScrumHubBackend.Common@{ScrumHubBackend.Common}!FinishedWBranch@{FinishedWBranch}}}\mbox{\Hypertarget{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6ae066a849cc5a4e3954329895c15020f5}\label{namespace_scrum_hub_backend_1_1_common_a3ec1d21c25ebf1b791416369efd9ffc6ae066a849cc5a4e3954329895c15020f5}} 
+Finished\+WBranch&Finished task, for closed issues, but matching branch exists in repo \\
 \hline
 
 \end{DoxyEnumFields}

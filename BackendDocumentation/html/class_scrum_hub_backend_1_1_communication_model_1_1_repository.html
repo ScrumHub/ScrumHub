@@ -9,6 +9,10 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -23,6 +27,7 @@
   <td id="projectalign">
    <div id="projectname">ScrumHubBackend
    </div>
+   <div id="projectbrief">Agile development platform integrated with GitHub. Engineering thesis of A. Kołakowska and A. Litkowski.</div>
   </td>
  </tr>
  </tbody>
@@ -46,6 +51,23 @@ $(function() {
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('class_scrum_hub_backend_1_1_communication_model_1_1_repository.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -60,11 +82,6 @@ $(function() {
 </iframe>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="namespace_scrum_hub_backend.html">ScrumHubBackend</a></li><li class="navelem"><a class="el" href="namespace_scrum_hub_backend_1_1_communication_model.html">CommunicationModel</a></li><li class="navelem"><a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_repository.html">Repository</a></li>  </ul>
-</div>
-</div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
@@ -91,41 +108,32 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
-<tr class="memitem:acecc25dde17bd6a610c444f24e6f2987"><td class="memItemLeft" align="right" valign="top"><a id="acecc25dde17bd6a610c444f24e6f2987" name="acecc25dde17bd6a610c444f24e6f2987"></a>
-string?&#160;</td><td class="memItemRight" valign="bottom"><b>Name</b> = String.Empty<code> [get, set]</code></td></tr>
-<tr class="memdesc:acecc25dde17bd6a610c444f24e6f2987"><td class="mdescLeft">&#160;</td><td class="mdescRight">Name of repository <br /></td></tr>
+<tr class="memitem:acecc25dde17bd6a610c444f24e6f2987"><td class="memItemLeft" align="right" valign="top">string?&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_repository.html#acecc25dde17bd6a610c444f24e6f2987">Name</a> = String.Empty<code> [get, set]</code></td></tr>
+<tr class="memdesc:acecc25dde17bd6a610c444f24e6f2987"><td class="mdescLeft">&#160;</td><td class="mdescRight">Name of repository  <a href="class_scrum_hub_backend_1_1_communication_model_1_1_repository.html#acecc25dde17bd6a610c444f24e6f2987">More...</a><br /></td></tr>
 <tr class="separator:acecc25dde17bd6a610c444f24e6f2987"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a42bfd3596698e3403490428017877ae3"><td class="memItemLeft" align="right" valign="top"><a id="a42bfd3596698e3403490428017877ae3" name="a42bfd3596698e3403490428017877ae3"></a>
-string?&#160;</td><td class="memItemRight" valign="bottom"><b>Description</b> = String.Empty<code> [get, set]</code></td></tr>
-<tr class="memdesc:a42bfd3596698e3403490428017877ae3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Description of the repository <br /></td></tr>
+<tr class="memitem:a42bfd3596698e3403490428017877ae3"><td class="memItemLeft" align="right" valign="top">string?&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_repository.html#a42bfd3596698e3403490428017877ae3">Description</a> = String.Empty<code> [get, set]</code></td></tr>
+<tr class="memdesc:a42bfd3596698e3403490428017877ae3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Description of the repository  <a href="class_scrum_hub_backend_1_1_communication_model_1_1_repository.html#a42bfd3596698e3403490428017877ae3">More...</a><br /></td></tr>
 <tr class="separator:a42bfd3596698e3403490428017877ae3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1dca9ada74fb3984fbc48b9e00be2452"><td class="memItemLeft" align="right" valign="top"><a id="a1dca9ada74fb3984fbc48b9e00be2452" name="a1dca9ada74fb3984fbc48b9e00be2452"></a>
-string?&#160;</td><td class="memItemRight" valign="bottom"><b>DateOfLastActivity</b> = String.Empty<code> [get, set]</code></td></tr>
-<tr class="memdesc:a1dca9ada74fb3984fbc48b9e00be2452"><td class="mdescLeft">&#160;</td><td class="mdescRight">Date of last user activity in format "yyyy-MM-dd HH:mm:ss 'UTC'" or "No recent activity" <br /></td></tr>
+<tr class="memitem:a1dca9ada74fb3984fbc48b9e00be2452"><td class="memItemLeft" align="right" valign="top">string?&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_repository.html#a1dca9ada74fb3984fbc48b9e00be2452">DateOfLastActivity</a> = String.Empty<code> [get, set]</code></td></tr>
+<tr class="memdesc:a1dca9ada74fb3984fbc48b9e00be2452"><td class="mdescLeft">&#160;</td><td class="mdescRight">Date of last user activity in format "yyyy-MM-dd HH:mm:ss 'UTC'" or "No recent activity"  <a href="class_scrum_hub_backend_1_1_communication_model_1_1_repository.html#a1dca9ada74fb3984fbc48b9e00be2452">More...</a><br /></td></tr>
 <tr class="separator:a1dca9ada74fb3984fbc48b9e00be2452"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa826864356e1a5d2f015e798e115cef1"><td class="memItemLeft" align="right" valign="top"><a id="aa826864356e1a5d2f015e798e115cef1" name="aa826864356e1a5d2f015e798e115cef1"></a>
-string?&#160;</td><td class="memItemRight" valign="bottom"><b>TypeOfLastActivity</b> = String.Empty<code> [get, set]</code></td></tr>
-<tr class="memdesc:aa826864356e1a5d2f015e798e115cef1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type of last user activity or "No recent activity" <br /></td></tr>
+<tr class="memitem:aa826864356e1a5d2f015e798e115cef1"><td class="memItemLeft" align="right" valign="top">string?&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_repository.html#aa826864356e1a5d2f015e798e115cef1">TypeOfLastActivity</a> = String.Empty<code> [get, set]</code></td></tr>
+<tr class="memdesc:aa826864356e1a5d2f015e798e115cef1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type of last user activity or "No recent activity"  <a href="class_scrum_hub_backend_1_1_communication_model_1_1_repository.html#aa826864356e1a5d2f015e798e115cef1">More...</a><br /></td></tr>
 <tr class="separator:aa826864356e1a5d2f015e798e115cef1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab32e0661fd1c351ac5ccf344f8140192"><td class="memItemLeft" align="right" valign="top"><a id="ab32e0661fd1c351ac5ccf344f8140192" name="ab32e0661fd1c351ac5ccf344f8140192"></a>
-long&#160;</td><td class="memItemRight" valign="bottom"><b>GitHubId</b> = 0<code> [get, set]</code></td></tr>
-<tr class="memdesc:ab32e0661fd1c351ac5ccf344f8140192"><td class="mdescLeft">&#160;</td><td class="mdescRight">GitHub id of repository <br /></td></tr>
+<tr class="memitem:ab32e0661fd1c351ac5ccf344f8140192"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_repository.html#ab32e0661fd1c351ac5ccf344f8140192">GitHubId</a> = 0<code> [get, set]</code></td></tr>
+<tr class="memdesc:ab32e0661fd1c351ac5ccf344f8140192"><td class="mdescLeft">&#160;</td><td class="mdescRight">GitHub id of repository  <a href="class_scrum_hub_backend_1_1_communication_model_1_1_repository.html#ab32e0661fd1c351ac5ccf344f8140192">More...</a><br /></td></tr>
 <tr class="separator:ab32e0661fd1c351ac5ccf344f8140192"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1e2e4a5d150077705eb3c9caf0d4dae6"><td class="memItemLeft" align="right" valign="top"><a id="a1e2e4a5d150077705eb3c9caf0d4dae6" name="a1e2e4a5d150077705eb3c9caf0d4dae6"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>HasAdminRights</b> = false<code> [get, set]</code></td></tr>
-<tr class="memdesc:a1e2e4a5d150077705eb3c9caf0d4dae6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Does current user have admin rights to the repository <br /></td></tr>
+<tr class="memitem:a1e2e4a5d150077705eb3c9caf0d4dae6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_repository.html#a1e2e4a5d150077705eb3c9caf0d4dae6">HasAdminRights</a> = false<code> [get, set]</code></td></tr>
+<tr class="memdesc:a1e2e4a5d150077705eb3c9caf0d4dae6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Does current user have admin rights to the repository  <a href="class_scrum_hub_backend_1_1_communication_model_1_1_repository.html#a1e2e4a5d150077705eb3c9caf0d4dae6">More...</a><br /></td></tr>
 <tr class="separator:a1e2e4a5d150077705eb3c9caf0d4dae6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af45e6e597642617a2feedcffb5e1442e"><td class="memItemLeft" align="right" valign="top"><a id="af45e6e597642617a2feedcffb5e1442e" name="af45e6e597642617a2feedcffb5e1442e"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>AlreadyInScrumHub</b> = false<code> [get, set]</code></td></tr>
-<tr class="memdesc:af45e6e597642617a2feedcffb5e1442e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Is this repository already in ScrumHub <br /></td></tr>
+<tr class="memitem:af45e6e597642617a2feedcffb5e1442e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_repository.html#af45e6e597642617a2feedcffb5e1442e">AlreadyInScrumHub</a> = false<code> [get, set]</code></td></tr>
+<tr class="memdesc:af45e6e597642617a2feedcffb5e1442e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Is this repository already in ScrumHub  <a href="class_scrum_hub_backend_1_1_communication_model_1_1_repository.html#af45e6e597642617a2feedcffb5e1442e">More...</a><br /></td></tr>
 <tr class="separator:af45e6e597642617a2feedcffb5e1442e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a85218a7f4ddaca97e0cafcb44c52b20b"><td class="memItemLeft" align="right" valign="top"><a id="a85218a7f4ddaca97e0cafcb44c52b20b" name="a85218a7f4ddaca97e0cafcb44c52b20b"></a>
-List&lt; long &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>BacklogItems</b> = new List&lt;long&gt;()<code> [get, set]</code></td></tr>
-<tr class="memdesc:a85218a7f4ddaca97e0cafcb44c52b20b"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of ids of backlog items <br /></td></tr>
+<tr class="memitem:a85218a7f4ddaca97e0cafcb44c52b20b"><td class="memItemLeft" align="right" valign="top">List&lt; long &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_repository.html#a85218a7f4ddaca97e0cafcb44c52b20b">BacklogItems</a> = new List&lt;long&gt;()<code> [get, set]</code></td></tr>
+<tr class="memdesc:a85218a7f4ddaca97e0cafcb44c52b20b"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of ids of backlog items  <a href="class_scrum_hub_backend_1_1_communication_model_1_1_repository.html#a85218a7f4ddaca97e0cafcb44c52b20b">More...</a><br /></td></tr>
 <tr class="separator:a85218a7f4ddaca97e0cafcb44c52b20b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aedb707bef94b5f77a165d3b035e9f54b"><td class="memItemLeft" align="right" valign="top"><a id="aedb707bef94b5f77a165d3b035e9f54b" name="aedb707bef94b5f77a165d3b035e9f54b"></a>
-List&lt; long &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Sprints</b> = new List&lt;long&gt;()<code> [get, set]</code></td></tr>
-<tr class="memdesc:aedb707bef94b5f77a165d3b035e9f54b"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of numbers of sprints <br /></td></tr>
+<tr class="memitem:aedb707bef94b5f77a165d3b035e9f54b"><td class="memItemLeft" align="right" valign="top">List&lt; long &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_repository.html#aedb707bef94b5f77a165d3b035e9f54b">Sprints</a> = new List&lt;long&gt;()<code> [get, set]</code></td></tr>
+<tr class="memdesc:aedb707bef94b5f77a165d3b035e9f54b"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of numbers of sprints  <a href="class_scrum_hub_backend_1_1_communication_model_1_1_repository.html#aedb707bef94b5f77a165d3b035e9f54b">More...</a><br /></td></tr>
 <tr class="separator:aedb707bef94b5f77a165d3b035e9f54b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-attribs" name="pri-static-attribs"></a>
@@ -180,13 +188,243 @@ const string&#160;</td><td class="memItemRight" valign="bottom"><b>noRecentActiv
 </div><!-- fragment -->
 </div>
 </div>
+<h2 class="groupheader">Property Documentation</h2>
+<a id="af45e6e597642617a2feedcffb5e1442e" name="af45e6e597642617a2feedcffb5e1442e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af45e6e597642617a2feedcffb5e1442e">&#9670;&nbsp;</a></span>AlreadyInScrumHub</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ScrumHubBackend.CommunicationModel.Repository.AlreadyInScrumHub = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Is this repository already in ScrumHub </p>
+<p >true</p>
+
+</div>
+</div>
+<a id="a85218a7f4ddaca97e0cafcb44c52b20b" name="a85218a7f4ddaca97e0cafcb44c52b20b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85218a7f4ddaca97e0cafcb44c52b20b">&#9670;&nbsp;</a></span>BacklogItems</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">List&lt;long&gt; ScrumHubBackend.CommunicationModel.Repository.BacklogItems = new List&lt;long&gt;()</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>List of ids of backlog items </p>
+<p >[1, 2, 9, 12, 18, 22]</p>
+
+</div>
+</div>
+<a id="a1dca9ada74fb3984fbc48b9e00be2452" name="a1dca9ada74fb3984fbc48b9e00be2452"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1dca9ada74fb3984fbc48b9e00be2452">&#9670;&nbsp;</a></span>DateOfLastActivity</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string? ScrumHubBackend.CommunicationModel.Repository.DateOfLastActivity = String.Empty</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Date of last user activity in format "yyyy-MM-dd HH:mm:ss 'UTC'" or "No recent activity" </p>
+<p >2022-01-22 10:05:11 UTC</p>
+
+</div>
+</div>
+<a id="a42bfd3596698e3403490428017877ae3" name="a42bfd3596698e3403490428017877ae3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a42bfd3596698e3403490428017877ae3">&#9670;&nbsp;</a></span>Description</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string? ScrumHubBackend.CommunicationModel.Repository.Description = String.Empty</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Description of the repository </p>
+<p >Agile development platform integrated with GitHub.</p>
+
+</div>
+</div>
+<a id="ab32e0661fd1c351ac5ccf344f8140192" name="ab32e0661fd1c351ac5ccf344f8140192"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab32e0661fd1c351ac5ccf344f8140192">&#9670;&nbsp;</a></span>GitHubId</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">long ScrumHubBackend.CommunicationModel.Repository.GitHubId = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>GitHub id of repository </p>
+<p >425815732</p>
+
+</div>
+</div>
+<a id="a1e2e4a5d150077705eb3c9caf0d4dae6" name="a1e2e4a5d150077705eb3c9caf0d4dae6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e2e4a5d150077705eb3c9caf0d4dae6">&#9670;&nbsp;</a></span>HasAdminRights</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ScrumHubBackend.CommunicationModel.Repository.HasAdminRights = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Does current user have admin rights to the repository </p>
+<p >true</p>
+
+</div>
+</div>
+<a id="acecc25dde17bd6a610c444f24e6f2987" name="acecc25dde17bd6a610c444f24e6f2987"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acecc25dde17bd6a610c444f24e6f2987">&#9670;&nbsp;</a></span>Name</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string? ScrumHubBackend.CommunicationModel.Repository.Name = String.Empty</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Name of repository </p>
+<p >ScrumHub/ScrumHub</p>
+
+</div>
+</div>
+<a id="aedb707bef94b5f77a165d3b035e9f54b" name="aedb707bef94b5f77a165d3b035e9f54b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aedb707bef94b5f77a165d3b035e9f54b">&#9670;&nbsp;</a></span>Sprints</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">List&lt;long&gt; ScrumHubBackend.CommunicationModel.Repository.Sprints = new List&lt;long&gt;()</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>List of numbers of sprints </p>
+<p >[1, 2, 4, 5]</p>
+
+</div>
+</div>
+<a id="aa826864356e1a5d2f015e798e115cef1" name="aa826864356e1a5d2f015e798e115cef1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa826864356e1a5d2f015e798e115cef1">&#9670;&nbsp;</a></span>TypeOfLastActivity</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string? ScrumHubBackend.CommunicationModel.Repository.TypeOfLastActivity = String.Empty</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Type of last user activity or "No recent activity" </p>
+<p >Branch or tag created</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>ScrumHubBackend/CommunicationModel/Repository.cs</li>
+<li>CommunicationModel/Repository.cs</li>
 </ul>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_scrum_hub_backend.html">ScrumHubBackend</a></li><li class="navelem"><a class="el" href="namespace_scrum_hub_backend_1_1_communication_model.html">CommunicationModel</a></li><li class="navelem"><a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_repository.html">Repository</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3 </li>
+  </ul>
+</div>
 </body>
 </html>

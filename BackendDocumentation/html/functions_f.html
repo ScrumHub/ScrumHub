@@ -9,6 +9,10 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -23,6 +27,7 @@
   <td id="projectalign">
    <div id="projectname">ScrumHubBackend
    </div>
+   <div id="projectbrief">Agile development platform integrated with GitHub. Engineering thesis of A. Kołakowska and A. Litkowski.</div>
   </td>
  </tr>
  </tbody>
@@ -47,6 +52,22 @@ $(function() {
 </script>
 <div id="main-nav"></div>
 </div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('functions_f.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -65,9 +86,10 @@ $(function() {
 <div class="textblock">Here is a list of all documented class members with links to the class documentation for each member:</div>
 
 <h3><a id="index_f" name="index_f"></a>- f -</h3><ul>
+<li>FillPBIsWithTasksCommandHandler()&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_c_q_r_s_1_1_tasks_1_1_fill_p_b_is_with_tasks_command_handler.html#a4d112aa4909d52a36472ab9ae6bafc41">ScrumHubBackend.CQRS.Tasks.FillPBIsWithTasksCommandHandler</a></li>
 <li>FilterAndPaginatePBIs()&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_c_q_r_s_1_1_p_b_i_1_1_get_p_b_is_query_handler.html#aa625f0d53655097ee5e713ee473095d9">ScrumHubBackend.CQRS.PBI.GetPBIsQueryHandler</a></li>
 <li>FilterAndPaginateRepositories()&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_get_repositories_query_handler.html#a58ad8cd13a28e53a64f6b878e4d136bc">ScrumHubBackend.CQRS.Repositories.GetRepositoriesQueryHandler</a></li>
-<li>FilterAndPaginateSprints()&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query_handler.html#a85539e0ba9fc07528a33d4823ff86b7d">ScrumHubBackend.CQRS.Sprints.GetSprintsQueryHandler</a></li>
+<li>FilterAndPaginateSprints()&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query_handler.html#a2e89d9b619dc6ec2118d7fc0b7380f6b">ScrumHubBackend.CQRS.Sprints.GetSprintsQueryHandler</a></li>
 <li>FinishBacklogItem()&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_controllers_1_1_backlog_item_controller.html#a7ab966e32cb237024d4e8cfc49136627">ScrumHubBackend.Controllers.BacklogItemController</a></li>
 <li>FinishDate&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_sprint_f.html#a4b16c0156f1a59e3642bb8cd948bc7dc">ScrumHubBackend.CommunicationModel.Frontend.SprintF</a>, <a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_sprint.html#ac1ce1ff440cc562bf908115d98568192">ScrumHubBackend.CommunicationModel.Sprint</a>, <a class="el" href="class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_add_sprint_command.html#a012882196fe9d466f92b36c2410e8ad7">ScrumHubBackend.CQRS.Sprints.AddSprintCommand</a>, <a class="el" href="class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_update_sprint_command.html#aaa737c8e8894ee7202b2a18e111a5d25">ScrumHubBackend.CQRS.Sprints.UpdateSprintCommand</a>, <a class="el" href="class_scrum_hub_backend_1_1_database_model_1_1_sprint.html#a487876a326e6070325eeb13e2a77aee1">ScrumHubBackend.DatabaseModel.Sprint</a></li>
 <li>Finished&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item.html#acc351406d9d3b4b275f0c2c044b60369">ScrumHubBackend.CommunicationModel.BacklogItem</a>, <a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_s_h_task.html#a4bc03971f5062d9483f369cde99cdb68">ScrumHubBackend.CommunicationModel.SHTask</a>, <a class="el" href="class_scrum_hub_backend_1_1_database_model_1_1_backlog_item.html#ab2adb141541f7b14359c6c88eaf36679">ScrumHubBackend.DatabaseModel.BacklogItem</a></li>
@@ -79,9 +101,12 @@ $(function() {
 <li>FullName&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_database_model_1_1_repository.html#a8b95d0922a9882fe61e7b4f1fb8844cb">ScrumHubBackend.DatabaseModel.Repository</a></li>
 </ul>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3 </li>
+  </ul>
+</div>
 </body>
 </html>

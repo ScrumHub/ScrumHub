@@ -1,0 +1,5 @@
+var class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_add_repository_to_scrum_hub_command_handler =
+[
+    [ "AddRepositoryToScrumHubCommandHandler", "class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_add_repository_to_scrum_hub_command_handler.html#a3277f4b57680ac412557f297de6e33a4", null ],
+    [ "Handle", "class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_add_repository_to_scrum_hub_command_handler.html#a2402b92302d0bd882cf5d0040363499e", null ]
+];
