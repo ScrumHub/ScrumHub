@@ -1,0 +1,8 @@
+BackendDocumentation/ linguist-vendored
+BackendDocumentation/* linguist-vendored
+BackendDocumentation/**/ linguist-vendored
+BackendDocumentation/**/* linguist-vendored
+FrontendDocumentation/ linguist-vendored
+FrontendDocumentation/* linguist-vendored
+FrontendDocumentation/**/ linguist-vendored
+FrontendDocumentation/**/* linguist-vendored
