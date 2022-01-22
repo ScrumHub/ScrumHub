@@ -8,6 +8,7 @@
         /// <summary>
         /// Login of the person
         /// </summary>
+        /// <example>jckex9912</example>
         public string Login { get; set; } = string.Empty;
     }
 }

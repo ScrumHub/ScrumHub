@@ -9,6 +9,10 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -23,6 +27,7 @@
   <td id="projectalign">
    <div id="projectname">ScrumHubBackend
    </div>
+   <div id="projectbrief">Agile development platform integrated with GitHub. Engineering thesis of A. Kołakowska and A. Litkowski.</div>
   </td>
  </tr>
  </tbody>
@@ -47,6 +52,22 @@ $(function() {
 </script>
 <div id="main-nav"></div>
 </div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('functions_prop.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -77,7 +98,7 @@ $(function() {
 
 <h3><a id="index_b" name="index_b"></a>- b -</h3><ul>
 <li>BacklogItemId&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_database_model_1_1_acceptance_criterium.html#ab683ce0ddbb5bdb4060e60dde39fb2a4">ScrumHubBackend.DatabaseModel.AcceptanceCriterium</a></li>
-<li>BacklogItems&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_repository.html#a85218a7f4ddaca97e0cafcb44c52b20b">ScrumHubBackend.CommunicationModel.Repository</a>, <a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_sprint.html#ac55ba3b511c026a2695a9574aa000f09">ScrumHubBackend.CommunicationModel.Sprint</a>, <a class="el" href="class_scrum_hub_backend_1_1_database_context.html#a5527b4beae2c0d09190ced652230818e">ScrumHubBackend.DatabaseContext</a></li>
+<li>BacklogItems&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_repository.html#a85218a7f4ddaca97e0cafcb44c52b20b">ScrumHubBackend.CommunicationModel.Repository</a>, <a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_sprint.html#ac55ba3b511c026a2695a9574aa000f09">ScrumHubBackend.CommunicationModel.Sprint</a>, <a class="el" href="class_scrum_hub_backend_1_1_c_q_r_s_1_1_tasks_1_1_fill_p_b_is_with_tasks_command.html#ae3b55b286d59b3eaf7864bb755a6ce3e">ScrumHubBackend.CQRS.Tasks.FillPBIsWithTasksCommand</a>, <a class="el" href="class_scrum_hub_backend_1_1_database_context.html#a5527b4beae2c0d09190ced652230818e">ScrumHubBackend.DatabaseContext</a></li>
 <li>BranchPrefix&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_c_q_r_s_1_1_tasks_1_1_create_branch_for_task_command.html#a26fe682a9b5da598bad81b6770e27f05">ScrumHubBackend.CQRS.Tasks.CreateBranchForTaskCommand</a></li>
 </ul>
 
@@ -90,6 +111,7 @@ $(function() {
 
 <h3><a id="index_d" name="index_d"></a>- d -</h3><ul>
 <li>DateOfLastActivity&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_repository.html#a1dca9ada74fb3984fbc48b9e00be2452">ScrumHubBackend.CommunicationModel.Repository</a></li>
+<li>DbRepository&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_c_q_r_s_1_1_tasks_1_1_fill_p_b_is_with_tasks_command.html#aaae1ebff7a6f35507cc5e2cc9ef7d124">ScrumHubBackend.CQRS.Tasks.FillPBIsWithTasksCommand</a></li>
 <li>Description&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_repository.html#a42bfd3596698e3403490428017877ae3">ScrumHubBackend.CommunicationModel.Repository</a></li>
 </ul>
 
@@ -111,6 +133,7 @@ $(function() {
 
 
 <h3><a id="index_g" name="index_g"></a>- g -</h3><ul>
+<li>GitHubClient&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_c_q_r_s_1_1_tasks_1_1_fill_p_b_is_with_tasks_command.html#a1be5b4c530fbf442daae090c11efe62c">ScrumHubBackend.CQRS.Tasks.FillPBIsWithTasksCommand</a></li>
 <li>GitHubId&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_person.html#a3a5ab2bde85a5418035a1830619c0379">ScrumHubBackend.CommunicationModel.Person</a>, <a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_repository.html#ab32e0661fd1c351ac5ccf344f8140192">ScrumHubBackend.CommunicationModel.Repository</a>, <a class="el" href="class_scrum_hub_backend_1_1_database_model_1_1_repository.html#a02a57bdf00d91af071165615654af338">ScrumHubBackend.DatabaseModel.Repository</a></li>
 <li>GitHubIssueId&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_database_model_1_1_s_h_task.html#a3933087c5c7515e2a0a1f9b2a4a1e196">ScrumHubBackend.DatabaseModel.SHTask</a></li>
 <li>GitHubIssueNumberInRepo&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_database_model_1_1_s_h_task.html#a05f42ceeb0a440b2b4b9b2bc1c5e463b">ScrumHubBackend.DatabaseModel.SHTask</a></li>
@@ -179,6 +202,7 @@ $(function() {
 <h3><a id="index_r" name="index_r"></a>- r -</h3><ul>
 <li>RealSize&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_common_1_1_paginated_list.html#a71e33c9e6f58919bcf3d2efd2552a220">ScrumHubBackend.CommunicationModel.Common.PaginatedList&lt; T &gt;</a></li>
 <li>Repositories&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_database_context.html#a7b49264583402c1a37a7d0aece5fd338">ScrumHubBackend.DatabaseContext</a></li>
+<li>Repository&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_c_q_r_s_1_1_tasks_1_1_fill_p_b_is_with_tasks_command.html#a233bd83fb804abcfb22eaa0415284ef9">ScrumHubBackend.CQRS.Tasks.FillPBIsWithTasksCommand</a></li>
 <li>RepositoryId&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_add_repository_to_scrum_hub_command.html#a2cf017d7789c117c97c830173694e7b4">ScrumHubBackend.CQRS.Repositories.AddRepositoryToScrumHubCommand</a>, <a class="el" href="class_scrum_hub_backend_1_1_database_model_1_1_backlog_item.html#a4fd126fb3d6ea1e5a42ce61ee64b9298">ScrumHubBackend.DatabaseModel.BacklogItem</a>, <a class="el" href="class_scrum_hub_backend_1_1_database_model_1_1_s_h_task.html#a77d838003e4f878a61561dbe88c5554a">ScrumHubBackend.DatabaseModel.SHTask</a>, <a class="el" href="class_scrum_hub_backend_1_1_database_model_1_1_sprint.html#af83af2b00fc9088ab4fdcec1315a0e6e">ScrumHubBackend.DatabaseModel.Sprint</a></li>
 <li>RepositoryName&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_c_q_r_s_1_1_common_in_repository_request.html#a87da4b392ad41aebadbc415950624221">ScrumHubBackend.CQRS.CommonInRepositoryRequest&lt; T &gt;</a>, <a class="el" href="interface_scrum_hub_backend_1_1_c_q_r_s_1_1_i_common_in_repository_request.html#ad30aed0c5cf05fb839023af3c65a4ffc">ScrumHubBackend.CQRS.ICommonInRepositoryRequest</a></li>
 <li>RepositoryOwner&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_c_q_r_s_1_1_common_in_repository_request.html#a17ab486f8efd756c9bf4fd406e2d7259">ScrumHubBackend.CQRS.CommonInRepositoryRequest&lt; T &gt;</a>, <a class="el" href="interface_scrum_hub_backend_1_1_c_q_r_s_1_1_i_common_in_repository_request.html#a70fc9115561b21db5750c7164fb183e5">ScrumHubBackend.CQRS.ICommonInRepositoryRequest</a></li>
@@ -195,16 +219,19 @@ $(function() {
 
 <h3><a id="index_t" name="index_t"></a>- t -</h3><ul>
 <li>TaskId&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_c_q_r_s_1_1_tasks_1_1_assign_task_to_p_b_i_command.html#a57c4d11f9b26c3263cd9bbd2be23dbd9">ScrumHubBackend.CQRS.Tasks.AssignTaskToPBICommand</a>, <a class="el" href="class_scrum_hub_backend_1_1_c_q_r_s_1_1_tasks_1_1_change_person_in_task_command.html#aa55bef6e9de645cc9cae90763f9c39a8">ScrumHubBackend.CQRS.Tasks.ChangePersonInTaskCommand</a>, <a class="el" href="class_scrum_hub_backend_1_1_c_q_r_s_1_1_tasks_1_1_create_branch_for_task_command.html#a899ba6fabeb11c34d40b94079b53523b">ScrumHubBackend.CQRS.Tasks.CreateBranchForTaskCommand</a>, <a class="el" href="class_scrum_hub_backend_1_1_c_q_r_s_1_1_tasks_1_1_get_one_task_query.html#abfdfc38f1a5b6ef7559927fe17a79a3f">ScrumHubBackend.CQRS.Tasks.GetOneTaskQuery</a></li>
-<li>Tasks&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item.html#a873098f75060a614c06efbd062b1783f">ScrumHubBackend.CommunicationModel.BacklogItem</a>, <a class="el" href="class_scrum_hub_backend_1_1_database_context.html#a7bba7d4ddfd01d7a5958af8662064c7e">ScrumHubBackend.DatabaseContext</a>, <a class="el" href="class_scrum_hub_backend_1_1_database_model_1_1_backlog_item.html#ab8484b469f3ebf4f28a82eaef7dfc12f">ScrumHubBackend.DatabaseModel.BacklogItem</a></li>
+<li>Tasks&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item.html#a00fdf498493323bd1bf090ff2ad00335">ScrumHubBackend.CommunicationModel.BacklogItem</a>, <a class="el" href="class_scrum_hub_backend_1_1_database_context.html#a7bba7d4ddfd01d7a5958af8662064c7e">ScrumHubBackend.DatabaseContext</a>, <a class="el" href="class_scrum_hub_backend_1_1_database_model_1_1_backlog_item.html#ab8484b469f3ebf4f28a82eaef7dfc12f">ScrumHubBackend.DatabaseModel.BacklogItem</a></li>
 <li>Text&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_database_model_1_1_acceptance_criterium.html#ad9fc102abb261d33a4852af0f6a12cb8">ScrumHubBackend.DatabaseModel.AcceptanceCriterium</a></li>
 <li>TimeSpentInHours&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item.html#a174da1ef77e961249384a4ba952746e9">ScrumHubBackend.CommunicationModel.BacklogItem</a>, <a class="el" href="class_scrum_hub_backend_1_1_database_model_1_1_backlog_item.html#aa4d2980bfd86bc2f5a88aa5424163c9f">ScrumHubBackend.DatabaseModel.BacklogItem</a></li>
 <li>Title&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_frontend_1_1_sprint_f.html#ac4dbcf2ad1ac55dde701c2abe40449d2">ScrumHubBackend.CommunicationModel.Frontend.SprintF</a>, <a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_sprint.html#abc16c8aebf865b0a473641ad601fcd36">ScrumHubBackend.CommunicationModel.Sprint</a>, <a class="el" href="class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_add_sprint_command.html#a760cac4ae883f56257b26d6d72506522">ScrumHubBackend.CQRS.Sprints.AddSprintCommand</a>, <a class="el" href="class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_update_sprint_command.html#abfd5f8837dffe4eeaa5942a1aa3c5b5b">ScrumHubBackend.CQRS.Sprints.UpdateSprintCommand</a>, <a class="el" href="class_scrum_hub_backend_1_1_database_model_1_1_sprint.html#a894a72129b92ec5218779c3677c29686">ScrumHubBackend.DatabaseModel.Sprint</a></li>
 <li>TypeOfLastActivity&#160;:&#160;<a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_repository.html#aa826864356e1a5d2f015e798e115cef1">ScrumHubBackend.CommunicationModel.Repository</a></li>
 </ul>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3 </li>
+  </ul>
+</div>
 </body>
 </html>

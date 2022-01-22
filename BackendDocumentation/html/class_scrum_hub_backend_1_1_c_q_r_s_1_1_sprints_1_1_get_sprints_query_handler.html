@@ -9,6 +9,10 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -23,6 +27,7 @@
   <td id="projectalign">
    <div id="projectname">ScrumHubBackend
    </div>
+   <div id="projectbrief">Agile development platform integrated with GitHub. Engineering thesis of A. Kołakowska and A. Litkowski.</div>
   </td>
  </tr>
  </tbody>
@@ -46,6 +51,23 @@ $(function() {
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query_handler.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -60,11 +82,6 @@ $(function() {
 </iframe>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="namespace_scrum_hub_backend.html">ScrumHubBackend</a></li><li class="navelem"><a class="el" href="namespace_scrum_hub_backend_1_1_c_q_r_s.html">CQRS</a></li><li class="navelem"><a class="el" href="namespace_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints.html">Sprints</a></li><li class="navelem"><a class="el" href="class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query_handler.html">GetSprintsQueryHandler</a></li>  </ul>
-</div>
-</div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
@@ -92,10 +109,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae1048dc7aa383a2923a4acbcc183605b"><td class="memItemLeft" align="right" valign="top"><a id="ae1048dc7aa383a2923a4acbcc183605b" name="ae1048dc7aa383a2923a4acbcc183605b"></a>
 Task&lt; <a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_common_1_1_paginated_list.html">PaginatedList</a>&lt; <a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_sprint.html">Sprint</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Handle</b> (<a class="el" href="class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query.html">GetSprintsQuery</a> request, CancellationToken cancellationToken)</td></tr>
 <tr class="separator:ae1048dc7aa383a2923a4acbcc183605b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a85539e0ba9fc07528a33d4823ff86b7d"><td class="memItemLeft" align="right" valign="top"><a id="a85539e0ba9fc07528a33d4823ff86b7d" name="a85539e0ba9fc07528a33d4823ff86b7d"></a>
-virtual <a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_common_1_1_paginated_list.html">PaginatedList</a>&lt; <a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_sprint.html">Sprint</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>FilterAndPaginateSprints</b> (<a class="el" href="interface_scrum_hub_backend_1_1_c_q_r_s_1_1_i_common_in_repository_request.html">ICommonInRepositoryRequest</a> request, IEnumerable&lt; <a class="el" href="class_scrum_hub_backend_1_1_database_model_1_1_sprint.html">DatabaseModel.Sprint</a> &gt; sprints, int pageNumber, int pageSize, bool? completedFilter, bool? onePage)</td></tr>
-<tr class="memdesc:a85539e0ba9fc07528a33d4823ff86b7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Paginates sprints and transforms them to model repositories <br /></td></tr>
-<tr class="separator:a85539e0ba9fc07528a33d4823ff86b7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e89d9b619dc6ec2118d7fc0b7380f6b"><td class="memItemLeft" align="right" valign="top"><a id="a2e89d9b619dc6ec2118d7fc0b7380f6b" name="a2e89d9b619dc6ec2118d7fc0b7380f6b"></a>
+virtual <a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_common_1_1_paginated_list.html">PaginatedList</a>&lt; <a class="el" href="class_scrum_hub_backend_1_1_communication_model_1_1_sprint.html">Sprint</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>FilterAndPaginateSprints</b> (<a class="el" href="interface_scrum_hub_backend_1_1_c_q_r_s_1_1_i_common_in_repository_request.html">ICommonInRepositoryRequest</a> request, IEnumerable&lt; <a class="el" href="class_scrum_hub_backend_1_1_database_model_1_1_sprint.html">DatabaseModel.Sprint</a> &gt; sprints, int pageNumber, int pageSize, bool? completedFilter, bool? onePage, IGitHubClient gitHubClient, Octokit.Repository repository, <a class="el" href="class_scrum_hub_backend_1_1_database_model_1_1_repository.html">DatabaseModel.Repository</a> dbRepository)</td></tr>
+<tr class="memdesc:a2e89d9b619dc6ec2118d7fc0b7380f6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Paginates sprints and transforms them to model repositories <br /></td></tr>
+<tr class="separator:a2e89d9b619dc6ec2118d7fc0b7380f6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -115,12 +132,16 @@ readonly IMediator&#160;</td><td class="memItemRight" valign="bottom"><b>_mediat
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Handler for getting sprints </p>
 </div><hr/>The documentation for this class was generated from the following file:<ul>
-<li>ScrumHubBackend/CQRS/Sprints/GetSprintsQueryHandler.cs</li>
+<li>CQRS/Sprints/GetSprintsQueryHandler.cs</li>
 </ul>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_scrum_hub_backend.html">ScrumHubBackend</a></li><li class="navelem"><a class="el" href="namespace_scrum_hub_backend_1_1_c_q_r_s.html">CQRS</a></li><li class="navelem"><a class="el" href="namespace_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints.html">Sprints</a></li><li class="navelem"><a class="el" href="class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query_handler.html">GetSprintsQueryHandler</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3 </li>
+  </ul>
+</div>
 </body>
 </html>

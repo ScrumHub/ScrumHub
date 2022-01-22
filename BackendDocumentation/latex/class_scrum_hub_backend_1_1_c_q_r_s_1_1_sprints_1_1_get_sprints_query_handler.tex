@@ -20,8 +20,8 @@ Inheritance diagram for Scrum\+Hub\+Backend.\+CQRS.\+Sprints.\+Get\+Sprints\+Que
 \mbox{\Hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query_handler_ae1048dc7aa383a2923a4acbcc183605b}\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query_handler_ae1048dc7aa383a2923a4acbcc183605b}} 
 Task$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_common_1_1_paginated_list}{Paginated\+List}}$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_sprint}{Sprint}} $>$ $>$ {\bfseries Handle} (\mbox{\hyperlink{class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query}{Get\+Sprints\+Query}} request, Cancellation\+Token cancellation\+Token)
 \item 
-\mbox{\Hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query_handler_a85539e0ba9fc07528a33d4823ff86b7d}\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query_handler_a85539e0ba9fc07528a33d4823ff86b7d}} 
-virtual \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_common_1_1_paginated_list}{Paginated\+List}}$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_sprint}{Sprint}} $>$ {\bfseries Filter\+And\+Paginate\+Sprints} (\mbox{\hyperlink{interface_scrum_hub_backend_1_1_c_q_r_s_1_1_i_common_in_repository_request}{ICommon\+In\+Repository\+Request}} request, IEnumerable$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_model_1_1_sprint}{Database\+Model.\+Sprint}} $>$ sprints, int page\+Number, int page\+Size, bool? completed\+Filter, bool? one\+Page)
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query_handler_a2e89d9b619dc6ec2118d7fc0b7380f6b}\label{class_scrum_hub_backend_1_1_c_q_r_s_1_1_sprints_1_1_get_sprints_query_handler_a2e89d9b619dc6ec2118d7fc0b7380f6b}} 
+virtual \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_common_1_1_paginated_list}{Paginated\+List}}$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_sprint}{Sprint}} $>$ {\bfseries Filter\+And\+Paginate\+Sprints} (\mbox{\hyperlink{interface_scrum_hub_backend_1_1_c_q_r_s_1_1_i_common_in_repository_request}{ICommon\+In\+Repository\+Request}} request, IEnumerable$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_model_1_1_sprint}{Database\+Model.\+Sprint}} $>$ sprints, int page\+Number, int page\+Size, bool? completed\+Filter, bool? one\+Page, IGit\+Hub\+Client git\+Hub\+Client, Octokit.\+Repository repository, \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_model_1_1_repository}{Database\+Model.\+Repository}} db\+Repository)
 \begin{DoxyCompactList}\small\item\em Paginates sprints and transforms them to model repositories \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Private Attributes}
 \begin{DoxyCompactItemize}
@@ -45,4 +45,4 @@ Handler for getting sprints
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-Scrum\+Hub\+Backend/\+CQRS/\+Sprints/Get\+Sprints\+Query\+Handler.\+cs\end{DoxyCompactItemize}
+CQRS/\+Sprints/Get\+Sprints\+Query\+Handler.\+cs\end{DoxyCompactItemize}

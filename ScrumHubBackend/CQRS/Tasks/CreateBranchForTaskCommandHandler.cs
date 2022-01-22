@@ -69,7 +69,7 @@ namespace ScrumHubBackend.CQRS.Tasks
             Octokit.NewReference newBranch = new Octokit.NewReference($"refs/heads/{newBranchName}", defaultBranch.Commit.Sha);
             gitHubClient.Git.Reference.Create(repository.Id, newBranch);
 
-            dbTask.Status = Common.SHTaskStatus.InProgress;
+            dbTask.Status = Common.SHTaskStatus.InProgressWBranch;
             _dbContext.Update(dbTask);
             _dbContext.SaveChanges();
 

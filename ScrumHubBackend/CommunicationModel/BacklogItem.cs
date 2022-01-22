@@ -13,51 +13,61 @@ namespace ScrumHubBackend.CommunicationModel
         /// <summary>
         /// Id of the PBI
         /// </summary>
+        /// <example>9</example>
         public long Id { get; set; } = 0;
 
         /// <summary>
         /// Name of the PBI
         /// </summary>
+        /// <example>Fix unconsistent frontend elements</example>
         public string Name { get; set; } = String.Empty;
 
         /// <summary>
         /// Flag if the PBI was finished
         /// </summary>
+        /// <example>false</example>
         public bool Finished { get; set; } = false;
 
         /// <summary>
         /// Estimation how many time will be spent on PBI
         /// </summary>
+        /// <example>8</example>
         public double ExpectedTimeInHours { get; set; } = 0;
 
         /// <summary>
         /// Is the PBI estimated
         /// </summary>
+        /// <example>true</example>
         public bool Estimated { get => ExpectedTimeInHours > 0; }
 
         /// <summary>
         /// Sprint where PBI is
         /// </summary>
+        /// <example>2</example>
         public long? SprintNumber { get; set; } = null;
 
         /// <summary>
         /// Is the PBI in sprint
         /// </summary>
+        /// <example>true</example>
         public bool IsInSprint { get => SprintNumber != null && SprintNumber > 0; }
 
         /// <summary>
         /// How many hours was spent on PBI
         /// </summary>
+        /// <example>0</example>
         public double TimeSpentInHours { get; set; } = 0;
 
         /// <summary>
         /// Priority of the PBI
         /// </summary>
+        /// <example>2</example>
         public long Priority { get; set; } = 0;
 
         /// <summary>
         /// List of acceptance criteria for the PBI
         /// </summary>
+        /// <example>["Frontend is consistent", "Application works not slower then before changes"]</example>
         public IList<string>? AcceptanceCriteria { get; set; } = new List<string>();
 
         /// <summary>

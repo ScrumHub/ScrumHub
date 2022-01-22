@@ -9,6 +9,10 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -23,6 +27,7 @@
   <td id="projectalign">
    <div id="projectname">ScrumHubBackend
    </div>
+   <div id="projectbrief">Agile development platform integrated with GitHub. Engineering thesis of A. Kołakowska and A. Litkowski.</div>
   </td>
  </tr>
  </tbody>
@@ -46,6 +51,23 @@ $(function() {
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('class_scrum_hub_backend_1_1_git_hub_client_1_1_git_hub_resynchronization.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -60,11 +82,6 @@ $(function() {
 </iframe>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="namespace_scrum_hub_backend.html">ScrumHubBackend</a></li><li class="navelem"><a class="el" href="namespace_scrum_hub_backend_1_1_git_hub_client.html">GitHubClient</a></li><li class="navelem"><a class="el" href="class_scrum_hub_backend_1_1_git_hub_client_1_1_git_hub_resynchronization.html">GitHubResynchronization</a></li>  </ul>
-</div>
-</div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
@@ -88,18 +105,24 @@ Inheritance diagram for ScrumHubBackend.GitHubClient.GitHubResynchronization:</d
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a6c0e1c08320530f17f9800de137bc6bd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_scrum_hub_backend_1_1_git_hub_client_1_1_git_hub_resynchronization.html#a6c0e1c08320530f17f9800de137bc6bd">ResynchronizeIssues</a> (Octokit.Repository repository, IGitHubClient gitHubClient, <a class="el" href="class_scrum_hub_backend_1_1_database_context.html">DatabaseContext</a> dbContext)</td></tr>
-<tr class="memdesc:a6c0e1c08320530f17f9800de137bc6bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resynchronizes issued between GitHub and ScrumHub   <a href="class_scrum_hub_backend_1_1_git_hub_client_1_1_git_hub_resynchronization.html#a6c0e1c08320530f17f9800de137bc6bd">More...</a><br /></td></tr>
-<tr class="separator:a6c0e1c08320530f17f9800de137bc6bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a439dc9af7eadadc1829682a287562ff4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_scrum_hub_backend_1_1_git_hub_client_1_1_i_git_hub_resynchronization.html#a439dc9af7eadadc1829682a287562ff4">ResynchronizeIssues</a> (Octokit.Repository repo, IGitHubClient gitHubClient, <a class="el" href="class_scrum_hub_backend_1_1_database_context.html">DatabaseContext</a> dbContext)</td></tr>
-<tr class="memdesc:a439dc9af7eadadc1829682a287562ff4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resynchronizes issued between GitHub and ScrumHub  <a href="interface_scrum_hub_backend_1_1_git_hub_client_1_1_i_git_hub_resynchronization.html#a439dc9af7eadadc1829682a287562ff4">More...</a><br /></td></tr>
-<tr class="separator:a439dc9af7eadadc1829682a287562ff4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e63faa2e7930ca7269e882d82956d07"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_scrum_hub_backend_1_1_git_hub_client_1_1_git_hub_resynchronization.html#a6e63faa2e7930ca7269e882d82956d07">ResynchronizeIssues</a> (Octokit.Repository repository, IEnumerable&lt; Issue &gt; repositoryIssues, IGitHubClient gitHubClient, <a class="el" href="class_scrum_hub_backend_1_1_database_context.html">DatabaseContext</a> dbContext)</td></tr>
+<tr class="memdesc:a6e63faa2e7930ca7269e882d82956d07"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resynchronizes issued between GitHub and ScrumHub   <a href="class_scrum_hub_backend_1_1_git_hub_client_1_1_git_hub_resynchronization.html#a6e63faa2e7930ca7269e882d82956d07">More...</a><br /></td></tr>
+<tr class="separator:a6e63faa2e7930ca7269e882d82956d07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8be9e758ec45366c8918b884d9415b74"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_scrum_hub_backend_1_1_git_hub_client_1_1_i_git_hub_resynchronization.html#a8be9e758ec45366c8918b884d9415b74">ResynchronizeIssues</a> (Octokit.Repository repo, IEnumerable&lt; Issue &gt; repositoryIssues, IGitHubClient gitHubClient, <a class="el" href="class_scrum_hub_backend_1_1_database_context.html">DatabaseContext</a> dbContext)</td></tr>
+<tr class="memdesc:a8be9e758ec45366c8918b884d9415b74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resynchronizes issued between GitHub and ScrumHub  <a href="interface_scrum_hub_backend_1_1_git_hub_client_1_1_i_git_hub_resynchronization.html#a8be9e758ec45366c8918b884d9415b74">More...</a><br /></td></tr>
+<tr class="separator:a8be9e758ec45366c8918b884d9415b74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-methods" name="pri-static-methods"></a>
 Static Private Member Functions</h2></td></tr>
-<tr class="memitem:aa9559b8cae58307ee6f662fc58ac5369"><td class="memItemLeft" align="right" valign="top"><a id="aa9559b8cae58307ee6f662fc58ac5369" name="aa9559b8cae58307ee6f662fc58ac5369"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>UpdateAndRemoveTasks</b> (IEnumerable&lt; <a class="el" href="class_scrum_hub_backend_1_1_database_model_1_1_s_h_task.html">SHTask</a> &gt; scrumHubTasks, IEnumerable&lt; Issue &gt; repositoryIssues, IEnumerable&lt; Branch &gt; repositoryBranches, <a class="el" href="class_scrum_hub_backend_1_1_database_context.html">DatabaseContext</a> dbContext)</td></tr>
-<tr class="separator:aa9559b8cae58307ee6f662fc58ac5369"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3af1d46bb8ed6e761b18bd3da6ef275c"><td class="memItemLeft" align="right" valign="top"><a id="a3af1d46bb8ed6e761b18bd3da6ef275c" name="a3af1d46bb8ed6e761b18bd3da6ef275c"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>UpdateAndRemoveTasks</b> (long repositoryId, IEnumerable&lt; <a class="el" href="class_scrum_hub_backend_1_1_database_model_1_1_s_h_task.html">SHTask</a> &gt; scrumHubTasks, IEnumerable&lt; Issue &gt; repositoryIssues, IEnumerable&lt; PullRequest &gt; repositoryPRsToDefaultBranch, IEnumerable&lt; Branch &gt; repositoryBranches, <a class="el" href="class_scrum_hub_backend_1_1_database_context.html">DatabaseContext</a> dbContext, IGitHubClient gitHubClient)</td></tr>
+<tr class="separator:a3af1d46bb8ed6e761b18bd3da6ef275c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b833071c792a5ae514f8fd6925d80c0"><td class="memItemLeft" align="right" valign="top"><a id="a8b833071c792a5ae514f8fd6925d80c0" name="a8b833071c792a5ae514f8fd6925d80c0"></a>
+static bool&#160;</td><td class="memItemRight" valign="bottom"><b>NameMatchesIssueBranchName</b> (string name, long issueNumber)</td></tr>
+<tr class="separator:a8b833071c792a5ae514f8fd6925d80c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2ecb1f95100e26b4af9e4be1ffb9352"><td class="memItemLeft" align="right" valign="top"><a id="af2ecb1f95100e26b4af9e4be1ffb9352" name="af2ecb1f95100e26b4af9e4be1ffb9352"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>SetTasksStatusDependingOnBranch</b> (IEnumerable&lt; <a class="el" href="class_scrum_hub_backend_1_1_database_model_1_1_s_h_task.html">SHTask</a> &gt; tasks, IEnumerable&lt; Issue &gt; repositoryIssues, IEnumerable&lt; Branch &gt; repositoryBranches, <a class="el" href="class_scrum_hub_backend_1_1_database_context.html">DatabaseContext</a> dbContext)</td></tr>
+<tr class="separator:af2ecb1f95100e26b4af9e4be1ffb9352"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a07d7bc40dec5b5029f8e13f96234a57d"><td class="memItemLeft" align="right" valign="top"><a id="a07d7bc40dec5b5029f8e13f96234a57d" name="a07d7bc40dec5b5029f8e13f96234a57d"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>AddTasks</b> (IEnumerable&lt; <a class="el" href="class_scrum_hub_backend_1_1_database_model_1_1_s_h_task.html">SHTask</a> &gt; scrumHubTasks, IEnumerable&lt; Issue &gt; repositoryIssues, <a class="el" href="class_scrum_hub_backend_1_1_database_model_1_1_repository.html">DatabaseModel.Repository</a> dbRepo, <a class="el" href="class_scrum_hub_backend_1_1_database_context.html">DatabaseContext</a> dbContext)</td></tr>
 <tr class="separator:a07d7bc40dec5b5029f8e13f96234a57d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -107,8 +130,8 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>AddTasks</b> (
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Class for resynchronizing group of objects between ScrumHub and GitHub </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a6c0e1c08320530f17f9800de137bc6bd" name="a6c0e1c08320530f17f9800de137bc6bd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6c0e1c08320530f17f9800de137bc6bd">&#9670;&nbsp;</a></span>ResynchronizeIssues()</h2>
+<a id="a6e63faa2e7930ca7269e882d82956d07" name="a6e63faa2e7930ca7269e882d82956d07"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e63faa2e7930ca7269e882d82956d07">&#9670;&nbsp;</a></span>ResynchronizeIssues()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -118,6 +141,12 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>AddTasks</b> (
           <td>(</td>
           <td class="paramtype">Octokit.Repository&#160;</td>
           <td class="paramname"><em>repository</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">IEnumerable&lt; Issue &gt;&#160;</td>
+          <td class="paramname"><em>repositoryIssues</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -141,17 +170,21 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>AddTasks</b> (
 
 <p>Resynchronizes issued between GitHub and ScrumHub  </p>
 
-<p>Implements <a class="el" href="interface_scrum_hub_backend_1_1_git_hub_client_1_1_i_git_hub_resynchronization.html#a439dc9af7eadadc1829682a287562ff4">ScrumHubBackend.GitHubClient.IGitHubResynchronization</a>.</p>
+<p>Implements <a class="el" href="interface_scrum_hub_backend_1_1_git_hub_client_1_1_i_git_hub_resynchronization.html#a8be9e758ec45366c8918b884d9415b74">ScrumHubBackend.GitHubClient.IGitHubResynchronization</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>ScrumHubBackend/GitHubClient/GitHubResynchronization.cs</li>
+<li>GitHubClient/GitHubResynchronization.cs</li>
 </ul>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespace_scrum_hub_backend.html">ScrumHubBackend</a></li><li class="navelem"><a class="el" href="namespace_scrum_hub_backend_1_1_git_hub_client.html">GitHubClient</a></li><li class="navelem"><a class="el" href="class_scrum_hub_backend_1_1_git_hub_client_1_1_git_hub_resynchronization.html">GitHubResynchronization</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3 </li>
+  </ul>
+</div>
 </body>
 </html>

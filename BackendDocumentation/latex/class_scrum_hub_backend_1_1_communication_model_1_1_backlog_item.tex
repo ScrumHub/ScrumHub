@@ -8,56 +8,169 @@ Represents PBI
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
+void \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a03232d1ed0aeb8e86cc887c50edfb75e}{Add\+Tasks}} (IEnumerable$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_s_h_task}{SHTask}} $>$ tasks)
+\begin{DoxyCompactList}\small\item\em Adds tasks to the PBI \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_aff529eb5522a76690ea495e67300db4a}\label{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_aff529eb5522a76690ea495e67300db4a}} 
 {\bfseries Backlog\+Item} ()
 \begin{DoxyCompactList}\small\item\em Constructor \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_ac210f8da58a8883961ca956b99f779b2}\label{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_ac210f8da58a8883961ca956b99f779b2}} 
-{\bfseries Backlog\+Item} (long db\+Id, \mbox{\hyperlink{interface_scrum_hub_backend_1_1_c_q_r_s_1_1_i_common_in_repository_request}{ICommon\+In\+Repository\+Request}} original\+Requst, \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_context}{Database\+Context}} db\+Context, IMediator mediator)
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a95e0d7eabc685051ca148bbdeb79b34c}\label{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a95e0d7eabc685051ca148bbdeb79b34c}} 
+{\bfseries Backlog\+Item} (long db\+Id, \mbox{\hyperlink{interface_scrum_hub_backend_1_1_c_q_r_s_1_1_i_common_in_repository_request}{ICommon\+In\+Repository\+Request}} original\+Requst, \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_context}{Database\+Context}} db\+Context, IMediator mediator, bool fill\+Tasks)
 \begin{DoxyCompactList}\small\item\em Constructor \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_af6751236f118e42ad1a47458ecfa6321}\label{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_af6751236f118e42ad1a47458ecfa6321}} 
-{\bfseries Backlog\+Item} (\mbox{\hyperlink{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item}{Database\+Model.\+Backlog\+Item}}? db\+PBI, \mbox{\hyperlink{interface_scrum_hub_backend_1_1_c_q_r_s_1_1_i_common_in_repository_request}{ICommon\+In\+Repository\+Request}} original\+Requst, \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_context}{Database\+Context}} db\+Context, IMediator mediator)
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a97dfec40f85f96b2ce4d1aaa45671938}\label{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a97dfec40f85f96b2ce4d1aaa45671938}} 
+{\bfseries Backlog\+Item} (\mbox{\hyperlink{class_scrum_hub_backend_1_1_database_model_1_1_backlog_item}{Database\+Model.\+Backlog\+Item}}? db\+PBI, \mbox{\hyperlink{interface_scrum_hub_backend_1_1_c_q_r_s_1_1_i_common_in_repository_request}{ICommon\+In\+Repository\+Request}} original\+Requst, \mbox{\hyperlink{class_scrum_hub_backend_1_1_database_context}{Database\+Context}} db\+Context, IMediator mediator, bool fill\+Tasks)
 \begin{DoxyCompactList}\small\item\em Constructor \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Properties}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a6b26888ddc5a9f6cf2ea19dbc4ee991d}\label{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a6b26888ddc5a9f6cf2ea19dbc4ee991d}} 
-long {\bfseries Id} = 0\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+long \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a6b26888ddc5a9f6cf2ea19dbc4ee991d}{Id}} = 0\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
 \begin{DoxyCompactList}\small\item\em Id of the PBI \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a42fe44d88821a46bd1535c409a6f7389}\label{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a42fe44d88821a46bd1535c409a6f7389}} 
-string {\bfseries Name} = String.\+Empty\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+string \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a42fe44d88821a46bd1535c409a6f7389}{Name}} = String.\+Empty\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
 \begin{DoxyCompactList}\small\item\em Name of the PBI \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_acc351406d9d3b4b275f0c2c044b60369}\label{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_acc351406d9d3b4b275f0c2c044b60369}} 
-bool {\bfseries Finished} = false\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+bool \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_acc351406d9d3b4b275f0c2c044b60369}{Finished}} = false\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
 \begin{DoxyCompactList}\small\item\em Flag if the PBI was finished \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a667e6c5d8d828bc79d47ba561b2eb0ed}\label{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a667e6c5d8d828bc79d47ba561b2eb0ed}} 
-double {\bfseries Expected\+Time\+In\+Hours} = 0\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+double \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a667e6c5d8d828bc79d47ba561b2eb0ed}{Expected\+Time\+In\+Hours}} = 0\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
 \begin{DoxyCompactList}\small\item\em Estimation how many time will be spent on PBI \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_ae114b1cae5d2be395a54c6463155b086}\label{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_ae114b1cae5d2be395a54c6463155b086}} 
-bool {\bfseries Estimated}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+bool \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_ae114b1cae5d2be395a54c6463155b086}{Estimated}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
 \begin{DoxyCompactList}\small\item\em Is the PBI estimated \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a4372991f2b5642977f1dbd2db14b222c}\label{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a4372991f2b5642977f1dbd2db14b222c}} 
-long? {\bfseries Sprint\+Number} = null\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+long? \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a4372991f2b5642977f1dbd2db14b222c}{Sprint\+Number}} = null\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
 \begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_sprint}{Sprint}} where PBI is \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a84c4e5c5ed8eb98d3626dffc9775ca3b}\label{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a84c4e5c5ed8eb98d3626dffc9775ca3b}} 
-bool {\bfseries Is\+In\+Sprint}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+bool \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a84c4e5c5ed8eb98d3626dffc9775ca3b}{Is\+In\+Sprint}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
 \begin{DoxyCompactList}\small\item\em Is the PBI in sprint \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a174da1ef77e961249384a4ba952746e9}\label{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a174da1ef77e961249384a4ba952746e9}} 
-double {\bfseries Time\+Spent\+In\+Hours} = 0\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+double \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a174da1ef77e961249384a4ba952746e9}{Time\+Spent\+In\+Hours}} = 0\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
 \begin{DoxyCompactList}\small\item\em How many hours was spent on PBI \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a491f4bdead3b12a6e07c9fa6303718ce}\label{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a491f4bdead3b12a6e07c9fa6303718ce}} 
-long {\bfseries Priority} = 0\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+long \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a491f4bdead3b12a6e07c9fa6303718ce}{Priority}} = 0\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
 \begin{DoxyCompactList}\small\item\em Priority of the PBI \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a39a3261c5dd5e81b932be917e6481a8e}\label{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a39a3261c5dd5e81b932be917e6481a8e}} 
-IList$<$ string $>$? {\bfseries Acceptance\+Criteria} = new List$<$string$>$()\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+IList$<$ string $>$? \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a39a3261c5dd5e81b932be917e6481a8e}{Acceptance\+Criteria}} = new List$<$string$>$()\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
 \begin{DoxyCompactList}\small\item\em List of acceptance criteria for the PBI \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a873098f75060a614c06efbd062b1783f}\label{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a873098f75060a614c06efbd062b1783f}} 
-IList$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_s_h_task}{SHTask}} $>$? {\bfseries Tasks} = new List$<$\mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_s_h_task}{SHTask}}$>$()\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a00fdf498493323bd1bf090ff2ad00335}\label{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a00fdf498493323bd1bf090ff2ad00335}} 
+List$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_s_h_task}{SHTask}} $>$? {\bfseries Tasks} = new List$<$\mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_s_h_task}{SHTask}}$>$()\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
 \begin{DoxyCompactList}\small\item\em List of tasks for PBI \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
 Represents PBI 
 
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a03232d1ed0aeb8e86cc887c50edfb75e}\label{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a03232d1ed0aeb8e86cc887c50edfb75e}} 
+\index{ScrumHubBackend.CommunicationModel.BacklogItem@{ScrumHubBackend.CommunicationModel.BacklogItem}!AddTasks@{AddTasks}}
+\index{AddTasks@{AddTasks}!ScrumHubBackend.CommunicationModel.BacklogItem@{ScrumHubBackend.CommunicationModel.BacklogItem}}
+\doxysubsubsection{\texorpdfstring{AddTasks()}{AddTasks()}}
+{\footnotesize\ttfamily void Scrum\+Hub\+Backend.\+Communication\+Model.\+Backlog\+Item.\+Add\+Tasks (\begin{DoxyParamCaption}\item[{IEnumerable$<$ \mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_s_h_task}{SHTask}} $>$}]{tasks }\end{DoxyParamCaption})}
+
+
+
+Adds tasks to the PBI 
+
+
+\begin{DoxyParams}{Parameters}
+{\em tasks} & Tasks to add\\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Property Documentation}
+\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a39a3261c5dd5e81b932be917e6481a8e}\label{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a39a3261c5dd5e81b932be917e6481a8e}} 
+\index{ScrumHubBackend.CommunicationModel.BacklogItem@{ScrumHubBackend.CommunicationModel.BacklogItem}!AcceptanceCriteria@{AcceptanceCriteria}}
+\index{AcceptanceCriteria@{AcceptanceCriteria}!ScrumHubBackend.CommunicationModel.BacklogItem@{ScrumHubBackend.CommunicationModel.BacklogItem}}
+\doxysubsubsection{\texorpdfstring{AcceptanceCriteria}{AcceptanceCriteria}}
+{\footnotesize\ttfamily IList$<$string$>$? Scrum\+Hub\+Backend.\+Communication\+Model.\+Backlog\+Item.\+Acceptance\+Criteria = new List$<$string$>$()\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+List of acceptance criteria for the PBI 
+
+\mbox{[}\char`\"{}\+Frontend is consistent\char`\"{}, \char`\"{}\+Application works not slower then before changes\char`\"{}\mbox{]}\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_ae114b1cae5d2be395a54c6463155b086}\label{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_ae114b1cae5d2be395a54c6463155b086}} 
+\index{ScrumHubBackend.CommunicationModel.BacklogItem@{ScrumHubBackend.CommunicationModel.BacklogItem}!Estimated@{Estimated}}
+\index{Estimated@{Estimated}!ScrumHubBackend.CommunicationModel.BacklogItem@{ScrumHubBackend.CommunicationModel.BacklogItem}}
+\doxysubsubsection{\texorpdfstring{Estimated}{Estimated}}
+{\footnotesize\ttfamily bool Scrum\+Hub\+Backend.\+Communication\+Model.\+Backlog\+Item.\+Estimated\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Is the PBI estimated 
+
+true\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a667e6c5d8d828bc79d47ba561b2eb0ed}\label{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a667e6c5d8d828bc79d47ba561b2eb0ed}} 
+\index{ScrumHubBackend.CommunicationModel.BacklogItem@{ScrumHubBackend.CommunicationModel.BacklogItem}!ExpectedTimeInHours@{ExpectedTimeInHours}}
+\index{ExpectedTimeInHours@{ExpectedTimeInHours}!ScrumHubBackend.CommunicationModel.BacklogItem@{ScrumHubBackend.CommunicationModel.BacklogItem}}
+\doxysubsubsection{\texorpdfstring{ExpectedTimeInHours}{ExpectedTimeInHours}}
+{\footnotesize\ttfamily double Scrum\+Hub\+Backend.\+Communication\+Model.\+Backlog\+Item.\+Expected\+Time\+In\+Hours = 0\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Estimation how many time will be spent on PBI 
+
+8\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_acc351406d9d3b4b275f0c2c044b60369}\label{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_acc351406d9d3b4b275f0c2c044b60369}} 
+\index{ScrumHubBackend.CommunicationModel.BacklogItem@{ScrumHubBackend.CommunicationModel.BacklogItem}!Finished@{Finished}}
+\index{Finished@{Finished}!ScrumHubBackend.CommunicationModel.BacklogItem@{ScrumHubBackend.CommunicationModel.BacklogItem}}
+\doxysubsubsection{\texorpdfstring{Finished}{Finished}}
+{\footnotesize\ttfamily bool Scrum\+Hub\+Backend.\+Communication\+Model.\+Backlog\+Item.\+Finished = false\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Flag if the PBI was finished 
+
+false\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a6b26888ddc5a9f6cf2ea19dbc4ee991d}\label{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a6b26888ddc5a9f6cf2ea19dbc4ee991d}} 
+\index{ScrumHubBackend.CommunicationModel.BacklogItem@{ScrumHubBackend.CommunicationModel.BacklogItem}!Id@{Id}}
+\index{Id@{Id}!ScrumHubBackend.CommunicationModel.BacklogItem@{ScrumHubBackend.CommunicationModel.BacklogItem}}
+\doxysubsubsection{\texorpdfstring{Id}{Id}}
+{\footnotesize\ttfamily long Scrum\+Hub\+Backend.\+Communication\+Model.\+Backlog\+Item.\+Id = 0\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Id of the PBI 
+
+9\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a84c4e5c5ed8eb98d3626dffc9775ca3b}\label{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a84c4e5c5ed8eb98d3626dffc9775ca3b}} 
+\index{ScrumHubBackend.CommunicationModel.BacklogItem@{ScrumHubBackend.CommunicationModel.BacklogItem}!IsInSprint@{IsInSprint}}
+\index{IsInSprint@{IsInSprint}!ScrumHubBackend.CommunicationModel.BacklogItem@{ScrumHubBackend.CommunicationModel.BacklogItem}}
+\doxysubsubsection{\texorpdfstring{IsInSprint}{IsInSprint}}
+{\footnotesize\ttfamily bool Scrum\+Hub\+Backend.\+Communication\+Model.\+Backlog\+Item.\+Is\+In\+Sprint\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Is the PBI in sprint 
+
+true\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a42fe44d88821a46bd1535c409a6f7389}\label{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a42fe44d88821a46bd1535c409a6f7389}} 
+\index{ScrumHubBackend.CommunicationModel.BacklogItem@{ScrumHubBackend.CommunicationModel.BacklogItem}!Name@{Name}}
+\index{Name@{Name}!ScrumHubBackend.CommunicationModel.BacklogItem@{ScrumHubBackend.CommunicationModel.BacklogItem}}
+\doxysubsubsection{\texorpdfstring{Name}{Name}}
+{\footnotesize\ttfamily string Scrum\+Hub\+Backend.\+Communication\+Model.\+Backlog\+Item.\+Name = String.\+Empty\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Name of the PBI 
+
+Fix unconsistent frontend elements\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a491f4bdead3b12a6e07c9fa6303718ce}\label{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a491f4bdead3b12a6e07c9fa6303718ce}} 
+\index{ScrumHubBackend.CommunicationModel.BacklogItem@{ScrumHubBackend.CommunicationModel.BacklogItem}!Priority@{Priority}}
+\index{Priority@{Priority}!ScrumHubBackend.CommunicationModel.BacklogItem@{ScrumHubBackend.CommunicationModel.BacklogItem}}
+\doxysubsubsection{\texorpdfstring{Priority}{Priority}}
+{\footnotesize\ttfamily long Scrum\+Hub\+Backend.\+Communication\+Model.\+Backlog\+Item.\+Priority = 0\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Priority of the PBI 
+
+2\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a4372991f2b5642977f1dbd2db14b222c}\label{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a4372991f2b5642977f1dbd2db14b222c}} 
+\index{ScrumHubBackend.CommunicationModel.BacklogItem@{ScrumHubBackend.CommunicationModel.BacklogItem}!SprintNumber@{SprintNumber}}
+\index{SprintNumber@{SprintNumber}!ScrumHubBackend.CommunicationModel.BacklogItem@{ScrumHubBackend.CommunicationModel.BacklogItem}}
+\doxysubsubsection{\texorpdfstring{SprintNumber}{SprintNumber}}
+{\footnotesize\ttfamily long? Scrum\+Hub\+Backend.\+Communication\+Model.\+Backlog\+Item.\+Sprint\+Number = null\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+\mbox{\hyperlink{class_scrum_hub_backend_1_1_communication_model_1_1_sprint}{Sprint}} where PBI is 
+
+2\mbox{\Hypertarget{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a174da1ef77e961249384a4ba952746e9}\label{class_scrum_hub_backend_1_1_communication_model_1_1_backlog_item_a174da1ef77e961249384a4ba952746e9}} 
+\index{ScrumHubBackend.CommunicationModel.BacklogItem@{ScrumHubBackend.CommunicationModel.BacklogItem}!TimeSpentInHours@{TimeSpentInHours}}
+\index{TimeSpentInHours@{TimeSpentInHours}!ScrumHubBackend.CommunicationModel.BacklogItem@{ScrumHubBackend.CommunicationModel.BacklogItem}}
+\doxysubsubsection{\texorpdfstring{TimeSpentInHours}{TimeSpentInHours}}
+{\footnotesize\ttfamily double Scrum\+Hub\+Backend.\+Communication\+Model.\+Backlog\+Item.\+Time\+Spent\+In\+Hours = 0\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+How many hours was spent on PBI 
+
+0
+
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-Scrum\+Hub\+Backend/\+Communication\+Model/Backlog\+Item.\+cs\end{DoxyCompactItemize}
+Communication\+Model/Backlog\+Item.\+cs\end{DoxyCompactItemize}

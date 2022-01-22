@@ -31,46 +31,55 @@ namespace ScrumHubBackend.CommunicationModel
         /// <summary>
         /// Name of repository
         /// </summary>
+        /// <example>ScrumHub/ScrumHub</example>
         public string? Name { get; set; } = String.Empty;
 
         /// <summary>
         /// Description of the repository
         /// </summary>
+        /// <example>Agile development platform integrated with GitHub.</example>
         public string? Description { get; set; } = String.Empty;
 
         /// <summary>
         /// Date of last user activity in format "yyyy-MM-dd HH:mm:ss 'UTC'" or "No recent activity"
         /// </summary>
+        /// <example>2022-01-22 10:05:11 UTC</example>
         public string? DateOfLastActivity { get; set; } = String.Empty;
 
         /// <summary>
         /// Type of last user activity or "No recent activity"
         /// </summary>
+        /// <example>Branch or tag created</example>
         public string? TypeOfLastActivity { get; set; } = String.Empty;
 
         /// <summary>
         /// GitHub id of repository
         /// </summary>
+        /// <example>425815732</example>
         public long GitHubId { get; set; } = 0;
 
         /// <summary>
         /// Does current user have admin rights to the repository
         /// </summary>
+        /// <example>true</example>
         public bool HasAdminRights { get; set; } = false;
 
         /// <summary>
         /// Is this repository already in ScrumHub
         /// </summary>
+        /// <example>true</example>
         public bool AlreadyInScrumHub { get; set; } = false;
 
         /// <summary>
         /// List of ids of backlog items
         /// </summary>
+        /// <example>[1, 2, 9, 12, 18, 22]</example>
         public List<long> BacklogItems { get; set; } = new List<long>();
 
         /// <summary>
         /// List of numbers of sprints
         /// </summary>
+        /// <example>[1, 2, 4, 5]</example>
         public List<long> Sprints { get; set; } = new List<long>();
 
         /// <summary>

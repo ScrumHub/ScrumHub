@@ -8,21 +8,25 @@
         /// <summary>
         /// Number of actual page
         /// </summary>
+        /// <example>2</example>
         public int PageNumber { get; set; }
 
         /// <summary>
         /// Total number of pages
         /// </summary>
+        /// <example>3</example>
         public int PageCount { get; set; }
 
         /// <summary>
         /// Size of page
         /// </summary>
+        /// <example>10</example>
         public int PageSize { get; set; }
 
         /// <summary>
         /// Number of actually received elements
         /// </summary>
+        /// <example>10</example>
         public int RealSize { get; set; }
 
         /// <summary>

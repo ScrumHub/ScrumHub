@@ -1,0 +1,7 @@
+var namespace_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories =
+[
+    [ "AddRepositoryToScrumHubCommand", "class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_add_repository_to_scrum_hub_command.html", "class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_add_repository_to_scrum_hub_command" ],
+    [ "AddRepositoryToScrumHubCommandHandler", "class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_add_repository_to_scrum_hub_command_handler.html", "class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_add_repository_to_scrum_hub_command_handler" ],
+    [ "GetRepositoriesQuery", "class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_get_repositories_query.html", "class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_get_repositories_query" ],
+    [ "GetRepositoriesQueryHandler", "class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_get_repositories_query_handler.html", "class_scrum_hub_backend_1_1_c_q_r_s_1_1_repositories_1_1_get_repositories_query_handler" ]
+];

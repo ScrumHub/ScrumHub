@@ -8,6 +8,7 @@
         /// <summary>
         /// Index
         /// </summary>
+        /// <example>1782921</example>
         public long Index { get; set; }
     }
 }
