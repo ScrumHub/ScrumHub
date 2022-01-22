@@ -14,41 +14,49 @@ namespace ScrumHubBackend.CommunicationModel
         /// <summary>
         /// Number of a sprint in the project
         /// </summary>
+        /// <example>2</example>
         public long SprintNumber { get; set; }
 
         /// <summary>
         /// Title of the sprint
         /// </summary>
+        /// <example>Make sprint view</example>
         public string Title { get; set; } = String.Empty;
 
         /// <summary>
         /// Goal of the sprint
         /// </summary>
+        /// <example>Sprint view consists of sprint list. Then in each element we should see all PBIs together with assigned tasks.</example>
         public string Goal { get; set; } = String.Empty;
 
         /// <summary>
         /// PBI that will be done in this sprint
         /// </summary>
+        /// <example>[1, 2, 4]</example>
         public ICollection<BacklogItem>? BacklogItems { get; set; } = null;
 
         /// <summary>
         /// in format "yyyy-MM-dd 'UTC'"
         /// </summary>
+        /// <example>2022-01-22 10:05:11 UTC</example>
         public string FinishDate { get; set; } = String.Empty;
 
         /// <summary>
         /// True if actual sprint is current (the one with the earliest not passed finish date)
         /// </summary>
+        /// <example>false</example>
         public bool IsCurrent { get; set; } = false;
 
         /// <summary>
         /// Status of the sprint
         /// </summary>
+        /// <example>Successful</example>
         public SprintStatus Status { get; set; } = SprintStatus.NotFinished;
 
         /// <summary>
         /// Flag if sprint is completed
         /// </summary>
+        /// <example>true</example>
         public bool IsCompleted { get => Status != SprintStatus.NotFinished; }
 
         /// <summary>

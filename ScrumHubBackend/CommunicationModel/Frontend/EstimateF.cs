@@ -8,6 +8,7 @@
         /// <summary>
         /// Estimation in hours
         /// </summary>
+        /// <example>8</example>
         public long Hours { get; set; }
     }
 }
