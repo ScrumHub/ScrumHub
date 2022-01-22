@@ -2339,7 +2339,8 @@
           "login": {
             "type": "string",
             "description": "Login of the person",
-            "nullable": true
+            "nullable": true,
+            "example": "jckex9912"
           }
         },
         "additionalProperties": false,
@@ -2351,47 +2352,56 @@
           "id": {
             "type": "integer",
             "description": "Id of the PBI",
-            "format": "int64"
+            "format": "int64",
+            "example": 9
           },
           "name": {
             "type": "string",
             "description": "Name of the PBI",
-            "nullable": true
+            "nullable": true,
+            "example": "Fix unconsistent frontend elements"
           },
           "finished": {
             "type": "boolean",
-            "description": "Flag if the PBI was finished"
+            "description": "Flag if the PBI was finished",
+            "example": false
           },
           "expectedTimeInHours": {
             "type": "number",
             "description": "Estimation how many time will be spent on PBI",
-            "format": "double"
+            "format": "double",
+            "example": 8
           },
           "estimated": {
             "type": "boolean",
             "description": "Is the PBI estimated",
-            "readOnly": true
+            "readOnly": true,
+            "example": true
           },
           "sprintNumber": {
             "type": "integer",
             "description": "Sprint where PBI is",
             "format": "int64",
-            "nullable": true
+            "nullable": true,
+            "example": 2
           },
           "isInSprint": {
             "type": "boolean",
             "description": "Is the PBI in sprint",
-            "readOnly": true
+            "readOnly": true,
+            "example": true
           },
           "timeSpentInHours": {
             "type": "number",
             "description": "How many hours was spent on PBI",
-            "format": "double"
+            "format": "double",
+            "example": 0
           },
           "priority": {
             "type": "integer",
             "description": "Priority of the PBI",
-            "format": "int64"
+            "format": "int64",
+            "example": 2
           },
           "acceptanceCriteria": {
             "type": "array",
@@ -2399,7 +2409,11 @@
               "type": "string"
             },
             "description": "List of acceptance criteria for the PBI",
-            "nullable": true
+            "nullable": true,
+            "example": [
+              "Frontend is consistent",
+              "Application works not slower then before changes"
+            ]
           },
           "tasks": {
             "type": "array",
@@ -2419,12 +2433,14 @@
           "name": {
             "type": "string",
             "description": "Name of the PBI",
-            "nullable": true
+            "nullable": true,
+            "example": "Add planning poker"
           },
           "priority": {
             "type": "integer",
             "description": "Priority of the PBI",
-            "format": "int64"
+            "format": "int64",
+            "example": 2
           },
           "acceptanceCriteria": {
             "type": "array",
@@ -2432,7 +2448,11 @@
               "type": "string"
             },
             "description": "List of acceptance criteria for the PBI",
-            "nullable": true
+            "nullable": true,
+            "example": [
+              "I can play plannig poker",
+              "Result of the game is saved as an estimate"
+            ]
           }
         },
         "additionalProperties": false,
@@ -2444,22 +2464,26 @@
           "pageNumber": {
             "type": "integer",
             "description": "Number of actual page",
-            "format": "int32"
+            "format": "int32",
+            "example": 2
           },
           "pageCount": {
             "type": "integer",
             "description": "Total number of pages",
-            "format": "int32"
+            "format": "int32",
+            "example": 3
           },
           "pageSize": {
             "type": "integer",
             "description": "Size of page",
-            "format": "int32"
+            "format": "int32",
+            "example": 10
           },
           "realSize": {
             "type": "integer",
             "description": "Number of actually received elements",
-            "format": "int32"
+            "format": "int32",
+            "example": 10
           },
           "list": {
             "type": "array",
@@ -2479,12 +2503,14 @@
           "message": {
             "type": "string",
             "description": "Message content",
-            "nullable": true
+            "nullable": true,
+            "example": "Something went wrong!"
           },
           "code": {
             "type": "integer",
             "description": "Error code",
-            "format": "int32"
+            "format": "int32",
+            "example": 500
           }
         },
         "additionalProperties": false,
@@ -2496,7 +2522,8 @@
           "hours": {
             "type": "integer",
             "description": "Estimation in hours",
-            "format": "int64"
+            "format": "int64",
+            "example": 8
           }
         },
         "additionalProperties": false,
@@ -2508,7 +2535,8 @@
           "index": {
             "type": "integer",
             "description": "Index",
-            "format": "int64"
+            "format": "int64",
+            "example": 1782921
           }
         },
         "additionalProperties": false,
@@ -2520,26 +2548,31 @@
           "name": {
             "type": "string",
             "description": "Name of person (might be null)",
-            "nullable": true
+            "nullable": true,
+            "example": "Jack Example"
           },
           "login": {
             "type": "string",
             "description": "Login of person",
-            "nullable": true
+            "nullable": true,
+            "example": "jckex9912"
           },
           "gitHubId": {
             "type": "integer",
             "description": "GitHub id of person",
-            "format": "int64"
+            "format": "int64",
+            "example": 718221
           },
           "avatarLink": {
             "type": "string",
             "description": "Link to the avatar of the person",
-            "nullable": true
+            "nullable": true,
+            "example": "https://avatars.githubusercontent.com/u/27913213?v=4"
           },
           "isCurrentUser": {
             "type": "boolean",
-            "description": "True if this person is the current user"
+            "description": "True if this person is the current user",
+            "example": false
           }
         },
         "additionalProperties": false,
@@ -2551,22 +2584,26 @@
           "pageNumber": {
             "type": "integer",
             "description": "Number of actual page",
-            "format": "int32"
+            "format": "int32",
+            "example": 2
           },
           "pageCount": {
             "type": "integer",
             "description": "Total number of pages",
-            "format": "int32"
+            "format": "int32",
+            "example": 3
           },
           "pageSize": {
             "type": "integer",
             "description": "Size of page",
-            "format": "int32"
+            "format": "int32",
+            "example": 10
           },
           "realSize": {
             "type": "integer",
             "description": "Number of actually received elements",
-            "format": "int32"
+            "format": "int32",
+            "example": 10
           },
           "list": {
             "type": "array",
@@ -2586,35 +2623,42 @@
           "name": {
             "type": "string",
             "description": "Name of repository",
-            "nullable": true
+            "nullable": true,
+            "example": "ScrumHub/ScrumHub"
           },
           "description": {
             "type": "string",
             "description": "Description of the repository",
-            "nullable": true
+            "nullable": true,
+            "example": "Agile development platform integrated with GitHub."
           },
           "dateOfLastActivity": {
             "type": "string",
             "description": "Date of last user activity in format \"yyyy-MM-dd HH:mm:ss 'UTC'\" or \"No recent activity\"",
-            "nullable": true
+            "nullable": true,
+            "example": "2022-01-22 10:05:11 UTC"
           },
           "typeOfLastActivity": {
             "type": "string",
             "description": "Type of last user activity or \"No recent activity\"",
-            "nullable": true
+            "nullable": true,
+            "example": "Branch or tag created"
           },
           "gitHubId": {
             "type": "integer",
             "description": "GitHub id of repository",
-            "format": "int64"
+            "format": "int64",
+            "example": 425815732
           },
           "hasAdminRights": {
             "type": "boolean",
-            "description": "Does current user have admin rights to the repository"
+            "description": "Does current user have admin rights to the repository",
+            "example": true
           },
           "alreadyInScrumHub": {
             "type": "boolean",
-            "description": "Is this repository already in ScrumHub"
+            "description": "Is this repository already in ScrumHub",
+            "example": true
           },
           "backlogItems": {
             "type": "array",
@@ -2623,7 +2667,15 @@
               "format": "int64"
             },
             "description": "List of ids of backlog items",
-            "nullable": true
+            "nullable": true,
+            "example": [
+              1,
+              2,
+              9,
+              12,
+              18,
+              22
+            ]
           },
           "sprints": {
             "type": "array",
@@ -2632,7 +2684,13 @@
               "format": "int64"
             },
             "description": "List of numbers of sprints",
-            "nullable": true
+            "nullable": true,
+            "example": [
+              1,
+              2,
+              4,
+              5
+            ]
           }
         },
         "additionalProperties": false,
@@ -2644,22 +2702,26 @@
           "pageNumber": {
             "type": "integer",
             "description": "Number of actual page",
-            "format": "int32"
+            "format": "int32",
+            "example": 2
           },
           "pageCount": {
             "type": "integer",
             "description": "Total number of pages",
-            "format": "int32"
+            "format": "int32",
+            "example": 3
           },
           "pageSize": {
             "type": "integer",
             "description": "Size of page",
-            "format": "int32"
+            "format": "int32",
+            "example": 10
           },
           "realSize": {
             "type": "integer",
             "description": "Number of actually received elements",
-            "format": "int32"
+            "format": "int32",
+            "example": 10
           },
           "list": {
             "type": "array",
@@ -2679,12 +2741,14 @@
           "id": {
             "type": "integer",
             "description": "Id of the PBI",
-            "format": "int64"
+            "format": "int64",
+            "example": 12
           },
           "name": {
             "type": "string",
-            "description": "Name of the PBI",
-            "nullable": true
+            "description": "Name of the task",
+            "nullable": true,
+            "example": "Fix buttons colour"
           },
           "status": {
             "$ref": "#/components/schemas/SHTaskStatus"
@@ -2692,23 +2756,27 @@
           "finished": {
             "type": "boolean",
             "description": "Flag if the PBI was finished",
-            "readOnly": true
+            "readOnly": true,
+            "example": false
           },
           "pbiId": {
             "type": "integer",
             "description": "PBI where the task is assigned",
             "format": "int64",
-            "nullable": true
+            "nullable": true,
+            "example": 9
           },
           "isAssignedToPBI": {
             "type": "boolean",
             "description": "Is the task in PBI",
-            "readOnly": true
+            "readOnly": true,
+            "example": true
           },
           "link": {
             "type": "string",
             "description": "Link to the repository",
-            "nullable": true
+            "nullable": true,
+            "example": "https://github.com/Owner/Repository/issues/12"
           },
           "assigness": {
             "type": "array",
@@ -2728,22 +2796,26 @@
           "pageNumber": {
             "type": "integer",
             "description": "Number of actual page",
-            "format": "int32"
+            "format": "int32",
+            "example": 2
           },
           "pageCount": {
             "type": "integer",
             "description": "Total number of pages",
-            "format": "int32"
+            "format": "int32",
+            "example": 3
           },
           "pageSize": {
             "type": "integer",
             "description": "Size of page",
-            "format": "int32"
+            "format": "int32",
+            "example": 10
           },
           "realSize": {
             "type": "integer",
             "description": "Number of actually received elements",
-            "format": "int32"
+            "format": "int32",
+            "example": 10
           },
           "list": {
             "type": "array",
@@ -2762,7 +2834,11 @@
           "New",
           "InProgress",
           "InReview",
-          "Finished"
+          "Finished",
+          "NewWBranch",
+          "InProgressWBranch",
+          "InReviewWBranch",
+          "FinishedWBranch"
         ],
         "type": "string",
         "description": "Status of the task"
@@ -2773,17 +2849,20 @@
           "sprintNumber": {
             "type": "integer",
             "description": "Number of a sprint in the project",
-            "format": "int64"
+            "format": "int64",
+            "example": 2
           },
           "title": {
             "type": "string",
             "description": "Title of the sprint",
-            "nullable": true
+            "nullable": true,
+            "example": "Make sprint view"
           },
           "goal": {
             "type": "string",
             "description": "Goal of the sprint",
-            "nullable": true
+            "nullable": true,
+            "example": "Sprint view consists of sprint list. Then in each element we should see all PBIs together with assigned tasks."
           },
           "backlogItems": {
             "type": "array",
@@ -2791,16 +2870,23 @@
               "$ref": "#/components/schemas/BacklogItem"
             },
             "description": "PBI that will be done in this sprint",
-            "nullable": true
+            "nullable": true,
+            "example": [
+              1,
+              2,
+              4
+            ]
           },
           "finishDate": {
             "type": "string",
             "description": "in format \"yyyy-MM-dd 'UTC'\"",
-            "nullable": true
+            "nullable": true,
+            "example": "2022-01-22 10:05:11 UTC"
           },
           "isCurrent": {
             "type": "boolean",
-            "description": "True if actual sprint is current (the one with the earliest not passed finish date)"
+            "description": "True if actual sprint is current (the one with the earliest not passed finish date)",
+            "example": false
           },
           "status": {
             "$ref": "#/components/schemas/SprintStatus"
@@ -2808,7 +2894,8 @@
           "isCompleted": {
             "type": "boolean",
             "description": "Flag if sprint is completed",
-            "readOnly": true
+            "readOnly": true,
+            "example": true
           }
         },
         "additionalProperties": false,
@@ -2820,7 +2907,8 @@
           "goal": {
             "type": "string",
             "description": "Goal of the sprint",
-            "nullable": true
+            "nullable": true,
+            "example": "Sprint view consists of sprint list. Then in each element we should see all PBIs together with assigned tasks."
           },
           "pbIs": {
             "type": "array",
@@ -2829,17 +2917,24 @@
               "format": "int64"
             },
             "description": "Ids of PBIs in the sprint",
-            "nullable": true
+            "nullable": true,
+            "example": [
+              1,
+              2,
+              4
+            ]
           },
           "title": {
             "type": "string",
             "description": "Title of the sprint",
-            "nullable": true
+            "nullable": true,
+            "example": "Make sprint view"
           },
           "finishDate": {
             "type": "string",
             "description": "Finish date of the sprint",
-            "format": "date-time"
+            "format": "date-time",
+            "example": "2022-01-22T10:17:34.147Z"
           }
         },
         "additionalProperties": false,
@@ -2851,22 +2946,26 @@
           "pageNumber": {
             "type": "integer",
             "description": "Number of actual page",
-            "format": "int32"
+            "format": "int32",
+            "example": 2
           },
           "pageCount": {
             "type": "integer",
             "description": "Total number of pages",
-            "format": "int32"
+            "format": "int32",
+            "example": 3
           },
           "pageSize": {
             "type": "integer",
             "description": "Size of page",
-            "format": "int32"
+            "format": "int32",
+            "example": 10
           },
           "realSize": {
             "type": "integer",
             "description": "Number of actually received elements",
-            "format": "int32"
+            "format": "int32",
+            "example": 10
           },
           "list": {
             "type": "array",
@@ -2895,12 +2994,14 @@
           "name": {
             "type": "string",
             "description": "Name of the new task",
-            "nullable": true
+            "nullable": true,
+            "example": "Fix buttons colour"
           },
           "pbiId": {
             "type": "integer",
             "description": "Id of PBI the task belongs to, 0 for unassigned",
-            "format": "int64"
+            "format": "int64",
+            "example": 9
           }
         },
         "additionalProperties": false,
