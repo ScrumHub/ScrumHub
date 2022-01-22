@@ -49,6 +49,11 @@ namespace ScrumHubBackend.GitHubClient
             scrumHubTasks = dbContext.Tasks?.Where(task => task.RepositoryId == dbRepo.Id).ToList() ?? new List<DatabaseModel.SHTask>();
 
             UpdateAndRemoveTasks(repository.Id, scrumHubTasks, repositoryIssues, repositoryPRsToDefaultBranch, repositoryBranches, dbContext, gitHubClient);
+
+            // Next update after potentially removing tasks
+            scrumHubTasks = dbContext.Tasks?.Where(task => task.RepositoryId == dbRepo.Id).ToList() ?? new List<DatabaseModel.SHTask>();
+
+            SetTasksStatusDependingOnBranch(scrumHubTasks, repositoryIssues, repositoryBranches, dbContext);
         }
 
         private static void UpdateAndRemoveTasks(long repositoryId, IEnumerable<SHTask> scrumHubTasks, IEnumerable<Issue> repositoryIssues, IEnumerable<PullRequest> repositoryPRsToDefaultBranch, IEnumerable<Branch> repositoryBranches, DatabaseContext dbContext, IGitHubClient gitHubClient)
@@ -126,6 +131,73 @@ namespace ScrumHubBackend.GitHubClient
         }
 
         private static bool NameMatchesIssueBranchName(string name, long issueNumber) => Regex.IsMatch(name, $"^(.*)/{issueNumber}\\..*$", RegexOptions.IgnoreCase);
+
+        private static void SetTasksStatusDependingOnBranch(IEnumerable<SHTask> tasks, IEnumerable<Issue> repositoryIssues, IEnumerable<Branch> repositoryBranches, DatabaseContext dbContext)
+        {
+            bool update = false;
+
+            foreach (var task in tasks)
+            {
+                var repositoryIssue = repositoryIssues.FirstOrDefault(repoIssue => repoIssue.Id == task.GitHubIssueId);
+
+                if (repositoryIssue == default)
+                    continue;
+
+                var branchExists = repositoryBranches.Any(branch => NameMatchesIssueBranchName(branch.Name, repositoryIssue.Number));
+
+                if(task.Status == Common.SHTaskStatus.Finished && branchExists)
+                {
+                    task.Status = Common.SHTaskStatus.FinishedWBranch;
+                    dbContext.Update(task);
+                    update = true;
+                } 
+                else if(task.Status == Common.SHTaskStatus.FinishedWBranch && !branchExists)
+                {
+                    task.Status = Common.SHTaskStatus.Finished;
+                    dbContext.Update(task);
+                    update = true;
+                }
+                else if(task.Status == Common.SHTaskStatus.InReview && branchExists)
+                {
+                    task.Status = Common.SHTaskStatus.InReviewWBranch;
+                    dbContext.Update(task);
+                    update = true;
+                }
+                else if(task.Status == Common.SHTaskStatus.InReviewWBranch && !branchExists)
+                {
+                    task.Status = Common.SHTaskStatus.InReview;
+                    dbContext.Update(task);
+                    update = true;
+                }
+                else if(task.Status == Common.SHTaskStatus.InProgress && branchExists)
+                {
+                    task.Status = Common.SHTaskStatus.InProgressWBranch;
+                    dbContext.Update(task);
+                    update = true;
+                }
+                else if(task.Status == Common.SHTaskStatus.InProgressWBranch && !branchExists)
+                {
+                    task.Status = Common.SHTaskStatus.InProgress;
+                    dbContext.Update(task);
+                    update = true;
+                }
+                else if(task.Status == Common.SHTaskStatus.New && branchExists)
+                {
+                    task.Status = Common.SHTaskStatus.NewWBranch;
+                    dbContext.Update(task);
+                    update = true;
+                }
+                else if(task.Status == Common.SHTaskStatus.NewWBranch && !branchExists)
+                {
+                    task.Status = Common.SHTaskStatus.New;
+                    dbContext.Update(task);
+                    update = true;
+                }
+            }
+
+            if (update)
+                dbContext.SaveChanges();
+        }
 
         private static void AddTasks(IEnumerable<SHTask> scrumHubTasks, IEnumerable<Issue> repositoryIssues, DatabaseModel.Repository dbRepo, DatabaseContext dbContext)
         {
