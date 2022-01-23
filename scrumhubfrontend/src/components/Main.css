@@ -30,8 +30,10 @@
   z-index: 99;
   min-height: 100vh;
   max-height: 100vh;
-  overflow-y: overlay;
+  overflow-y: auto;
 }
+
+
 .scrollDiv::-webkit-scrollbar {
   margin-top: 5vh;
   width: 0.75vw;

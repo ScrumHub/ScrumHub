@@ -213,4 +213,5 @@ export const initState: IState = {
   activeSprintNumber: -1,
   keys: initKeys,
   loadingKeys: initLoadingKeys,
+  changedRepo: ""
 };

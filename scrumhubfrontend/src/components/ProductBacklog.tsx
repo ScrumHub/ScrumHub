@@ -12,12 +12,12 @@ import { useNavigate } from 'react-router';
 import { initModalVals, pbiFilterVals } from './utility/commonInitValues';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
 import { dateFormat, canDropPBI, canDropTask, isArrayValid, isBranchNotCreated, } from './utility/commonFunctions';
-import { taskStatusCol, taskGhLinkCol, taskNameCol, pbiProgressCol, backlogColors, backlogPriorities, pbiProgressCol2 } from './utility/BodyRowsAndColumns';
+import { taskStatusCol, taskGhLinkCol, taskNameCol, pbiProgressCol, backlogColors, backlogPriorities, pbiProgressCol2, peopleDropdown } from './utility/BodyRowsAndColumns';
 import { PBITableComponent } from './BacklogPBITableComponent';
 import { MenuWithPeopleSave } from './utility/LoadAnimations';
 import { BranchesOutlined, CalendarOutlined, DownOutlined, EditOutlined } from '@ant-design/icons';
 import { SprintTableComponent } from './BacklogSprintTableComponent';
-import { initPBIFilter } from '../appstate/initStateValues';
+import { initPBIFilter } from '../appstate/stateInitValues';
 import { assignPerson, startTask, updatePBI, updateTask, fetchPBIsAndUnassigned } from './utility/BacklogHandlers';
 import { AddTaskPopup } from './popups/AddTaskPopup';
 import { CompleteSprintPopup } from './popups/CompleteSprintPopup';
@@ -204,19 +204,7 @@ export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
         task.assigness.filter((person: IPerson) => {
           return (props.peopleFilter.includes(person.login))
         }).length > 0 : '',
-      render: (record: ITask) => {
-        return (
-          <Dropdown.Button style={{ cursor: "pointer" }} placement='bottomCenter' type="text"
-            overlay={<MenuWithPeopleSave itemSelected={function (person: string): void { assignPerson(person, record.id, record.assigness, token, ownerName) }} visible={true} people={people} taskPeople={record.assigness} />}
-            buttonsRender={() => [
-              <></>, React.cloneElement(<span>
-                <Badge size='small'
-                  status={typeof record.assigness !== "undefined" && record.assigness.length > 0 ? "success" : "error"} />
-                {typeof record.assigness !== "undefined" && record.assigness.length > 0
-                  ? (record.assigness.at(0).login as string) + " " : "Not Assigned "}
-                <DownOutlined />
-              </span>),]} > </Dropdown.Button>)
-      },
+      render: (record: ITask) => peopleDropdown(record, token, ownerName, people),
     }, {
       title: "Start Branch",
       key: "branch",

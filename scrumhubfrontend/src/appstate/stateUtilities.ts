@@ -1,13 +1,9 @@
-import { PayloadAction } from "@reduxjs/toolkit";
-import _ from "lodash";
-import { isArrayValid, isItemDefined } from "../components/utility/commonFunctions";
-import config from "../configuration/config";
-import { initError, initProductBacklogList, unassignedPBI } from "./initStateValues";
-import { RequestResponse } from "./response";
+import { isArrayValid, isItemDefined, isNameFilterValid } from "../components/utility/commonFunctions";
+import { initError, initProductBacklogList, unassignedPBI } from "./stateInitValues";
 import { IError, IFilters, IProductBacklogItem, ISprint, ITask, ITaskList, IState, IRepositoryList, IRepository } from "./stateInterfaces";
 
 /**
- * returns a header
+ * @returns Request header
  * @param {String} token User validation
  * @param {Object} config Configuration of port and id, can be in Production or Development
  */
@@ -15,12 +11,12 @@ export const getHeader = (token: string, config: any) => {
   return ({
     'Accept': "application/json",
     'authToken': token,
-    'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
+    'Access-Control-Allow-Origin': `*`,
   });
 };
 
 /**
- * returns a header with "application/json" content type
+ * @returns Request header with "application/json" content type
  * @param {String} token User validation
  * @param {Object} config Configuration of port and id, can be in Production or Development
  */
@@ -29,12 +25,12 @@ export const getHeaderWithContent = (token: string, config: any) => {
     'authToken': token,
     'Accept': "application/json",
     'contentType': "application/json",
-    'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
+    'Access-Control-Allow-Origin': `*`,
   } as IFilters);
 };
 
 /**
- * returns a header that accepts all responses type
+ * @returns Request header that accepts all responses type
  * @param {String} token User validation
  * @param {Object} config Configuration of port and id, can be in Production or Development
  */
@@ -42,12 +38,12 @@ export const getHeaderAcceptAll = (token: string, config: any) => {
   return ({
     'authToken': token,
     'Accept': "*/*",
-    'Access-Control-Allow-Origin': `https://${config.backend.ip}:${config.backend.port}`,
+    'Access-Control-Allow-Origin': `*`,
   } as IFilters);
 };
 
 /**
- * @returns error object after validation
+ * @returns Error object after validation
  */
 export const getError = (res: any) => { return ({ hasError: true, errorCode: res ? res.code : -1, erorMessage: isItemDefined(res) && isItemDefined(res.response)? (res.response as IError).Message : "", }) };
 
@@ -59,7 +55,7 @@ export function validateUri(uri: string | undefined) { return (typeof (uri) === 
 
 /**
  * @param {IFilters} filters Filters to validate and concatenate into string
- * @returns {String} stringWithFilters 
+ * @returns {String} Filters' names and values combined into one string 
  */
 export function filterUrlString(filters: IFilters) {
   return (typeof (filters) === "undefined" ? ""
@@ -72,7 +68,9 @@ export function filterUrlString(filters: IFilters) {
       .join("&"));
 }
 
-/*removes duplicate key and concates expanded keys arrays*/
+/**
+ * Removes duplicate key and concates expanded keys arrays
+ **/
 export function updateStateKeys(oldKeys: number[], newKeys: number[]) {
   return ((oldKeys.filter((key: number) => !newKeys.includes(key))).concat(newKeys.filter((key: number) => !oldKeys.includes(key))));
 };
@@ -235,14 +233,16 @@ export function updateStatePBI(state: IState, pbi: IProductBacklogItem) {
 }
 
 export function fetchStateRepos(newState: IState, repos: IRepositoryList, pageNumber: number, pageSize: number, pageCount:number) {
+  const temp = isNameFilterValid(newState.changedRepo)?  repos.list.filter((r:IRepository)=>r.name!==newState.changedRepo):repos.list;
   if (newState.repositories == null || !isArrayValid(newState.repositories)|| pageNumber === 1) {
-    newState = { ...newState, repositories: (repos.list).slice(0, (pageNumber + 1) * pageSize) };
-  } else if (newState.repositories !== repos.list) {
+    newState = { ...newState, repositories: (temp).slice(0, (pageNumber + 1) * pageSize) };
+  } else if (newState.repositories !== temp) {
     newState = { ...newState, repositories: newState.repositories
-      .concat(repos.list)
+      .concat(temp)
       .slice(0, (pageNumber + 1) * pageSize)};
   }
   newState.reposLastPage = repos.list.length < pageSize ||  (isItemDefined(pageCount) && pageCount===1);
+  newState.changedRepo = "";
   newState.reposRequireRefresh = false;
   newState.error = initError;
   newState.loading = false;

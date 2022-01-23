@@ -2,7 +2,7 @@ import { Avatar, Breadcrumb, Layout, Menu, message, PageHeader } from 'antd';
 import { useLocation, useNavigate } from 'react-router';
 import 'antd/dist/antd.css';
 import { DatabaseOutlined, GithubOutlined, ProjectOutlined } from '@ant-design/icons';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { AppRouter } from '../Approuter';
 import { store } from '../appstate/store';
 import * as Actions from '../appstate/actions';
@@ -31,7 +31,7 @@ export function Main(props: any) {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
-
+  message.config({maxCount: 1});
   useEffect(() => {
     if (logout || (!isLoggedIn)) {
       setLogout(false);
@@ -74,12 +74,18 @@ export function Main(props: any) {
   }
   useEffect(() => {
     if (error.hasError && isMessageValid(error.erorMessage)) {
+      console.log(error);
       message.error(error.erorMessage, 2);
-      store.dispatch(Actions.clearError());
+      if(error.erorMessage.includes("not found in ScrumHub") && location.pathname!=="/"){
+        message.info("The repository name has changed and the repository is no longer in Scrumhub.",5);
+        store.dispatch(Actions.clearError(localStorage.getItem("ownerName") as string));
+        handleProjects();
+      }else{
+      store.dispatch(Actions.clearError(""));}
     }
   }, [error]);
   useEffect(() => {
-    if (isLoggedIn && !currentUser.isCurrentUser && !load) {
+    if (isLoggedIn && !currentUser.isCurrentUser && !load && !location.pathname.includes("login")) {
       setLoad(true);
       store.dispatch(
         Actions.getCurrentUserThunk({
@@ -88,8 +94,8 @@ export function Main(props: any) {
       ).then((response: any) => { if (response.payload && response.payload.code === 0) { message.error(response.payload.response.message, 2); handleLogout(); } else { setLoad(false); } });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUser, load, isLoggedIn]);
-  let stop = true, y_pos = -1, old_pos = -1, down = false,start=false;
+  }, [currentUser, load, isLoggedIn, location]);
+  let stop = true, y_pos = -1, old_pos = -1, down = false,start = false;
   document.ondragover = () => { };
   document.ondragenter = () => { };
   const scroll = (step:number) => {
@@ -147,7 +153,7 @@ export function Main(props: any) {
   return (
     <section id="parentSection" className="container" >
       <Layout id="scrollableDiv" onDragStart={handleDragEnter} onDragOver={handleDragOver} onDragEnd={handleDragLeave} className={'scrollDiv'}>
-        {!location.pathname.includes("login")&&<Header  className="clearfix" style={{ position: 'fixed', zIndex: 100, padding: 0, height: "5vh", lineHeight: "5vh", width: "100%", backgroundColor: "#f0f0f0" }}>
+        {!location.pathname.includes("login")&&<Header className="clearfix" style={{ position: 'fixed', zIndex: 100, padding: 0, height: "5vh", lineHeight: "5vh", width: "100%", backgroundColor: "#f0f0f0" }}>
           <Menu mode="horizontal" theme="light" className="mainMenu" >
             <SubMenu style={{ float: "unset" }} key="SubMenu0" title={currentUser.isCurrentUser ? currentUser.login : ""} icon={
               currentUser.isCurrentUser ? <Avatar style={{ transform: "scale(0.8)", marginBottom: "0.4vh" }} size="small" src={`${currentUser.avatarLink}`} ></Avatar> : <></>}>
@@ -182,7 +188,7 @@ export function Main(props: any) {
               </div>
               <Footer className={location.pathname.includes("login")?"loginFooter":"mainFooter"}>
                 <a
-                  href="http://github.com/ScrumHub/ScrumHub"
+                  href="https://github.com/ScrumHub/ScrumHub"
                   target="_blank"
                   rel="noreferrer"
                   className="GithubFooter"

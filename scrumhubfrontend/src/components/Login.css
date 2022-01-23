@@ -1,4 +1,4 @@
-.loginContainer {
+.mainContainer {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -26,8 +26,8 @@
   margin: 10px 0 20px;
   color: red;
 }
-.login-container {
-  background-color: #000;
+.loginContainer {
+  background-color: black;
   width: 70%;
   border-radius: 3px;
   color: #fff;
@@ -35,7 +35,7 @@
   align-items: center;
   justify-content: center;
 }
-.login-link {
+.loginLink {
   text-decoration: none;
   color: #fff;
   text-transform: uppercase;
@@ -44,7 +44,7 @@
   align-items: center;
   height: 40px;
 }
-.loader-container {
+.loaderContainer {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -68,8 +68,10 @@
 }
 
 .loginh1 {
+  color: black;
   font-size: 2rem;
   margin-bottom: 20px;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .imgLoginNone {

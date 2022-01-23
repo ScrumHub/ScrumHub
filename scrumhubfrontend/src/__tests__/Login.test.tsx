@@ -6,12 +6,12 @@ import { act } from "react-dom/test-utils";
 import { isNull } from "lodash";
 import { Provider } from "react-redux";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import { Login } from "../components/Login";
 import { configureStore } from "@reduxjs/toolkit";
 import renderer from 'react-test-renderer';
+import { initTestState } from "../appstate/stateTestValues";
 import { reducerFunction } from "../appstate/reducer";
-import { initTestState } from "./stateTestValues";
 import { Home } from "../components/Home";
+import { Login } from "../components/Login";
 
 describe('Login component rendered in container', () => {
   let container: any;

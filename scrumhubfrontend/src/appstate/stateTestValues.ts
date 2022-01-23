@@ -1,9 +1,9 @@
 
 import { initKeys, initLoadingKeys } from "../components/utility/commonInitValues";
 import config from "../configuration/config";
-import { initError, initPeopleList, initPerson, initPBItem, initProductBacklogList, initRepository, initRepositoryList, initSprint, initSprintList, initTaskList, initTask } from "../appstate/initStateValues";
-import { ILoginState, IProductBacklogList, IRepositoryList, ISprint, ISprintList, IState, ITaskList } from "../appstate/stateInterfaces";
-import { validateUri } from "../appstate/stateUtilities";
+import { initError, initPeopleList, initPerson, initPBItem, initProductBacklogList, initRepository, initRepositoryList, initSprint, initSprintList, initTaskList, initTask } from "./stateInitValues";
+import { ILoginState, IProductBacklogList, IRepositoryList, ISprintList, IState, ITaskList } from "./stateInterfaces";
+import { validateUri } from "./stateUtilities";
 
 export const testLoginState: ILoginState = {
   isLoggedIn: false,
@@ -39,6 +39,7 @@ export const initTestState: IState = {
   keys: initKeys,
   loadingKeys: initLoadingKeys,
   loginState: testLoginState,
+  changedRepo: ""
 };
 
 export const testRepositoryList: IRepositoryList  = {

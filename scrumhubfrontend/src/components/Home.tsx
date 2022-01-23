@@ -14,6 +14,7 @@ import { clearReposList } from '../appstate/actions';
 import SkeletonList, { CantAddToShButton, InShButton } from './utility/LoadAnimations';
 import { dateFormat, isArrayValid } from './utility/commonFunctions';
 import { initReposFilters } from './utility/commonInitValues';
+import { response } from 'express';
 const { Meta } = Card;
 
 export function Home() {
@@ -61,6 +62,7 @@ export function Home() {
   const fetchMore = () => {
     if (!fetching) {
       setFetching(true);
+      setDisplayId(-1);
       try {
         store.dispatch(
           Actions.fetchReposThunk({
@@ -69,7 +71,7 @@ export function Home() {
               pageNumber: filters.pageNumber,
             },
             token: token,
-          }) 
+          })
         );
       } catch (err) {
         console.error("Failed to fetch the repos: ", err);
@@ -82,16 +84,13 @@ export function Home() {
 
   function addProject(projId: number) {
     setDisplayId(projId);
-      store.dispatch(
-        Actions.addRepositoryThunk({
-          id: projId,
-          token: token,
-        })
-      )
-      .catch((error: any)=>{console.error("Failed to fetch the pbis: ", error);
-      setDisplayId(-1);
-      return({});})
-      .then(()=>setDisplayId(-1));
+    store.dispatch(
+      Actions.addRepositoryThunk({
+        id: projId,
+        token: token,
+      })
+    ).then((response:any)=>{if (response.payload && response.payload?.code === 201) {
+      setDisplayId(-1);}});
   };
 
   function redirectToProject(props: IRepository) {
@@ -102,35 +101,35 @@ export function Home() {
   return (
     <div>
       <InfiniteScroll
-      scrollableTarget="scrollableDiv"
-      dataLength={isArrayValid(repos) ? repos.length : 0}
-      scrollThreshold={0.7}
-      next={fetchMore}
-      hasMore={!lastPage && !fetching}
-      loader={<></>}>
-      <div className="reposGrid">
-        {isArrayValid(repos) && repos.map((rep: IRepository) => {
-          return (<section className="card" style={{ width: "85%" }} key={rep.gitHubId} >
-            <Card loading={rep.gitHubId===displayId &&loading } className='repoCard' type="inner" actions=
-              {[!rep.hasAdminRights ? <CantAddToShButton/>:(rep.alreadyInScrumHub ? <InShButton/>:
-                <Button loading={rep.gitHubId===displayId &&loading } disabled={false} className='cardButton' onClick={() => { addProject(rep.gitHubId);}} >
-                <span>{<FolderAddOutlined disabled={false} />}{" Add to ScrumHub" }</span></Button>),
-              <Button loading={rep.gitHubId===displayId &&loading} disabled={!rep.alreadyInScrumHub} type="primary" className='cardButton' onClick={() => { redirectToProject(rep) }}><span><InfoCircleOutlined />{" Manage project"}</span></Button>,
-              <Button className='calButton'><span><CalendarOutlined />{rep.typeOfLastActivity === "No recent activity" ? " Not updated" : " " + dateFormat(rep.dateOfLastActivity as Date)}</span></Button>]}>
-              <Meta
-                title={rep.alreadyInScrumHub ? <div className='link-button' onClick={() => { redirectToProject(rep) }}>{rep.name.split("/")[1]}</div> : <div>{rep.name.split("/")[1]}</div>}
-                description={rep.description}
-              ></Meta>
-              <br />
-              <p>{"This project has " + (rep.sprints && rep.sprints.length === 1 ? "1 sprint and " : (rep.sprints.length + " sprints and ")) + (rep.backlogItems && rep.backlogItems.length === 1 ? "1 backlog item.\n" : rep.backlogItems.length + " backlog items.\n")}</p>
-              <p>{rep.typeOfLastActivity + (rep.dateOfLastActivity === "No recent activity" ? " " : " was the last activity") + " in the repository."}</p>
-            </Card>
-          </section>);
-        })
-        }
-        <SkeletonList loading={loading  || refreshRequired} number={repos.length < 1?5:1} />
-      </div>
-    </InfiniteScroll>
+        scrollableTarget="scrollableDiv"
+        dataLength={isArrayValid(repos) ? repos.length : 0}
+        scrollThreshold={0.7}
+        next={fetchMore}
+        hasMore={!lastPage && !fetching}
+        loader={<></>}>
+        <div className="reposGrid">
+          {isArrayValid(repos) && repos.map((rep: IRepository) => {
+            return (<section className="card" style={{ width: "85%" }} key={rep.gitHubId} >
+              <Card loading={rep.gitHubId === displayId && loading} className='repoCard' type="inner" actions=
+                {[!rep.hasAdminRights ? <CantAddToShButton /> : (rep.alreadyInScrumHub ? <InShButton /> :
+                  <Button loading={rep.gitHubId === displayId && loading} disabled={false} className='cardButton' onClick={() => { addProject(rep.gitHubId); }} >
+                    <span>{<FolderAddOutlined disabled={false} />}{" Add to ScrumHub"}</span></Button>),
+                <Button loading={rep.gitHubId === displayId && loading} disabled={!rep.alreadyInScrumHub} type="primary" className='cardButton' onClick={() => { redirectToProject(rep) }}><span><InfoCircleOutlined />{" Manage project"}</span></Button>,
+                <Button onClick={(e) => { e.preventDefault(); }} className='calButton'><span><CalendarOutlined />{rep.typeOfLastActivity === "No recent activity" ? " Not updated" : " " + dateFormat(rep.dateOfLastActivity as Date)}</span></Button>]}>
+                <Meta
+                  title={rep.alreadyInScrumHub ? <div className='link-button' onClick={() => { redirectToProject(rep) }}>{rep.name.split("/")[1]}</div> : <div>{rep.name.split("/")[1]}</div>}
+                  description={rep.description}
+                ></Meta>
+                <br />
+                <p>{"This project has " + (rep.sprints && rep.sprints.length === 1 ? "1 sprint and " : (rep.sprints.length + " sprints and ")) + (rep.backlogItems && rep.backlogItems.length === 1 ? "1 backlog item.\n" : rep.backlogItems.length + " backlog items.\n")}</p>
+                <p>{rep.typeOfLastActivity + (rep.dateOfLastActivity === "No recent activity" ? " " : " was the last activity") + " in the repository."}</p>
+              </Card>
+            </section>);
+          })
+          }
+          <SkeletonList loading={(loading || refreshRequired) && displayId === -1} number={repos.length < 1 ? 5 : 1} />
+        </div>
+      </InfiniteScroll>
     </div >
   );
 }

@@ -12,7 +12,7 @@ import * as Actions from '../appstate/actions';
 import React from 'react';
 import { AddPBIPopup } from './popups/AddPBIPopup';
 import { AddSprintPopup } from './popups/AddSprintPopup';
-import { initAddPBI, initSprint } from '../appstate/initStateValues';
+import { initAddPBI, initSprint } from '../appstate/stateInitValues';
 import { initFilterMenu, initFilterSortInfo } from './utility/commonInitValues';
 import { isNull } from 'lodash';
 const { Search } = Input;

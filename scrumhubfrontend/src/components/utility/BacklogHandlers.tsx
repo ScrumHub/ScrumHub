@@ -1,7 +1,7 @@
 import { IPerson, IProductBacklogItem, ISprint, ISprintList } from "../../appstate/stateInterfaces";
 import { store } from "../../appstate/store";
 import * as Actions from '../../appstate/actions';
-import { initPBIFilter } from "../../appstate/initStateValues";
+import { initPBIFilter } from "../../appstate/stateInitValues";
 import { isArrayValid } from "./commonFunctions";
 
 export const assignPerson = (person: string, taskId: number, taskPeople: IPerson[], token: string, ownerName: string) => {

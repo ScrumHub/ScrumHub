@@ -252,7 +252,7 @@ export const startTaskThunk = createAsyncThunk<
 
 export const login = createAction<any>("login");
 export const logout = createAction("logout");
-export const clearError = createAction("clearError");
+export const clearError = createAction<string>("clearError");
 export const clearState = createAction("clearState");
 export const clearProject = createAction("clearProject");
 export const clearSprintList = createAction("clearSprintList");

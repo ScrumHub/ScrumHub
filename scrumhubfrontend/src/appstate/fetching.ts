@@ -5,7 +5,7 @@ import axios, { AxiosResponse } from "axios";
 import { IAddPBI, IFilters, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList } from "./stateInterfaces";
 import { filterUrlString, getHeader, getHeaderAcceptAll, getHeaderWithContent } from "./stateUtilities";
 import { isNull } from "lodash";
-import { errorObject } from "./initStateValues";
+import { errorObject } from "./stateInitValues";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function getResponse<T, K>(

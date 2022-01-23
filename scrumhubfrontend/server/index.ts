@@ -4,14 +4,13 @@ import bodyParser from "body-parser";
 import fetch from "node-fetch";
 import { createRequire } from "module";
 import { fileURLToPath } from "url";
-import joi from "joi";
 const require = createRequire(import.meta.url);
 const path = require("path");
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 
-export const githubConfig = {
+export const ghConfig = {
   client_id: process.env.REACT_APP_CLIENT_ID,
   redirect_uri: process.env.REACT_APP_REDIRECT_URI,
   client_secret: process.env.REACT_APP_CLIENT_SECRET,
@@ -19,17 +18,8 @@ export const githubConfig = {
   logout_url: process.env.REACT_APP_LOGOUT_URL
 };
 
-const validateGithubConfig = joi.object({
-  client_id: joi.string().required(),
-  redirect_uri: joi.string().required(),
-  client_secret: joi.string().required(),
-  proxy_url: joi.string().required(),
-  logout_url: joi.string().required(),
-});
-
-const { error } = validateGithubConfig.validate(githubConfig);
-if (error) {
-  throw new Error(`Config validation error.`);
+if ( isInvalid(ghConfig.client_id) || isInvalid(ghConfig.redirect_uri) || isInvalid(ghConfig.client_secret) || isInvalid(ghConfig.proxy_url)) {
+  throw new Error("You need to update .env file!");
 }
 const app = express();
 app.use(bodyParser.json());
@@ -44,8 +34,8 @@ app.use((req: any, res: any, next: NextFunction) => {
 app.post("/authenticate", (req: any, res: any) => {
   const { code } = req.body;
   const data = {
-    client_id: githubConfig.client_id, client_secret: githubConfig.client_secret,
-    code: code, redirect_uri: githubConfig.redirect_uri
+    client_id: ghConfig.client_id, client_secret: ghConfig.client_secret,
+    code: code, redirect_uri: ghConfig.redirect_uri
   };
   fetch(`https://github.com/login/oauth/access_token`, {
     method: "POST",
@@ -65,4 +55,8 @@ app.post("/authenticate", (req: any, res: any) => {
 });
 
 const PORT = process.env.REACT_APP_SERVER_PORT || 5000;
-app.listen(PORT, () => console.log(`Listening on ${PORT}`));
+app.listen(PORT, () => console.log(`Proxy server started on ${PORT}`));
+
+function isInvalid(link: any) {
+  return typeof (link) === "undefined" || (link as string).length < 2;
+}

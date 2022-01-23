@@ -1,9 +1,12 @@
-import { Badge, Progress, Tag } from "antd";
-import { IProductBacklogItem, ITask } from "../../appstate/stateInterfaces";
+import { Badge, Dropdown, Progress, Tag } from "antd";
+import { IPeopleList, IPerson, IProductBacklogItem, ITask } from "../../appstate/stateInterfaces";
 import "../Home.css";
 import "../Main.css";
-import { HomeOutlined } from "@ant-design/icons";
+import { DownOutlined, HomeOutlined } from "@ant-design/icons";
 import { isArrayValid } from "./commonFunctions";
+import React from "react";
+import { assignPerson } from "./BacklogHandlers";
+import { MenuWithPeopleSave } from "./LoadAnimations";
 
 export const backlogPriorities = ["Could", "Should", "Must"];
 export const backlogColors = ["green", "blue", "red"];
@@ -35,6 +38,18 @@ export const taskGhLinkCol = {
   align: "right" as const,
   render: (text: string) => <a href={text}>{"See on GitHub"}</a>,
 };
+
+export const peopleDropdown =(record:ITask, token:string, ownerName:string, people:IPeopleList)=>{return (
+  <Dropdown.Button style={{ cursor: "pointer" }} placement='bottomCenter' type="text"
+    overlay={<MenuWithPeopleSave itemSelected={function (person: string): void { assignPerson(person, record.id, record.assigness, token, ownerName) }} visible={true} people={people} taskPeople={record.assigness} />}
+    buttonsRender={() => [
+      <></>, React.cloneElement(<span>
+        <Badge size='small'
+          status={typeof record.assigness !== "undefined" && record.assigness.length > 0 ? "success" : "error"} />
+        {typeof record.assigness !== "undefined" && record.assigness.length > 0
+          ? (record.assigness.at(0).login as string) + " " : "Not Assigned "}
+        <DownOutlined />
+      </span>),]} > </Dropdown.Button>)};
 
 export const priorityPBItem =(item:IProductBacklogItem)=>{
   return( item.id !== 0 ? <Tag style={{ cursor: "pointer" }} color={backlogColors[item.priority % 3]}>{backlogPriorities[item.priority % 3]}</Tag> : <Tag className='transparentItem' color={backlogColors[0]}>{backlogPriorities[0]}</Tag>);

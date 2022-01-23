@@ -2,14 +2,14 @@
  * @jest-environment jsdom
  */
 import { Provider } from "react-redux";
-import { initTestState } from "./stateTestValues";
-import { reducerFunction } from "../appstate/reducer";
+import { initTestState } from "../appstate/stateTestValues";
 import { configureStore } from "@reduxjs/toolkit";
 import { act } from "react-dom/test-utils";
 import { render, unmountComponentAtNode } from "react-dom";
 import renderer from 'react-test-renderer';
 import { isNull } from "lodash";
 import { App } from "../App";
+import { reducerFunction } from "../appstate/reducer";
 describe('App component in container', () => {
   let container: any;
   let store: any;

@@ -11,6 +11,7 @@ export const handleLogin = (token:string, navigate:NavigateFunction) => {
         })
     ).then((response: any) => {
         if (response.payload && response.payload.code !== 0) {
+            store.dispatch(Actions.login({ token: token, isLoggedIn: true }));
             navigate("/", { replace: true });
         }
     });

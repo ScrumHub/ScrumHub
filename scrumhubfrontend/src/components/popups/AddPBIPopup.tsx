@@ -45,6 +45,7 @@ export const AddPBIPopup: React.FC<IAddPBICollectionCreateFormProps> = ({
         <Form.Item
           key="name"
           name="name"
+          required tooltip="This is a required field!"
           rules={[{ required: true, message: 'Please input the name of the new backlog item!' }]}
         >
           <Input placeholder='Product Backlog Name' />
