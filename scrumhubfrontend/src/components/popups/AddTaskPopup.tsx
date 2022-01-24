@@ -10,6 +10,17 @@ export const AddTaskPopup: React.FC<IAddTaskCollectionCreateFormProps> = ({
   onCancel,
 }) => {
   const [form] = Form.useForm();
+  const okForm =() => {
+    form
+      .validateFields()
+      .then((values: {name:string}) => {
+        form.resetFields();
+        onCreate(values);
+      })
+      .catch((info: any) => {
+        console.error('Validate Failed:', info);
+      });
+  }
   return (
     <Modal
       centered={true}
@@ -19,17 +30,7 @@ export const AddTaskPopup: React.FC<IAddTaskCollectionCreateFormProps> = ({
       okText="Save"
       cancelText="Cancel"
       onCancel={onCancel}
-      onOk={() => {
-        form
-          .validateFields()
-          .then((values: {name:string}) => {
-            form.resetFields();
-            onCreate(values);
-          })
-          .catch((info: any) => {
-            console.error('Validate Failed:', info);
-          });
-      }}
+      onOk={okForm}
     >
       <Form
         form={form}
@@ -40,9 +41,13 @@ export const AddTaskPopup: React.FC<IAddTaskCollectionCreateFormProps> = ({
         <FormItemLabel prefixCls="name" label="Name" required={true} />
         <Form.Item
           name="name"
-          rules={[{ required: true, message: 'Please input the name of the new task!' }]}
+          rules={[{ required: true, message: 'Please input the name of the new task!', whitespace: true }]}
         >
-          <Input />
+          <Input minLength={1} autoComplete='on'onKeyPress={event => {
+                if (event.key === 'Enter') {
+                  okForm();
+                }
+              }} />
         </Form.Item>
       </Form>
     </Modal>

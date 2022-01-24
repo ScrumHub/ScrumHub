@@ -72,7 +72,7 @@ export const EditPBIPopup: React.FC<IEditPBICollectionCreateFormProps> = ({
           initialValue={data.name}
           name="name"
           key="name"
-          rules={[{ required: true, message: 'Please input the name of the new backlog item!' }]}
+          rules={[{ required: true, message: 'Please input the name of the new backlog item!', whitespace: true }]}
         >
           <Input />
         </Form.Item>
