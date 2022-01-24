@@ -29,7 +29,7 @@ export const isInReviewOrFinished = (message: string): boolean => {
 }
 
 export const isBranchNotCreated = (message: string): boolean => {
-  return (!isNull(message) && (!message.includes("WBranch") || isInReviewOrFinished(message)));
+  return (!isNull(message) && (!message.includes("WBranch") && !isInReviewOrFinished(message)));
 }
 
 

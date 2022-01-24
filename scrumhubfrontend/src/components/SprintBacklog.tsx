@@ -11,7 +11,7 @@ import { store } from '../appstate/store';
 import {PBITableComponent} from './BacklogPBITableComponent';
 import {TaskTableComponent} from './BacklogTaskTableComponent';
 import { taskNameCol, taskStatusCol, taskGhLinkCol, pbiProgressCol, pbiProgressCol2, backlogPriorities, backlogColors, peopleDropdown } from './utility/BodyRowsAndColumns';
-import { canDropTask, dateFormat, isBranchNotCreated, isSprintLoaded } from './utility/commonFunctions';
+import { canDropTask, dateFormat, isBranchNotCreated, isInReviewOrFinished, isSprintLoaded } from './utility/commonFunctions';
 import SkeletonList, { PBIMenuWithPeople } from './utility/LoadAnimations';
 import { assignPerson, startTask, updateTask } from './utility/BacklogHandlers';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
@@ -206,8 +206,8 @@ export function SprintBacklog() {
       <Popconfirm title={"Are you sure you want to start a hotfix branch?"} onConfirm={()=>{startTask(token, ownerName, true,record.id);setIsModal({...isModal, startBranchId:-1});}}><Button key={"hotfix"} size='small' type="primary" color="deeppink">Hotfix</Button></Popconfirm>
       </Space></>}trigger="click">
     <Button key={"action" + record.id} size='small' type="link" onClick={()=>{setIsModal({...isModal, startBranchId:record.id})}}>
-    <span>{"Start "}<BranchesOutlined/></span></Button></Popover>:
-    <div><span><BranchesOutlined/> Created</span></div>
+    <span>{"Create "}<BranchesOutlined /></span></Button></Popover> :
+        <div><span hidden={isInReviewOrFinished(record.status)}>Created <BranchesOutlined /></span></div>
     },taskGhLinkCol,];
   const TaskTableforPBI: React.FC<IProductBacklogItem> = (item: IProductBacklogItem) => { return (<TaskTableComponent peopleFilter={filterPBI.peopleFilter} item={item} taskColumns={taskColumns} taskComponents={nestedcomponents} />) };
   const pbiColumns = [
