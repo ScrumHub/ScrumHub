@@ -14,6 +14,7 @@ import React from "react";
 
 export const TaskTableComponent = React.memo((props: any) => {
   const token = useSelector((appState: IState) => appState.loginState.token);
+  const loadingKeys = useSelector((appState: IState) => appState.loadingKeys.pbiKeys as number[]);
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : "";
   useEffect(() => {
     const timer = setInterval(
@@ -34,7 +35,7 @@ export const TaskTableComponent = React.memo((props: any) => {
   }, []);
   return (<Table
     size="small"
-    loading={!props.item}
+    loading={!props.item || (props.item && loadingKeys.includes(props.item.id))}
     showHeader={false}
     rowKey={(record: ITask) => record.id}
     columns={props.taskColumns}

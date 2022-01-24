@@ -2994,11 +2994,6 @@
   "resolved" "https://registry.npmjs.org/at-least-node/-/at-least-node-1.0.0.tgz"
   "version" "1.0.0"
 
-"atoa@1.0.0":
-  "integrity" "sha1-DMDpGkgOc4+SPrwQNnZHF3mzSkk="
-  "resolved" "https://registry.npmjs.org/atoa/-/atoa-1.0.0.tgz"
-  "version" "1.0.0"
-
 "atob@^2.1.2":
   "integrity" "sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg=="
   "resolved" "https://registry.npmjs.org/atob/-/atob-2.1.2.tgz"
@@ -4155,14 +4150,6 @@
   "resolved" "https://registry.npmjs.org/content-type/-/content-type-1.0.4.tgz"
   "version" "1.0.4"
 
-"contra@1.9.4":
-  "integrity" "sha1-9TveQtfltZhcrk2ZqNYQUm3o8o0="
-  "resolved" "https://registry.npmjs.org/contra/-/contra-1.9.4.tgz"
-  "version" "1.9.4"
-  dependencies:
-    "atoa" "1.0.0"
-    "ticky" "1.0.1"
-
 "convert-source-map@^0.3.3":
   "integrity" "sha1-8dgClQr33SYxof6+BZZVDIarMZA="
   "resolved" "https://registry.npmjs.org/convert-source-map/-/convert-source-map-0.3.5.tgz"
@@ -4331,13 +4318,6 @@
     "path-key" "^3.1.0"
     "shebang-command" "^2.0.0"
     "which" "^2.0.1"
-
-"crossvent@1.5.5":
-  "integrity" "sha1-rSCHjkkh6b5z2daXb4suzQ9xoLE="
-  "resolved" "https://registry.npmjs.org/crossvent/-/crossvent-1.5.5.tgz"
-  "version" "1.5.5"
-  dependencies:
-    "custom-event" "^1.0.0"
 
 "crypto-browserify@^3.11.0":
   "integrity" "sha512-fz4spIh+znjO2VjL+IdhEpRJ3YN6sMzITSBijk6FK2UvTqruSQW+/cCZTSNsMiZNvUeq0CqurF+dAbyiGOY6Wg=="
@@ -4620,11 +4600,6 @@
   "integrity" "sha512-2u44ZG2OcNUO9HDp/Jl8C07x6pU/eTR3ncV91SiK3dhG9TWvRVsCoJw14Ckx5DgWkzGA3waZWO3d7pgqpUI/XA=="
   "resolved" "https://registry.npmjs.org/csstype/-/csstype-3.0.10.tgz"
   "version" "3.0.10"
-
-"custom-event@^1.0.0":
-  "integrity" "sha1-XQKkaFCt8bSjF5RqOSj8y1v9BCU="
-  "resolved" "https://registry.npmjs.org/custom-event/-/custom-event-1.0.1.tgz"
-  "version" "1.0.1"
 
 "cyclist@^1.0.1":
   "integrity" "sha1-WW6WmP0MgOEgOMK4LW6xs1tiJNk="
@@ -5059,14 +5034,6 @@
   "integrity" "sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw=="
   "resolved" "https://registry.npmjs.org/dotenv/-/dotenv-8.2.0.tgz"
   "version" "8.2.0"
-
-"dragula@^3.7.3":
-  "integrity" "sha512-/rRg4zRhcpf81TyDhaHLtXt6sEywdfpv1cRUMeFFy7DuypH2U0WUL0GTdyAQvXegviT4PJK4KuMmOaIDpICseQ=="
-  "resolved" "https://registry.npmjs.org/dragula/-/dragula-3.7.3.tgz"
-  "version" "3.7.3"
-  dependencies:
-    "contra" "1.9.4"
-    "crossvent" "1.5.5"
 
 "duplexer@^0.1.1":
   "integrity" "sha512-jtD6YG370ZCIi/9GTaJKQxWTZD045+4R4hTk/x1UyoqadyJ9x9CgSi1RlVDQF8U2sxLLSnFkCaMihqljHIWgMg=="
@@ -11013,7 +10980,7 @@
     "react-shallow-renderer" "^16.13.1"
     "scheduler" "^0.20.2"
 
-"react@*", "react@^0.14.0 || ^15.0.0 || ^16.0.0-0 || ^17.0.0-0", "react@^16.0.0 || ^17.0.0", "react@^16.11.0 || ^17.0.0 || ^18.0.0", "react@^16.13.1", "react@^16.14.0 || ^17.0.0", "react@^16.8.3 || ^17", "react@^17.0.2", "react@>= 16", "react@>= 16.14", "react@>= 16.3.0", "react@>= 16.8.0", "react@>= 16.9.0", "react@>=16.0.0", "react@>=16.13.1", "react@>=16.8", "react@>=16.9.0", "react@17.0.2":
+"react@*", "react@^0.14.0 || ^15.0.0 || ^16.0.0-0 || ^17.0.0-0", "react@^16.0.0 || ^17.0.0", "react@^16.13.1", "react@^16.14.0 || ^17.0.0", "react@^16.8.3 || ^17", "react@^17.0.2", "react@>= 16", "react@>= 16.14", "react@>= 16.3.0", "react@>= 16.8.0", "react@>= 16.9.0", "react@>=16.0.0", "react@>=16.13.1", "react@>=16.8", "react@>=16.9.0", "react@17.0.2":
   "integrity" "sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA=="
   "resolved" "https://registry.npmjs.org/react/-/react-17.0.2.tgz"
   "version" "17.0.2"
@@ -12493,11 +12460,6 @@
     "unquote" "~1.1.1"
     "util.promisify" "~1.0.0"
 
-"swr@^1.1.2":
-  "integrity" "sha512-UsM0eo5T+kRPyWFZtWRx2XR5qzohs/LS4lDC0GCyLpCYFmsfTk28UCVDbOE9+KtoXY4FnwHYiF+ZYEU3hnJ1lQ=="
-  "resolved" "https://registry.npmjs.org/swr/-/swr-1.1.2.tgz"
-  "version" "1.1.2"
-
 "symbol-tree@^3.2.4":
   "integrity" "sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw=="
   "resolved" "https://registry.npmjs.org/symbol-tree/-/symbol-tree-3.2.4.tgz"
@@ -12637,11 +12599,6 @@
   "integrity" "sha512-eHY7nBftgThBqOyHGVN+l8gF0BucP09fMo0oO/Lb0w1OF80dJv+lDVpXG60WMQvkcxAkNybKsrEIE3ZtKGmPrA=="
   "resolved" "https://registry.npmjs.org/thunky/-/thunky-1.1.0.tgz"
   "version" "1.1.0"
-
-"ticky@1.0.1":
-  "integrity" "sha1-t8+nHnaPHJAAxJe5FRswlHxQ5G0="
-  "resolved" "https://registry.npmjs.org/ticky/-/ticky-1.0.1.tgz"
-  "version" "1.0.1"
 
 "timers-browserify@^2.0.4":
   "integrity" "sha512-9phl76Cqm6FhSX9Xe1ZUAMLtm1BLkKj2Qd5ApyWkXzsMRaA7dgr81kf4wJmQf/hAvg8EEyJxDo3du/0KlhPiKQ=="

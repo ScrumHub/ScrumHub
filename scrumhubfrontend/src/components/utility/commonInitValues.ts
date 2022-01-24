@@ -50,15 +50,6 @@ export const pbiFilterVals =
 {text: backlogPriorities[1],value: 1,}, 
 {text: backlogPriorities[2],value: 2,},];
 
-export const initKeys: tableKeys = {
-  sprintKeys: [0],
-  pbiKeys: []
-}
-
-export const initLoadingKeys: tableKeys = {
-  sprintKeys: [],
-  pbiKeys: []
-}
 
 export const loginData = {
   isLoading: false,

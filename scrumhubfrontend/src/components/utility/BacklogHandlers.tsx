@@ -60,8 +60,15 @@ export const updatePBI = (pbiId: number, oldSprintId: number, newSprintId: numbe
   }
 }
 
-export const updateTask = (pbiId: number, taskId: number, token: string, ownerName: string) => {
-  store.dispatch(Actions.assignTaskToPBIThunk({ token: token, ownerName: ownerName, pbiId: pbiId, taskId: taskId }));
+export const updateTask = (pbiId: number, taskId: number, oldPbiId:number,pbiKeys:number[],token: string, ownerName: string) => {
+  const keys = [pbiId, oldPbiId].filter((n:number)=>!isArrayValid(pbiKeys) || !pbiKeys.includes(n));
+  store.dispatch(Actions.updatePBILoadingKeys(keys));
+  store.dispatch(Actions.assignTaskToPBIThunk({ token: token, ownerName: ownerName, pbiId: pbiId, taskId: taskId })).then((response:any)=>{
+    if(response.payload && response.payload.code===200){
+      store.dispatch(Actions.updatePBILoadingKeys(keys));
+    }
+  })
+  ;
 }
 
 export const fetchPBIsAndUnassigned = (refreshRequired: boolean, ownerName: any, token: any) => {

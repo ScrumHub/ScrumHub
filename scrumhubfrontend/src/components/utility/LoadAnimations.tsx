@@ -201,7 +201,7 @@ export function MenuWithFilters(props: any) {
 }
 
 
-export function MenuWithPeopleSave(props: any) {
+export function PBIMenuWithPeople(props: any) {
     const ppl = props.people && props.people.list && props.people.list.length > 0 ? props.people.list : [] as IPerson[];
     const [nameList, setList] = useState(props.taskPeople.map((item: IPerson) => { return (item.login) }));
     const handleList = (item: IPerson) => {
@@ -220,6 +220,25 @@ export function MenuWithPeopleSave(props: any) {
                     {" "}
                     <div style={{ width: "8vw" }} >{" " + item.login as string}</div>
                     {nameList && nameList.length > 0 && nameList.includes(item.login) ? <CheckOutlined /> : <></>}
+                </Space>
+            </MenuItem>);
+    })
+    }
+    </Menu >
+    </div>);
+}
+
+export function PBIMenuWithPriorities(props:any) {
+    const val = typeof(props.priority)==="number" && props.priority < backlogPriorities.length ? props.priority : -1;
+    const handleList = (item: number) => {
+        if (item < backlogPriorities.length) { props.itemSelected(item); }
+    };
+    return (<div><Menu className="peopleMenu">{backlogPriorities.map((item:string, key:number) => {
+        return (
+            <MenuItem key={"pbiPrior"+item} onClick={() => { handleList(key); }}>
+                <Space>
+                <Tag style={{ cursor: "pointer" }} color={backlogColors[key%3]}>{backlogPriorities[key % 3]}</Tag>
+                    <CheckOutlined hidden={key!==val || val<0} />
                 </Space>
             </MenuItem>);
     })

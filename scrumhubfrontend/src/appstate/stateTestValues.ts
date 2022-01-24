@@ -1,7 +1,6 @@
 
-import { initKeys, initLoadingKeys } from "../components/utility/commonInitValues";
 import config from "../configuration/config";
-import { initError, initPeopleList, initPerson, initPBItem, initProductBacklogList, initRepository, initRepositoryList, initSprint, initSprintList, initTaskList, initTask } from "./stateInitValues";
+import { initError, initPeopleList, initPerson, initPBItem, initProductBacklogList, initRepository, initRepositoryList, initSprint, initSprintList, initTaskList, initTask, initKeys, initLoadingKeys } from "./stateInitValues";
 import { ILoginState, IProductBacklogList, IRepositoryList, ISprintList, IState, ITaskList } from "./stateInterfaces";
 import { validateUri } from "./stateUtilities";
 

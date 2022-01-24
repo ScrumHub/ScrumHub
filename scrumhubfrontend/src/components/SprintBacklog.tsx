@@ -10,9 +10,9 @@ import { BranchesOutlined, CalendarOutlined, DownOutlined, EditOutlined } from '
 import { store } from '../appstate/store';
 import {PBITableComponent} from './BacklogPBITableComponent';
 import {TaskTableComponent} from './BacklogTaskTableComponent';
-import { taskNameCol, taskStatusCol, taskGhLinkCol, pbiProgressCol, pbiProgressCol2, backlogPriorities, backlogColors } from './utility/BodyRowsAndColumns';
+import { taskNameCol, taskStatusCol, taskGhLinkCol, pbiProgressCol, pbiProgressCol2, backlogPriorities, backlogColors, peopleDropdown } from './utility/BodyRowsAndColumns';
 import { canDropTask, dateFormat, isBranchNotCreated, isSprintLoaded } from './utility/commonFunctions';
-import SkeletonList, { MenuWithPeopleSave } from './utility/LoadAnimations';
+import SkeletonList, { PBIMenuWithPeople } from './utility/LoadAnimations';
 import { assignPerson, startTask, updateTask } from './utility/BacklogHandlers';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
 import { useDrop, useDrag, DndProvider } from 'react-dnd';
@@ -30,6 +30,7 @@ import { date } from 'joi';
 
 export function SprintBacklog() {
   const token = useSelector((appState: IState) => appState.loginState.token);
+  const pbiKeys = useSelector((appState: IState) => appState.loadingKeys.pbiKeys as number[]);
   const [infos, setInfos] = useState({
     filteredInfo: { complete: -1, pbiPriorities: [] as number[] },
     sortedInfo: { order: '', columnKey: '', },
@@ -160,11 +161,11 @@ export function SprintBacklog() {
             message.info("Cannot assign not estimated pbi", 5);
           }
           else if (item.bodyType === "ITask" && canDropTask(record.pbiID, item.index, item.record.pbiID)) {
-            updateTask(record.pbiID, item.index, token, ownerName);
+            updateTask(record.pbiID,item.record.pbiID, item.index,pbiKeys, token, ownerName);
             setInitialRefresh(true);
           }
           else if (item.bodyType === "ITask" && record.pbiID === -2 && record.sprintNumber === 0 && item.index !== -2 && item.record.pbiID !== -2) {
-            updateTask(0, item.index, token, ownerName);
+            updateTask(0, item.index,item.record.pbiID,pbiKeys, token, ownerName);
             setInitialRefresh(true);
           }
         }
@@ -193,19 +194,7 @@ export function SprintBacklog() {
   const taskColumns = [taskNameCol, taskStatusCol,
     {
       key: "isAssignedToPBI", title: "Assignees", width: "22%", align: "center" as const,
-      render: (record: ITask) => {
-        return (
-          <Dropdown.Button style={{ cursor: "pointer" }} placement='bottomCenter' type="text"
-            overlay={<MenuWithPeopleSave itemSelected={function (person: string): void { assignPerson(person, record.id, record.assigness, token, ownerName);}} visible={true} people={people} taskPeople={record.assigness} />}
-            buttonsRender={() => [
-              <></>, React.cloneElement(<span>
-                <Badge size='small'
-                  status={typeof record.assigness !== "undefined" && record.assigness.length > 0 ? "success" : "error"} />
-                {typeof record.assigness !== "undefined" && record.assigness.length > 0
-                  ? (record.assigness.at(0).login as string) + " " : "Not Assigned "}
-                <DownOutlined />
-              </span>),]} > </Dropdown.Button>)
-      },
+      render: (record: ITask) => peopleDropdown(record, token, ownerName, people),
     }, {title: "Start Branch",
     key: "branch",
     width: "12%",
@@ -256,7 +245,8 @@ export function SprintBacklog() {
       <Space>
         <Typography>{isSprintLoaded(sprintID, sprintPage,true)? sprintPage.goal : ""}</Typography>
         </Space><br/><Space>
-        {isSprintLoaded(sprintID, sprintPage,true) && <span><CalendarOutlined style={{color:moment().endOf('day') <= moment(sprintPage.finishDate)?(moment(sprintPage.finishDate).diff(moment().endOf('day'),'day')<4?"red":"darkorange"):"green"}}></CalendarOutlined>{" " + dateFormat(sprintPage.finishDate as unknown as Date)}</span>}
+        {isSprintLoaded(sprintID, sprintPage,true) && <span><CalendarOutlined style={{color:
+          moment(sprintPage.finishDate).diff(moment().endOf('day'),'day')<8?(moment(sprintPage.finishDate).diff(moment().endOf('day'),'day')<4?"red":"darkorange"):"green"}}></CalendarOutlined>{" " + dateFormat(sprintPage.finishDate as unknown as Date)}</span>}
         <Button key="1" type="link" onClick={() => { setIsModal({ ...isModal, updateSprint: true }); }}>{isSprintLoaded(sprintID, sprintPage,true) ?  "Update Sprint":""} </Button>
       </Space>
       <DndProvider backend={HTML5Backend} key={"dnd_sprint"}>

@@ -1,8 +1,8 @@
 import { ISprint } from "../../appstate/stateInterfaces"
 import { useCallback, useEffect, useRef } from "react";
 import moment from 'moment';
-import { isNull } from "lodash";
-import { number } from "joi";
+import { includes, isNull } from "lodash";
+import _ from "lodash";
 
 export const canDropPBI = (pbiId: number, oldSprintId: number, newSprintId: number) => {
   return (oldSprintId !== -2 && newSprintId !== null && newSprintId !== -2 && pbiId !== -2 && newSprintId !== oldSprintId);
@@ -23,9 +23,15 @@ export const isMessageValid = (message: string|undefined): boolean => {
   return (!isNull(message) && typeof (message) !== "undefined" && message !== "" && message.length > 0);
 }
 
-export const isBranchNotCreated = (message: string): boolean => {
-  return (!isNull(message) && message === "New");
+
+export const isInReviewOrFinished = (message: string): boolean => {
+  return message===("InReview")||message === ("Finished");
 }
+
+export const isBranchNotCreated = (message: string): boolean => {
+  return (!isNull(message) && (!message.includes("WBranch") || isInReviewOrFinished(message)));
+}
+
 
 export const isArrayValid = (objectArray: any[]) => {
   return objectArray && objectArray.length > 0;
@@ -62,7 +68,8 @@ export function getIndex(record: ISprint) {
   return record.sprintNumber;
 }
 
-export function updateRowKeys(record: ISprint, expandedRowKeys: any[]) {
+export function updateRowKeys(record: ISprint, expKeys: any[]) {
+  let expandedRowKeys = _.cloneDeep(expKeys);
   const rowKey = record.sprintNumber;
   const isExpanded = expandedRowKeys.includes(rowKey);
   let newExpandedRowKeys = [] as number[];
