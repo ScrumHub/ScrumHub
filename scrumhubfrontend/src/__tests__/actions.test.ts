@@ -2,15 +2,41 @@
  * @jest-environment jsdom
  */
 import expect from "expect"; // You can use any testing library
-import { IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList } from "../appstate/stateInterfaces";
-import config from "../configuration/config";
-import * as Fetching from "../appstate/fetching";
-import { RequestResponse } from "../appstate/response";
-import { initPerson, initPBItem, initRepository, initSprint, initTask, initPBIFilter, initError, errorObject } from "../appstate/initStateValues";
-import axios, { AxiosResponse } from 'axios';
-import MockAdapter from 'axios-mock-adapter';
-import { tstConf, testFilters, testPBIList, testRepositoryList, testSprintList, testTaskList } from "./stateTestValues";
-import { filterUrlString, getHeader } from "../appstate/stateUtilities";
+import { configureStore } from '@reduxjs/toolkit';
+import axios from 'axios';
+import { reducerFunction } from "../appstate/reducer";
+import { initTestState, testFetchReposVals, testFilters, testRepositoryList, tstConf } from "../appstate/stateTestValues";
+import * as Actions from "../appstate/actions";
+import { fetchStateRepos, filterUrlString } from "../appstate/stateUtilities";
+import MockAdapter from "axios-mock-adapter";
+
+describe('fetching Repos', () => {
+  test('should pass', async () => {
+    const mock = new MockAdapter(axios);
+  mock.onGet(`${tstConf.url}/Repositories?${filterUrlString(testFilters)}`).reply(200, testRepositoryList);
+    const store = configureStore({
+      reducer: reducerFunction(initTestState),
+    });
+    await store.dispatch(Actions.fetchReposThunk(testFetchReposVals));
+    const state = store.getState();
+    expect(state).toEqual(fetchStateRepos(initTestState,testRepositoryList,1,10,1));
+  });
+});
+/*
+    // Test that our thunk is calling the API using the arguments we expect
+    it('calls the api correctly', async () => {
+      await action(dispatch, getState, undefined);
+      expect(api.register).toHaveBeenCalledWith(arg);
+    });
+
+    // Confirm that a success dispatches an action that we anticipate
+    it('triggers auth success', async () => {
+      const call = actions.authSuccess(result);
+      await action(dispatch, getState, undefined);
+      expect(dispatch).toHaveBeenCalledWith(call);
+    });
+  });
+
 
 test("getResponseResultsInNetworkError", async () => {
   const mock = new MockAdapter(axios);
@@ -34,7 +60,7 @@ test("getResponseResultsInOtherError", async () => {
 
 test("getResponseResultsInSuccess", async () => {
   const mock = new MockAdapter(axios);
-  mock.onGet(`${config.backend.ip}:${config.backend.port}/api/Repositories?${filterUrlString(initPBIFilter)}`).reply(200,testRepositoryList);
+  const p = mock.onGet(`${config.backend.ip}:${config.backend.port}/api/Repositories?${filterUrlString(initPBIFilter)}`).reply(200,testRepositoryList);
   const response = axios.get(
       `${config.backend.ip}:${config.backend.port}/api/Repositories?${filterUrlString(initPBIFilter)}`,
       { headers: getHeader(config.token, config), }
@@ -247,4 +273,4 @@ test("startFeatureBranchForTaskIsSuccessful", async () => {
   const response: RequestResponse<ITask, number> =
     await Fetching.startBranchForTask(config.token,tstConf.ownerName, !tstConf.hotfix,tstConf.taskId, );
   expect(response).toEqual({ code: 200, response: initTask });
-});
+});*/

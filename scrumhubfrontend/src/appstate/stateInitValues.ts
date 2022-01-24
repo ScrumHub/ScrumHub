@@ -1,4 +1,4 @@
-import { initKeys, initLoadingKeys } from "../components/utility/commonInitValues";
+import { tableKeys } from "../components/utility/commonInterfaces";
 import config from "../configuration/config"
 import { IAddPBI, IAssignPBI, IFilters, ILoginState, IPBIFilter, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, IState } from "./stateInterfaces";
 import { validateUri } from "./stateUtilities";
@@ -187,6 +187,16 @@ export const backlogSprint: ISprint = {
   isCompleted: false, sprintNumber: 0, 
   title: "Product Backlog", 
   backlogItems: [] };
+  
+export const initKeys: tableKeys = {
+  sprintKeys: [0],
+  pbiKeys: []
+}
+
+export const initLoadingKeys: tableKeys = {
+  sprintKeys: [],
+  pbiKeys: []
+}
 
 export const initState: IState = {
   loginState: initLoginState,
@@ -213,4 +223,5 @@ export const initState: IState = {
   activeSprintNumber: -1,
   keys: initKeys,
   loadingKeys: initLoadingKeys,
+  changedRepo: ""
 };

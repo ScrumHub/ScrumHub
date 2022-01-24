@@ -1,5 +1,5 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
-import { initState } from "./initStateValues";
+import { initState } from "./stateInitValues";
 import {reducerFunction } from "./reducer";
 
 export const store = configureStore({

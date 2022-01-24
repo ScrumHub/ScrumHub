@@ -175,4 +175,5 @@ export interface IState {
   currentUser: IPerson;
   keys:tableKeys;
   loadingKeys:tableKeys;
+  changedRepo:string;
 };

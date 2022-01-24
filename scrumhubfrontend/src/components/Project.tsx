@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Avatar, Badge, Button, Dropdown, Input, Space, } from 'antd';
 import 'antd/dist/antd.css';
 import "./Project.css";
@@ -12,9 +12,8 @@ import * as Actions from '../appstate/actions';
 import React from 'react';
 import { AddPBIPopup } from './popups/AddPBIPopup';
 import { AddSprintPopup } from './popups/AddSprintPopup';
-import { initAddPBI, initSprint } from '../appstate/initStateValues';
+import { initAddPBI, initSprint } from '../appstate/stateInitValues';
 import { initFilterMenu, initFilterSortInfo } from './utility/commonInitValues';
-import { isNull } from 'lodash';
 const { Search } = Input;
 
 export const Project = React.memo((props: any) => {
@@ -71,7 +70,7 @@ export const Project = React.memo((props: any) => {
   const updateInputPplFilter = (e: { target: { value: string; }; }) => {
     setInputPplFilter(e.target.value);
   };
-  const onSearch = (value: string) => { setFiltersPBI({ ...filterPBI, nameFilter: [value.toLowerCase()] }); };
+  const onSearch = (value: string) => {setFiltersPBI({ ...filterPBI, nameFilter: value!==""?[value.toLowerCase()]:[] }); };
   useEffect(() => {
     if (isLoggedIn && (ownerName !== "" || initialRefresh)) {
       setInitialRefresh(false);
@@ -91,10 +90,10 @@ export const Project = React.memo((props: any) => {
   return (
     <div id="projectDiv" className='projectDiv' >
       <Space wrap direction="horizontal" split={true} onMouseLeave={() => setFilterMenu(initFilterMenu)}
-        className='projectSpace'>
-        <Button onClick={() => { setIsAddSprint(true); }}>{"Create Sprint"}</Button>
-        <Button onClick={() => { setIsAddPBI(true); }}>{"Add Product Backlog Item"}</Button>
-        <Search onMouseEnter={() => setFilterMenu(initFilterMenu)} placeholder="Input backlog item name" onSearch={onSearch} enterButton />
+        className='projectSpace' style={{marginBottom:"0.5%"}}>
+        <Button type="primary" onClick={() => { setIsAddSprint(true); }}>{"Create Sprint"}</Button>
+        <Button type="primary" onClick={() => { setIsAddPBI(true); }}>{"Add Product Backlog Item"}</Button>
+        <Search autoComplete='on' onMouseEnter={() => setFilterMenu(initFilterMenu)} placeholder="Input backlog item name" onSearch={onSearch} enterButton />
         <Dropdown.Button
           className='projectDropBtn'
           placement="bottomCenter"

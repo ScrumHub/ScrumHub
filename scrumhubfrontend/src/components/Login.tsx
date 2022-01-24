@@ -1,15 +1,13 @@
 import { useState, useEffect } from "react";
-import { GithubOutlined } from "@ant-design/icons";
-import { useLocation, useNavigate } from "react-router";
-import * as Actions from '../appstate/actions';
-import { store } from "../appstate/store";
+import { GithubOutlined, SyncOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router";
 import { loginData } from "./utility/commonInitValues";
 import { useSelector } from "react-redux";
 import { IState } from "../appstate/stateInterfaces";
 import { getFetchBodyData, hasGithubResponseCode, setLocalStorage as setLoginStateLocalStorage } from "./utility/commonFunctions";
 import { handleLogin } from "./utility/LoginAndMainHandlers";
-import logo from "./logo.png";
 import "./Login.css";
+import { Button } from "antd";
 
 export function Login(props: any) {
   const loginState = useSelector((appState: IState) => appState.loginState);
@@ -30,7 +28,6 @@ export function Login(props: any) {
           let params = new URLSearchParams(response);
           const access_token = params.get("access_token");
           if (access_token) {
-            store.dispatch(Actions.login({ token: access_token, isLoggedIn: true }));
             setLoginStateLocalStorage(access_token);
             handleLogin(access_token, navigate);
           }
@@ -50,29 +47,23 @@ export function Login(props: any) {
     }
   }, [error.hasError]);
   return (
-      <section className="loginContainer">
+      <section className="mainContainer">
         <div className="loginDiv">
           <h1 className="loginh1">ScrumHub</h1>
           <div className={imgLoaded ? "imgLoginNone": "imgLoginTemp"}></div>
-          <img onLoad={(e) => { setImgLoaded(true); }} src={logo} alt="Logo" className={imgLoaded ? "imgLoginLogo" : "imgLoginNone"} />
+          <img onLoad={(e) => { setImgLoaded(true); }} src={process.env.PUBLIC_URL +'/logo.png'} alt="Logo" className={imgLoaded ? "imgLoginLogo" : "imgLoginNone"} />
           <span className="errorSpan">{data.errorMessage}</span>
-          <div className="login-container">
-            {data.isLoading ? (
-              <div className="loader-container">
-                <div className="loader"></div>
-              </div>
-            ) : (
-              <>
-                <a
-                  className="login-link"
-                  href={`http://github.com/login/oauth/authorize?scope=repo&client_id=${loginState.client_id}&redirect_uri=${loginState.redirect_uri}`}
-                  onClick={() => {setData({ ...data, errorMessage: "" });}}
-                  style={{whiteSpace:"nowrap", textOverflow:"ellipsis", overflow:"clip"}}
-                >
-                  <span style={{whiteSpace:"nowrap", textOverflow:"ellipsis", overflow:"clip"}}>{loginState.isLoggedIn ? "Logged in " : "Login "}    <GithubOutlined /></span>
-                </a>
-              </>
-            )}
+          <div className="loginContainer">
+            {data.isLoading ?
+            <Button icon={<SyncOutlined spin/>} type="primary"
+            onClick={(e) => {e.preventDefault()}}
+            style={{backgroundColor:"black", borderColor:"black", whiteSpace:"nowrap", textOverflow:"ellipsis", overflow:"clip", width:"100%"}}>
+        </Button>:
+              <Button type="primary" href={`https://github.com/login/oauth/authorize?scope=repo&client_id=${loginState.client_id}&redirect_uri=${loginState.redirect_uri}`}
+                  style={{backgroundColor:"black", borderColor:"black", whiteSpace:"nowrap", textOverflow:"ellipsis", overflow:"clip", width:"100%"}}>
+               {<span style={{color:"white", fontFamily:'Montserrat', whiteSpace:"nowrap", textOverflow:"ellipsis", overflow:"clip", width:"100%", textTransform:"uppercase"}}>{loginState.isLoggedIn && !data.errorMessage ? "Logged in  " : "Login  "}    <GithubOutlined /></span>}
+              </Button>
+              }
           </div>
         </div>
       </section>

@@ -2,7 +2,7 @@ import { Avatar, Breadcrumb, Layout, Menu, message, PageHeader } from 'antd';
 import { useLocation, useNavigate } from 'react-router';
 import 'antd/dist/antd.css';
 import { DatabaseOutlined, GithubOutlined, ProjectOutlined } from '@ant-design/icons';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { AppRouter } from '../Approuter';
 import { store } from '../appstate/store';
 import * as Actions from '../appstate/actions';
@@ -20,6 +20,7 @@ const { SubMenu } = Menu;
 export function Main(props: any) {
   const isLoggedIn = useSelector((appState: IState) => appState.loginState.isLoggedIn);
   const token = useSelector((appState: IState) => appState.loginState.token);
+  const client_id = useSelector((appState: IState) => appState.loginState.client_id);
   const error = useSelector((appState: IState) => appState.error);
   const currentUser = useSelector((appState: IState) => appState.currentUser);
   const activeSprintNumber = useSelector((appState: IState) => appState.activeSprintNumber);
@@ -31,7 +32,7 @@ export function Main(props: any) {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
-
+  message.config({ maxCount: 1 });
   useEffect(() => {
     if (logout || (!isLoggedIn)) {
       setLogout(false);
@@ -75,11 +76,23 @@ export function Main(props: any) {
   useEffect(() => {
     if (error.hasError && isMessageValid(error.erorMessage)) {
       message.error(error.erorMessage, 2);
-      store.dispatch(Actions.clearError());
+      if (error.erorMessage.includes("not found in ScrumHub") && location.pathname !== "/") {
+        store.dispatch(Actions.clearError(localStorage.getItem("ownerName") as string));
+        message.info("The repository name has changed and the repository is no longer in Scrumhub.", 5);
+        handleProjects();
+      } else if (error.erorMessage.includes("Bad credentials")) {
+        store.dispatch(Actions.clearError(""))
+        message.info("The scope of of authorization was changed. You need to login again", 2);
+        setLogout(true);
+      }
+      else {
+        store.dispatch(Actions.clearError(""));
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
   useEffect(() => {
-    if (isLoggedIn && !currentUser.isCurrentUser && !load) {
+    if (isLoggedIn && !currentUser.isCurrentUser && !load && !location.pathname.includes("login")) {
       setLoad(true);
       store.dispatch(
         Actions.getCurrentUserThunk({
@@ -88,39 +101,39 @@ export function Main(props: any) {
       ).then((response: any) => { if (response.payload && response.payload.code === 0) { message.error(response.payload.response.message, 2); handleLogout(); } else { setLoad(false); } });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUser, load, isLoggedIn]);
-  let stop = true, y_pos = -1, old_pos = -1, down = false,start=false;
+  }, [currentUser, load, isLoggedIn, location]);
+  let stop = true, y_pos = -1, old_pos = -1, down = false, start = false;
   document.ondragover = () => { };
   document.ondragenter = () => { };
-  const scroll = (step:number) => {
+  const scroll = (step: number) => {
     var elmnt = document.getElementById("scrollableDiv");
     if (!isNull(elmnt)) {
-      if (y_pos > 1 * window.innerHeight / 2 && y_pos > old_pos && down) {elmnt.scrollTop += step;}
-      else if (y_pos <= 9 * window.outerHeight / 10 &&y_pos <= old_pos && down) {elmnt.scrollTop -= step;}
+      if (y_pos < 1 * window.outerHeight / 6 && y_pos < old_pos && down) { elmnt.scrollTop -= step; }
+      else if (y_pos > 3 * window.outerHeight / 4 && y_pos >= old_pos && down) { elmnt.scrollTop += step; }
       start = true;
     }
   }
-  function handleMouseDragOver(event:any) {
+  function handleMouseDragOver(event: any) {
     event = event || window.event;
     if (event.clientY !== y_pos && down) {
       stop = false;
       y_pos = event.clientY;
     }
   }
-  function handleMouseDragEnter(event:any) {
+  function handleMouseDragEnter(event: any) {
     event = event || window.event;
     if (old_pos === -1) { old_pos = event.clientY; }
   }
-  const handleDragEnter = (e:any) => {
+  const handleDragEnter = (e: any) => {
     document.ondragenter = handleMouseDragEnter;
     document.ondragover = handleMouseDragOver;
   }
-  const handleDragOver = (e:any) => {
+  const handleDragOver = (e: any) => {
     down = true;
     scroll(5);
   }
 
-  const handleDragLeave = (e:any) => {
+  const handleDragLeave = (e: any) => {
     down = false;
     start = false;
     stop = true;
@@ -132,13 +145,13 @@ export function Main(props: any) {
   useEffect(() => {
     let timer;
     if (!stop && start) {
-       timer = setTimeout(function () {
+      timer = setTimeout(function () {
         scroll(5)
       }, 50
       );
     }
-    if(!start && stop){
-    return () => clearInterval(timer);
+    if (!start && stop) {
+      return () => clearInterval(timer);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stop, start]);
@@ -147,21 +160,24 @@ export function Main(props: any) {
   return (
     <section id="parentSection" className="container" >
       <Layout id="scrollableDiv" onDragStart={handleDragEnter} onDragOver={handleDragOver} onDragEnd={handleDragLeave} className={'scrollDiv'}>
-        {!location.pathname.includes("login")&&<Header  className="clearfix" style={{ position: 'fixed', zIndex: 100, padding: 0, height: "5vh", lineHeight: "5vh", width: "100%", backgroundColor: "#f0f0f0" }}>
-          <Menu mode="horizontal" theme="light" className="mainMenu" >
-            <SubMenu style={{ float: "unset" }} key="SubMenu0" title={currentUser.isCurrentUser ? currentUser.login : ""} icon={
+        {!location.pathname.includes("login") && <Header className="clearfix" style={{ position: 'fixed', zIndex: 100, padding: 0, height: "5vh", lineHeight: "5vh", width: "100%", backgroundColor: "#f0f0f0" }}>
+          <Menu mode="horizontal" theme="light" className="mainMenu">
+            <SubMenu popupOffset={[-18,2]} key="SubMenu0" title={currentUser.isCurrentUser ? currentUser.login : ""} icon={
               currentUser.isCurrentUser ? <Avatar style={{ transform: "scale(0.8)", marginBottom: "0.4vh" }} size="small" src={`${currentUser.avatarLink}`} ></Avatar> : <></>}>
               {currentUser.isCurrentUser && <Menu.Item key="SubMenu4">
                 <a href={"https://github.com/" + currentUser.login}>See on Github</a>
               </Menu.Item>}
             </SubMenu>
             <Menu.Item className='mainMenuItem' key="proj" onClick={() => handleProjects()}><span style={{ maxHeight: "1vh" }}>Projects</span></Menu.Item>
+            <SubMenu popupOffset={[-50,2]}  key="SubMenu1" title="Settings">
+            <Menu.Item icon={<GithubOutlined/>} key="sett"><a href={`https://github.com/settings/connections/applications/${client_id}`}><span>{"Set Permissions "}</span> </a></Menu.Item>
+            </SubMenu>
             <Menu.Item className='mainMenuItem' key="logout" onClick={() => handleLogout()} >Logout</Menu.Item>
           </Menu>
         </Header>}
         <Content className="content">
           <Layout className="site-layout-background">
-          {!location.pathname.includes("login")&&<Sider hidden={location.pathname.includes("login") || ownerName === ""} theme="light" collapsedWidth={40} style={{ marginTop: "5vh", height: 'auto', backgroundColor: "white", borderColor: "transparent" }} onCollapse={() => setIsCollapsed(!isCollapsed)} collapsible={true} collapsed={isCollapsed} className="site-layout-background" width={200}>
+            {!location.pathname.includes("login") && <Sider hidden={location.pathname.includes("login") || ownerName === ""} theme="light" collapsedWidth={40} style={{ marginTop: "5vh", height: 'auto', backgroundColor: "white", borderColor: "transparent" }} onCollapse={() => setIsCollapsed(!isCollapsed)} collapsible={true} collapsed={isCollapsed} className="site-layout-background" width={200}>
               <Menu mode="inline" style={{ position: "fixed", width: isCollapsed ? 40 : 200 }} defaultSelectedKeys={[selectedSiderKey]}>
                 {/*<Menu.Item key="1" icon={<ProjectOutlined />}>
                   <span>Project Details</span></Menu.Item>
@@ -171,18 +187,18 @@ export function Main(props: any) {
                   <span>Active Sprint</span></Menu.Item>
               </Menu>
             </Sider>}
-            <Content style={location.pathname.includes("login")||ownerName === "" ? {} : { padding: '0 50px' }}>
+            <Content style={location.pathname.includes("login") || ownerName === "" ? {} : { padding: '0 50px' }}>
               <div style={{ minHeight: "90vh", margin: 0, }}>
                 {ownerName !== "" && <PageHeader className="pageHeader"
-                  title={<div style={{ fontWeight: "bold", textOverflow:"ellipsis", whiteSpace:"nowrap",overflow:"clip", width:"85vw", lineHeight: 1.25, paddingTop: 0, marginTop: 0, }}>{sprintID && sprintID !== "0" && sprintPage && sprintPage.title && Number(sprintID) === sprintPage.sprintNumber ? sprintPage.title : location.pathname.includes("sprint") ? "" : "Product Backlog"}</div>}
+                  title={<div style={{ fontWeight: "bold", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "clip", width: "85vw", lineHeight: 1.25, paddingTop: 0, marginTop: 0, }}>{sprintID && sprintID !== "0" && sprintPage && sprintPage.title && Number(sprintID) === sprintPage.sprintNumber ? sprintPage.title : location.pathname.includes("sprint") ? "" : "Product Backlog"}</div>}
                   breadcrumb={<Breadcrumb style={{ marginTop: 0, marginBottom: 0, }} itemRender={ItemRender} routes={routes(ownerName, sprintID, location)} />}
                 >
                 </PageHeader>}
                 <AppRouter />
               </div>
-              <Footer className={location.pathname.includes("login")?"loginFooter":"mainFooter"}>
+              <Footer className={location.pathname.includes("login") ? "loginFooter" : "mainFooter"}>
                 <a
-                  href="http://github.com/ScrumHub/ScrumHub"
+                  href="https://github.com/ScrumHub/ScrumHub"
                   target="_blank"
                   rel="noreferrer"
                   className="GithubFooter"

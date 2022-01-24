@@ -6,9 +6,8 @@ import { IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IReposi
 import config from "../configuration/config";
 import * as Fetching from "../appstate/fetching";
 import { RequestResponse } from "../appstate/response";
-import { errorObject, initAddPBI, initSprint } from "../appstate/initStateValues";
-import { testConnectionError, testFilters } from "./stateTestValues";
-import { initReposFilters } from "../components/utility/commonInitValues";
+import { errorObject, initAddPBI, initSprint } from "../appstate/stateInitValues";
+import { testConnectionError, testFilters } from "../appstate/stateTestValues";
 const axios = require('axios');
 
 /* At the same scope with `require`*/

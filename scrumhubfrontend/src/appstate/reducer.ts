@@ -2,18 +2,18 @@ import * as Actions from "./actions";
 import { createReducer, PayloadAction } from "@reduxjs/toolkit";
 import { RequestResponse } from "./response";
 import { IAssignPBI, ILoginState, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, IState } from "./stateInterfaces";
-import { initError, loggedOutLoginState, unassignedPBI } from "./initStateValues";
-import { isArrayValid } from "../components/utility/commonFunctions";
-import { getError, updateStateTasks, updateStateKeys, addStateTask, addStateUnassignedTaskToPBI, updateStatePBI, updateTasksSWR, fetchStateRepos, updateStateOneSprint, addStateRepo, addStatePBI, addStateSprint } from "./stateUtilities";
+import { initError, loggedOutLoginState, unassignedPBI } from "./stateInitValues";
+import { isArrayValid, isNameFilterValid } from "../components/utility/commonFunctions";
+import { getError, updateStateTasks, updateStateKeys, addStateTask, addStateUnassignedTaskToPBI, updateStatePBI, updateTasksSWR, fetchStateRepos, updateStateOneSprint, addStateRepo, addStatePBI, addStateSprint, updateOnDragStateTasks } from "./stateUtilities";
 import { isNull } from "lodash";
 import config from "../configuration/config";
 var _ = require('lodash');
 
 export const reducerFunction = (initState: IState) => {
   return (createReducer(initState, {
-    [Actions.clearError.type]: (state: IState) => {
+    [Actions.clearError.type]: (state: IState, payload: any) => {
       let newState = _.cloneDeep(state as IState);
-      return ({ ...newState, error: initError });
+      return ({ ...newState, error: initError, changedRepo:isNameFilterValid(payload.payload)?payload.payload:""});
     },
     [Actions.clearReposList.type]: (state: IState) => {
       let newState = _.cloneDeep(state);
@@ -341,10 +341,7 @@ export const reducerFunction = (initState: IState) => {
     },
     [Actions.assignTaskToPBIThunk.fulfilled.toString()]: (state: IState, payload: PayloadAction<RequestResponse<IProductBacklogItem, number>>) => {
       let newState = _.cloneDeep(state);
-      newState.productRequireRefresh = true;
-      newState.sprintRequireRefresh = true;
-      newState.loading = false;
-      return newState;
+      return updateOnDragStateTasks(newState,payload.payload.response as ITask);
     },
     [Actions.assignTaskToPBIThunk.rejected.toString()]: (state: IState, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
       let newState = _.cloneDeep(state);

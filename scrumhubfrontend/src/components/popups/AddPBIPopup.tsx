@@ -25,7 +25,7 @@ export const AddPBIPopup: React.FC<IAddPBICollectionCreateFormProps> = ({
       onCancel={onCancel}
       onOk={() => {
         form
-          .validateFields()
+          .validateFields()         
           .then((values: IAddPBI) => {
             form.resetFields();
             onCreate(values);
@@ -45,9 +45,10 @@ export const AddPBIPopup: React.FC<IAddPBICollectionCreateFormProps> = ({
         <Form.Item
           key="name"
           name="name"
-          rules={[{ required: true, message: 'Please input the name of the new backlog item!' }]}
+          required tooltip="This is a required field!"
+          rules={[{ required: true, message: 'Please input the name of the new backlog item!', whitespace: true }]}
         >
-          <Input placeholder='Product Backlog Name' />
+          <Input minLength={1} placeholder='Product Backlog Name' />
         </Form.Item>
         <FormItemLabel prefixCls="priority" label="Priority" required={true} />
         <Form.Item

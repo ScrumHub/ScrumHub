@@ -53,7 +53,7 @@ export const UpdateSprintPopup: React.FC<IUpdateSprintCollectionCreateFormProps>
         <Form.Item
           initialValue={data.title}
           name="title"
-          rules={[{ required: true, message: 'Please input the title of this sprint!' }]}
+          rules={[{ required: true, message: 'Please input the title of this sprint!', whitespace: true }]}
         >
           <Input required={true}
           />
@@ -63,7 +63,7 @@ export const UpdateSprintPopup: React.FC<IUpdateSprintCollectionCreateFormProps>
           initialValue={data.goal}
           name="goal"
           labelAlign="left"
-          rules={[{ required: true, message: 'Please input the goal of this sprint!' }]}
+          rules={[{ required: true, message: 'Please input the goal of this sprint!', whitespace: true }]}
         >
           <TextArea
             maxLength={105}

@@ -60,16 +60,16 @@ export const AddSprintPopup: React.FC<IAddSprintCollectionCreateFormProps> = ({
         <Form.Item
           initialValue={data.title}
           name="title"
-          rules={[{ required: true, message: 'Please input the title of this sprint!' }]}
+          rules={[{ required: true, message: 'Please input the title of this sprint!', whitespace: true }]}
         >
-          <Input required={true} autoComplete="on"
+          <Input required={true} autoComplete="on" maxLength={60}
           />
         </Form.Item>
         <FormItemLabel prefixCls="goal" label="Goal" required={true} />
         <Form.Item
           initialValue={data.goal}
           name="goal"
-          rules={[{ required: true, message: 'Please input the goal of this sprint!' }]}
+          rules={[{ required: true, message: 'Please input the goal of this sprint!', whitespace: true }]}
         >
           <TextArea required={true}
             maxLength={105}
