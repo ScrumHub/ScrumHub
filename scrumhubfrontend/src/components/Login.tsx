@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { GithubOutlined, SyncOutlined } from "@ant-design/icons";
+import { GithubOutlined, LoadingOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router";
 import { loginData } from "./utility/commonInitValues";
 import { useSelector } from "react-redux";
@@ -55,7 +55,7 @@ export function Login(props: any) {
           <span className="errorSpan">{data.errorMessage}</span>
           <div className="loginContainer">
             {data.isLoading ?
-            <Button icon={<SyncOutlined spin/>} type="primary"
+            <Button icon={<LoadingOutlined/>} type="primary"
             onClick={(e) => {e.preventDefault()}}
             style={{backgroundColor:"black", borderColor:"black", whiteSpace:"nowrap", textOverflow:"ellipsis", overflow:"clip", width:"100%"}}>
         </Button>:

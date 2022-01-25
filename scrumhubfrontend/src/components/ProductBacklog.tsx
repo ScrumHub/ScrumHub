@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router';
 import { initModalVals, pbiFilterVals } from './utility/commonInitValues';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
 import { canDropPBI, canDropTask, isArrayValid, isBranchNotCreated, isInReviewOrFinished, } from './utility/commonFunctions';
-import { taskStatusCol, taskGhLinkCol, taskNameCol, pbiProgressCol, backlogColors, pbiProgressCol2, peopleDropdown, PriorityDropdown, sprintNrCol, sprintTitleCol, sprintDateCol, sprintStoryPtsCol, sprintStatusCol, sprintActCol, pbiNameCol } from './utility/BodyRowsAndColumns';
+import { taskStatusCol, taskGhLinkCol, taskNameCol, pbiProgressCol, backlogColors, pbiProgressCol2, peopleDropdown, PriorityDropdown, sprintNrCol, sprintTitleCol, sprintDateCol, sprintStoryPtsCol, sprintStatusCol, sprintActCol, pbiNameCol, pbiStatusCol } from './utility/BodyRowsAndColumns';
 import { PBITableComponent } from './BacklogPBITableComponent';
 import { BranchesOutlined, EditOutlined } from '@ant-design/icons';
 import { SprintTableComponent } from './BacklogSprintTableComponent';
@@ -219,17 +219,18 @@ export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
   const pbiColumns = [
     pbiNameCol(props.nameFilter, props.sortedInfo, setSelectedPBI, isModal, setIsModal), pbiProgressCol, pbiProgressCol2,
     {
-      title: 'Priority', sorter: (a: IProductBacklogItem, b: IProductBacklogItem) => a.priority - b.priority, align: "center" as const, width: "20%", key: 'pbiPriority',
+      title: 'Priority', sorter: (a: IProductBacklogItem, b: IProductBacklogItem) => a.priority - b.priority, align: "center" as const, width: "15%", key: 'pbiPriority',
       filteredValue: props.filteredInfo.pbiPriority || null, filters: pbiFilterVals, onFilter: (value: any, item: IProductBacklogItem) => props.filteredInfo && isArrayValid(props.filteredInfo.pbiPriority) ? props.filteredInfo.pbiPriority.includes(item.priority) : item.priority === value,
       sortOrder: props.sortedInfo && props.sortedInfo.columnKey === 'pbiPriority' && props.sortedInfo.order,
       render: (item: IProductBacklogItem) => <PriorityDropdown loading={pbiKeys.includes(item.id)} record={item} token={token} ownerName={ownerName} />
     },
     {
-      title: 'Story Points', sortOrder: props.sortedInfo && props.sortedInfo.columnKey === 'storyPoints' && props.sortedInfo.order, sorter: (a: IProductBacklogItem, b: IProductBacklogItem) => a.expectedTimeInHours - b.expectedTimeInHours, width: "15%", key: 'storyPoints', align: "center" as const, render: (item: IProductBacklogItem) => {
+      title: 'Story Points', sortOrder: props.sortedInfo && props.sortedInfo.columnKey === 'storyPoints' && props.sortedInfo.order, sorter: (a: IProductBacklogItem, b: IProductBacklogItem) => a.expectedTimeInHours - b.expectedTimeInHours, width: "10%", key: 'storyPoints', align: "center" as const, render: (item: IProductBacklogItem) => {
         return (item.id !== 0 ? <Tag style={{ cursor: "pointer" }} color={item.estimated ? (item.expectedTimeInHours > 10 ? "red" : "green") : "purple"} onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, estimatePBI: true }); }}>
           {item.estimated ? (item.expectedTimeInHours + " SP ") : "Not estimated "}{<EditOutlined />}</Tag> : <Tag className='transparentItem' color={backlogColors[0]}>{"Not estimated "}{<EditOutlined />}</Tag>)
       }
     },
+    pbiStatusCol,
     {
       title: '', align: "right" as const, width: "15%", key: 'actions', render: (item: IProductBacklogItem) => {
         return (<span > <Button size='small' type="link" onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, addTask: true }); }} >{"Add Task"}</Button></span>)

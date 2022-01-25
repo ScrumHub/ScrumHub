@@ -1,7 +1,7 @@
 import { IFilters } from "../../appstate/stateInterfaces";
 import config from "../../configuration/config";
 import { backlogPriorities } from "./BodyRowsAndColumns";
-import { IModals, IRowIds, tableKeys } from "./commonInterfaces";
+import { IModals, IRowIds } from "./commonInterfaces";
 
 export const initIDs: IFilters = {
   oldSprintId: -1, newSprintId: -1, pbiId: -1, dropped: false

@@ -10,7 +10,7 @@ import { BranchesOutlined, CalendarOutlined, DownOutlined, EditOutlined } from '
 import { store } from '../appstate/store';
 import {PBITableComponent} from './BacklogPBITableComponent';
 import {TaskTableComponent} from './BacklogTaskTableComponent';
-import { taskNameCol, taskStatusCol, taskGhLinkCol, pbiProgressCol, pbiProgressCol2, backlogPriorities, backlogColors, peopleDropdown } from './utility/BodyRowsAndColumns';
+import { taskNameCol, taskStatusCol, taskGhLinkCol, pbiProgressCol, pbiProgressCol2, backlogPriorities, backlogColors, peopleDropdown, pbiStatusCol } from './utility/BodyRowsAndColumns';
 import { canDropTask, dateFormat, isBranchNotCreated, isInReviewOrFinished, isSprintLoaded } from './utility/commonFunctions';
 import SkeletonList, { PBIMenuWithPeople } from './utility/LoadAnimations';
 import { assignPerson, startTask, updateTask } from './utility/BacklogHandlers';
@@ -223,6 +223,7 @@ export function SprintBacklog() {
       filters: [{ text: backlogPriorities[0], value: 0, }, { text: backlogPriorities[1], value: 1, }, { text: backlogPriorities[2], value: 2, },], onFilter: (value: any, item: IProductBacklogItem) => item.priority === value,
       render: (item: IProductBacklogItem) => item.id !== 0 ? <Tag style={{ cursor: "pointer" }} color={backlogColors[item.priority % 3]}>{backlogPriorities[item.priority % 3]}</Tag> : <Tag style={{ color: "transparent", backgroundColor: "transparent", borderColor: "transparent" }} color={backlogColors[0]}>{backlogPriorities[0]}</Tag>
     },
+    pbiStatusCol,
     {
       title: 'Story Points', sorter: {
         compare: (a: IProductBacklogItem, b: IProductBacklogItem) => a.priority - b.priority,

@@ -179,9 +179,7 @@ export function Main(props: any) {
           <Layout className="site-layout-background">
             {!location.pathname.includes("login") && <Sider hidden={location.pathname.includes("login") || ownerName === ""} theme="light" collapsedWidth={40} style={{ marginTop: "5vh", height: 'auto', backgroundColor: "white", borderColor: "transparent" }} onCollapse={() => setIsCollapsed(!isCollapsed)} collapsible={true} collapsed={isCollapsed} className="site-layout-background" width={200}>
               <Menu mode="inline" style={{ position: "fixed", width: isCollapsed ? 40 : 200 }} defaultSelectedKeys={[selectedSiderKey]}>
-                {/*<Menu.Item key="1" icon={<ProjectOutlined />}>
-                  <span>Project Details</span></Menu.Item>
-                */}<Menu.Item key="ProductBacklog" onClick={() => handlePBacklog()} icon={<DatabaseOutlined />}>
+                <Menu.Item key="ProductBacklog" onClick={() => handlePBacklog()} icon={<DatabaseOutlined />}>
                   <span>Product Backlog</span></Menu.Item>
                 <Menu.Item key="ActiveSprint" onClick={() => handleActiveSprint()} disabled={activeSprintNumber === -1} icon={<ProjectOutlined />}>
                   <span>Active Sprint</span></Menu.Item>

@@ -3,7 +3,7 @@ import { IPeopleList, IProductBacklogItem, ISprint, IState, ITask } from "../../
 import * as Actions from '../../appstate/actions';
 import "../Home.css";
 import "../Main.css";
-import { CalendarOutlined, DownOutlined, EditOutlined, HomeOutlined, SyncOutlined } from "@ant-design/icons";
+import { CalendarOutlined, CheckOutlined, CloseOutlined, DownOutlined, EditOutlined, HomeOutlined, SyncOutlined } from "@ant-design/icons";
 import { dateFormat, isArrayValid } from "./commonFunctions";
 import React from "react";
 import { assignPerson } from "./BacklogHandlers";
@@ -94,10 +94,16 @@ export const pbiProgressTagCol = {
   }
 };
 
+export const pbiStatusCol ={
+  title: 'Status', align: "center" as const, width: "10%", key: 'status', render: (item: IProductBacklogItem) => 
+  item.finished? <CheckOutlined style={{color:"green"}} hidden={item.id===0}/>:<CloseOutlined style={{color:"red"}} hidden={item.id===0}/>
+
+}
+
 export function PriorityDropdown(props: { loading: boolean; token: string; ownerName: string; record: IProductBacklogItem; }) {
   const keys = useSelector((appState: IState) => appState.loadingKeys.pbiKeys);
   return (
-    <Dropdown.Button style={{ cursor: "pointer" }} placement='bottomCenter' type="text"
+    <Dropdown.Button trigger={["click"]} style={{ cursor: "pointer" }} placement='bottomCenter' type="text"
       overlay={<PBIMenuWithPriorities itemSelected={function (priority: number): void {
         if (priority !== props.record.priority) {
           if (!keys.includes(props.record.id)) { store.dispatch(Actions.updatePBILoadingKeys([props.record.id])); }

@@ -1,7 +1,7 @@
 import { ISprint } from "../../appstate/stateInterfaces"
 import { useCallback, useEffect, useRef } from "react";
 import moment from 'moment';
-import { includes, isNull } from "lodash";
+import { isNull } from "lodash";
 import _ from "lodash";
 
 export const canDropPBI = (pbiId: number, oldSprintId: number, newSprintId: number) => {
@@ -133,4 +133,3 @@ export function hasGithubResponseCode(url:string){
 export function isSprintLoaded(sprintID:number, sprintPage:ISprint, shouldBeEqual:boolean){
   return(sprintID!==-1 && isItemDefined(sprintPage) && shouldBeEqual ===(sprintID === sprintPage.sprintNumber));
 }
-
