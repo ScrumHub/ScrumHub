@@ -139,7 +139,7 @@ export const sprintNrCol = (ownerName: string, navigate: NavigateFunction) => {
   })
 };
 
-export const sprintStatusCol = (record: ISprint, setSelectedSprint: React.Dispatch<React.SetStateAction<ISprint>>, isModal, setIsModal: React.Dispatch<React.SetStateAction<IModals>>) => {
+export const sprintStatusRender = (record: ISprint, setSelectedSprint: React.Dispatch<React.SetStateAction<ISprint>>, isModal, setIsModal: React.Dispatch<React.SetStateAction<IModals>>) => {
   return (record.sprintNumber !== 0 && (record.isCompleted ? <Tag color={record.status === "Failed" ? "red" : "green"}><span>
     {record.status.replace("Not", "Not ").replace("In", "In ")}</span></Tag> : <Tag style={{ cursor: "pointer" }} onClick={() => { setSelectedSprint(record); setIsModal({ ...isModal, completeSprint: true }); }} color="geekblue"><span>
       {record.status.replace("Not", "Not ").replace("In", "In ")} <EditOutlined /></span></Tag>));
@@ -168,7 +168,16 @@ export const sprintStoryPtsCol = {
     return (<Tag hidden={item.sprintNumber === 0} style={{ cursor: "pointer" }} color={"purple"} >
       {item && isArrayValid(item.backlogItems) ? (item.backlogItems.map(item => item.expectedTimeInHours).reduce((prev, next) => prev + next) + " Story Points ") : "Not estimated "}</Tag>)
   }
-}
+};
+
+export const sprintStatusCol = (sortedInfo,filteredInfo, setSelectedSprint: React.Dispatch<React.SetStateAction<ISprint>>, isModal: IModals, setIsModal: React.Dispatch<React.SetStateAction<IModals>>) => 
+{return({
+  key: "isCompleted", title: "completed", width: "15%", sorter: (a: ISprint, b: ISprint) => a.sprintNumber - b.sprintNumber,
+  sortOrder: sortedInfo && sortedInfo.columnKey === "isCompleted" && sortedInfo.order,
+  filteredValue: filteredInfo.complete || null, filters: [{ text: "Complete", value: 1, }, { text: "Not complete", value: 0, }],
+  onFilter: (value: any, item: ISprint) => filteredInfo && isArrayValid(filteredInfo.complete) && item.sprintNumber !== 0 ? filteredInfo.complete.includes(Number(item.isCompleted)) : true,
+  render: (record: ISprint) => sprintStatusRender(record, setSelectedSprint, isModal, setIsModal), align: "center" as const,
+})};
 
 export const routes = (ownerName: string | null, sprintID: string, location: any) =>
   [

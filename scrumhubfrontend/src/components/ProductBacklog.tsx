@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router';
 import { initModalVals, pbiFilterVals } from './utility/commonInitValues';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
 import { canDropPBI, canDropTask, isArrayValid, isBranchNotCreated, isInReviewOrFinished, } from './utility/commonFunctions';
-import { taskStatusCol, taskGhLinkCol, taskNameCol, pbiProgressCol, backlogColors, pbiProgressCol2, peopleDropdown, PriorityDropdown, sprintNrCol, sprintTitleCol, sprintDateCol, sprintStoryPtsCol, sprintStatusCol, sprintActCol, pbiNameCol, pbiStatusCol } from './utility/BodyRowsAndColumns';
+import { taskStatusCol, taskGhLinkCol, taskNameCol, pbiProgressCol, backlogColors, pbiProgressCol2, peopleDropdown, PriorityDropdown, sprintNrCol, sprintTitleCol, sprintDateCol, sprintStoryPtsCol, sprintStatusRender, sprintActCol, pbiNameCol, pbiStatusCol, sprintStatusCol } from './utility/BodyRowsAndColumns';
 import { PBITableComponent } from './BacklogPBITableComponent';
 import { BranchesOutlined, EditOutlined } from '@ant-design/icons';
 import { SprintTableComponent } from './BacklogSprintTableComponent';
@@ -241,15 +241,8 @@ export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
     return (<PBITableComponent sortedInfo={props.sortedInfo} filteredInfo={props.filteredInfo} sortSelected={function (items: any): void { props.sortSelected(items) }} itemSelected={function (items: number[]): void { props.itemSelected(items) }}
       TaskTableforPBI={TaskTableforPBI} nameFilter={props.nameFilter} peopleFilter={props.peopleFilter} item={item} pbiColumns={pbiColumns} nestedcomponents={nestedcomponents} />)
   };
-  const sprintColumns = [
-    sprintNrCol(ownerName, navigate), sprintTitleCol, sprintDateCol, sprintStoryPtsCol,
-    {
-      key: "isCompleted", title: "completed", width: "15%", sorter: (a: ISprint, b: ISprint) => a.sprintNumber - b.sprintNumber,
-      sortOrder: props.sortedInfo && props.sortedInfo.columnKey === "isCompleted" && props.sortedInfo.order,
-      filteredValue: props.filteredInfo.complete || null, filters: [{ text: "Complete", value: 1, }, { text: "Not complete", value: 0, }],
-      onFilter: (value: any, item: ISprint) => props.filteredInfo && isArrayValid(props.filteredInfo.complete) && item.sprintNumber !== 0 ? props.filteredInfo.complete.includes(Number(item.isCompleted)) : true,
-      render: (record: ISprint) => sprintStatusCol(record, setSelectedSprint, isModal, setIsModal), align: "center" as const,
-    }, sprintActCol(setSelectedSprint, isModal, setIsModal),];
+  const sprintColumns = [sprintNrCol(ownerName, navigate), sprintTitleCol, sprintDateCol, sprintStoryPtsCol,
+    sprintStatusCol(props.sortedInfo,props.filteredInfo, setSelectedSprint, isModal, setIsModal), sprintActCol(setSelectedSprint, isModal, setIsModal),];
 
   return (<div className='baccklogScroll' >
     <SprintTableComponent sortedInfo={props.sortedInfo ? props.sortedInfo.order : ""} nameFilter={props.nameFilter} keys={0} peopleFilter={props.peopleFilter} loading={refreshRequired || initialRefresh} data={[{
