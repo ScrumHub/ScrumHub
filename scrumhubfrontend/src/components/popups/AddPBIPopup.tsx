@@ -5,7 +5,7 @@ import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import { backlogColors, backlogPriorities } from '../utility/BodyRowsAndColumns';
 import { formItemLayoutWithOutLabel } from '../utility/commonInitValues';
 import { IAddPBICollectionCreateFormProps } from './popupInterfaces';
-import { IAddPBI } from '../../appstate/stateInterfaces';
+import { IAddBI } from '../../appstate/stateInterfaces';
 
 export const AddPBIPopup: React.FC<IAddPBICollectionCreateFormProps> = ({
   data,
@@ -26,7 +26,7 @@ export const AddPBIPopup: React.FC<IAddPBICollectionCreateFormProps> = ({
       onOk={() => {
         form
           .validateFields()         
-          .then((values: IAddPBI) => {
+          .then((values: IAddBI) => {
             form.resetFields();
             onCreate(values);
           })

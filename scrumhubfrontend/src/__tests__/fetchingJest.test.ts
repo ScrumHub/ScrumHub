@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import expect from "expect"; // You can use any testing library
-import { IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList } from "../appstate/stateInterfaces";
+import { IPerson, IBacklogItem, IBacklogItemList, IRepository, IRepositoryList, ISprint, ISprintList } from "../appstate/stateInterfaces";
 import config from "../configuration/config";
 import * as Fetching from "../appstate/fetching";
 import { RequestResponse } from "../appstate/response";
@@ -31,25 +31,25 @@ test("fetching the repositories with a wrong token results in an error", async (
   });
 
   test("fetching the pbis with a wrong token results in an error", async () => {
-    const data: RequestResponse<IProductBacklogList, undefined> =
+    const data: RequestResponse<IBacklogItemList, undefined> =
       await Fetching.fetchPBIs("", config.token,testFilters,);
     expect(data).toEqual(errorObject);
   });
 
   test("add the pbi with a wrong token results in an error", async () => {
-    const data: RequestResponse<IProductBacklogItem, undefined> =
+    const data: RequestResponse<IBacklogItem, undefined> =
       await Fetching.addPBI("", config.token,initAddPBI,);
     expect(data).toEqual(errorObject);
   });
 
   test("finish the pbi with a wrong token results in an error", async () => {
-    const data: RequestResponse<IProductBacklogItem, undefined> =
+    const data: RequestResponse<IBacklogItem, undefined> =
       await Fetching.finishPBI("", config.token,0,);
     expect(data).toEqual(errorObject);
   });
 
   test("estimate the pbi with a wrong token results in an error", async () => {
-    const data: RequestResponse<IProductBacklogItem, undefined> =
+    const data: RequestResponse<IBacklogItem, undefined> =
       await Fetching.estimatePBI("", config.token,0,0);
     expect(data).toEqual(errorObject);
   });

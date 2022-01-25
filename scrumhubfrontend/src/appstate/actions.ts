@@ -2,7 +2,7 @@
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit"
 import type { RequestResponse } from "./response";
 import * as Fetching from "./fetching";
-import { IAddPBI, IFilters, IFiltersAndToken, ILoginState, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList } from "./stateInterfaces";
+import { IAddBI, IFilters, IFiltersAndToken, ILoginState, IPeopleList, IPerson, IBacklogItem, IBacklogItemList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList } from "./stateInterfaces";
 
 export const fetchReposThunk = createAsyncThunk<
   RequestResponse<IRepositoryList, number>,
@@ -50,25 +50,25 @@ export const addRepositoryThunk = createAsyncThunk<
 });
 
 export const fetchPBIsThunk = createAsyncThunk<
-  RequestResponse<IProductBacklogList, number>,
+  RequestResponse<IBacklogItemList, number>,
   { ownerName: string; token: string; filters: IFilters; },
-  { rejectValue: RequestResponse<IProductBacklogList, number> }
+  { rejectValue: RequestResponse<IBacklogItemList, number> }
 >("fetchPBIs", async (item: { ownerName: string; token: string; filters: IFilters; }, { rejectWithValue }
 ) => {
-  const response: RequestResponse<IProductBacklogList, number> = await Fetching.fetchPBIs(item.ownerName, item.token, item.filters);
+  const response: RequestResponse<IBacklogItemList, number> = await Fetching.fetchPBIs(item.ownerName, item.token, item.filters);
   if (response.code !== 200) { return rejectWithValue(response as RequestResponse<undefined, undefined>); }
-  return response as RequestResponse<IProductBacklogList, number>;
+  return response as RequestResponse<IBacklogItemList, number>;
 });
 
 export const finishPBIThunk = createAsyncThunk<
-  RequestResponse<IProductBacklogItem, number>,
+  RequestResponse<IBacklogItem, number>,
   { ownerName: string; token: string; pbiId: number; },
-  { rejectValue: RequestResponse<IProductBacklogItem, number> }
+  { rejectValue: RequestResponse<IBacklogItem, number> }
 >("finishPBI", async (item: { ownerName: string; token: string; pbiId: number; }, { rejectWithValue }
 ) => {
-  const response: RequestResponse<IProductBacklogItem, number> = await Fetching.finishPBI(item.ownerName, item.token, item.pbiId);
+  const response: RequestResponse<IBacklogItem, number> = await Fetching.finishPBI(item.ownerName, item.token, item.pbiId);
   if (response.code !== 200) { return rejectWithValue(response as RequestResponse<undefined, number>); }
-  return response as RequestResponse<IProductBacklogItem, number>;
+  return response as RequestResponse<IBacklogItem, number>;
 });
 
 export const deletePBIThunk = createAsyncThunk<
@@ -83,39 +83,39 @@ export const deletePBIThunk = createAsyncThunk<
 });
 
 export const addPBIThunk = createAsyncThunk<
-  RequestResponse<IProductBacklogItem, number>,
-  { ownerName: string; token: string; pbi: IAddPBI; },
-  { rejectValue: RequestResponse<IProductBacklogItem, number> }
->("addPBI", async (item: { ownerName: string; token: string; pbi: IAddPBI; }, { rejectWithValue }
+  RequestResponse<IBacklogItem, number>,
+  { ownerName: string; token: string; pbi: IAddBI; },
+  { rejectValue: RequestResponse<IBacklogItem, number> }
+>("addPBI", async (item: { ownerName: string; token: string; pbi: IAddBI; }, { rejectWithValue }
 ) => {
-  const response: RequestResponse<IProductBacklogItem, number> = await Fetching.addPBI(item.ownerName, item.token, item.pbi);
-  if (response.code !== 201) { return rejectWithValue(response as RequestResponse<IProductBacklogItem, number>); }
-  return response as RequestResponse<IProductBacklogItem, number>;
+  const response: RequestResponse<IBacklogItem, number> = await Fetching.addPBI(item.ownerName, item.token, item.pbi);
+  if (response.code !== 201) { return rejectWithValue(response as RequestResponse<IBacklogItem, number>); }
+  return response as RequestResponse<IBacklogItem, number>;
 });
 
 export const estimatePBIThunk = createAsyncThunk<
-  RequestResponse<IProductBacklogItem, number>,
+  RequestResponse<IBacklogItem, number>,
   { ownerName: string; token: string; pbiId: number; hours: number; },
-  { rejectValue: RequestResponse<IProductBacklogItem, number> }
+  { rejectValue: RequestResponse<IBacklogItem, number> }
 >("estimatePBI", async (item: {
   ownerName: string; token: string; pbiId: number;
   hours: number;
 }, { rejectWithValue }
 ) => {
-  const response: RequestResponse<IProductBacklogItem, number> = await Fetching.estimatePBI(item.ownerName, item.token, item.pbiId, item.hours);
-  if (response.code !== 200) { return rejectWithValue(response as RequestResponse<IProductBacklogItem, number>); }
-  return response as RequestResponse<IProductBacklogItem, number>;
+  const response: RequestResponse<IBacklogItem, number> = await Fetching.estimatePBI(item.ownerName, item.token, item.pbiId, item.hours);
+  if (response.code !== 200) { return rejectWithValue(response as RequestResponse<IBacklogItem, number>); }
+  return response as RequestResponse<IBacklogItem, number>;
 });
 
 export const editPBIThunk = createAsyncThunk<
-  RequestResponse<IProductBacklogItem, number>,
-  { ownerName: string; token: string; pbi: IAddPBI; pbiId: number; },
-  { rejectValue: RequestResponse<IProductBacklogItem, number> }
->("editPBI", async (item: { ownerName: string; token: string; pbi: IAddPBI; pbiId: number }, { rejectWithValue }
+  RequestResponse<IBacklogItem, number>,
+  { ownerName: string; token: string; pbi: IAddBI; pbiId: number; },
+  { rejectValue: RequestResponse<IBacklogItem, number> }
+>("editPBI", async (item: { ownerName: string; token: string; pbi: IAddBI; pbiId: number }, { rejectWithValue }
 ) => {
-  const response: RequestResponse<IProductBacklogItem, number> = await Fetching.editPBI(item.ownerName, item.token, item.pbi, item.pbiId);
-  if (response.code !== 200) { return rejectWithValue(response as RequestResponse<IProductBacklogItem, number>); }
-  return response as RequestResponse<IProductBacklogItem, number>;
+  const response: RequestResponse<IBacklogItem, number> = await Fetching.editPBI(item.ownerName, item.token, item.pbi, item.pbiId);
+  if (response.code !== 200) { return rejectWithValue(response as RequestResponse<IBacklogItem, number>); }
+  return response as RequestResponse<IBacklogItem, number>;
 });
 
 //SPRINTS
@@ -212,12 +212,12 @@ export const addTaskThunk = createAsyncThunk<
 export const getPBINamesThunk = createAsyncThunk<
   RequestResponse<string[], number>,
   { ownerName: string; token: string; filters: IFilters; },
-  { rejectValue: RequestResponse<IProductBacklogList, number> }
+  { rejectValue: RequestResponse<IBacklogItemList, number> }
 >("getPBINames", async (item: { ownerName: string; token: string; filters: IFilters; }, { rejectWithValue }
 ) => {
-  const response: RequestResponse<IProductBacklogList, number> = await Fetching.getPBINames(item.ownerName, item.token, item.filters);
-  if (response.code !== 200) { return rejectWithValue(response as RequestResponse<IProductBacklogList, number>); }
-  return response as RequestResponse<IProductBacklogList, number>;
+  const response: RequestResponse<IBacklogItemList, number> = await Fetching.getPBINames(item.ownerName, item.token, item.filters);
+  if (response.code !== 200) { return rejectWithValue(response as RequestResponse<IBacklogItemList, number>); }
+  return response as RequestResponse<IBacklogItemList, number>;
 });
 
 export const assignTaskToPBIThunk = createAsyncThunk<
@@ -263,4 +263,4 @@ export const updateSprintKeys = createAction<number[]>("updateSprintKeys");
 export const updatePBIKeys = createAction<number[]>("updatePBIKeys");
 export const updateSprintLoadingKeys = createAction<number[]>("updateSprintLoadingKeys");
 export const updatePBILoadingKeys = createAction<number[]>("updatePBILoadingKeys");
-export const updateTasks = createAction<IProductBacklogItem>("updateTasks");
+export const updateTasks = createAction<IBacklogItem>("updateTasks");

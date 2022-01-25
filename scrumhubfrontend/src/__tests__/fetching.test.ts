@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import expect from "expect"; // You can use any testing library
-import { IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList } from "../appstate/stateInterfaces";
+import { IPeopleList, IPerson, IBacklogItem, IBacklogItemList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList } from "../appstate/stateInterfaces";
 import config from "../configuration/config";
 import * as Fetching from "../appstate/fetching";
 import { RequestResponse } from "../appstate/response";
@@ -76,7 +76,7 @@ test("getCurrentUserIsSuccessful", async () => {
 test("fetchPBItemsIsSuccessful", async () => {
   const mock = new MockAdapter(axios);
   mock.onGet(`${tstConf.url}/BacklogItem/${tstConf.ownerName}?${filterUrlString(testFilters)}`).reply(200, testPBIList);
-  const response: RequestResponse<IProductBacklogList, number> =
+  const response: RequestResponse<IBacklogItemList, number> =
     await Fetching.fetchPBIs(tstConf.ownerName, config.token,testFilters);
   expect(response).toEqual({ code: 200, response: testPBIList });
 });
@@ -84,7 +84,7 @@ test("fetchPBItemsIsSuccessful", async () => {
 test("finishPBItemIsSuccessful", async () => {
   const mock = new MockAdapter(axios);
   mock.onPatch(`${tstConf.url}/BacklogItem/${tstConf.ownerName}/${tstConf.pbiId}/finish`,{}).reply(200, initPBItem);
-  const response: RequestResponse<IProductBacklogItem, number> =
+  const response: RequestResponse<IBacklogItem, number> =
     await Fetching.finishPBI(tstConf.ownerName, config.token, tstConf.pbiId);
     expect(response).toEqual({ code: 200, response: initPBItem });
 });
@@ -100,7 +100,7 @@ test("deletePBItemIsSuccessful", async () => {
 test("addPBItemIsSuccessful", async () => {
   const mock = new MockAdapter(axios);
   mock.onPost(`${tstConf.url}/BacklogItem/${tstConf.ownerName}`).reply(200, initPBItem);
-  const response: RequestResponse<IProductBacklogItem, number> =
+  const response: RequestResponse<IBacklogItem, number> =
     await Fetching.addPBI(tstConf.ownerName, config.token, initPBItem);
   expect(response).toEqual({ code: 200, response: initPBItem });
 });
@@ -108,7 +108,7 @@ test("addPBItemIsSuccessful", async () => {
 test("estimatePBItemIsSuccessful", async () => {
   const mock = new MockAdapter(axios);
   mock.onPatch(`${tstConf.url}/BacklogItem/${tstConf.ownerName}/${tstConf.pbiId}/estimate`,{ "hours": JSON.stringify(tstConf.hours) }).reply(200, initPBItem);
-  const response: RequestResponse<IProductBacklogItem, number> =
+  const response: RequestResponse<IBacklogItem, number> =
     await Fetching.estimatePBI(tstConf.ownerName, config.token, tstConf.pbiId, tstConf.hours);
     expect(response).toEqual({ code: 200, response: initPBItem });
 });
@@ -116,7 +116,7 @@ test("estimatePBItemIsSuccessful", async () => {
 test("editPBItemIsSuccessful", async () => {
   const mock = new MockAdapter(axios);
   mock.onPut(`${tstConf.url}/BacklogItem/${tstConf.ownerName}/${tstConf.pbiId}`).reply(200, initPBItem);
-  const response: RequestResponse<IProductBacklogItem, number> =
+  const response: RequestResponse<IBacklogItem, number> =
     await Fetching.editPBI(tstConf.ownerName, config.token, initPBItem, tstConf.pbiId);
     expect(response).toEqual({ code: 200, response: initPBItem });
 });
@@ -195,7 +195,7 @@ test("addTaskIsSuccessful", async () => {
 test("getPBINamesIsSuccessful", async () => {
   const mock = new MockAdapter(axios);
   mock.onGet(`${tstConf.url}/BacklogItem/${tstConf.ownerName}?${filterUrlString(testFilters)}`).reply(200, testPBIList);
-  const response: RequestResponse<IProductBacklogList, number> =
+  const response: RequestResponse<IBacklogItemList, number> =
     await Fetching.getPBINames(tstConf.ownerName, config.token,testFilters);
   expect(response).toEqual({ code: 200, response: testPBIList });
 });

@@ -27,7 +27,7 @@
     "src",
     "server",
     "fileTransformer.ts"
-, "src/tests"  ],
+, "src/tests", "src/__tests__"  ],
   "exclude": ["src/node_modules"],
   "baseUrl": "."
 }

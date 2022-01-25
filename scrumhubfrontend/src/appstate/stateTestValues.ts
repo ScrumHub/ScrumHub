@@ -1,7 +1,7 @@
 
 import config from "../configuration/config";
 import { initError, initPeopleList, initPerson, initPBItem, initProductBacklogList, initRepository, initRepositoryList, initSprint, initSprintList, initTaskList, initTask, initKeys, initLoadingKeys } from "./stateInitValues";
-import { ILoginState, IProductBacklogList, IRepositoryList, ISprintList, IState, ITaskList } from "./stateInterfaces";
+import { ILoginState, IBacklogItemList, IRepositoryList, ISprintList, IState, ITaskList } from "./stateInterfaces";
 import { validateUri } from "./stateUtilities";
 
 export const testLoginState: ILoginState = {
@@ -49,7 +49,7 @@ export const testRepositoryList: IRepositoryList  = {
   list: [initRepository],
 }
 
-export const testPBIList: IProductBacklogList = {
+export const testPBIList: IBacklogItemList = {
   pageNumber: 1,
   pageCount: 1,
   pageSize: 10,

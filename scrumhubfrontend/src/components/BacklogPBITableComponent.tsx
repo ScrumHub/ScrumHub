@@ -1,5 +1,5 @@
 import { Table } from "antd";
-import { IPerson, IProductBacklogItem, IState, ITask } from "../appstate/stateInterfaces";
+import { IPerson, IBacklogItem, IState, ITask } from "../appstate/stateInterfaces";
 import { initRowIds, initSortedInfo } from "./utility/commonInitValues";
 import { IRowIds } from "./utility/commonInterfaces";
 import * as Actions from '../appstate/actions';
@@ -14,7 +14,7 @@ export const PBITableComponent = React.memo((props: any) =>{
   const loadPbiKeys = useSelector((appState: IState) => appState.loadingKeys.pbiKeys as number[]);
   const [wait, setWait] = useState(false);
   const loadSprintKeys = useSelector((appState: IState) => appState.loadingKeys.sprintKeys as number[]);
-  const updateExpandedRowKeys = (record: IProductBacklogItem) => {
+  const updateExpandedRowKeys = (record: IBacklogItem) => {
     store.dispatch(Actions.updatePBIKeys([record.id]));
   };
   const handleChange = (pagination: any, filters: any, sorter: any) => {
@@ -37,14 +37,14 @@ export const PBITableComponent = React.memo((props: any) =>{
       showHeader={true}
       //loading={(props.item && isArrayValid(props.item.backlogItems) && pbiKeys.filter((nr:number)=>props.item.backlogItems.map((pbi:IProductBacklogItem)=>{return(pbi.id)}).includes(nr)).length>0)}
       columns={props.pbiColumns}
-      rowKey={(record: IProductBacklogItem) => record.id}
+      rowKey={(record: IBacklogItem) => record.id}
       expandable={{
         expandedRowRender: props.TaskTableforPBI,
         expandedRowKeys: keys,
-        onExpand: (expanded: any, record: IProductBacklogItem) => {
+        onExpand: (expanded: any, record: IBacklogItem) => {
           updateExpandedRowKeys(record);
         },
-        rowExpandable: (record: IProductBacklogItem) => isArrayValid(record.tasks) &&
+        rowExpandable: (record: IBacklogItem) => isArrayValid(record.tasks) &&
            (isArrayValid(props.peopleFilter) ? record.tasks.filter((task: ITask) => {
               return (task.assigness.filter((person: IPerson) => {
                 return (props.peopleFilter.includes(person.login))

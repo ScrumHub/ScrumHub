@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Modal, Form, Typography, Progress, Timeline, Button, message, Popconfirm } from 'antd';
-import { IProductBacklogItem } from '../../appstate/stateInterfaces';
+import { IBacklogItem } from '../../appstate/stateInterfaces';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import { getDate, isArrayValid, validateString } from '../utility/commonFunctions';
 import moment from 'moment';
@@ -61,13 +61,13 @@ export const CompleteSprintPopup: React.FC<ICompleteSprintCollectionCreateFormPr
           key="progress"
           style={{ width: "87%" }}
         >  <>
-            <Progress percent={isArrayValid(data.backlogItems) ? (100 * data.backlogItems.filter((item: IProductBacklogItem) => !item.estimated).length / data.backlogItems.length) : 100}
-              format={percent => `${isArrayValid(data.backlogItems) ? data.backlogItems.filter((item: IProductBacklogItem) => !item.estimated).length : 0} Estimated`} ></Progress>
+            <Progress percent={isArrayValid(data.backlogItems) ? (100 * data.backlogItems.filter((item: IBacklogItem) => !item.estimated).length / data.backlogItems.length) : 100}
+              format={percent => `${isArrayValid(data.backlogItems) ? data.backlogItems.filter((item: IBacklogItem) => !item.estimated).length : 0} Estimated`} ></Progress>
             <br />
-            <Progress percent={isArrayValid(data.backlogItems) ? (100 * data.backlogItems.filter((item: IProductBacklogItem) => !item.finished).length / data.backlogItems.length) : 100}
-              format={percent => `${isArrayValid(data.backlogItems) ? data.backlogItems.filter((item: IProductBacklogItem) => !item.finished).length : 0} To Do`} ></Progress>
-            <Progress percent={isArrayValid(data.backlogItems) ? (100 * data.backlogItems.filter((item: IProductBacklogItem) => item.finished).length / data.backlogItems.length) : 100}
-              format={percent => `${isArrayValid(data.backlogItems) ? data.backlogItems.filter((item: IProductBacklogItem) => item.finished).length : 0} Done`} ></Progress>
+            <Progress percent={isArrayValid(data.backlogItems) ? (100 * data.backlogItems.filter((item: IBacklogItem) => !item.finished).length / data.backlogItems.length) : 100}
+              format={percent => `${isArrayValid(data.backlogItems) ? data.backlogItems.filter((item: IBacklogItem) => !item.finished).length : 0} To Do`} ></Progress>
+            <Progress percent={isArrayValid(data.backlogItems) ? (100 * data.backlogItems.filter((item: IBacklogItem) => item.finished).length / data.backlogItems.length) : 100}
+              format={percent => `${isArrayValid(data.backlogItems) ? data.backlogItems.filter((item: IBacklogItem) => item.finished).length : 0} Done`} ></Progress>
           </>
         </Form.Item>
         <FormItemLabel prefixCls="finishDate" label="Sprint Timeline" required={true} />
@@ -78,13 +78,13 @@ export const CompleteSprintPopup: React.FC<ICompleteSprintCollectionCreateFormPr
         >{moment().endOf('day') < moment(data.finishDate) ?
           <Timeline style={{marginTop:"2%", paddingBottom:0, height:50}}>
             <Timeline.Item  >{moment().endOf('day').format("YYYY/MM/DD").toString()+" "+
-            (isArrayValid(data.backlogItems)?data.backlogItems.filter((pbi:IProductBacklogItem)=>!pbi.finished).length=== 0:true)? "All items finished":"Not all items are finished"}</Timeline.Item>
+            (isArrayValid(data.backlogItems)?data.backlogItems.filter((pbi:IBacklogItem)=>!pbi.finished).length=== 0:true)? "All items finished":"Not all items are finished"}</Timeline.Item>
             <Timeline.Item color="green">{getDate(data.finishDate as string)+" "+validateString(data.title)+" Deadline"} </Timeline.Item>
           </Timeline>:
           <Timeline style={{marginTop:"2%",paddingBottom:0, height:50}}>
             <Timeline.Item color="red">{getDate(data.finishDate as string)+" "+validateString(data.title)+" Deadline"} </Timeline.Item>
           <Timeline.Item>{moment().endOf('day').format("YYYY/MM/DD").toString()+" "+
-            (isArrayValid(data.backlogItems)?data.backlogItems.filter((pbi:IProductBacklogItem)=>!pbi.finished).length=== 0:true)? "All items finished":"Not all items are finished"}</Timeline.Item>
+            (isArrayValid(data.backlogItems)?data.backlogItems.filter((pbi:IBacklogItem)=>!pbi.finished).length=== 0:true)? "All items finished":"Not all items are finished"}</Timeline.Item>
         </Timeline>
           }
         </Form.Item>

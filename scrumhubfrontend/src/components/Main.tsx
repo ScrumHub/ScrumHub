@@ -28,6 +28,7 @@ export function Main(props: any) {
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") : "";
   const sprintID = localStorage.getItem("sprintID") ? localStorage.getItem("sprintID") as string : "";
   const [load, setLoad] = useState(false);
+  const [hasError, setHasError] = useState(true);
   const [logout, setLogout] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(true);
   const navigate = useNavigate();
@@ -74,7 +75,8 @@ export function Main(props: any) {
     }
   }
   useEffect(() => {
-    if (error.hasError && isMessageValid(error.erorMessage)) {
+    if (error.hasError && isMessageValid(error.erorMessage)&&hasError) {
+      setHasError(false);
       message.error(error.erorMessage, 2);
       if (error.erorMessage.includes("not found in ScrumHub") && location.pathname !== "/") {
         store.dispatch(Actions.clearError(localStorage.getItem("ownerName") as string));
@@ -88,6 +90,7 @@ export function Main(props: any) {
       else {
         store.dispatch(Actions.clearError(""));
       }
+      setHasError(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);

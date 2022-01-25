@@ -39,7 +39,7 @@ import { initTask, initSprint } from "../appstate/stateInitValues";
  })
  
  test('cannot create a branch', () => {
- expect(isBranchNotCreated("")).toBe(false)
+ expect(isBranchNotCreated("InReview")).toBe(false)
  })
  
  test('array is valid', () => {

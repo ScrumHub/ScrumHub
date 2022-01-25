@@ -1,7 +1,7 @@
 import * as Actions from "./actions";
 import { createReducer, PayloadAction } from "@reduxjs/toolkit";
 import { RequestResponse } from "./response";
-import { IAssignPBI, ILoginState, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, IState } from "./stateInterfaces";
+import { IAssignBI, ILoginState, IPeopleList, IPerson, IBacklogItem, IBacklogItemList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, IState } from "./stateInterfaces";
 import { initError, loggedOutLoginState, unassignedPBI } from "./stateInitValues";
 import { isArrayValid, isNameFilterValid } from "../components/utility/commonFunctions";
 import { getError, updateStateTasks, updateStateKeys, addStateTask, addStateUnassignedTaskToPBI, updateStatePBI, updateTasksSWR, fetchStateRepos, updateStateOneSprint, addStateRepo, addStatePBI, addStateSprint, updateOnDragStateTasks } from "./stateUtilities";
@@ -106,9 +106,9 @@ export const reducerFunction = (initState: IState) => {
       let newState = _.cloneDeep(state);
       return { ...newState, loading: true };
     },
-    [Actions.finishPBIThunk.fulfilled.toString()]: (state: IState, payload: PayloadAction<RequestResponse<IProductBacklogItem, number>>) => {
+    [Actions.finishPBIThunk.fulfilled.toString()]: (state: IState, payload: PayloadAction<RequestResponse<IBacklogItem, number>>) => {
       let newState = _.cloneDeep(state);
-      return updateStatePBI(newState, payload.payload.response as IProductBacklogItem);
+      return updateStatePBI(newState, payload.payload.response as IBacklogItem);
     },
     [Actions.finishPBIThunk.rejected.toString()]: (state: IState, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
       let newState = _.cloneDeep(state);
@@ -118,9 +118,9 @@ export const reducerFunction = (initState: IState) => {
       let newState = _.cloneDeep(state);
       return { ...newState, loading: true };
     },
-    [Actions.addPBIThunk.fulfilled.toString()]: (state: IState, payload: PayloadAction<RequestResponse<IProductBacklogItem, number>>) => {
+    [Actions.addPBIThunk.fulfilled.toString()]: (state: IState, payload: PayloadAction<RequestResponse<IBacklogItem, number>>) => {
       let newState = _.cloneDeep(state);
-      return(addStatePBI(newState,payload.payload.response as IProductBacklogItem));
+      return(addStatePBI(newState,payload.payload.response as IBacklogItem));
     },
     [Actions.addPBIThunk.rejected.toString()]: (state: IState, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
       let newState = _.cloneDeep(state);
@@ -143,9 +143,9 @@ export const reducerFunction = (initState: IState) => {
       let newState = _.cloneDeep(state);
       return { ...newState, loading: true };
     },
-    [Actions.fetchPBIsThunk.fulfilled.toString()]: (state: IState, payload: PayloadAction<RequestResponse<IProductBacklogList, number>>) => {
+    [Actions.fetchPBIsThunk.fulfilled.toString()]: (state: IState, payload: PayloadAction<RequestResponse<IBacklogItemList, number>>) => {
       let newState = _.cloneDeep(state);
-      const pbisList = payload.payload.response as IProductBacklogList;
+      const pbisList = payload.payload.response as IBacklogItemList;
       if (newState.pbiPage && isArrayValid(newState.pbiPage.list) && newState.pbiPage.list[0].id === 0) {
         newState.pbiPage = { ...pbisList, list: [newState.pbiPage.list[0]].concat(pbisList.list) };
       }
@@ -187,10 +187,10 @@ export const reducerFunction = (initState: IState) => {
       let newState = _.cloneDeep(state);
       return { ...newState, loading: true };
     },
-    [Actions.getPBINamesThunk.fulfilled.toString()]: (state: IState, payload: PayloadAction<RequestResponse<IProductBacklogList, number>>) => {
+    [Actions.getPBINamesThunk.fulfilled.toString()]: (state: IState, payload: PayloadAction<RequestResponse<IBacklogItemList, number>>) => {
       let newState = _.cloneDeep(state);
       newState.error = initError;
-      newState.namedPBI = (payload.payload.response as IProductBacklogList).list as IAssignPBI[];
+      newState.namedPBI = (payload.payload.response as IBacklogItemList).list as IAssignBI[];
       newState.loading = false;
       return newState;
     },
@@ -202,9 +202,9 @@ export const reducerFunction = (initState: IState) => {
       let newState = _.cloneDeep(state);
       return { ...newState, loading: true };
     },
-    [Actions.estimatePBIThunk.fulfilled.toString()]: (state: IState, payload: PayloadAction<RequestResponse<IProductBacklogItem, number>>) => {
+    [Actions.estimatePBIThunk.fulfilled.toString()]: (state: IState, payload: PayloadAction<RequestResponse<IBacklogItem, number>>) => {
       let newState = _.cloneDeep(state);
-      return updateStatePBI(newState, payload.payload.response as IProductBacklogItem);
+      return updateStatePBI(newState, payload.payload.response as IBacklogItem);
     },
     [Actions.estimatePBIThunk.rejected.toString()]: (state: IState, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
       let newState = _.cloneDeep(state);
@@ -214,9 +214,9 @@ export const reducerFunction = (initState: IState) => {
       let newState = _.cloneDeep(state);
       return { ...newState, loading: true };
     },
-    [Actions.editPBIThunk.fulfilled.toString()]: (state: IState, payload: PayloadAction<RequestResponse<IProductBacklogItem, number>>) => {
+    [Actions.editPBIThunk.fulfilled.toString()]: (state: IState, payload: PayloadAction<RequestResponse<IBacklogItem, number>>) => {
       let newState = _.cloneDeep(state);
-      return updateStatePBI(newState, payload.payload.response as IProductBacklogItem);
+      return updateStatePBI(newState, payload.payload.response as IBacklogItem);
     },
     [Actions.editPBIThunk.rejected.toString()]: (state: IState, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
       let newState = _.cloneDeep(state);
@@ -304,7 +304,7 @@ export const reducerFunction = (initState: IState) => {
     },
     [Actions.updateTasks.type]: (state: IState, payload: PayloadAction<any>) => {
       let newState = _.cloneDeep(state);
-      const item = payload.payload as IProductBacklogItem;
+      const item = payload.payload as IBacklogItem;
       return updateStatePBI(newState, item);
     },
     [Actions.fetchPBITasksThunk.rejected.toString()]: (state: IState, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
@@ -339,7 +339,7 @@ export const reducerFunction = (initState: IState) => {
       let newState = _.cloneDeep(state);
       return { ...newState, loading: true };
     },
-    [Actions.assignTaskToPBIThunk.fulfilled.toString()]: (state: IState, payload: PayloadAction<RequestResponse<IProductBacklogItem, number>>) => {
+    [Actions.assignTaskToPBIThunk.fulfilled.toString()]: (state: IState, payload: PayloadAction<RequestResponse<IBacklogItem, number>>) => {
       let newState = _.cloneDeep(state);
       return updateOnDragStateTasks(newState,payload.payload.response as ITask);
     },

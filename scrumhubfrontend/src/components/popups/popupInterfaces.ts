@@ -1,23 +1,23 @@
-import { IAddPBI, IFilters, IProductBacklogItem, ISprint } from "../../appstate/stateInterfaces";
+import { IAddBI, IFilters, IBacklogItem, ISprint } from "../../appstate/stateInterfaces";
 import { Moment } from "moment";
 //pbi
 export interface IAddPBICollectionCreateFormProps {
-    data: IAddPBI;
+    data: IAddBI;
     visible: boolean;
-    onCreate: (values: IAddPBI) => void;
+    onCreate: (values: IAddBI) => void;
     onCancel: () => void;
 }
 export interface IEditPBICollectionCreateFormProps {
-    data: IAddPBI;
+    data: IAddBI;
     visible: boolean;
-    onCreate: (values: IAddPBI) => void;
+    onCreate: (values: IAddBI) => void;
     onCancel: () => void;
     onDelete: () => void;
     onFinish: () => void;
 }
 
 export interface IEstimatePBICollectionCreateFormProps {
-    data: IProductBacklogItem;
+    data: IBacklogItem;
     visible: boolean;
     onCreate: (values: { expectedTimeInHours: number }) => void;
     onCancel: () => void;
@@ -26,11 +26,11 @@ export interface IEstimatePBICollectionCreateFormProps {
 //sprint
 export interface IUpdateSprintPBIsValues {
     goal: string;
-    backlogItems: IProductBacklogItem[];
+    backlogItems: IBacklogItem[];
 }
 export interface IUpdateSprintPBIsCollectionCreateFormProps {
     data: ISprint;
-    pbiData: IProductBacklogItem[];
+    pbiData: IBacklogItem[];
     visible: boolean;
     onCreate: (values: IUpdateSprintPBIsValues) => void;
     onCancel: () => void;
@@ -51,7 +51,7 @@ export interface IUpdateSprintCollectionCreateFormProps {
 export interface IAddSprintCollectionCreateFormProps {
     data: ISprint;
     error: string;
-    pbiData: IProductBacklogItem[];
+    pbiData: IBacklogItem[];
     visible: boolean;
     onCreate: (values: ISprint) => void;
     onCancel: () => void;

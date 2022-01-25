@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Avatar, Badge, Button, Dropdown, Input, Space, } from 'antd';
 import 'antd/dist/antd.css';
 import "./Project.css";
-import { IAddPBI, IFilters, IPeopleList, IProductBacklogItem, IProductBacklogList, ISprint, IState } from '../appstate/stateInterfaces';
+import { IAddBI, IFilters, IPeopleList, IBacklogItem, IBacklogItemList, ISprint, IState } from '../appstate/stateInterfaces';
 import { useSelector } from 'react-redux';
 import { DownOutlined, FilterOutlined, UserOutlined } from '@ant-design/icons';
 import { ProductBacklog } from './ProductBacklog';
@@ -19,7 +19,7 @@ const { Search } = Input;
 export const Project = React.memo((props: any) => {
   const isLoggedIn = useSelector((appState: IState) => appState.loginState.isLoggedIn);
   const token = useSelector((appState: IState) => appState.loginState.token);
-  const pbiPage = useSelector((appState: IState) => appState.pbiPage as IProductBacklogList);
+  const pbiPage = useSelector((appState: IState) => appState.pbiPage as IBacklogItemList);
   const [initialRefresh, setInitialRefresh] = useState(true);
   const [infos, setInfos] = useState(initFilterSortInfo);
   const [filterMenu, setFilterMenu] = useState(initFilterMenu);
@@ -32,7 +32,7 @@ export const Project = React.memo((props: any) => {
   const [isAddSprint, setIsAddSprint] = useState(false);
   const error = useSelector((appState: IState) => appState.error);
 
-  const addPBI = (pbi: IAddPBI) => {
+  const addPBI = (pbi: IAddBI) => {
     pbi.acceptanceCriteria = pbi.acceptanceCriteria.filter((value: any) => { return (typeof (value) === "string"); });
     try {
       store.dispatch(
@@ -49,7 +49,7 @@ export const Project = React.memo((props: any) => {
   };
 
   const addSprint = (sprint: ISprint) => {
-    const ids = sprint.backlogItems.map((value: IProductBacklogItem) => { return ((value.isInSprint ? value.id.toString() : "")) }).filter((x: string) => x !== "");
+    const ids = sprint.backlogItems.map((value: IBacklogItem) => { return ((value.isInSprint ? value.id.toString() : "")) }).filter((x: string) => x !== "");
     try {
       store.dispatch(
         Actions.addSprintThunk({

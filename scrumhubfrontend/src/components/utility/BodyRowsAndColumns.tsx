@@ -1,11 +1,11 @@
 import { Badge, Button, Dropdown, Progress, Tag } from "antd";
-import { IPeopleList, IProductBacklogItem, ISprint, IState, ITask } from "../../appstate/stateInterfaces";
+import { IPeopleList, IBacklogItem, ISprint, IState, ITask } from "../../appstate/stateInterfaces";
 import * as Actions from '../../appstate/actions';
 import "../Home.css";
 import "../Main.css";
 import { CalendarOutlined, CheckOutlined, CloseOutlined, DownOutlined, EditOutlined, HomeOutlined, SyncOutlined } from "@ant-design/icons";
 import { dateFormat, isArrayValid } from "./commonFunctions";
-import React from "react";
+import React, { useState } from "react";
 import { assignPerson } from "./BacklogHandlers";
 import { PBIMenuWithPeople, PBIMenuWithPriorities } from "./LoadAnimations";
 import { store } from "../../appstate/store";
@@ -58,28 +58,28 @@ export const peopleDropdown = (record: ITask, token: string, ownerName: string, 
         </span>),]} > </Dropdown.Button>)
 };
 
-export const priorityPBItem = (item: IProductBacklogItem) => {
+export const priorityPBItem = (item: IBacklogItem) => {
   return (item.id !== 0 ? <Tag style={{ cursor: "pointer" }} color={backlogColors[item.priority % 3]}>{backlogPriorities[item.priority % 3]}</Tag> : <Tag className='transparentItem' color={backlogColors[0]}>{backlogPriorities[0]}</Tag>);
 }
 
 
 /*pbi columns functionalities*/
-export const pbiNameCol=(nameFilter, sortedInfo, setSelectedPBI: React.Dispatch<React.SetStateAction<IProductBacklogItem>>, isModal: IModals, setIsModal: React.Dispatch<React.SetStateAction<IModals>>)=>    {return({
-  title: 'Name', width: "25%", sorter: (a: IProductBacklogItem, b: IProductBacklogItem) => a.name.length - b.name.length, sortOrder: sortedInfo && sortedInfo.columnKey === 'name' && sortedInfo.order,
-  filterIcon: <></>, filters: [], filteredValue: nameFilter || null, onFilter: (value: any, record: IProductBacklogItem) => isArrayValid(nameFilter) ? record.name.toLowerCase().includes(nameFilter.at(0).toLowerCase()) : '',
-  align: "left" as const, key: 'name', render: (item: IProductBacklogItem) => { return (<div className={item.id === 0 ? '' : 'link-button'} onClick={() => { if (item.id !== 0) { setSelectedPBI(item); setIsModal({ ...isModal, editPBI: true }); } }}>{item.name}</div>) },
+export const pbiNameCol=(nameFilter, sortedInfo, setSelectedPBI: React.Dispatch<React.SetStateAction<IBacklogItem>>, isModal: IModals, setIsModal: React.Dispatch<React.SetStateAction<IModals>>)=>    {return({
+  title: 'Name', width: "25%", sorter: (a: IBacklogItem, b: IBacklogItem) => a.name.length - b.name.length, sortOrder: sortedInfo && sortedInfo.columnKey === 'name' && sortedInfo.order,
+  filterIcon: <></>, filters: [], filteredValue: nameFilter || null, onFilter: (value: any, record: IBacklogItem) => isArrayValid(nameFilter) ? record.name.toLowerCase().includes(nameFilter.at(0).toLowerCase()) : '',
+  align: "left" as const, key: 'name', render: (item: IBacklogItem) => { return (<div className={item.id === 0 ? '' : 'link-button'} onClick={() => { if (item.id !== 0) { setSelectedPBI(item); setIsModal({ ...isModal, editPBI: true }); } }}>{item.name}</div>) },
 })
 }
 
 export const pbiProgressCol = {
-  title: 'Progress', width: "20%", key: 'progressBar', align: "center" as const, render: (item: IProductBacklogItem) => {
+  title: 'Progress', width: "20%", key: 'progressBar', align: "center" as const, render: (item: IBacklogItem) => {
     return (<span><Progress width={25} size='small' type="line" showInfo={false} percent={item.tasks && item.tasks.length > 0 ? 100 * (item.tasks.filter((item: ITask) => item.finished).length / item.tasks.length) : 100}
     ></Progress></span>
     )
   }
 };
 export const pbiProgressCol2 = {
-  title: 'Tasks To Do', width: "15%", key: 'tasks', align: "center" as const, render: (item: IProductBacklogItem) => {
+  title: 'Tasks To Do', width: "15%", key: 'tasks', align: "center" as const, render: (item: IBacklogItem) => {
     const filtered = isArrayValid(item.tasks) ? item.tasks.filter((item: ITask) => !item.finished).length : 0;
     return (
       <Progress width={25} percent={100} size='small' type="dashboard" status={`${filtered === 0 ? "success" : "exception"}`}
@@ -88,33 +88,35 @@ export const pbiProgressCol2 = {
 };
 
 export const pbiProgressTagCol = {
-  title: 'Tasks Done', width: "20%", key: 'tag', align: "center" as const, render: (item: IProductBacklogItem) => {
+  title: 'Tasks Done', width: "20%", key: 'tag', align: "center" as const, render: (item: IBacklogItem) => {
     return (<Tag style={{ cursor: "pointer" }} color={item.estimated ? (item.expectedTimeInHours > 10 ? "red" : "green") : "purple"}>
       {(item.tasks && item.tasks.length > 0 ? (item.tasks.filter((item: ITask) => item.finished).length + "/" + item.tasks.length) : "0/0") + " Tasks Done"}</Tag>)
   }
 };
 
 export const pbiStatusCol ={
-  title: 'Status', align: "center" as const, width: "10%", key: 'status', render: (item: IProductBacklogItem) => 
+  title: 'Status', align: "center" as const, width: "10%", key: 'status', render: (item: IBacklogItem) => 
   item.finished? <CheckOutlined style={{color:"green"}} hidden={item.id===0}/>:<CloseOutlined style={{color:"red"}} hidden={item.id===0}/>
 
 }
 
-export function PriorityDropdown(props: { loading: boolean; token: string; ownerName: string; record: IProductBacklogItem; }) {
+export function PriorityDropdown(props: { loading: boolean; token: string; ownerName: string; record: IBacklogItem; }) {
   const keys = useSelector((appState: IState) => appState.loadingKeys.pbiKeys);
+  const [change, setChange] = useState(false);
   return (
     <Dropdown.Button trigger={["click"]} style={{ cursor: "pointer" }} placement='bottomCenter' type="text"
       overlay={<PBIMenuWithPriorities itemSelected={function (priority: number): void {
         if (priority !== props.record.priority) {
+          setChange(true);
           if (!keys.includes(props.record.id)) { store.dispatch(Actions.updatePBILoadingKeys([props.record.id])); }
           store.dispatch(Actions.editPBIThunk({
             ownerName: props.ownerName, token: props.token, pbi: { ...props.record, priority: priority },
             pbiId: props.record.id,
-          })).then((response: any) => { if (response.payload && response.payload.code === 200) { store.dispatch(Actions.updatePBILoadingKeys([props.record.id])); } })
+          })).then((response: any) => { if (response.payload && response.payload.code === 200) { store.dispatch(Actions.updatePBILoadingKeys([props.record.id])); }setChange(true); })
         }
       }} visible={true} priority={props.record.priority} />}
       buttonsRender={() => [
-        <></>, props.loading ? <Tag icon={<SyncOutlined spin />} color="processing">
+        <></>, props.loading && change ? <Tag icon={<SyncOutlined spin />} color="processing">
           SYNCING
         </Tag> :
           props.record.id !== 0 ? <Tag style={{ cursor: "pointer" }} color={backlogColors[props.record.priority % 3]}>{

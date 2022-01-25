@@ -2,7 +2,7 @@ import type { APIResponse, RequestResponse } from "./response";
 import config from "../configuration/config";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import axios, { AxiosResponse } from "axios";
-import { IAddPBI, IFilters, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList } from "./stateInterfaces";
+import { IAddBI, IFilters, IPeopleList, IPerson, IBacklogItem, IBacklogItemList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList } from "./stateInterfaces";
 import { filterUrlString, getHeader, getHeaderAcceptAll, getHeaderWithContent } from "./stateUtilities";
 import { isNull } from "lodash";
 import { errorObject } from "./stateInitValues";
@@ -74,7 +74,7 @@ export function getCurrentUser(token: string
 }
 
 export function fetchPBIs(ownerName: any, token: string, filters: IFilters
-): Promise<RequestResponse<IProductBacklogList, number>> {
+): Promise<RequestResponse<IBacklogItemList, number>> {
   return getResponse(
     axios.get(
       `${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}?${filterUrlString(filters)}`,
@@ -84,7 +84,7 @@ export function fetchPBIs(ownerName: any, token: string, filters: IFilters
 }
 
 export function finishPBI(ownerName: string, token: string, pbiId: number
-): Promise<RequestResponse<IProductBacklogItem, number>> {
+): Promise<RequestResponse<IBacklogItem, number>> {
   return getResponse(
     axios.patch(
       `${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}/${pbiId}/finish`,
@@ -105,8 +105,8 @@ export function deletePBI(ownerName: string, token: string, pbild: number
   );
 }
 
-export function addPBI(ownerName: string, token: string, pbi: IAddPBI
-): Promise<RequestResponse<IProductBacklogItem, number>> {
+export function addPBI(ownerName: string, token: string, pbi: IAddBI
+): Promise<RequestResponse<IBacklogItem, number>> {
   return getResponse(
     axios.post(
       `${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}`,
@@ -123,7 +123,7 @@ export function addPBI(ownerName: string, token: string, pbi: IAddPBI
 }
 
 export function estimatePBI(ownerName: string, token: string, pbiId: number, hours: number
-): Promise<RequestResponse<IProductBacklogItem, number>> {
+): Promise<RequestResponse<IBacklogItem, number>> {
   return getResponse(
     axios.patch(
       `${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}/${pbiId}/estimate`,
@@ -132,8 +132,8 @@ export function estimatePBI(ownerName: string, token: string, pbiId: number, hou
   );
 }
 
-export function editPBI(ownerName: string, token: string, pbi: IAddPBI, pbiId: number
-): Promise<RequestResponse<IProductBacklogItem, number>> {
+export function editPBI(ownerName: string, token: string, pbi: IAddBI, pbiId: number
+): Promise<RequestResponse<IBacklogItem, number>> {
   return getResponse(
     axios.put(
       `${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}/${pbiId}`,
@@ -232,7 +232,7 @@ export function addTask(token: string, ownerName: string, pbiId: number, name: s
 }
 
 export function getPBINames(ownerName: any, token: string, filters: IFilters
-): Promise<RequestResponse<IProductBacklogList, number>> {
+): Promise<RequestResponse<IBacklogItemList, number>> {
   return getResponse(
     axios.get(
       `${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}?${filterUrlString(filters)}`,

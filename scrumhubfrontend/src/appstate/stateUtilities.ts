@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { isArrayValid, isItemDefined, isNameFilterValid } from "../components/utility/commonFunctions";
 import { initError, initProductBacklogList, unassignedPBI } from "./stateInitValues";
-import { IError, IFilters, IProductBacklogItem, ISprint, ITask, ITaskList, IState, IRepositoryList, IRepository } from "./stateInterfaces";
+import { IError, IFilters, IBacklogItem, ISprint, ITask, ITaskList, IState, IRepositoryList, IRepository } from "./stateInterfaces";
 
 /**
  * @returns Request header
@@ -70,6 +70,24 @@ export function filterUrlString(filters: IFilters) {
 }
 
 /**
+ * Removes duplicate tasks
+ * @param {ITask[]} tasks Array of tasks to be filtered by unique id
+ * @returns {ITask[]} Array of tasks, with each task having unique id
+ */
+export function filterTasksById(tasks:ITask[]){
+  return[...new Map(tasks.map(item =>[item['id'], item])).values()];
+}
+
+/**
+ * Removes duplicate tasks from pbi
+ * @param {IBacklogItem} pbi Backlog Item with an array of tasks to be filtered by unique id
+ * @returns {IBacklogItem} Backlog Item with an array of of tasks, with each task having unique id
+ */
+export function filterPbiTasksById(pbi:IBacklogItem){
+  return {...pbi, tasks:isArrayValid(pbi.tasks)?filterTasksById(pbi.tasks):[]};
+}
+
+/**
  * Removes duplicate key and concates expanded keys arrays
  **/
 export function updateStateKeys(oldKeys: number[], newKeys: number[]) {
@@ -78,8 +96,8 @@ export function updateStateKeys(oldKeys: number[], newKeys: number[]) {
 
 export function updateStateTasks(newState: IState, task: ITask) {
   newState.error = initError;
-  if (newState.openSprint && isArrayValid(newState.openSprint.backlogItems) && newState.openSprint.backlogItems.findIndex((pbi: IProductBacklogItem) => pbi.id === task.pbiId) !== -1) {
-    const index = newState.openSprint.backlogItems.findIndex((pbi: IProductBacklogItem) => pbi.id === task.pbiId);
+  if (newState.openSprint && isArrayValid(newState.openSprint.backlogItems) && newState.openSprint.backlogItems.findIndex((pbi: IBacklogItem) => pbi.id === task.pbiId) !== -1) {
+    const index = newState.openSprint.backlogItems.findIndex((pbi: IBacklogItem) => pbi.id === task.pbiId);
     newState.openSprint.backlogItems[index] = {
       ...newState.openSprint.backlogItems[index],
       tasks: newState.openSprint.backlogItems[index].tasks.map((t: ITask) => {
@@ -90,8 +108,8 @@ export function updateStateTasks(newState: IState, task: ITask) {
       })
     };
   }
-  if (newState.pbiPage && isArrayValid(newState.pbiPage.list) && (task.isAssignedToPBI ? newState.pbiPage.list.findIndex((pbi: IProductBacklogItem) => pbi.id === task.pbiId) : newState.pbiPage.list.findIndex((pbi: IProductBacklogItem) => pbi.id === 0)) !== -1) {
-    const index = task.isAssignedToPBI ? newState.pbiPage.list.findIndex((pbi: IProductBacklogItem) => pbi.id === task.pbiId) : newState.pbiPage.list.findIndex((pbi: IProductBacklogItem) => pbi.id === 0);
+  if (newState.pbiPage && isArrayValid(newState.pbiPage.list) && (task.isAssignedToPBI ? newState.pbiPage.list.findIndex((pbi: IBacklogItem) => pbi.id === task.pbiId) : newState.pbiPage.list.findIndex((pbi: IBacklogItem) => pbi.id === 0)) !== -1) {
+    const index = task.isAssignedToPBI ? newState.pbiPage.list.findIndex((pbi: IBacklogItem) => pbi.id === task.pbiId) : newState.pbiPage.list.findIndex((pbi: IBacklogItem) => pbi.id === 0);
     newState.pbiPage.list[index] = {
       ...newState.pbiPage.list[index],
       tasks: newState.pbiPage.list[index].tasks.map((t: ITask) => {
@@ -104,7 +122,7 @@ export function updateStateTasks(newState: IState, task: ITask) {
   }
   else if (newState.sprintPage && isArrayValid(newState.sprintPage.list)) {
     newState.sprintPage.list = newState.sprintPage.list.map((sprint: ISprint) => {
-      sprint.backlogItems = sprint.backlogItems.map((item: IProductBacklogItem) => {
+      sprint.backlogItems = sprint.backlogItems.map((item: IBacklogItem) => {
         if (item.id === task.pbiId && isArrayValid(item.tasks)) {
           item.tasks = item.tasks.map((t: ITask) => {
             if (t.id === task.id) {
@@ -122,9 +140,9 @@ export function updateStateTasks(newState: IState, task: ITask) {
   return (newState)
 };
 
-export function filterPBIsList(pbis:IProductBacklogItem[], task:ITask){
+export function filterPBIsList(pbis:IBacklogItem[], task:ITask){
 let list = _.cloneDeep(pbis);
-return(list.map((pbi: IProductBacklogItem) => {
+return(list.map((pbi: IBacklogItem) => {
   if (pbi.id === task.pbiId) {
     return ({ ...pbi, tasks: isArrayValid(pbi.tasks) ? pbi.tasks.concat([task]) : [task] });
   } else {
@@ -154,12 +172,12 @@ export function updateOnDragStateTasks(newState: IState, task: ITask) {
 export function addStateTask(state: IState, task: ITask) {
   let newState = state;
   newState.error = initError;
-  if (newState.openSprint && isArrayValid(newState.openSprint.backlogItems) && newState.openSprint.backlogItems.findIndex((pbi: IProductBacklogItem) => pbi.id === task.pbiId) !== -1) {
-    const index = newState.openSprint.backlogItems.findIndex((pbi: IProductBacklogItem) => pbi.id === task.pbiId);
+  if (newState.openSprint && isArrayValid(newState.openSprint.backlogItems) && newState.openSprint.backlogItems.findIndex((pbi: IBacklogItem) => pbi.id === task.pbiId) !== -1) {
+    const index = newState.openSprint.backlogItems.findIndex((pbi: IBacklogItem) => pbi.id === task.pbiId);
     newState.openSprint.backlogItems[index] = { ...newState.openSprint.backlogItems[index], tasks: isArrayValid(newState.openSprint.backlogItems[index].tasks) ? newState.openSprint.backlogItems[index].tasks.concat([task]) : [task] };
   }
-  if (newState.pbiPage && isArrayValid(newState.pbiPage.list) && (task.isAssignedToPBI ? newState.pbiPage.list.findIndex((pbi: IProductBacklogItem) => pbi.id === task.pbiId) : newState.pbiPage.list.findIndex((pbi: IProductBacklogItem) => pbi.id === 0)) !== -1) {
-    const index = task.isAssignedToPBI ? newState.pbiPage.list.findIndex((pbi: IProductBacklogItem) => pbi.id === task.pbiId) : newState.pbiPage.list.findIndex((pbi: IProductBacklogItem) => pbi.id === 0);
+  if (newState.pbiPage && isArrayValid(newState.pbiPage.list) && (task.isAssignedToPBI ? newState.pbiPage.list.findIndex((pbi: IBacklogItem) => pbi.id === task.pbiId) : newState.pbiPage.list.findIndex((pbi: IBacklogItem) => pbi.id === 0)) !== -1) {
+    const index = task.isAssignedToPBI ? newState.pbiPage.list.findIndex((pbi: IBacklogItem) => pbi.id === task.pbiId) : newState.pbiPage.list.findIndex((pbi: IBacklogItem) => pbi.id === 0);
     newState.pbiPage.list[index] = {
       ...newState.pbiPage.list[index],
       tasks: isArrayValid(newState.pbiPage.list[index].tasks) ?
@@ -168,7 +186,7 @@ export function addStateTask(state: IState, task: ITask) {
   }
   else if (newState.sprintPage && isArrayValid(newState.sprintPage.list)) {
     newState.sprintPage.list = newState.sprintPage.list.map((sprint: ISprint) => {
-      sprint.backlogItems = sprint.backlogItems.map((item: IProductBacklogItem) => {
+      sprint.backlogItems = sprint.backlogItems.map((item: IBacklogItem) => {
         if (item.id === task.pbiId) {
           item.tasks = isArrayValid(item.tasks) ? item.tasks.concat([task]) : [task];
         }
@@ -181,20 +199,22 @@ export function addStateTask(state: IState, task: ITask) {
   return (newState)
 };
 
-export function addStateUnassignedTaskToPBI(state: IState, tasks: ITaskList) {
+export function addStateUnassignedTaskToPBI(state: IState, temp: ITaskList) {
   let newState = state;
-  const pbisList = [unassignedPBI] as IProductBacklogItem[];
-  if (tasks && tasks.list.length > 0) {
+  const pbisList = [unassignedPBI] as IBacklogItem[];
+  if (temp && isArrayValid(temp.list)) {
+    const tasks =  filterTasksById(temp.list);
+    console.log(tasks);
     if (!newState.pbiPage || !isArrayValid(newState.pbiPage.list)) {
       newState.pbiPage = initProductBacklogList;
     }
-    else if (newState.pbiPage.list.findIndex((pbi: IProductBacklogItem) => pbi.id === 0) === -1) {
+    else if (newState.pbiPage.list.findIndex((pbi: IBacklogItem) => pbi.id === 0) === -1) {
       newState.pbiPage.list = pbisList.concat(newState.pbiPage.list);//add empty pbi that holds unassigned tasks
     }
     newState.pbiPage = {
-      ...newState.pbiPage, list: newState.pbiPage.list.map((item: IProductBacklogItem) => {
-        if (item.id === 0 && isArrayValid(tasks.list)) {
-          return { ...item, tasks: tasks.list };
+      ...newState.pbiPage, list: newState.pbiPage.list.map((item: IBacklogItem) => {
+        if (item.id === 0 && isArrayValid(tasks)) {
+          return { ...item, tasks: tasks };
         }
         return item;
       })
@@ -206,24 +226,26 @@ export function addStateUnassignedTaskToPBI(state: IState, tasks: ITaskList) {
   return (newState);
 }
 
-export function updateTasksSWR(state: IState, tasks: ITaskList) {
+export function updateTasksSWR(state: IState, temp: ITaskList) {
   let newState = state;
   newState.error = initError;
-  if (tasks && isArrayValid(tasks.list)) {
-    const pbiIndex = tasks.list.at(0)?.isAssignedToPBI ? tasks.list.at(0)?.pbiId as number : 0;
-    if (newState.openSprint && isArrayValid(newState.openSprint.backlogItems) && newState.openSprint.backlogItems.findIndex((pbi: IProductBacklogItem) => pbi.id === pbiIndex) !== -1) {
-      const index = newState.openSprint.backlogItems.findIndex((pbi: IProductBacklogItem) => pbi.id === pbiIndex);
-      newState.openSprint.backlogItems[index] = { ...newState.openSprint.backlogItems[index], tasks: tasks.list };
+  if (temp && isArrayValid(temp.list)) {
+    const tasks =  filterTasksById(temp.list);
+    console.log(tasks);
+    const pbiIndex = tasks.at(0)?.isAssignedToPBI ? tasks.at(0)?.pbiId as number : 0;
+    if (newState.openSprint && isArrayValid(newState.openSprint.backlogItems) && newState.openSprint.backlogItems.findIndex((pbi: IBacklogItem) => pbi.id === pbiIndex) !== -1) {
+      const index = newState.openSprint.backlogItems.findIndex((pbi: IBacklogItem) => pbi.id === pbiIndex);
+      newState.openSprint.backlogItems[index] = { ...newState.openSprint.backlogItems[index], tasks: tasks };
     }
-    if (newState.pbiPage && isArrayValid(newState.pbiPage.list) && (newState.pbiPage.list.findIndex((pbi: IProductBacklogItem) => pbi.id === pbiIndex)) !== -1) {
-      const index = newState.pbiPage.list.findIndex((pbi: IProductBacklogItem) => pbi.id === pbiIndex);
-      newState.pbiPage.list[index] = { ...newState.pbiPage.list[index], tasks: tasks.list };
+    if (newState.pbiPage && isArrayValid(newState.pbiPage.list) && (newState.pbiPage.list.findIndex((pbi: IBacklogItem) => pbi.id === pbiIndex)) !== -1) {
+      const index = newState.pbiPage.list.findIndex((pbi: IBacklogItem) => pbi.id === pbiIndex);
+      newState.pbiPage.list[index] = { ...newState.pbiPage.list[index], tasks: tasks };
     }
     else if (newState.sprintPage && isArrayValid(newState.sprintPage.list)) {
       newState.sprintPage.list = newState.sprintPage.list.map((sprint: ISprint) => {
-        sprint.backlogItems = sprint.backlogItems.map((item: IProductBacklogItem) => {
+        sprint.backlogItems = sprint.backlogItems.map((item: IBacklogItem) => {
           if (item.id === pbiIndex) {
-            item.tasks = tasks.list;
+            item.tasks = tasks;
           }
           return item;
         });
@@ -238,24 +260,24 @@ export function updateTasksSWR(state: IState, tasks: ITaskList) {
 
 }
 
-export function updateStatePBI(state: IState, pbi: IProductBacklogItem) {
+export function updateStatePBI(state: IState, pbi: IBacklogItem) {
   let newState = state;
   if (pbi.isInSprint) {
     if (newState.sprintPage && isArrayValid(newState.sprintPage.list)) {
       const index = newState.sprintPage.list.findIndex((sprint: ISprint) => sprint.sprintNumber === pbi.sprintNumber);
       if (index !== -1) {
-        const pbiIndex = newState.sprintPage.list[index].backlogItems.findIndex((pb: IProductBacklogItem) => pb.id === pbi.id);
-        newState.sprintPage.list[index].backlogItems[pbiIndex] = pbi;
+        const pbiIndex = newState.sprintPage.list[index].backlogItems.findIndex((pb: IBacklogItem) => pb.id === pbi.id);
+        newState.sprintPage.list[index].backlogItems[pbiIndex] = filterPbiTasksById(pbi);
       }
     }
     if (newState.openSprint && isArrayValid(newState.openSprint.backlogItems) && newState.openSprint.sprintNumber === pbi.sprintNumber) {
-      const pbiIndex = newState.openSprint.backlogItems.findIndex((pb: IProductBacklogItem) => pb.id === pbi.id);
-      newState.openSprint.backlogItems[pbiIndex] = pbi;
+      const pbiIndex = newState.openSprint.backlogItems.findIndex((pb: IBacklogItem) => pb.id === pbi.id);
+      newState.openSprint.backlogItems[pbiIndex] = filterPbiTasksById(pbi);
     }
   }
   else {
-    const index = newState.pbiPage.list.findIndex((pb: IProductBacklogItem) => pb.id === pbi.id);
-    newState.pbiPage.list[index] = pbi;
+    const index = newState.pbiPage.list.findIndex((pb: IBacklogItem) => pb.id === pbi.id);
+    newState.pbiPage.list[index] = filterPbiTasksById(pbi);
   }
   newState.error = initError;
   newState.loading = false;
@@ -300,7 +322,7 @@ export function addStateRepo(newState: IState, repo: IRepository) {
   newState.error = initError;
   return (newState);
 }
-export function addStatePBI(newState: IState, pbi: IProductBacklogItem) {
+export function addStatePBI(newState: IState, pbi: IBacklogItem) {
   if (newState.pbiPage && isArrayValid(newState.pbiPage.list)) {
     newState.pbiPage.list = newState.pbiPage.list.concat([pbi]);
   } else { newState.pbiPage.list = [pbi]; }
@@ -311,7 +333,7 @@ export function addStatePBI(newState: IState, pbi: IProductBacklogItem) {
 
 export function addStateSprint(newState: IState, sprint: ISprint) {
   if (isArrayValid(sprint.backlogItems) && newState.pbiPage && isArrayValid(newState.pbiPage.list)) {
-    newState.pbiPage = { ...newState.pbiPage, list: newState.pbiPage.list.filter((pbi: IProductBacklogItem) => !sprint.backlogItems.filter((pbi2: IProductBacklogItem) => pbi.id === pbi2.id).length) };
+    newState.pbiPage = { ...newState.pbiPage, list: newState.pbiPage.list.filter((pbi: IBacklogItem) => !sprint.backlogItems.filter((pbi2: IBacklogItem) => pbi.id === pbi2.id).length) };
   }
   if (newState.sprintPage && isArrayValid(newState.sprintPage.list)) {
     newState.sprintPage.list = newState.sprintPage.list.concat([sprint]);

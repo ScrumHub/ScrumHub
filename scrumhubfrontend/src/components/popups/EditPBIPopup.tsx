@@ -5,7 +5,7 @@ import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import { backlogColors, backlogPriorities } from '../utility/BodyRowsAndColumns';
 import { formItemLayoutWithOutLabel } from '../utility/commonInitValues';
 import { IEditPBICollectionCreateFormProps } from './popupInterfaces';
-import { IAddPBI } from '../../appstate/stateInterfaces';
+import { IAddBI } from '../../appstate/stateInterfaces';
 
 export const EditPBIPopup: React.FC<IEditPBICollectionCreateFormProps> = ({
   data,
@@ -49,7 +49,7 @@ export const EditPBIPopup: React.FC<IEditPBICollectionCreateFormProps> = ({
         <Button key="SaveInEditPopup" type="primary" onClick={() => {
           form
             .validateFields()
-            .then((values: IAddPBI) => {
+            .then((values: IAddBI) => {
               form.resetFields();
               onCreate(values);
             })

@@ -1,6 +1,6 @@
 import { tableKeys } from "../components/utility/commonInterfaces";
 import config from "../configuration/config"
-import { IAddPBI, IAssignPBI, IFilters, ILoginState, IPBIFilter, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, IState } from "./stateInterfaces";
+import { IAddBI, IAssignBI, IFilters, ILoginState, IBIFilter, IPeopleList, IPerson, IBacklogItem, IBacklogItemList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, IState } from "./stateInterfaces";
 import { validateUri } from "./stateUtilities";
 const path = require("path");
 require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
@@ -32,7 +32,7 @@ export const initTaskList: ITaskList = {
   realSize: 5,
   list: [],
 };
-export const initPBItem: IProductBacklogItem = {
+export const initPBItem: IBacklogItem = {
   id: 0,
   name: "Item",
   finished: false,
@@ -45,7 +45,7 @@ export const initPBItem: IProductBacklogItem = {
   acceptanceCriteria: ["criteria", "criteria2"],
   tasks: [initTask],
 };
-export const init2ProductBacklogItem: IProductBacklogItem = {
+export const init2ProductBacklogItem: IBacklogItem = {
   id: 1,
   name: "Second",
   finished: false,
@@ -58,7 +58,7 @@ export const init2ProductBacklogItem: IProductBacklogItem = {
   acceptanceCriteria: ["criteria", "criteria2"],
   tasks: [],
 };
-export const unassignedPBI: IProductBacklogItem = {
+export const unassignedPBI: IBacklogItem = {
   id: 0,
   name: "Tasks To Assign",
   finished: false,
@@ -71,17 +71,17 @@ export const unassignedPBI: IProductBacklogItem = {
   acceptanceCriteria: [""],
   tasks: [],
 };
-export const initAddPBI: IAddPBI = {
+export const initAddPBI: IAddBI = {
   name: "Item",
   priority: 0,
   acceptanceCriteria: ["criteria", "criteria2"],
 };
-export const initAssignPBI: IAssignPBI = {
+export const initAssignPBI: IAssignBI = {
   name: "",
   id: 0,
   isInSprint: false
 };
-export const initPBIFilter: IPBIFilter = {
+export const initPBIFilter: IBIFilter = {
   pageNumber: config.defaultFilters.page,
   pageSize: config.defaultFilters.pbiSize,
   nameFilter: "",
@@ -91,7 +91,7 @@ export const initSprintFilter: IFilters = {
   pageSize: config.defaultFilters.sprintSize,
   nameFilter: "",
 };
-export const initProductBacklogList: IProductBacklogList = {
+export const initProductBacklogList: IBacklogItemList = {
   pageNumber: 1,
   pageCount: 1,
   pageSize: 10,

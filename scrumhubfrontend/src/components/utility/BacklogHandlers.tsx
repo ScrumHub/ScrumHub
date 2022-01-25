@@ -1,4 +1,4 @@
-import { IPerson, IProductBacklogItem, ISprint, ISprintList } from "../../appstate/stateInterfaces";
+import { IPerson, IBacklogItem, ISprint, ISprintList } from "../../appstate/stateInterfaces";
 import { store } from "../../appstate/store";
 import * as Actions from '../../appstate/actions';
 import { initPBIFilter } from "../../appstate/stateInitValues";
@@ -16,7 +16,7 @@ export const startTask = (token: string, ownerName: string, hotfix: boolean, tas
 
 export const calculateOldSprint = (sprintPage: ISprintList, oldSprintId: number, pbiId: number) => {
   const oldSprint = sprintPage.list.find((i: ISprint) => i.sprintNumber === oldSprintId);
-  const oldPbis = oldSprint?.backlogItems.map((i: IProductBacklogItem) => { return ((i.id !== pbiId ? i.id.toString() : "")) }).filter((x: string) => x !== "");
+  const oldPbis = oldSprint?.backlogItems.map((i: IBacklogItem) => { return ((i.id !== pbiId ? i.id.toString() : "")) }).filter((x: string) => x !== "");
   return ({
     "goal": oldSprint?.goal as string, "title": oldSprint?.title, "pbIs": oldPbis as string[],
     "finishDate": new Date(oldSprint?.finishDate as string)
@@ -24,7 +24,7 @@ export const calculateOldSprint = (sprintPage: ISprintList, oldSprintId: number,
 }
 export const calculateNewSprint = (sprintPage: ISprintList, newSprintId: number, pbiId: number) => {
   const newSprint = sprintPage.list.find((i: ISprint) => i.sprintNumber === newSprintId);
-  const newPbis = newSprint?.backlogItems.map((i: IProductBacklogItem) => { return (i.id.toString()) }).concat([pbiId.toString()]);
+  const newPbis = newSprint?.backlogItems.map((i: IBacklogItem) => { return (i.id.toString()) }).concat([pbiId.toString()]);
   return ({ "goal": newSprint?.goal as string, "pbIs": newPbis as string[], "title": newSprint?.title, "finishDate": new Date(newSprint?.finishDate as string) });
 }
 

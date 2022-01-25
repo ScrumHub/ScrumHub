@@ -2,7 +2,7 @@ import { Empty, Table } from "antd";
 import { useEffect, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { IPerson, IProductBacklogItem, ISprint, IState, ITask } from "../appstate/stateInterfaces";
+import { IPerson, IBacklogItem, ISprint, IState, ITask } from "../appstate/stateInterfaces";
 import { store } from "../appstate/store";
 import { initRowIds } from "./utility/commonInitValues";
 import * as Actions from '../appstate/actions';
@@ -30,7 +30,7 @@ export const SprintTableComponent = React.memo((props: any) => {
     if (isArrayValid(props.data) && !wait && mounted) {
       setWait(true);
       const tempSKeys = props.data.map((sprint: ISprint) => { return (sprint.sprintNumber) });
-      const tempPKeys = [].concat.apply([],props.data.map((sprint: ISprint) => { return sprint.backlogItems.map((pbi:IProductBacklogItem)=>{return(pbi.id)})}));
+      const tempPKeys = [].concat.apply([],props.data.map((sprint: ISprint) => { return sprint.backlogItems.map((pbi:IBacklogItem)=>{return(pbi.id)})}));
       if (isArrayValid(props.nameFilter) || isArrayValid(props.peopleFilter)) {
         store.dispatch(Actions.updateSprintKeys(tempSKeys.filter((item: number) => !keys.includes(item))));
         store.dispatch(Actions.updatePBIKeys(tempPKeys.filter((item: number) => !pbiKeys.includes(item))));
@@ -66,8 +66,8 @@ export const SprintTableComponent = React.memo((props: any) => {
           onExpand: (expanded, record) => {
             updateExpandedRowKeys(record);
           },
-          rowExpandable: record => isArrayValid(record.backlogItems) && (isArrayValid(props.nameFilter) ? record.backlogItems.filter((pbi: IProductBacklogItem) => pbi.name.toLowerCase().includes(props.nameFilter[0].toLowerCase())).length > 0 : true)
-            && (isArrayValid(props.peopleFilter) ? record.backlogItems.filter((pbi: IProductBacklogItem) => {
+          rowExpandable: record => isArrayValid(record.backlogItems) && (isArrayValid(props.nameFilter) ? record.backlogItems.filter((pbi: IBacklogItem) => pbi.name.toLowerCase().includes(props.nameFilter[0].toLowerCase())).length > 0 : true)
+            && (isArrayValid(props.peopleFilter) ? record.backlogItems.filter((pbi: IBacklogItem) => {
               return (pbi.tasks.filter((task: ITask) => {
                 return (task.assigness.filter((person: IPerson) => {
                   return (props.peopleFilter.includes(person.login))
