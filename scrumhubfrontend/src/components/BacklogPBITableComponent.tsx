@@ -44,13 +44,13 @@ export const PBITableComponent = React.memo((props: any) =>{
         onExpand: (expanded: any, record: IBacklogItem) => {
           updateExpandedRowKeys(record);
         },
-        rowExpandable: (record: IBacklogItem) => isArrayValid(record.tasks) &&
+        rowExpandable: (record: IBacklogItem) => (isArrayValid(record.tasks) &&
            (isArrayValid(props.peopleFilter) ? record.tasks.filter((task: ITask) => {
               return (task.assigness.filter((person: IPerson) => {
                 return (props.peopleFilter.includes(person.login))
               }).length > 0)
             }).length > 0
-            : true)
+            : true)) || record.id===0
 
       }}
       components={props.nestedcomponents}

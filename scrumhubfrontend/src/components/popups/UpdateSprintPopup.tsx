@@ -46,7 +46,7 @@ export const UpdateSprintPopup: React.FC<IUpdateSprintCollectionCreateFormProps>
           name="finishDate"
           rules={[{ required: true, message: 'Please input the deadline of this sprint!' }]}
         >
-          <DatePicker defaultValue={moment(data.finishDate, "YYYY-MM-DD")} showToday={true} disabledDate={disabledDate} format={"YYYY-MM-DD"}
+          <DatePicker defaultValue={moment(data.finishDate, "YYYY-MM-DD")} showToday={true} format={"YYYY-MM-DD"}
           />
         </Form.Item>
         <FormItemLabel prefixCls="title" label="Title" required={true} />
