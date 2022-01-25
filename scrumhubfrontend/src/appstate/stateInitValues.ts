@@ -9,7 +9,7 @@ export const errorObject = {
   code: 0,
   response: {
     data: null,
-    message: "Connection error",
+    Message: "Connection error",
     successful: false,
     metadata: null,
   },

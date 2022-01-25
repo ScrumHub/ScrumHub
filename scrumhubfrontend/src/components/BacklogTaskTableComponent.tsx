@@ -22,7 +22,7 @@ export const TaskTableComponent = React.memo((props: any) => {
         const res = await axios.get(
           `${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/PBI/${props.item && props.item.id ? props.item.id : 0}`,
           { headers: getHeader(token, config) }
-        ).then(response => { return (response.data) });
+        ).then(response => { console.log(response);return (response.data); });
         axios.get(`https://api.github.com/rate_limit`, { headers: { "Accept": "application/vnd.github.v3+json", "Authorization": "token " + token } })
           //.then((response: any) => console.log("", getTimeFromDate(new Date()), isItemDefined(response.data) && isItemDefined(response.data.rate) && isItemDefined(response.data.rate.used) ? response.data.rate.used : 0))
           ;/*RATE LIMIT*/

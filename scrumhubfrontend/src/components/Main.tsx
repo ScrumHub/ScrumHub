@@ -83,8 +83,11 @@ export function Main(props: any) {
         message.info("The repository name has changed and the repository is no longer in Scrumhub.", 5);
         handleProjects();
       } else if (error.erorMessage.includes("Bad credentials")) {
-        store.dispatch(Actions.clearError(""))
+        store.dispatch(Actions.clearError(""));
         message.info("The scope of of authorization was changed. You need to login again", 2);
+        setLogout(true);
+      }else if(error.erorMessage.includes("Connection error")){
+        store.dispatch(Actions.clearError(""));
         setLogout(true);
       }
       else {

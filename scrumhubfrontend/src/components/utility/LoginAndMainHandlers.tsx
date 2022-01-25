@@ -10,6 +10,7 @@ export const handleLogin = (token:string, navigate:NavigateFunction) => {
             token: token,
         })
     ).then((response: any) => {
+        console.log(response);
         if (response.payload && response.payload.code !== 0) {
             store.dispatch(Actions.login({ token: token, isLoggedIn: true }));
             navigate("/", { replace: true });

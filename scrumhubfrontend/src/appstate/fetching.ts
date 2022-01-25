@@ -6,18 +6,15 @@ import { IAddBI, IFilters, IPeopleList, IPerson, IBacklogItem, IBacklogItemList,
 import { filterUrlString, getHeader, getHeaderAcceptAll, getHeaderWithContent } from "./stateUtilities";
 import { isNull } from "lodash";
 import { errorObject } from "./stateInitValues";
+import { isItemDefined } from "../components/utility/commonFunctions";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function getResponse<T, K>(
   axiosRequest: Promise<AxiosResponse<any>>
 ): Promise<RequestResponse<T, K>> {
-  try {
-    const response = await axiosRequest;
-    return {
-      code: response.status,
-      response: response.data as APIResponse<T, K>,
-    };
-  } catch (error: any) {
+  let response;
+    try{
+    response = await axiosRequest.catch((error:any) => { 
     if (error instanceof TypeError || error.message === "Network Error") {
       return errorObject;
     }
@@ -25,7 +22,17 @@ export async function getResponse<T, K>(
     return {
       code: response_1.status,
       response: response_1.data as APIResponse<T, K>,
-    };
+    }; }).then((response: any) => { 
+    return {
+      code: response && isItemDefined(response.status)? response.status:errorObject.code,
+      response: response && isItemDefined(response.status)?response.data as APIResponse<T, K>:errorObject.response,
+    }; });
+  }
+  catch(error: any) {
+    return errorObject;
+  }
+  finally{
+    return response;
   }
 }
 
@@ -198,7 +205,7 @@ export function addSprint(token: string, ownerName: string, sprint: any
   );
 }
 //TASKS
-export function fetchPBITasks(token: string, ownerName: string, pbiId: number|null,
+export function fetchPBITasks(token: string, ownerName: string, pbiId: number | null,
 ): Promise<RequestResponse<ITaskList, number>> {
   return getResponse(
     axios.get(
@@ -241,7 +248,7 @@ export function getPBINames(ownerName: any, token: string, filters: IFilters
   );
 }
 
-export function assignTaskToPBI(token: string, ownerName: string, pbiId: number|null, taskId: number
+export function assignTaskToPBI(token: string, ownerName: string, pbiId: number | null, taskId: number
 ): Promise<RequestResponse<ITask, number>> {
   return getResponse(
     axios.patch(

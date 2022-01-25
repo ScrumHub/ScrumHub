@@ -46,7 +46,8 @@ export const getHeaderAcceptAll = (token: string, config: any) => {
 /**
  * @returns Error object after validation
  */
-export const getError = (res: any) => { return ({ hasError: true, errorCode: res ? res.code : -1, erorMessage: isItemDefined(res) && isItemDefined(res.response) ? (res.response as IError).Message : "", }) };
+export const getError = (res: any) => { console.log(res);
+  return ({ hasError: true, errorCode: res ? res.code : -1, erorMessage: isItemDefined(res) && isItemDefined(res.response) ? (res.response as IError).Message : "", }) };
 
 /**
  * @param {String|undefined} uri Uri to validate
