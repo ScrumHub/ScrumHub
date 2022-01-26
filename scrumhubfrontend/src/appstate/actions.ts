@@ -276,3 +276,4 @@ export const updatePBIKeys = createAction<number[]>("updatePBIKeys");
 export const updateSprintLoadingKeys = createAction<number[]>("updateSprintLoadingKeys");
 export const updatePBILoadingKeys = createAction<number[]>("updatePBILoadingKeys");
 export const updateTasks = createAction<IBacklogItem>("updateTasks");
+export const updateAllTasks = createAction<ITask[]>("updateAllTasks");

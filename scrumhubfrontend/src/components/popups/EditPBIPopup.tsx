@@ -99,7 +99,7 @@ export const EditPBIPopup: React.FC<IEditPBICollectionCreateFormProps> = ({
                   <Form.Item
                     noStyle
                     key={"inner"+key}
-                    name={key}
+                    name={name}
                     rules={[{ required: form.getFieldValue("acceptanceCriteria").length < 2  ? true : false, whitespace: true, message: 'Please input at least one acceptance criteria!' }]}
                   >
                     <Input key={"input"+key} style={{ width: "95%" }} placeholder={`Input New Cirterion`} />

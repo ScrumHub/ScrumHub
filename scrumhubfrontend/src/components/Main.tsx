@@ -11,10 +11,9 @@ import './ProductBacklog.css';
 import { useSelector } from 'react-redux';
 import { ISprint, IState } from '../appstate/stateInterfaces';
 import { routes } from './utility/BodyRowsAndColumns';
-import { clearLocalStorage, clearProjectLocalStorage, getTimeFromDate, isItemDefined, isMessageValid } from './utility/commonFunctions';
+import { clearLocalStorage, clearProjectLocalStorage, isMessageValid } from './utility/commonFunctions';
 import { ItemRender } from './utility/LoginAndMainHandlers';
 import { isNull } from 'lodash';
-import axios from 'axios';
 const { Header, Footer, Content, Sider } = Layout;
 const { SubMenu } = Menu;
 

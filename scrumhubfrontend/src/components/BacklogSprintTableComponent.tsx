@@ -4,7 +4,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { IPerson, IBacklogItem, ISprint, IState, ITask } from "../appstate/stateInterfaces";
 import { store } from "../appstate/store";
-import { initRowIds } from "./utility/commonInitValues";
+import { initFilteredInfo, initRowIds, initSortedInfo } from "./utility/commonInitValues";
 import * as Actions from '../appstate/actions';
 import { useSelector } from "react-redux";
 import { isArrayValid, isNameFilterValid, useIsMounted } from "./utility/commonFunctions";
@@ -31,9 +31,10 @@ export const SprintTableComponent = React.memo((props: any) => {
       setWait(true);
       const tempSKeys = props.data.map((sprint: ISprint) => { return (sprint.sprintNumber) });
       const tempPKeys = [].concat.apply([],props.data.map((sprint: ISprint) => { return sprint.backlogItems.map((pbi:IBacklogItem)=>{return(pbi.id)})}));
-      if (isArrayValid(props.nameFilter) || isArrayValid(props.peopleFilter)) {
+      console.log("",props.filteredInfo, initFilteredInfo);
+      if (isArrayValid(props.nameFilter) || isArrayValid(props.peopleFilter) || (!_.isEqual(props.filteredInfo,initFilteredInfo))) {
         store.dispatch(Actions.updateSprintKeys(tempSKeys.filter((item: number) => !keys.includes(item))));
-        store.dispatch(Actions.updatePBIKeys(tempPKeys.filter((item: number) => !pbiKeys.includes(item))));
+        if(props.filteredInfo && !isArrayValid(props.filteredInfo.complete)){store.dispatch(Actions.updatePBIKeys(tempPKeys.filter((item: number) => !pbiKeys.includes(item))))};
       }
       else {
         store.dispatch(Actions.updateSprintKeys(tempSKeys.filter((item: number) => keys.includes(item))));
@@ -41,7 +42,7 @@ export const SprintTableComponent = React.memo((props: any) => {
       }
       setWait(false);
     }// eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.peopleFilter, props.nameFilter, wait]);
+  }, [props.peopleFilter, props.nameFilter,props.filteredInfo, wait]);
 
   return (
     <DndProvider backend={HTML5Backend} key={"dnd" + props.keys}>

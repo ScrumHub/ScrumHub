@@ -13,7 +13,7 @@ import React from 'react';
 import { AddPBIPopup } from './popups/AddPBIPopup';
 import { AddSprintPopup } from './popups/AddSprintPopup';
 import { initAddPBI, initSprint } from '../appstate/stateInitValues';
-import { initFilteredInfo, initFilterMenu, initFilterSortInfo, initSortedInfo } from './utility/commonInitValues';
+import { initFilterMenu, initFilterSortInfo, initSortedInfo } from './utility/commonInitValues';
 import { isArrayValid } from './utility/commonFunctions';
 const { Search } = Input;
 
@@ -24,7 +24,7 @@ export const Project = React.memo((props: any) => {
   const [initialRefresh, setInitialRefresh] = useState(true);
   const [infos, setInfos] = useState(initFilterSortInfo);
   const [filterMenu, setFilterMenu] = useState(initFilterMenu);
-  const [filterPBI, setFiltersPBI] = useState<IFilters>({ nameFilter: [], peopleFilter: [] });
+  const [filterPBI, setFiltersPBI] = useState<IFilters>({ nameFilter: [] as string[], peopleFilter: [] as string[] });
   const [inputPplFilter, setInputPplFilter] = useState("");
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : "";
   const currentUser = useSelector((appState: IState) => appState.currentUser);

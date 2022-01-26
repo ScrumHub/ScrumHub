@@ -10,7 +10,7 @@ import { BranchesOutlined, CalendarOutlined, DownOutlined, EditOutlined } from '
 import { store } from '../appstate/store';
 import {PBITableComponent} from './BacklogPBITableComponent';
 import {TaskTableComponent} from './BacklogTaskTableComponent';
-import { taskNameCol, taskStatusCol, taskGhLinkCol, pbiProgressCol, pbiProgressCol2, backlogPriorities, backlogColors, peopleDropdown, pbiStatusCol } from './utility/BodyRowsAndColumns';
+import { taskNameCol, taskStatusCol, taskGhLinkCol, pbiProgressCol, pbiToDoCol, backlogPriorities, backlogColors, peopleDropdown, pbiStatusCol } from './utility/BodyRowsAndColumns';
 import { canDropTask, dateFormat, isBranchNotCreated, isInReviewOrFinished, isSprintLoaded } from './utility/commonFunctions';
 import SkeletonList, { PBIMenuWithPeople } from './utility/LoadAnimations';
 import { assignPerson, startTask, updateTask } from './utility/BacklogHandlers';
@@ -217,7 +217,7 @@ export function SprintBacklog() {
         multiple: 1,
       }, align: "left" as const, key: 'name', render: (item: IBacklogItem) => { return (<div className={item.id === 0 ? '' : 'link-button'} onClick={() => { if (item.id !== 0) { setSelectedPBI(item); setIsModal({ ...isModal, editPBI: true }); } }}>{item.name}</div>) },
     },
-    pbiProgressCol, pbiProgressCol2,
+    pbiProgressCol, pbiToDoCol,
     {
       title: 'Priority', sorter: { compare: (a: IBacklogItem, b: IBacklogItem) => a.priority - b.priority, multiple: 1, }, align: "center" as const, width: "20%", key: 'pbiPriority',
       filters: [{ text: backlogPriorities[0], value: 0, }, { text: backlogPriorities[1], value: 1, }, { text: backlogPriorities[2], value: 2, },], onFilter: (value: any, item: IBacklogItem) => item.priority === value,

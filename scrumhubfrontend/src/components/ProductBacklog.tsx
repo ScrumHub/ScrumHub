@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useRef, useEffect } from 'react';
-import { Button, Tag, message, Popover, Space, Popconfirm } from 'antd';
+import { message } from 'antd';
 import { useDrag, useDrop } from 'react-dnd';
 import * as Actions from '../appstate/actions';
-import { IAddBI, IFilters, IPeopleList, IPerson, IBacklogItem, IBacklogItemList, ISprint, ISprintList, ITask, IState } from '../appstate/stateInterfaces';
+import { IAddBI, IFilters, IPeopleList, IBacklogItem, IBacklogItemList, ISprint, ISprintList, ITask, IState } from '../appstate/stateInterfaces';
 import 'antd/dist/antd.css';
 import moment from 'moment';
 import './ProductBacklog.css';
@@ -12,13 +12,12 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { initModalVals } from './utility/commonInitValues';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
-import { canDropPBI, canDropTask, isArrayValid, isBranchNotCreated, isInReviewOrFinished, isItemDefined, } from './utility/commonFunctions';
-import { taskStatusCol, taskGhLinkCol, taskNameCol, pbiProgressCol, backlogColors, pbiProgressCol2, peopleDropdown, sprintNrCol, sprintTitleCol, sprintDateCol, sprintStoryPtsCol, sprintActCol, pbiNameCol, pbiStatusCol, sprintStatusCol, pbiActionCol, pbiPriorityCol, pbiStoryPointsCol } from './utility/BodyRowsAndColumns';
+import { canDropPBI, canDropTask, isItemDefined, } from './utility/commonFunctions';
+import { taskColumns, dragCmpnts, pbiColumns, sprintColumns } from './utility/BodyRowsAndColumns';
 import { PBITableComponent } from './BacklogPBITableComponent';
-import { BranchesOutlined, EditOutlined } from '@ant-design/icons';
 import { SprintTableComponent } from './BacklogSprintTableComponent';
 import { initPBIFilter } from '../appstate/stateInitValues';
-import { startTask, updatePBI, updateTask, fetchPBIsAndUnassigned } from './utility/BacklogHandlers';
+import { updatePBI, updateTask, fetchPBIsAndUnassigned } from './utility/BacklogHandlers';
 import { AddTaskPopup } from './popups/AddTaskPopup';
 import { CompleteSprintPopup } from './popups/CompleteSprintPopup';
 import { EditPBIPopup } from './popups/EditPBIPopup';
@@ -39,7 +38,7 @@ export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
   const pbiPage = useSelector((appState: IState) => appState.pbiPage as IBacklogItemList);
   const people = useSelector((appState: IState) => appState.people as IPeopleList);
   const tasks = useSelector((appState: IState) => appState.tasks as ITask[]);
-  const keys = useSelector((appState: IState) => appState.keys.pbiKeys);
+  const pbiKeys = useSelector((appState: IState) => appState.loadingKeys.pbiKeys as number[]);
   const refreshRequired = useSelector((appState: IState) => appState.productRequireRefresh as boolean);
   const sprintRefreshRequired = useSelector((appState: IState) => appState.sprintRequireRefresh as boolean);
   const [initialRefresh, setInitialRefresh] = useState(true);
@@ -166,42 +165,16 @@ export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
       style={{ cursor: isDraggable ? "move" : "default", ...style }} {...restProps} />
     );
   };
-  const nestedcomponents = { body: { row: DraggableBodyRow, }, };
-  const taskColumns = [taskNameCol, taskStatusCol,
-    {
-      key: "isAssignedToPBI", title: "Assignees", width: "22%", align: "center" as const,
-      filterIcon: <></>, filters: [], filteredValue: props.peopleFilter || null, onFilter: (value: any, task: ITask) => isArrayValid(props.peopleFilter) && isArrayValid(task.assigness) ?
-        task.assigness.filter((person: IPerson) => { return (props.peopleFilter.includes(person.login)) }).length > 0 : '',
-      render: (record: ITask) => peopleDropdown(record, token, ownerName, people),
-    }, {
-      title: "Start Branch", key: "branch", width: "12%", align: "right" as const,
-      render: (record: ITask) => isBranchNotCreated(record.status) ?
-        <Popover visible={isModal.startBranchId === record.id}
-          content={<><div style={{ alignSelf: "center", marginBottom: "10%", textAlign: "center" }}>Start New Branch</div><Space style={{ alignItems: "flex-end" }}>
-            <Popconfirm title={"Are you sure you want to start a feature branch?"} onConfirm={() => { startTask(token, ownerName, false, record.id); setIsModal({ ...isModal, startBranchId: -1 }); }}><Button key={"hotfix"} size='small' type="primary" >Feature</Button></Popconfirm>
-            <Popconfirm title={"Are you sure you want to start a hotfix branch?"} onConfirm={() => { startTask(token, ownerName, true, record.id); setIsModal({ ...isModal, startBranchId: -1 }); }}><Button key={"hotfix"} size='small' type="primary" color="deeppink">Hotfix</Button></Popconfirm>
-          </Space></>} trigger="click">
-          <Button key={"action" + record.id} size='small' type="link" onClick={() => { setIsModal({ ...isModal, startBranchId: record.id }) }}>
-            <span>{"Create "}<BranchesOutlined /></span></Button></Popover> :
-        <div><span hidden={isInReviewOrFinished(record.status)}>Created <BranchesOutlined /></span></div>
-    },
-    taskGhLinkCol,];
-  const TaskTableforPBI: React.FC<IBacklogItem> = (item: IBacklogItem) => {
-    return (<TaskTableComponent peopleFilter={props.peopleFilter} item={item} taskColumns={taskColumns} taskComponents={nestedcomponents} />)
-  };
-  const pbiKeys = useSelector((appState: IState) => appState.loadingKeys.pbiKeys as number[]);
-  const pbiColumns = [
-    pbiNameCol(props.nameFilter, props.sortedInfo, setSelectedPBI, isModal, setIsModal), pbiProgressCol, pbiProgressCol2,
-    pbiPriorityCol(props.filteredInfo, props.sortedInfo, pbiKeys, token, ownerName),
-    pbiStoryPointsCol(props.sortedInfo,setSelectedPBI, isModal,setIsModal),
-    pbiStatusCol, pbiActionCol(setSelectedPBI, isModal, setIsModal)];
+  const TaskTableforPBI: React.FC<IBacklogItem> = (item: IBacklogItem) => {return (<TaskTableComponent peopleFilter={props.peopleFilter} 
+    item={item} taskColumns={taskColumns(props.peopleFilter, token, ownerName, people, setIsModal, isModal)} taskComponents={dragCmpnts(DraggableBodyRow)} />)};
+
   const PBITableforSprint: React.FC<ISprint> = (item: ISprint) => {
-    return (<PBITableComponent sortedInfo={props.sortedInfo} filteredInfo={props.filteredInfo} sortSelected={function (items: any): void { props.sortSelected(items) }} itemSelected={function (items: number[]): void { props.itemSelected(items) }}
-      TaskTableforPBI={TaskTableforPBI} nameFilter={props.nameFilter} peopleFilter={props.peopleFilter} item={item} pbiColumns={pbiColumns} nestedcomponents={nestedcomponents} />)
+    return (<PBITableComponent sortedInfo={props.sortedInfo} filteredInfo={props.filteredInfo} sortSelected={function (items: any): void { props.sortSelected(items) }} 
+    itemSelected={function (items: number[]): void { props.itemSelected(items) }} TaskTableforPBI={TaskTableforPBI} 
+    nameFilter={props.nameFilter} peopleFilter={props.peopleFilter} item={item} 
+    pbiColumns={pbiColumns(props.nameFilter, props.sortedInfo,props.filteredInfo,setSelectedPBI,isModal,setIsModal,pbiKeys,token, ownerName)} 
+    nestedcomponents={dragCmpnts(DraggableBodyRow)} />)
   };
-  const sprintColumns = [sprintNrCol(ownerName, navigate), sprintTitleCol, sprintDateCol, sprintStoryPtsCol,
-  sprintStatusCol(props.sortedInfo, props.filteredInfo, setSelectedSprint, isModal, setIsModal), sprintActCol(setSelectedSprint, isModal, setIsModal),];
-  //let timer;
   let x = 0;
   useEffect(() => {
     const timer = setInterval(
@@ -210,7 +183,6 @@ export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
         const data = axios.get(`https://api.github.com/rate_limit`, { headers: { "Accept": "application/vnd.github.v3+json", "Authorization": "token " + token } })
           .then((response: any) => { //console.log("", getTimeFromDate(new Date()), isItemDefined(response.data) && isItemDefined(response.data.rate) && isItemDefined(response.data.rate.used) ? response.data.rate.used : 0); 
           return (isItemDefined(response.data) && isItemDefined(response.data.rate) && isItemDefined(response.data.rate.used) ? response.data.rate.used as number : 0); });
-        console.log(x % 2);
         if (isItemDefined(data) && typeof (data) === "number" && (data < 4000 || (data > 4000 && x % 2 === 0))) {
           const res = await axios.get(
             `${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}?onePage=true`,
@@ -223,12 +195,12 @@ export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
     return () => clearInterval(timer);
   }, []);
   return (<div className='baccklogScroll' >
-    <SprintTableComponent sortedInfo={props.sortedInfo ? props.sortedInfo.order : ""} nameFilter={props.nameFilter} keys={0} peopleFilter={props.peopleFilter} loading={refreshRequired || initialRefresh} data={[{
+    <SprintTableComponent filteredInfo={props.filteredInfo} sortedInfo={props.sortedInfo ? props.sortedInfo.order : ""} nameFilter={props.nameFilter} keys={0} peopleFilter={props.peopleFilter} loading={refreshRequired || initialRefresh} data={[{
       goal: "", finishDate: "", isCurrent: false, status: "", isCompleted: false, sprintNumber: 0, title: "", backlogItems: pbiPage.list
     } as ISprint] as ISprint[]}
-      components={nestedcomponents} columns={sprintColumns} PBITableforSprint={PBITableforSprint} />
-    {(<SprintTableComponent sortedInfo={props.sortedInfo ? props.sortedInfo.order : ""} nameFilter={props.nameFilter} keys={1} peopleFilter={props.peopleFilter} loading={sprintRefreshRequired || initialRefresh}
-      data={sprintPage.list as ISprint[]} components={nestedcomponents} columns={sprintColumns} PBITableforSprint={PBITableforSprint} />)
+      components={dragCmpnts(DraggableBodyRow)} columns={sprintColumns(ownerName,navigate,props.sortedInfo, props.filteredInfo, setSelectedSprint, isModal, setIsModal)} PBITableforSprint={PBITableforSprint} />
+    {(<SprintTableComponent filteredInfo={props.filteredInfo} sortedInfo={props.sortedInfo ? props.sortedInfo.order : ""} nameFilter={props.nameFilter} keys={1} peopleFilter={props.peopleFilter} loading={sprintRefreshRequired || initialRefresh}
+      data={sprintPage.list as ISprint[]} components={dragCmpnts(DraggableBodyRow)} columns={sprintColumns(ownerName,navigate,props.sortedInfo, props.filteredInfo, setSelectedSprint, isModal, setIsModal)} PBITableforSprint={PBITableforSprint} />)
     }
     {isModal.editPBI && selectedPBI && selectedPBI.id && <EditPBIPopup data={selectedPBI as IAddBI} visible={isModal.editPBI}
       onCreate={function (values: any): void { editPBI(values) }} onDelete={() => { deletePBI(selectedPBI) }} onFinish={() => { finishPBI(selectedPBI) }}

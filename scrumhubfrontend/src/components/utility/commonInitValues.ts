@@ -50,6 +50,10 @@ export const pbiFilterVals =
 {text: backlogPriorities[1],value: 1,}, 
 {text: backlogPriorities[2],value: 2,},];
 
+export const pbiStatusVals = 
+[{text: "Not Finished", value: false, },
+{text: "Finished",value: true,}, ];
+
 
 export const loginDataError = {
   isLoading: false,
