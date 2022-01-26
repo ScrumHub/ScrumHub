@@ -75,14 +75,14 @@ export const EstimatePBIPopup: React.FC<IEstimatePBICollectionCreateFormProps> =
             <VirtualList
               data={slicedData}
               key="virtual_list"
-              height={70}
+              height={80}
               itemHeight={42}
               itemKey="acceptanceCriteria"
               onScroll={(e: any) => { if (e.target.scrollHeight - e.target.scrollTop > 0) { setSlicedData(data.acceptanceCriteria.slice(0, slicedData.length + 2).map((data, key) => { return { "key": key, "acceptanceCriteria": data } })) } }}
             >{item => (
               <List.Item key={item.key}>
                 <List.Item.Meta
-                  avatar={<span><NumberOutlined></NumberOutlined>{" "}{item.key}</span>}
+                  avatar={<span><NumberOutlined></NumberOutlined>{" "}{item.key+1}</span>}
                   title={item.acceptanceCriteria}
                 />
               </List.Item>

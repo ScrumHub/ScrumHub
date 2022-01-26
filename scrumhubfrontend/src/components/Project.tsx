@@ -94,7 +94,7 @@ export const Project = React.memo((props: any) => {
         className='projectSpace' style={{marginBottom:"0.5%"}}>
         <Button type="primary" onClick={() => { setIsAddSprint(true); }}>{"Create Sprint"}</Button>
         <Button type="primary" onClick={() => { setIsAddPBI(true); }}>{"Add Product Backlog Item"}</Button>
-        <Search autoComplete='on' onMouseEnter={() => setFilterMenu(initFilterMenu)} placeholder="Input backlog item name" onSearch={onSearch} enterButton />
+        <Search autoComplete='on' onMouseEnter={() => setFilterMenu(initFilterMenu)} placeholder="Input Backlog Item name" onSearch={onSearch} enterButton />
         <Badge status={"error"} count={isArrayValid(infos.filteredInfo.complete)||isArrayValid(infos.filteredInfo.pbiPriority)?2:0} overflowCount={1} style={{ borderColor: "transparent", zIndex:20 }}><Dropdown.Button
           className='projectDropBtn'
           placement="bottomCenter"
