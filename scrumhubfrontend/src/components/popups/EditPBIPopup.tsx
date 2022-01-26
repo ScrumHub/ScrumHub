@@ -21,7 +21,8 @@ export const EditPBIPopup: React.FC<IEditPBICollectionCreateFormProps> = ({
       centered={true}
       title="Edit Backlog Item"
       visible={visible}
-      closable={false}
+      closable={true}
+      onCancel={onCancel}
       footer={[
         <Popconfirm
           key="delInEditPopup"
@@ -43,7 +44,7 @@ export const EditPBIPopup: React.FC<IEditPBICollectionCreateFormProps> = ({
           okText="Yes"
           cancelText="No"
           icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-        ><Button type="primary" key="FinishInEditPopup">
+        ><Button hidden={data.finished} type="primary" key="FinishInEditPopup">
             {"Finish"}</Button>
         </Popconfirm>,
         <Button key="SaveInEditPopup" type="primary" onClick={() => {
@@ -51,7 +52,7 @@ export const EditPBIPopup: React.FC<IEditPBICollectionCreateFormProps> = ({
             .validateFields()
             .then((values: IAddBI) => {
               form.resetFields();
-              onCreate(values);
+              onCreate(values as IAddBI);
             })
             .catch((info: any) => {
               console.error('Validate Failed:', info);

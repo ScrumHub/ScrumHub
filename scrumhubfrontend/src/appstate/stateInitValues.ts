@@ -32,7 +32,7 @@ export const initTaskList: ITaskList = {
   realSize: 5,
   list: [],
 };
-export const initPBItem: IBacklogItem = {
+export const initBI: IBacklogItem = {
   id: 0,
   name: "Item",
   finished: false,
@@ -45,7 +45,7 @@ export const initPBItem: IBacklogItem = {
   acceptanceCriteria: ["criteria", "criteria2"],
   tasks: [initTask],
 };
-export const init2ProductBacklogItem: IBacklogItem = {
+export const initBI2: IBacklogItem = {
   id: 1,
   name: "Second",
   finished: false,
@@ -58,7 +58,7 @@ export const init2ProductBacklogItem: IBacklogItem = {
   acceptanceCriteria: ["criteria", "criteria2"],
   tasks: [],
 };
-export const unassignedPBI: IBacklogItem = {
+export const unassignedBI: IBacklogItem = {
   id: 0,
   name: "Tasks To Assign",
   finished: false,
@@ -91,7 +91,7 @@ export const initSprintFilter: IFilters = {
   pageSize: config.defaultFilters.sprintSize,
   nameFilter: "",
 };
-export const initProductBacklogList: IBacklogItemList = {
+export const initBacklogItemList: IBacklogItemList = {
   pageNumber: 1,
   pageCount: 1,
   pageSize: 10,
@@ -102,7 +102,7 @@ export const initSprint: ISprint = {
   sprintNumber: 1,
   title: "",
   goal: "",
-  backlogItems: [initPBItem],
+  backlogItems: [initBI],
   finishDate: "",
   isCurrent: false,
   status: "New",
@@ -130,7 +130,7 @@ export const initRepository: IRepository = {
   gitHubId: 0,
   hasAdminRights: true,
   alreadyInScrumHub: true,
-  backlogItems: [initPBItem],
+  backlogItems: [initBI],
   sprints: [initSprint],
   description: "",
   dateOfLastActivity: null,
@@ -202,7 +202,7 @@ export const initState: IState = {
   loginState: initLoginState,
   loading: false,
   error: initError,
-  pbiPage: initProductBacklogList,
+  pbiPage: initBacklogItemList,
   sprintPage: initSprintList,
   taskPage: initTaskList,
   repositories: [],

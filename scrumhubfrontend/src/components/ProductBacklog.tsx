@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { initModalVals } from './utility/commonInitValues';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
-import { canDropPBI, canDropTask, isItemDefined, } from './utility/commonFunctions';
+import { canDropPBI, canDropTask, getTimeFromDate, isItemDefined, } from './utility/commonFunctions';
 import { taskColumns, dragCmpnts, pbiColumns, sprintColumns } from './utility/BodyRowsAndColumns';
 import { PBITableComponent } from './BacklogPBITableComponent';
 import { SprintTableComponent } from './BacklogSprintTableComponent';
@@ -175,25 +175,28 @@ export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
     pbiColumns={pbiColumns(props.nameFilter, props.sortedInfo,props.filteredInfo,setSelectedPBI,isModal,setIsModal,pbiKeys,token, ownerName)} 
     nestedcomponents={dragCmpnts(DraggableBodyRow)} />)
   };
-  let x = 0;
+ /* let x = 0;
   useEffect(() => {
     const timer = setInterval(
       async () => {
         ++x;
-        const data = axios.get(`https://api.github.com/rate_limit`, { headers: { "Accept": "application/vnd.github.v3+json", "Authorization": "token " + token } })
-          .then((response: any) => { //console.log("", getTimeFromDate(new Date()), isItemDefined(response.data) && isItemDefined(response.data.rate) && isItemDefined(response.data.rate.used) ? response.data.rate.used : 0); 
+        const data = await axios.get(`https://api.github.com/rate_limit`, { headers: { "Accept": "application/vnd.github.v3+json", "Authorization": "token " + token } })
+          .then((response: any) => { console.log("", getTimeFromDate(new Date()), isItemDefined(response.data) && isItemDefined(response.data.rate) && isItemDefined(response.data.rate.used) ? response.data.rate.used : 0); 
           return (isItemDefined(response.data) && isItemDefined(response.data.rate) && isItemDefined(response.data.rate.used) ? response.data.rate.used as number : 0); });
-        if (isItemDefined(data) && typeof (data) === "number" && (data < 4000 || (data > 4000 && x % 2 === 0))) {
+        console.log("", data, x);
+          if (isItemDefined(data) && typeof (data) === "number" && (data < 4000 || (data > 4000 && x % 2 === 0))) {
           const res = await axios.get(
             `${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}?onePage=true`,
             { headers: getHeader(token, config) }
           ).then(response => { return (response.data); });
+          console.log(res.list, tasks);
           if (!_.isEqual(res.list, tasks)) {
+            store.dispatch(Actions.updateAllTasks(res));
           }
         }
       }, 8000);
     return () => clearInterval(timer);
-  }, []);
+  }, []);*/
   return (<div className='baccklogScroll' >
     <SprintTableComponent filteredInfo={props.filteredInfo} sortedInfo={props.sortedInfo ? props.sortedInfo.order : ""} nameFilter={props.nameFilter} keys={0} peopleFilter={props.peopleFilter} loading={refreshRequired || initialRefresh} data={[{
       goal: "", finishDate: "", isCurrent: false, status: "", isCompleted: false, sprintNumber: 0, title: "", backlogItems: pbiPage.list
@@ -202,7 +205,7 @@ export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
     {(<SprintTableComponent filteredInfo={props.filteredInfo} sortedInfo={props.sortedInfo ? props.sortedInfo.order : ""} nameFilter={props.nameFilter} keys={1} peopleFilter={props.peopleFilter} loading={sprintRefreshRequired || initialRefresh}
       data={sprintPage.list as ISprint[]} components={dragCmpnts(DraggableBodyRow)} columns={sprintColumns(ownerName,navigate,props.sortedInfo, props.filteredInfo, setSelectedSprint, isModal, setIsModal)} PBITableforSprint={PBITableforSprint} />)
     }
-    {isModal.editPBI && selectedPBI && selectedPBI.id && <EditPBIPopup data={selectedPBI as IAddBI} visible={isModal.editPBI}
+    {isModal.editPBI && selectedPBI && selectedPBI.id && <EditPBIPopup data={selectedPBI} visible={isModal.editPBI}
       onCreate={function (values: any): void { editPBI(values) }} onDelete={() => { deletePBI(selectedPBI) }} onFinish={() => { finishPBI(selectedPBI) }}
       onCancel={() => { setIsModal({ ...isModal, editPBI: false }); setSelectedPBI({} as IBacklogItem); }} />}
     {isModal.estimatePBI && selectedPBI && selectedPBI.id && <EstimatePBIPopup data={selectedPBI as IBacklogItem} visible={isModal.estimatePBI}

@@ -92,7 +92,7 @@ test("fetching the repositories with a wrong token results in an error", async (
   });
 
   test("completing one sprint with a wrong token results in an error", async () => {
-    const data: RequestResponse<ISprint, undefined> =
+    const data: RequestResponse<ISprint, number> =
       await Fetching.completeOneSprint(config.token, "", 0,true);
     expect(data).toEqual(errorObject);
   });

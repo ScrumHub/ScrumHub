@@ -1,6 +1,6 @@
 
 import config from "../configuration/config";
-import { initError, initPeopleList, initPerson, initPBItem, initProductBacklogList, initRepository, initRepositoryList, initSprint, initSprintList, initTaskList, initTask, initKeys, initLoadingKeys } from "./stateInitValues";
+import { initError, initPeopleList, initPerson, initBI, initBacklogItemList, initRepository, initRepositoryList, initSprint, initSprintList, initTaskList, initTask, initKeys, initLoadingKeys } from "./stateInitValues";
 import { ILoginState, IBacklogItemList, IRepositoryList, ISprintList, IState, ITaskList } from "./stateInterfaces";
 import { validateUri } from "./stateUtilities";
 
@@ -16,7 +16,7 @@ export const testLoginState: ILoginState = {
 export const initTestState: IState = {
   loading: false,
   error: initError,
-  pbiPage: initProductBacklogList,
+  pbiPage: initBacklogItemList,
   sprintPage: initSprintList,
   taskPage: initTaskList,
   repositories: initRepositoryList,
@@ -54,7 +54,7 @@ export const testPBIList: IBacklogItemList = {
   pageCount: 1,
   pageSize: 10,
   realSize: 0,
-  list: [initPBItem],
+  list: [initBI],
 }
 
 export const testSprintList: ISprintList = {
@@ -80,9 +80,9 @@ export const tstConf = {
   sprintNr:0,
   hours:2,
   editedPBI:{
-    "name": initPBItem.name,
-    "priority": initPBItem.priority,
-    "acceptanceCriteria": initPBItem.acceptanceCriteria
+    "name": initBI.name,
+    "priority": initBI.priority,
+    "acceptanceCriteria": initBI.acceptanceCriteria
   },
   name:"taskName",
   taskId:0,

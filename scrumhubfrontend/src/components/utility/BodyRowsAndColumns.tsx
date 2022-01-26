@@ -165,17 +165,16 @@ export const pbiActionCol = (setSelectedPBI: React.Dispatch<React.SetStateAction
 
 export function PriorityDropdown(props: { loading: boolean; token: string; ownerName: string; record: IBacklogItem; }) {
   const keys = useSelector((appState: IState) => appState.loadingKeys.pbiKeys);
-  const [change, setChange] = useState(false);
+  let change = true;
   return (
     <Dropdown.Button trigger={["click"]} style={{ cursor: "pointer" }} placement='bottomCenter' type="text"
       overlay={<PBIMenuWithPriorities itemSelected={function (priority: number): void {
         if (priority !== props.record.priority) {
-          setChange(true);
           if (!keys.includes(props.record.id)) { store.dispatch(Actions.updatePBILoadingKeys([props.record.id])); }
           store.dispatch(Actions.editPBIThunk({
             ownerName: props.ownerName, token: props.token, pbi: { ...props.record, priority: priority },
             pbiId: props.record.id,
-          })).then((response: any) => { if (response.payload && response.payload.code === 200) { store.dispatch(Actions.updatePBILoadingKeys([props.record.id])); } setChange(true); })
+          })).then((response: any) => { if (response.payload && response.payload.code === 200) { store.dispatch(Actions.updatePBILoadingKeys([props.record.id])); } change=false; })
         }
       }} visible={true} priority={props.record.priority} />}
       buttonsRender={() => [

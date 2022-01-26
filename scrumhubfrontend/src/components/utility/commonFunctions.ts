@@ -19,13 +19,13 @@ export const isNameFilterValid = (nameFilter: string) => {
   return !isNull(nameFilter) && nameFilter !== "";
 }
 
-export const isMessageValid = (message: string|undefined): boolean => {
+export const isMessageValid = (message: string | undefined): boolean => {
   return (!isNull(message) && typeof (message) !== "undefined" && message !== "" && message.length > 0);
 }
 
 
 export const isInReviewOrFinished = (message: string): boolean => {
-  return message===("InReview")||message === ("Finished");
+  return message === ("InReview") || message === ("Finished");
 }
 
 export const isBranchNotCreated = (message: string): boolean => {
@@ -109,31 +109,46 @@ export function clearProjectLocalStorage() {
   localStorage.removeItem("sprintID");
 }
 
-export function setLocalStorage(token:string|undefined) {
-  if(isMessageValid(token)){
+export function setLocalStorage(token: string | undefined) {
+  if (isMessageValid(token)) {
     localStorage.setItem("isLoggedIn", JSON.stringify(true));
     localStorage.setItem("token", JSON.stringify(token));
   }
 }
 
-export function getTimeFromDate(date:Date){
-  return(date.getHours()+":"+(date.getMinutes()<10?"0":"")+date.getMinutes()+":"+(date.getSeconds()<10?"0":"")+date.getSeconds());
+export function getTimeFromDate(date: Date) {
+  return (date.getHours() + ":" + (date.getMinutes() < 10 ? "0" : "") + date.getMinutes() + ":" + (date.getSeconds() < 10 ? "0" : "") + date.getSeconds());
 }
 
-export function getFetchBodyData(url:string){
+export function getFetchBodyData(url: string) {
   const newUrl = url.split("?code=");
   window.history.pushState({}, "", newUrl[0]);
-  return({code: newUrl[1]});
+  return ({ code: newUrl[1] });
 }
 
-export function hasGithubResponseCode(url:string){
- return(isNameFilterValid(url)&& url.includes("?code="));
+export function hasGithubResponseCode(url: string) {
+  return (isNameFilterValid(url) && url.includes("?code="));
 }
 
-export function isSprintLoaded(sprintID:number, sprintPage:ISprint, shouldBeEqual:boolean){
-  return(sprintID!==-1 && isItemDefined(sprintPage) && shouldBeEqual ===(sprintID === sprintPage.sprintNumber));
+export function isSprintLoaded(sprintID: number, sprintPage: ISprint, shouldBeEqual: boolean) {
+  return (sprintID !== -1 && isItemDefined(sprintPage) && shouldBeEqual === (sprintID === sprintPage.sprintNumber));
 }
 
-export function formatSprintStatus(status:string){
- return status.replace("Not", "Not ").replace("In", "In ");
+export function formatSprintStatus(status: string) {
+  return status.replace("Not", "Not ").replace("In", "In ");
+}
+
+export function isTaskTableInViewPort(tasksEl: Element | null) {
+  if (!isNull(tasksEl)) {
+    const rect = tasksEl.getBoundingClientRect();
+    return (
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+
+    );
+  } else {
+    return (false)
+  }
 }

@@ -89,7 +89,7 @@ export const Project = React.memo((props: any) => {
   }, [ownerName, initialRefresh]);
 
   return (
-    <div id="projectDiv" className='projectDiv' >
+    <div id="projectDiv" className='projectDiv'>
       <Space wrap direction="horizontal" split={true} onMouseLeave={() => setFilterMenu(initFilterMenu)}
         className='projectSpace' style={{marginBottom:"0.5%"}}>
         <Button type="primary" onClick={() => { setIsAddSprint(true); }}>{"Create Sprint"}</Button>

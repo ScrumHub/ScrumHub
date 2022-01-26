@@ -12,7 +12,6 @@ export const handleLogin = (token:string, navigate:NavigateFunction, setData:Rea
             token: token,
         })
     ).then((response: any) => {
-        console.log(response);
         if (response.payload && response.payload.code !== 0) {
             store.dispatch(Actions.login({ token: token, isLoggedIn: true }));
             setLocalStorage(token);

@@ -254,7 +254,7 @@ export function SprintBacklog() {
         {sprintPage && sprintPage.backlogItems  && isSprintLoaded(sprintID, sprintPage,true) && <PBITableComponent loading={loading || initialRefresh} sortedInfo={infos.sortedInfo} TaskTableforPBI={TaskTableforPBI} nameFilter={filters.nameFilter} peopleFilter={filters.peopleFilter}
           item={sprintPage} pbiColumns={pbiColumns} nestedcomponents={nestedcomponents} />}
       </DndProvider>
-      {isModal.editPBI && selectedPBI && selectedPBI.id && <EditPBIPopup data={selectedPBI as IAddBI} visible={isModal.editPBI}
+      {isModal.editPBI && selectedPBI && selectedPBI.id && <EditPBIPopup data={selectedPBI} visible={isModal.editPBI}
       onCreate={function (values: any): void { editPBI(values) }} onDelete={() => { deletePBI(selectedPBI) }} onFinish={() => { finishPBI(selectedPBI) }}
       onCancel={() => { setIsModal({ ...isModal, editPBI: false }); setSelectedPBI({} as IBacklogItem); }} />}
     {isModal.estimatePBI && selectedPBI && selectedPBI.id && <EstimatePBIPopup data={selectedPBI as IBacklogItem} visible={isModal.estimatePBI}

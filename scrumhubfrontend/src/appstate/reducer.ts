@@ -2,9 +2,9 @@ import * as Actions from "./actions";
 import { createReducer, PayloadAction } from "@reduxjs/toolkit";
 import { RequestResponse } from "./response";
 import { IAssignBI, ILoginState, IPeopleList, IPerson, IBacklogItem, IBacklogItemList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, IState } from "./stateInterfaces";
-import { initError, loggedOutLoginState, unassignedPBI } from "./stateInitValues";
+import { initError, loggedOutLoginState, unassignedBI } from "./stateInitValues";
 import { isArrayValid, isNameFilterValid } from "../components/utility/commonFunctions";
-import { getError, updateStateTasks, updateStateKeys, addStateTask, addStateUnassignedTaskToPBI, updateStatePBI, updateTasksSWR, fetchStateRepos, updateStateOneSprint, addStateRepo, addStatePBI, addStateSprint, updateOnDragStateTasks } from "./stateUtilities";
+import { getError, updateStateTasks, updateStateKeys, addStateTask, addStateUnassignedTaskToPBI, updateStatePBI, updateTasksSWR, fetchStateRepos, updateStateOneSprint, addStateRepo, addStatePBI, addStateSprint, updateOnDragStateTasks, updateAllTasksSWR } from "./stateUtilities";
 import { isNull } from "lodash";
 import config from "../configuration/config";
 var _ = require('lodash');
@@ -150,7 +150,7 @@ export const reducerFunction = (initState: IState) => {
         newState.pbiPage = { ...pbisList, list: [newState.pbiPage.list[0]].concat(pbisList.list) };
       }
       else {
-        newState.pbiPage = { ...pbisList, list: [unassignedPBI].concat(pbisList.list) };
+        newState.pbiPage = { ...pbisList, list: [unassignedBI].concat(pbisList.list) };
       }
       newState.loading = false;
       return newState;
@@ -310,6 +310,10 @@ export const reducerFunction = (initState: IState) => {
       let newState = _.cloneDeep(state);
       const item = payload.payload as IBacklogItem;
       return updateStatePBI(newState, item);
+    },
+    [Actions.updateAllTasks.type]: (state: IState, payload: PayloadAction<any>) => {
+      let newState = _.cloneDeep(state);
+      return updateAllTasksSWR(newState, payload.payload.response as ITaskList);
     },
     [Actions.addUnassignedTasksToPBI.pending.toString()]: (state: IState, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
       let newState = _.cloneDeep(state);

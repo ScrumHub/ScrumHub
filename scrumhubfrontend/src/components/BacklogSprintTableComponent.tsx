@@ -19,9 +19,6 @@ export const SprintTableComponent = React.memo((props: any) => {
   const updateExpandedRowKeys = (record: ISprint) => {
     store.dispatch(Actions.updateSprintKeys([record.sprintNumber]));
   };
-  const handleChange = (pagination: any, filters: any, sorter: any, data: any) => {
-    //console.log('Various parameters', pagination, filters, sorter, data);
-  };
   let locales = {
     emptyText: () => { return (!props.loading ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={"No Sprints"} /> : "") }
   };
@@ -31,7 +28,6 @@ export const SprintTableComponent = React.memo((props: any) => {
       setWait(true);
       const tempSKeys = props.data.map((sprint: ISprint) => { return (sprint.sprintNumber) });
       const tempPKeys = [].concat.apply([],props.data.map((sprint: ISprint) => { return sprint.backlogItems.map((pbi:IBacklogItem)=>{return(pbi.id)})}));
-      console.log("",props.filteredInfo, initFilteredInfo);
       if (isArrayValid(props.nameFilter) || isArrayValid(props.peopleFilter) || (!_.isEqual(props.filteredInfo,initFilteredInfo))) {
         store.dispatch(Actions.updateSprintKeys(tempSKeys.filter((item: number) => !keys.includes(item))));
         if(props.filteredInfo && !isArrayValid(props.filteredInfo.complete)){store.dispatch(Actions.updatePBIKeys(tempPKeys.filter((item: number) => !pbiKeys.includes(item))))};
@@ -57,7 +53,6 @@ export const SprintTableComponent = React.memo((props: any) => {
         bordered={false}
         pagination={false}
         dataSource={props.data}
-        onChange={(pagination: any, filters: any, sorter: any, data: any) => { handleChange(pagination, filters, sorter, data) }}
         columns={props.columns}
         components={props.components}
         rowKey={(record: ISprint) => record.sprintNumber}

@@ -8,7 +8,7 @@ export interface IAddPBICollectionCreateFormProps {
     onCancel: () => void;
 }
 export interface IEditPBICollectionCreateFormProps {
-    data: IAddBI;
+    data: IBacklogItem;
     visible: boolean;
     onCreate: (values: IAddBI) => void;
     onCancel: () => void;

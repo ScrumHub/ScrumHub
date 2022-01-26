@@ -33,6 +33,8 @@ export function Main(props: any) {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
+  //window.devicePixelRatio = 1.2;
+  //console.log(window.devicePixelRatio);
   message.config({ maxCount: 1 });
   useEffect(() => {
     if (logout || (!isLoggedIn)) {
@@ -202,7 +204,7 @@ export function Main(props: any) {
               </Menu>
             </Sider>}
             <Content style={location.pathname.includes("login") || ownerName === "" ? {} : { padding: '0 50px' }}>
-              <div style={{ minHeight: "90vh", margin: 0, }}>
+              <div style={{ minHeight: "90vh", margin: 0 }}>
                 {ownerName !== "" && <PageHeader className="pageHeader"
                   title={<div style={{ fontWeight: "bold", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "clip", width: "85vw", lineHeight: 1.25, paddingTop: 0, marginTop: 0, }}>{sprintID && sprintID !== "0" && sprintPage && sprintPage.title && Number(sprintID) === sprintPage.sprintNumber ? sprintPage.title : location.pathname.includes("sprint") ? "" : "Product Backlog"}</div>}
                   breadcrumb={<Breadcrumb style={{ marginTop: 0, marginBottom: 0, }} itemRender={ItemRender} routes={routes(ownerName, sprintID, location)} />}
