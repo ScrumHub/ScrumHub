@@ -133,3 +133,7 @@ export function hasGithubResponseCode(url:string){
 export function isSprintLoaded(sprintID:number, sprintPage:ISprint, shouldBeEqual:boolean){
   return(sprintID!==-1 && isItemDefined(sprintPage) && shouldBeEqual ===(sprintID === sprintPage.sprintNumber));
 }
+
+export function formatSprintStatus(status:string){
+ return status.replace("Not", "Not ").replace("In", "In ");
+}

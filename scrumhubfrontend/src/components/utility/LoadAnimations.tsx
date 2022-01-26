@@ -9,7 +9,7 @@ import { isArrayValid, isNameFilterValid } from "./commonFunctions";
 import { useEffect } from "react";
 import SubMenu from "antd/lib/menu/SubMenu";
 import { backlogColors, backlogPriorities } from "./BodyRowsAndColumns";
-import { initFilteredInfo } from "./commonInitValues";
+import { initFilteredInfo, initSortedInfo } from "./commonInitValues";
 
 export default function SkeletonList(props: any) {
     const number = props.number ? props.number : 0;
@@ -89,7 +89,7 @@ export function MenuWithSorting(props: any) {
     const [sortedInfo, setSortedInfo] = useState([] as IFilters);
     const handleList = (item: any) => {
         if (item.columnKey === props.sortedInfo.columnKey && item.order === props.sortedInfo.order) {
-            props.itemSelected({ columnKey: "", order: "" })
+            props.itemSelected(initSortedInfo)
         }
         else { props.itemSelected(item); }
     };
@@ -122,11 +122,10 @@ export function MenuWithSorting(props: any) {
             </Space>
 
         </MenuItem>
-        <MenuItem key={"clear"} onClick={() => { handleList({ columnKey: "", order: "" }); }}>
+        <MenuItem key={"clear"} onClick={() => { handleList(initSortedInfo); }}>
             <Space>
                 <div style={{ minWidth: "6vw" }} >{"Clear Sorting"}</div>
             </Space>
-
         </MenuItem>
     </Menu >);
 }

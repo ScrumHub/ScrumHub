@@ -3,7 +3,6 @@ import { Modal, Form, DatePicker, Input } from 'antd';
 import { ISprint } from '../../appstate/stateInterfaces';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import TextArea from 'antd/lib/input/TextArea';
-import { disabledDate } from '../utility/commonFunctions';
 import moment from 'moment';
 import { IUpdateSprintCollectionCreateFormProps, IUpdateSprintValues } from './popupInterfaces';
 

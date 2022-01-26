@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router';
 import { initModalVals, pbiFilterVals } from './utility/commonInitValues';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
 import { canDropPBI, canDropTask, isArrayValid, isBranchNotCreated, isInReviewOrFinished, } from './utility/commonFunctions';
-import { taskStatusCol, taskGhLinkCol, taskNameCol, pbiProgressCol, backlogColors, pbiProgressCol2, peopleDropdown, PriorityDropdown, sprintNrCol, sprintTitleCol, sprintDateCol, sprintStoryPtsCol, sprintStatusRender, sprintActCol, pbiNameCol, pbiStatusCol, sprintStatusCol } from './utility/BodyRowsAndColumns';
+import { taskStatusCol, taskGhLinkCol, taskNameCol, pbiProgressCol, backlogColors, pbiProgressCol2, peopleDropdown, PriorityDropdown, sprintNrCol, sprintTitleCol, sprintDateCol, sprintStoryPtsCol, sprintActCol, pbiNameCol, pbiStatusCol, sprintStatusCol, pbiActionCol } from './utility/BodyRowsAndColumns';
 import { PBITableComponent } from './BacklogPBITableComponent';
 import { BranchesOutlined, EditOutlined } from '@ant-design/icons';
 import { SprintTableComponent } from './BacklogSprintTableComponent';
@@ -231,19 +231,14 @@ export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
           {item.estimated ? (item.expectedTimeInHours + " SP ") : "Not estimated "}{<EditOutlined />}</Tag> : <Tag className='transparentItem' color={backlogColors[0]}>{"Not estimated "}{<EditOutlined />}</Tag>)
       }
     },
-    pbiStatusCol,
-    {
-      title: '', align: "right" as const, width: "15%", key: 'actions', render: (item: IBacklogItem) => {
-        return (<span > <Button size='small' type="link" onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, addTask: true }); }} >{"Add Task"}</Button></span>)
-      }
-    },];
+    pbiStatusCol,pbiActionCol(setSelectedPBI,isModal,setIsModal)];
   const PBITableforSprint: React.FC<ISprint> = (item: ISprint) => {
     return (<PBITableComponent sortedInfo={props.sortedInfo} filteredInfo={props.filteredInfo} sortSelected={function (items: any): void { props.sortSelected(items) }} itemSelected={function (items: number[]): void { props.itemSelected(items) }}
       TaskTableforPBI={TaskTableforPBI} nameFilter={props.nameFilter} peopleFilter={props.peopleFilter} item={item} pbiColumns={pbiColumns} nestedcomponents={nestedcomponents} />)
   };
   const sprintColumns = [sprintNrCol(ownerName, navigate), sprintTitleCol, sprintDateCol, sprintStoryPtsCol,
     sprintStatusCol(props.sortedInfo,props.filteredInfo, setSelectedSprint, isModal, setIsModal), sprintActCol(setSelectedSprint, isModal, setIsModal),];
-
+console.log(selectedSprint);
   return (<div className='baccklogScroll' >
     <SprintTableComponent sortedInfo={props.sortedInfo ? props.sortedInfo.order : ""} nameFilter={props.nameFilter} keys={0} peopleFilter={props.peopleFilter} loading={refreshRequired || initialRefresh} data={[{
       goal: "", finishDate: "", isCurrent: false, status: "", isCompleted: false, sprintNumber: 0, title: "", backlogItems: pbiPage.list
@@ -254,15 +249,15 @@ export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
     }
     {isModal.editPBI && selectedPBI && selectedPBI.id && <EditPBIPopup data={selectedPBI as IAddBI} visible={isModal.editPBI}
       onCreate={function (values: any): void { editPBI(values) }} onDelete={() => { deletePBI(selectedPBI) }} onFinish={() => { finishPBI(selectedPBI) }}
-      onCancel={() => { setIsModal({ ...isModal, editPBI: false }); }} />}
+      onCancel={() => { setIsModal({ ...isModal, editPBI: false }); setSelectedPBI({} as IBacklogItem); }} />}
     {isModal.estimatePBI && selectedPBI && selectedPBI.id && <EstimatePBIPopup data={selectedPBI as IBacklogItem} visible={isModal.estimatePBI}
-      onCreate={function (values: any): void { estimatePBI(values) }} onCancel={() => { setIsModal({ ...isModal, estimatePBI: false }); }} />}
+      onCreate={function (values: any): void { estimatePBI(values) }} onCancel={() => { setIsModal({ ...isModal, estimatePBI: false });setSelectedPBI({} as IBacklogItem); }} />}
     {isModal.addTask && <AddTaskPopup data={{ name: "" } as IFilters} visible={isModal.addTask}
       onCreate={function (values: any): void { addTaskToPBI(values); }} onCancel={() => { setIsModal({ ...isModal, addTask: false }); }} />}
     {isModal.updateSprint && !loading && <UpdateSprintPopup data={selectedSprint} visible={isModal.updateSprint} onCreate={function (values: any): void { updateSprint(values) }}
-      onCancel={() => { setIsModal({ ...isModal, updateSprint: false }); }} />}
+      onCancel={() => { setIsModal({ ...isModal, updateSprint: false });setSelectedSprint({} as ISprint); }} />}
     {isModal.completeSprint && !loading && <CompleteSprintPopup data={selectedSprint} visible={isModal.completeSprint} onComplete={function (value: boolean): void { completeSprint(value) }}
-      onCancel={() => { setIsModal({ ...isModal, completeSprint: false }); }} />}
+      onCancel={() => { setIsModal({ ...isModal, completeSprint: false });setSelectedSprint({} as ISprint); }} />}
   </div>
   );
 });

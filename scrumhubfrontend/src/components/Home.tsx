@@ -14,7 +14,6 @@ import { clearReposList } from '../appstate/actions';
 import SkeletonList, { CantAddToShButton, InShButton } from './utility/LoadAnimations';
 import { dateFormat, isArrayValid } from './utility/commonFunctions';
 import { initReposFilters } from './utility/commonInitValues';
-import { response } from 'express';
 const { Meta } = Card;
 
 export function Home() {

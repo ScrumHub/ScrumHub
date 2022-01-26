@@ -3,8 +3,8 @@ import { IPeopleList, IBacklogItem, ISprint, IState, ITask } from "../../appstat
 import * as Actions from '../../appstate/actions';
 import "../Home.css";
 import "../Main.css";
-import { CalendarOutlined, CheckOutlined, CloseOutlined, DownOutlined, EditOutlined, HomeOutlined, SyncOutlined } from "@ant-design/icons";
-import { dateFormat, isArrayValid } from "./commonFunctions";
+import { CalendarOutlined, CheckOutlined, CloseOutlined, DownOutlined, EditOutlined, HomeOutlined, SnippetsOutlined, SyncOutlined } from "@ant-design/icons";
+import { dateFormat, formatSprintStatus, isArrayValid } from "./commonFunctions";
 import React, { useState } from "react";
 import { assignPerson } from "./BacklogHandlers";
 import { PBIMenuWithPeople, PBIMenuWithPriorities } from "./LoadAnimations";
@@ -32,7 +32,7 @@ export const taskStatusCol = {
   render: (record: ITask) => (
     <span>
       <Badge size='small' status={record.finished ? "success" : "error"} />
-      {record.status.replace("In", "In ").replace("WBranch","")}
+      {record.status.replace("In", "In ").replace("WBranch", "")}
     </span>
   ),
 };
@@ -64,11 +64,12 @@ export const priorityPBItem = (item: IBacklogItem) => {
 
 
 /*pbi columns functionalities*/
-export const pbiNameCol=(nameFilter, sortedInfo, setSelectedPBI: React.Dispatch<React.SetStateAction<IBacklogItem>>, isModal: IModals, setIsModal: React.Dispatch<React.SetStateAction<IModals>>)=>    {return({
-  title: 'Name', width: "25%", sorter: (a: IBacklogItem, b: IBacklogItem) => a.name.length - b.name.length, sortOrder: sortedInfo && sortedInfo.columnKey === 'name' && sortedInfo.order,
-  filterIcon: <></>, filters: [], filteredValue: nameFilter || null, onFilter: (value: any, record: IBacklogItem) => isArrayValid(nameFilter) ? record.name.toLowerCase().includes(nameFilter.at(0).toLowerCase()) : '',
-  align: "left" as const, key: 'name', render: (item: IBacklogItem) => { return (<div className={item.id === 0 ? '' : 'link-button'} onClick={() => { if (item.id !== 0) { setSelectedPBI(item); setIsModal({ ...isModal, editPBI: true }); } }}>{item.name}</div>) },
-})
+export const pbiNameCol = (nameFilter, sortedInfo, setSelectedPBI: React.Dispatch<React.SetStateAction<IBacklogItem>>, isModal: IModals, setIsModal: React.Dispatch<React.SetStateAction<IModals>>) => {
+  return ({
+    title: 'Name', width: "25%", sorter: (a: IBacklogItem, b: IBacklogItem) => a.name.length - b.name.length, sortOrder: sortedInfo && sortedInfo.columnKey === 'name' && sortedInfo.order,
+    filterIcon: <></>, filters: [], filteredValue: nameFilter || null, onFilter: (value: any, record: IBacklogItem) => isArrayValid(nameFilter) ? record.name.toLowerCase().includes(nameFilter.at(0).toLowerCase()) : '',
+    align: "left" as const, key: 'name', render: (item: IBacklogItem) => { return (<div className={item.id === 0 ? '' : 'link-button'} onClick={() => { if (item.id !== 0) { setSelectedPBI(item); setIsModal({ ...isModal, editPBI: true }); } }}>{item.name}</div>) },
+  })
 }
 
 export const pbiProgressCol = {
@@ -94,10 +95,18 @@ export const pbiProgressTagCol = {
   }
 };
 
-export const pbiStatusCol ={
-  title: 'Status', align: "center" as const, width: "10%", key: 'status', render: (item: IBacklogItem) => 
-  item.finished? <CheckOutlined style={{color:"green"}} hidden={item.id===0}/>:<CloseOutlined style={{color:"red"}} hidden={item.id===0}/>
+export const pbiStatusCol = {
+  title: 'Status', align: "center" as const, width: "10%", key: 'status', render: (item: IBacklogItem) =>
+    item.finished ? <CheckOutlined style={{ color: "green" }} hidden={item.id === 0} /> : <CloseOutlined style={{ color: "red" }} hidden={item.id === 0} />
 
+}
+
+export const pbiActionCol = (setSelectedPBI: React.Dispatch<React.SetStateAction<IBacklogItem>>, isModal: IModals, setIsModal: React.Dispatch<React.SetStateAction<IModals>>) => {
+  return ({
+    title: '', align: "right" as const, width: "15%", key: 'actions', render: (item: IBacklogItem) => {
+      return (<span > <Button size='small' type="link" onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, addTask: true }); }} >{"Add Task"}</Button></span>)
+    }
+  });
 }
 
 export function PriorityDropdown(props: { loading: boolean; token: string; ownerName: string; record: IBacklogItem; }) {
@@ -112,7 +121,7 @@ export function PriorityDropdown(props: { loading: boolean; token: string; owner
           store.dispatch(Actions.editPBIThunk({
             ownerName: props.ownerName, token: props.token, pbi: { ...props.record, priority: priority },
             pbiId: props.record.id,
-          })).then((response: any) => { if (response.payload && response.payload.code === 200) { store.dispatch(Actions.updatePBILoadingKeys([props.record.id])); }setChange(true); })
+          })).then((response: any) => { if (response.payload && response.payload.code === 200) { store.dispatch(Actions.updatePBILoadingKeys([props.record.id])); } setChange(true); })
         }
       }} visible={true} priority={props.record.priority} />}
       buttonsRender={() => [
@@ -140,9 +149,9 @@ export const sprintNrCol = (ownerName: string, navigate: NavigateFunction) => {
 };
 
 export const sprintStatusRender = (record: ISprint, setSelectedSprint: React.Dispatch<React.SetStateAction<ISprint>>, isModal, setIsModal: React.Dispatch<React.SetStateAction<IModals>>) => {
-  return (record.sprintNumber !== 0 && (record.isCompleted ? <Tag color={record.status === "Failed" ? "red" : "green"}><span>
-    {record.status.replace("Not", "Not ").replace("In", "In ")}</span></Tag> : <Tag style={{ cursor: "pointer" }} onClick={() => { setSelectedSprint(record); setIsModal({ ...isModal, completeSprint: true }); }} color="geekblue"><span>
-      {record.status.replace("Not", "Not ").replace("In", "In ")} <EditOutlined /></span></Tag>));
+  return (record.sprintNumber !== 0 && (record.isCompleted ? <Tag style={{ cursor: "progress" }} onClick={() => { setSelectedSprint(record); setIsModal({ ...isModal, completeSprint: true }); }} color={record.status === "Failed" ? "red" : "green"}><span>
+    {formatSprintStatus(record.status)} <SnippetsOutlined /></span></Tag> : <Tag style={{ cursor: "pointer" }} onClick={() => { setSelectedSprint(record); setIsModal({ ...isModal, completeSprint: true }); }} color="geekblue"><span>
+      {formatSprintStatus(record.status)} <EditOutlined /></span></Tag>));
 }
 
 export const sprintActCol = (setSelectedSprint: React.Dispatch<React.SetStateAction<ISprint>>, isModal: IModals, setIsModal: React.Dispatch<React.SetStateAction<IModals>>) => {
@@ -153,9 +162,7 @@ export const sprintActCol = (setSelectedSprint: React.Dispatch<React.SetStateAct
   });
 }
 
-export const sprintTitleCol = {
-  title: 'Title', width: "30%", align: "center" as const, dataIndex: 'title', key: 'sprintTitle', ellipsis: true
-};
+export const sprintTitleCol = { title: 'Title', width: "30%", align: "center" as const, dataIndex: 'title', key: 'sprintTitle', ellipsis: true };
 
 export const sprintDateCol = {
   title: 'Deadline', width: "15%", align: "center" as const, dataIndex: 'finishDate', key: 'finishDate',
@@ -170,14 +177,15 @@ export const sprintStoryPtsCol = {
   }
 };
 
-export const sprintStatusCol = (sortedInfo,filteredInfo, setSelectedSprint: React.Dispatch<React.SetStateAction<ISprint>>, isModal: IModals, setIsModal: React.Dispatch<React.SetStateAction<IModals>>) => 
-{return({
-  key: "isCompleted", title: "completed", width: "15%", sorter: (a: ISprint, b: ISprint) => a.sprintNumber - b.sprintNumber,
-  sortOrder: sortedInfo && sortedInfo.columnKey === "isCompleted" && sortedInfo.order,
-  filteredValue: filteredInfo.complete || null, filters: [{ text: "Complete", value: 1, }, { text: "Not complete", value: 0, }],
-  onFilter: (value: any, item: ISprint) => filteredInfo && isArrayValid(filteredInfo.complete) && item.sprintNumber !== 0 ? filteredInfo.complete.includes(Number(item.isCompleted)) : true,
-  render: (record: ISprint) => sprintStatusRender(record, setSelectedSprint, isModal, setIsModal), align: "center" as const,
-})};
+export const sprintStatusCol = (sortedInfo, filteredInfo, setSelectedSprint: React.Dispatch<React.SetStateAction<ISprint>>, isModal: IModals, setIsModal: React.Dispatch<React.SetStateAction<IModals>>) => {
+  return ({
+    key: "isCompleted", title: "completed", width: "15%", sorter: (a: ISprint, b: ISprint) => a.sprintNumber - b.sprintNumber,
+    sortOrder: sortedInfo && sortedInfo.columnKey === "isCompleted" && sortedInfo.order,
+    filteredValue: filteredInfo.complete || null, filters: [{ text: "Complete", value: 1, }, { text: "Not complete", value: 0, }],
+    onFilter: (value: any, item: ISprint) => filteredInfo && isArrayValid(filteredInfo.complete) && item.sprintNumber !== 0 ? filteredInfo.complete.includes(Number(item.isCompleted)) : true,
+    render: (record: ISprint) => sprintStatusRender(record, setSelectedSprint, isModal, setIsModal), align: "center" as const,
+  })
+};
 
 export const routes = (ownerName: string | null, sprintID: string, location: any) =>
   [

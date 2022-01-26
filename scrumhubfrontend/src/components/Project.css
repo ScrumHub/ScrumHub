@@ -23,12 +23,12 @@
 }
 
 .projectCurUserDiv{
-cursor: "pointer"; 
-border-radius: "50%";  
+cursor: pointer; 
+border-radius: 50%;  
 }
 
 .projectCurUserShadowDiv{
-  cursor: "pointer"; 
-  border-radius: "50%";  
+  cursor: pointer; 
+  border-radius: 50%;  
   box-shadow:white 0px 0px 0.1px 0.05em;
   }

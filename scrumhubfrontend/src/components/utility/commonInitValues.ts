@@ -1,7 +1,7 @@
 import { IFilters } from "../../appstate/stateInterfaces";
 import config from "../../configuration/config";
 import { backlogPriorities } from "./BodyRowsAndColumns";
-import { IModals, IRowIds } from "./commonInterfaces";
+import { IFilteredInfo, IModals, IRowIds, ISortedInfo } from "./commonInterfaces";
 
 export const initIDs: IFilters = {
   oldSprintId: -1, newSprintId: -1, pbiId: -1, dropped: false
@@ -33,8 +33,8 @@ export const formItemLayoutWithOutLabel = {
     sm: { offset: 0 },
   },
 };
-export const initFilteredInfo = { complete: [] as number[], pbiPriority: [] as number[] };
-export const initSortedInfo = {order: '',columnKey: '',};
+export const initFilteredInfo = { complete: [] as number[], pbiPriority: [] as number[] } as IFilteredInfo;
+export const initSortedInfo = {order: "",columnKey: ""} as ISortedInfo;
 
 export const initFilterSortInfo =  {
   filteredInfo: initFilteredInfo,

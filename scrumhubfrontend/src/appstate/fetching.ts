@@ -24,8 +24,8 @@ export async function getResponse<T, K>(
       response: response_1.data as APIResponse<T, K>,
     }; }).then((response: any) => { 
     return {
-      code: response && isItemDefined(response.status)? response.status:errorObject.code,
-      response: response && isItemDefined(response.status)?response.data as APIResponse<T, K>:errorObject.response,
+      code: response && isItemDefined(response.status)? response.status:(isItemDefined(response.Code)?response.Code:errorObject.code),
+      response: response && isItemDefined(response.status)?response.data as APIResponse<T, K>:(isItemDefined(response.response) && isItemDefined(response.response.Message)?({...errorObject.response, Message:response.response.Message}):errorObject.response),
     }; });
   }
   catch(error: any) {

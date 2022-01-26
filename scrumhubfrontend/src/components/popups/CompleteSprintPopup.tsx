@@ -19,9 +19,10 @@ export const CompleteSprintPopup: React.FC<ICompleteSprintCollectionCreateFormPr
     <Modal
     centered={true}
     visible={visible}
-    closable={false}
-      title="Complete Sprint"
-      footer={[
+    closable={true}
+    onCancel={onCancel}
+      title={data.isCompleted?"Sprint Details":"Complete Sprint"}
+      footer={data.isCompleted?[]:[
         <Button key="CancelInCompletePopup" onClick={onCancel}>
           Cancel
         </Button>,
@@ -33,7 +34,7 @@ export const CompleteSprintPopup: React.FC<ICompleteSprintCollectionCreateFormPr
         okText="Yes"
         cancelText="No"
         icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-      ><Button  type="primary"  key="FailedInCompletePopup">
+      ><Button type="primary" disabled={!data.status.includes("Not")} key="FailedInCompletePopup">
           {"Mark As Failed"}</Button>
       </Popconfirm>,
               <Popconfirm
@@ -44,7 +45,7 @@ export const CompleteSprintPopup: React.FC<ICompleteSprintCollectionCreateFormPr
               okText="Yes"
               cancelText="No"
               icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-            ><Button  type="primary"  key="SuccesfulInCompletePopup">
+            ><Button disabled={!data.status.includes("Not")} type="primary"  key="SuccesfulInCompletePopup">
                 {"Mark As Successful"}</Button>
             </Popconfirm>,
       ]}
@@ -78,13 +79,13 @@ export const CompleteSprintPopup: React.FC<ICompleteSprintCollectionCreateFormPr
         >{moment().endOf('day') < moment(data.finishDate) ?
           <Timeline style={{marginTop:"2%", paddingBottom:0, height:50}}>
             <Timeline.Item  >{moment().endOf('day').format("YYYY/MM/DD").toString()+" "+
-            (isArrayValid(data.backlogItems)?data.backlogItems.filter((pbi:IBacklogItem)=>!pbi.finished).length=== 0:true)? "All items finished":"Not all items are finished"}</Timeline.Item>
+            ((isArrayValid(data.backlogItems)?data.backlogItems.filter((pbi:IBacklogItem)=>!pbi.finished).length=== 0:true)? "All items finished":"Not all items are finished")}</Timeline.Item>
             <Timeline.Item color="green">{getDate(data.finishDate as string)+" "+validateString(data.title)+" Deadline"} </Timeline.Item>
           </Timeline>:
           <Timeline style={{marginTop:"2%",paddingBottom:0, height:50}}>
             <Timeline.Item color="red">{getDate(data.finishDate as string)+" "+validateString(data.title)+" Deadline"} </Timeline.Item>
           <Timeline.Item>{moment().endOf('day').format("YYYY/MM/DD").toString()+" "+
-            (isArrayValid(data.backlogItems)?data.backlogItems.filter((pbi:IBacklogItem)=>!pbi.finished).length=== 0:true)? "All items finished":"Not all items are finished"}</Timeline.Item>
+            ((isArrayValid(data.backlogItems)?data.backlogItems.filter((pbi:IBacklogItem)=>!pbi.finished).length=== 0:true)? "All items finished":"Not all items are finished")+(data.isCompleted?(", Sprint marked as "+data.status.toLowerCase()):"")}</Timeline.Item>
         </Timeline>
           }
         </Form.Item>

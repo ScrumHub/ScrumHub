@@ -33,3 +33,13 @@
     sprintKeys:number[],
     pbiKeys:number[],
   }
+
+export interface IFilteredInfo{
+  complete:number[],
+  pbiPriority: number[]
+}
+
+export interface ISortedInfo{
+  order:string,
+  columnKey: string
+}

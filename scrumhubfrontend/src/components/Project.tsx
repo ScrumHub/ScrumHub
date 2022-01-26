@@ -13,7 +13,7 @@ import React from 'react';
 import { AddPBIPopup } from './popups/AddPBIPopup';
 import { AddSprintPopup } from './popups/AddSprintPopup';
 import { initAddPBI, initSprint } from '../appstate/stateInitValues';
-import { initFilterMenu, initFilterSortInfo } from './utility/commonInitValues';
+import { initFilteredInfo, initFilterMenu, initFilterSortInfo, initSortedInfo } from './utility/commonInitValues';
 const { Search } = Input;
 
 export const Project = React.memo((props: any) => {
@@ -94,7 +94,7 @@ export const Project = React.memo((props: any) => {
         <Button type="primary" onClick={() => { setIsAddSprint(true); }}>{"Create Sprint"}</Button>
         <Button type="primary" onClick={() => { setIsAddPBI(true); }}>{"Add Product Backlog Item"}</Button>
         <Search autoComplete='on' onMouseEnter={() => setFilterMenu(initFilterMenu)} placeholder="Input backlog item name" onSearch={onSearch} enterButton />
-        <Dropdown.Button
+        <Badge status={"error"} count={infos.filteredInfo!==initFilteredInfo?2:0} overflowCount={1} style={{ borderColor: "transparent", zIndex:20 }}><Dropdown.Button
           className='projectDropBtn'
           placement="bottomCenter"
           visible={filterMenu.filterMenuVisible}
@@ -104,8 +104,8 @@ export const Project = React.memo((props: any) => {
           buttonsRender={() => [<></>,
           React.cloneElement(<Button type="primary" onMouseEnter={() => { setFilterMenu({ ...filterMenu, filterMenuVisible: true }); }} icon={<FilterOutlined className='projectWhIcon'></FilterOutlined>}>Filter</Button>),
           ]} >
-
-        </Dropdown.Button>
+        </Dropdown.Button></Badge>
+        <Badge status={"error"} count={infos.sortedInfo!==initSortedInfo?2:0} overflowCount={1} style={{ borderColor: "transparent", zIndex:20 }}>
         <Dropdown.Button
           className='projectDropBtn'
           placement="bottomCenter"
@@ -114,8 +114,7 @@ export const Project = React.memo((props: any) => {
             <></>,
             React.cloneElement(<Button onMouseEnter={() => setFilterMenu(initFilterMenu)} type="primary" icon={<DownOutlined prefix='Sort' className='projectWhIcon'></DownOutlined>}>{"Sort"}</Button>),
           ]} >
-
-        </Dropdown.Button>
+        </Dropdown.Button></Badge>
         <Dropdown.Button
           className='projectDropBtn'
           placement="bottomCenter"
