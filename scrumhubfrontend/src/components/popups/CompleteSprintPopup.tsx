@@ -28,7 +28,8 @@ export const CompleteSprintPopup: React.FC<ICompleteSprintCollectionCreateFormPr
         </Button>,
         <Popconfirm
         key="succInComplPopup"
-        title="Are you sure you want to mark this sprint as successful?"
+        title={()=><><div>{`There are ${isArrayValid(data.backlogItems) ? data.backlogItems.filter((item: IBacklogItem) => !item.finished).length : 0} unfinished backlog items in this sprint.`}</div>
+        <div>Are you sure you want to mark this sprint as failed?</div></>}
         onConfirm={()=>{onComplete(true)}}
         onCancel={(e) => { message.info("Sprint " +data.sprintNumber+ " was not marked") }}
         okText="Yes"
@@ -39,7 +40,8 @@ export const CompleteSprintPopup: React.FC<ICompleteSprintCollectionCreateFormPr
       </Popconfirm>,
               <Popconfirm
               key="failInComplPopup"
-              title="Are you sure you want to mark this sprint as successful?"
+              title={()=><><div>{`There are ${isArrayValid(data.backlogItems) ? data.backlogItems.filter((item: IBacklogItem) => !item.finished).length : 0} unfinished backlog items in this sprint.`}</div>
+        <div>Are you sure you want to mark this sprint as successful?</div></>}
               onConfirm={()=>{onComplete(false)}}
               onCancel={(e) => { message.info("Sprint " +data.sprintNumber+ " was not marked") }}
               okText="Yes"

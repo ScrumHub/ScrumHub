@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { GithubOutlined, LoadingOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router";
-import { loginData } from "./utility/commonInitValues";
+import { loginDataError } from "./utility/commonInitValues";
 import { useSelector } from "react-redux";
 import { IState } from "../appstate/stateInterfaces";
 import { getFetchBodyData, hasGithubResponseCode, setLocalStorage as setLoginStateLocalStorage } from "./utility/commonFunctions";
@@ -28,22 +28,21 @@ export function Login(props: any) {
           let params = new URLSearchParams(response);
           const access_token = params.get("access_token");
           if (access_token) {
-            setLoginStateLocalStorage(access_token);
-            handleLogin(access_token, navigate);
+            handleLogin(access_token, navigate, setData);
           }
           else {
-            setData(loginData);
+            setData(loginDataError);
           }
         })
         .catch((error: any) => {
-          setData(loginData);
+          setData(loginDataError);
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loginState.isLoggedIn, loginState.token, data, loginState.proxy_url]);
   useEffect(() => {
     if (error.hasError) {
-      setData(loginData);
+      setData(loginDataError);
     }
   }, [error.hasError]);
   return (

@@ -14,6 +14,7 @@ import { AddPBIPopup } from './popups/AddPBIPopup';
 import { AddSprintPopup } from './popups/AddSprintPopup';
 import { initAddPBI, initSprint } from '../appstate/stateInitValues';
 import { initFilteredInfo, initFilterMenu, initFilterSortInfo, initSortedInfo } from './utility/commonInitValues';
+import { isArrayValid } from './utility/commonFunctions';
 const { Search } = Input;
 
 export const Project = React.memo((props: any) => {
@@ -94,7 +95,7 @@ export const Project = React.memo((props: any) => {
         <Button type="primary" onClick={() => { setIsAddSprint(true); }}>{"Create Sprint"}</Button>
         <Button type="primary" onClick={() => { setIsAddPBI(true); }}>{"Add Product Backlog Item"}</Button>
         <Search autoComplete='on' onMouseEnter={() => setFilterMenu(initFilterMenu)} placeholder="Input backlog item name" onSearch={onSearch} enterButton />
-        <Badge status={"error"} count={infos.filteredInfo!==initFilteredInfo?2:0} overflowCount={1} style={{ borderColor: "transparent", zIndex:20 }}><Dropdown.Button
+        <Badge status={"error"} count={isArrayValid(infos.filteredInfo.complete)||isArrayValid(infos.filteredInfo.pbiPriority)?2:0} overflowCount={1} style={{ borderColor: "transparent", zIndex:20 }}><Dropdown.Button
           className='projectDropBtn'
           placement="bottomCenter"
           visible={filterMenu.filterMenuVisible}

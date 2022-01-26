@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { initModalVals, pbiFilterVals } from './utility/commonInitValues';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
-import { canDropPBI, canDropTask, isArrayValid, isBranchNotCreated, isInReviewOrFinished, } from './utility/commonFunctions';
+import { canDropPBI, canDropTask, getTimeFromDate, isArrayValid, isBranchNotCreated, isInReviewOrFinished, isItemDefined, } from './utility/commonFunctions';
 import { taskStatusCol, taskGhLinkCol, taskNameCol, pbiProgressCol, backlogColors, pbiProgressCol2, peopleDropdown, PriorityDropdown, sprintNrCol, sprintTitleCol, sprintDateCol, sprintStoryPtsCol, sprintActCol, pbiNameCol, pbiStatusCol, sprintStatusCol, pbiActionCol } from './utility/BodyRowsAndColumns';
 import { PBITableComponent } from './BacklogPBITableComponent';
 import { BranchesOutlined, EditOutlined } from '@ant-design/icons';
@@ -25,6 +25,10 @@ import { EditPBIPopup } from './popups/EditPBIPopup';
 import { EstimatePBIPopup } from './popups/EstimatePBIPopup';
 import { UpdateSprintPopup } from './popups/UpdateSprintPopup';
 import { TaskTableComponent } from './BacklogTaskTableComponent';
+import config from '../configuration/config';
+import axios from 'axios';
+import _ from 'lodash';
+import { getHeader } from '../appstate/stateUtilities';
 export const type = 'DraggableBodyRow';
 
 export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
@@ -34,9 +38,12 @@ export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
   const loading = useSelector((appState: IState) => appState.loading as boolean);
   const pbiPage = useSelector((appState: IState) => appState.pbiPage as IBacklogItemList);
   const people = useSelector((appState: IState) => appState.people as IPeopleList);
+  const tasks = useSelector((appState: IState) => appState.tasks as ITask[]);
+  const keys = useSelector((appState: IState) => appState.keys.pbiKeys);
   const refreshRequired = useSelector((appState: IState) => appState.productRequireRefresh as boolean);
   const sprintRefreshRequired = useSelector((appState: IState) => appState.sprintRequireRefresh as boolean);
   const [initialRefresh, setInitialRefresh] = useState(true);
+  const [startTimer, setStartTimer] = useState(true);
   const [selectedPBI, setSelectedPBI] = useState({} as IBacklogItem);
   const [selectedSprint, setSelectedSprint] = useState({} as ISprint);
   const [isModal, setIsModal] = useState<IModals>(initModalVals);
@@ -59,6 +66,7 @@ export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
       store.dispatch(Actions.fetchSprintsThunk({ token: token, ownerName: ownerName as string, filters: { ...initPBIFilter, onePage: true } }));
     }
   }, [sprintRefreshRequired]);
+ 
   const addTaskToPBI = (input: IFilters) => {
     setIsModal({ ...isModal, addTask: false });
     try {
@@ -238,7 +246,40 @@ export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
   };
   const sprintColumns = [sprintNrCol(ownerName, navigate), sprintTitleCol, sprintDateCol, sprintStoryPtsCol,
     sprintStatusCol(props.sortedInfo,props.filteredInfo, setSelectedSprint, isModal, setIsModal), sprintActCol(setSelectedSprint, isModal, setIsModal),];
-console.log(selectedSprint);
+ //let timer;
+ let x = 0;
+  useEffect(() => {
+    console.log("start");
+
+     
+    const timer = setInterval(
+      
+      async () => {         ++x;
+       const data = axios.get(`https://api.github.com/rate_limit`, { headers: { "Accept": "application/vnd.github.v3+json", "Authorization": "token " + token } })
+      .then((response: any) => {console.log("", getTimeFromDate(new Date()), isItemDefined(response.data) && isItemDefined(response.data.rate) && isItemDefined(response.data.rate.used) ? response.data.rate.used : 0); return(isItemDefined(response.data) && isItemDefined(response.data.rate) && isItemDefined(response.data.rate.used) ? response.data.rate.used as number: 0);});
+      //console.log(++x);
+      console.log("",props.peopleFilter, props.nameFilter, keys);
+        //if((isArrayValid(props.peopleFilter)|| isArrayValid(props.nameFilter)||isArrayValid(keys))){
+          console.log(x%2);
+          if(isItemDefined(data) && typeof(data)==="number" && (data <3000 ||(data>3000 && x%2===0))){
+        const res = await axios.get(
+        `${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}?onePage=true`,
+        { headers: getHeader(token, config) }
+        ).then(response => { console.log(response);return (response.data); });
+        
+          //.then((response: any) => console.log("", getTimeFromDate(new Date()), isItemDefined(response.data) && isItemDefined(response.data.rate) && isItemDefined(response.data.rate.used) ? response.data.rate.used : 0))
+          console.log(res.list);
+        if (!_.isEqual(res.list, tasks)) {
+          //console.log(res.list);
+          //store.dispatch(Actions.updateTasks({ ...props.item, tasks: res.list }));
+        }
+      }
+      //}
+      }, 8000);
+    return () => clearInterval(timer);
+    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (<div className='baccklogScroll' >
     <SprintTableComponent sortedInfo={props.sortedInfo ? props.sortedInfo.order : ""} nameFilter={props.nameFilter} keys={0} peopleFilter={props.peopleFilter} loading={refreshRequired || initialRefresh} data={[{
       goal: "", finishDate: "", isCurrent: false, status: "", isCompleted: false, sprintNumber: 0, title: "", backlogItems: pbiPage.list

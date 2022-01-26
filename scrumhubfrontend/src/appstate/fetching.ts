@@ -225,6 +225,16 @@ export function addUnassignedTasksToPBI(token: string, ownerName: string, pbiId:
   );
 }
 
+export function fetchAllRepoTasks(token: string, ownerName: string,
+  ): Promise<RequestResponse<ITask, number>> {
+    return getResponse(
+      axios.get(
+        `${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}?onePage=true`,
+        { headers: getHeader(token, config) }
+      )
+    );
+  }
+
 export function addTask(token: string, ownerName: string, pbiId: number, name: string,
 ): Promise<RequestResponse<ITask, number>> {
   return getResponse(

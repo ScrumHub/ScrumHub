@@ -3,7 +3,7 @@ import { IPeopleList, IBacklogItem, ISprint, IState, ITask } from "../../appstat
 import * as Actions from '../../appstate/actions';
 import "../Home.css";
 import "../Main.css";
-import { CalendarOutlined, CheckOutlined, CloseOutlined, DownOutlined, EditOutlined, HomeOutlined, SnippetsOutlined, SyncOutlined } from "@ant-design/icons";
+import { AuditOutlined, CalendarOutlined, CheckOutlined, CloseOutlined, DownOutlined, EditOutlined, HomeOutlined, SnippetsOutlined, SyncOutlined } from "@ant-design/icons";
 import { dateFormat, formatSprintStatus, isArrayValid } from "./commonFunctions";
 import React, { useState } from "react";
 import { assignPerson } from "./BacklogHandlers";
@@ -66,7 +66,7 @@ export const priorityPBItem = (item: IBacklogItem) => {
 /*pbi columns functionalities*/
 export const pbiNameCol = (nameFilter, sortedInfo, setSelectedPBI: React.Dispatch<React.SetStateAction<IBacklogItem>>, isModal: IModals, setIsModal: React.Dispatch<React.SetStateAction<IModals>>) => {
   return ({
-    title: 'Name', width: "25%", sorter: (a: IBacklogItem, b: IBacklogItem) => a.name.length - b.name.length, sortOrder: sortedInfo && sortedInfo.columnKey === 'name' && sortedInfo.order,
+    title: 'Name', width: "33%", ellipsis:true ,sorter: (a: IBacklogItem, b: IBacklogItem) => a.name.length - b.name.length, sortOrder: sortedInfo && sortedInfo.columnKey === 'name' && sortedInfo.order,
     filterIcon: <></>, filters: [], filteredValue: nameFilter || null, onFilter: (value: any, record: IBacklogItem) => isArrayValid(nameFilter) ? record.name.toLowerCase().includes(nameFilter.at(0).toLowerCase()) : '',
     align: "left" as const, key: 'name', render: (item: IBacklogItem) => { return (<div className={item.id === 0 ? '' : 'link-button'} onClick={() => { if (item.id !== 0) { setSelectedPBI(item); setIsModal({ ...isModal, editPBI: true }); } }}>{item.name}</div>) },
   })
@@ -80,7 +80,7 @@ export const pbiProgressCol = {
   }
 };
 export const pbiProgressCol2 = {
-  title: 'Tasks To Do', width: "15%", key: 'tasks', align: "center" as const, render: (item: IBacklogItem) => {
+  title: 'Tasks To Do', width: "12%", key: 'tasks', align: "center" as const, render: (item: IBacklogItem) => {
     const filtered = isArrayValid(item.tasks) ? item.tasks.filter((item: ITask) => !item.finished).length : 0;
     return (
       <Progress width={25} percent={100} size='small' type="dashboard" status={`${filtered === 0 ? "success" : "exception"}`}
@@ -103,7 +103,7 @@ export const pbiStatusCol = {
 
 export const pbiActionCol = (setSelectedPBI: React.Dispatch<React.SetStateAction<IBacklogItem>>, isModal: IModals, setIsModal: React.Dispatch<React.SetStateAction<IModals>>) => {
   return ({
-    title: '', align: "right" as const, width: "15%", key: 'actions', render: (item: IBacklogItem) => {
+    title: '', align: "right" as const, width: "10%", key: 'actions', render: (item: IBacklogItem) => {
       return (<span > <Button size='small' type="link" onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, addTask: true }); }} >{"Add Task"}</Button></span>)
     }
   });
@@ -149,20 +149,24 @@ export const sprintNrCol = (ownerName: string, navigate: NavigateFunction) => {
 };
 
 export const sprintStatusRender = (record: ISprint, setSelectedSprint: React.Dispatch<React.SetStateAction<ISprint>>, isModal, setIsModal: React.Dispatch<React.SetStateAction<IModals>>) => {
-  return (record.sprintNumber !== 0 && (record.isCompleted ? <Tag style={{ cursor: "progress" }} onClick={() => { setSelectedSprint(record); setIsModal({ ...isModal, completeSprint: true }); }} color={record.status === "Failed" ? "red" : "green"}><span>
-    {formatSprintStatus(record.status)} <SnippetsOutlined /></span></Tag> : <Tag style={{ cursor: "pointer" }} onClick={() => { setSelectedSprint(record); setIsModal({ ...isModal, completeSprint: true }); }} color="geekblue"><span>
-      {formatSprintStatus(record.status)} <EditOutlined /></span></Tag>));
+  return (record.sprintNumber !== 0 ? (record.isCompleted ? 
+  <Tag icon={<AuditOutlined style={{color:"white"}} />} color={record.status === "Failed" ? "#cc3837" : "#4dc980"} style={{color:"white", cursor: "pointer",  }} onClick={() => { setSelectedSprint(record); setIsModal({ ...isModal, completeSprint: true }); }}>
+    {formatSprintStatus(record.status)} </Tag> : 
+    <Tag icon={<EditOutlined style={{ color:"white" }}/>} style={{ cursor: "pointer" }} color="#55acee" onClick={() => { setSelectedSprint(record); setIsModal({ ...isModal, completeSprint: true }); }} >
+      {formatSprintStatus(record.status)} </Tag>):
+      <Tag className="transparentItem"><span>
+      {"Not Finished"} <EditOutlined /></span></Tag>);
 }
 
 export const sprintActCol = (setSelectedSprint: React.Dispatch<React.SetStateAction<ISprint>>, isModal: IModals, setIsModal: React.Dispatch<React.SetStateAction<IModals>>) => {
   return ({
-    title: 'Action', width: "10%", align: "right" as const, key: 'action', render: (record: ISprint) => {
+    title: 'Action', width: "8%", align: "right" as const, key: 'action', render: (record: ISprint) => {
       return (<Button hidden={record.sprintNumber === 0} key={"action" + record.sprintNumber} size='small' type="link" onClick={() => { setSelectedSprint(record); setIsModal({ ...isModal, updateSprint: true }); }} >{"Update"}</Button>)
     },
   });
 }
 
-export const sprintTitleCol = { title: 'Title', width: "30%", align: "center" as const, dataIndex: 'title', key: 'sprintTitle', ellipsis: true };
+export const sprintTitleCol = { title: 'Title', width: "27%", align: "center" as const, dataIndex: 'title', key: 'sprintTitle', ellipsis: true };
 
 export const sprintDateCol = {
   title: 'Deadline', width: "15%", align: "center" as const, dataIndex: 'finishDate', key: 'finishDate',
@@ -172,9 +176,10 @@ export const sprintDateCol = {
 export const sprintStoryPtsCol = {
   title: 'Story Points', width: "15%", align: "center" as const, key: 'finishDate',
   render: (item: ISprint) => {
-    return (<Tag hidden={item.sprintNumber === 0} style={{ cursor: "pointer" }} color={"purple"} >
-      {item && isArrayValid(item.backlogItems) ? (item.backlogItems.map(item => item.expectedTimeInHours).reduce((prev, next) => prev + next) + " Story Points ") : "Not estimated "}</Tag>)
-  }
+    return<div hidden={item.sprintNumber===0}>{(item && isArrayValid(item.backlogItems) ? (item.backlogItems.map(item => item.expectedTimeInHours).reduce((prev, next) => prev + next)):0)+" Story Points"}</div>
+  }//return (<Tag hidden={item && isArrayValid(item.backlogItems) ? (item.backlogItems.map(item => item.expectedTimeInHours).reduce((prev, next) => prev + next)} style={{ cursor: "pointer" }} color={"purple"} >
+     // {item && isArrayValid(item.backlogItems) ? (item.backlogItems.map(item => item.expectedTimeInHours).reduce((prev, next) => prev + next) + " Story Points ") : "Not estimated "}</Tag>)
+  
 };
 
 export const sprintStatusCol = (sortedInfo, filteredInfo, setSelectedSprint: React.Dispatch<React.SetStateAction<ISprint>>, isModal: IModals, setIsModal: React.Dispatch<React.SetStateAction<IModals>>) => {

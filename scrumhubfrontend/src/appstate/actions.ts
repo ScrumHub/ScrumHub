@@ -196,6 +196,18 @@ export const addUnassignedTasksToPBI = createAsyncThunk<
   return response as RequestResponse<ITaskList, number>;
 });
 
+export const fetchRepoTasksThunk = createAsyncThunk<
+  RequestResponse<ITaskList, number>,
+  { token: string, ownerName: string; },
+  { rejectValue: RequestResponse<ITask, number> }
+>("fetchRepoTasks", async (item: {
+  token: string; ownerName: string; 
+}, { rejectWithValue }) => {
+  const response: RequestResponse<ITaskList, number> = await Fetching.fetchAllRepoTasks(item.token, item.ownerName);
+  if (response.code !== 200) { return rejectWithValue(response as RequestResponse<ITask, number>); }
+  return response as RequestResponse<ITaskList, number>;
+});
+
 export const addTaskThunk = createAsyncThunk<
   RequestResponse<ITask, number>,
   { token: string, ownerName: string; pbiId: number; name: string },

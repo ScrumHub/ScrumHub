@@ -1,7 +1,7 @@
 import { IFilters } from "../../appstate/stateInterfaces";
 import config from "../../configuration/config";
 import { backlogPriorities } from "./BodyRowsAndColumns";
-import { IFilteredInfo, IModals, IRowIds, ISortedInfo } from "./commonInterfaces";
+import { IFilteredInfo, ILoginData, IModals, IRowIds, ISortedInfo } from "./commonInterfaces";
 
 export const initIDs: IFilters = {
   oldSprintId: -1, newSprintId: -1, pbiId: -1, dropped: false
@@ -51,10 +51,10 @@ export const pbiFilterVals =
 {text: backlogPriorities[2],value: 2,},];
 
 
-export const loginData = {
+export const loginDataError = {
   isLoading: false,
   errorMessage: "Error! Login failed"
-}
+} as ILoginData;
 
 export const initReposFilters = {
   pageSize: config.defaultFilters.size,

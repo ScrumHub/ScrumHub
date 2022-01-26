@@ -11,9 +11,10 @@ import './ProductBacklog.css';
 import { useSelector } from 'react-redux';
 import { ISprint, IState } from '../appstate/stateInterfaces';
 import { routes } from './utility/BodyRowsAndColumns';
-import { clearLocalStorage, clearProjectLocalStorage, isMessageValid } from './utility/commonFunctions';
+import { clearLocalStorage, clearProjectLocalStorage, getTimeFromDate, isItemDefined, isMessageValid } from './utility/commonFunctions';
 import { ItemRender } from './utility/LoginAndMainHandlers';
 import { isNull } from 'lodash';
+import axios from 'axios';
 const { Header, Footer, Content, Sider } = Layout;
 const { SubMenu } = Menu;
 
@@ -108,6 +109,16 @@ export function Main(props: any) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser, load, isLoggedIn, location]);
+  /*useEffect(() => {
+    const timer = setInterval(
+      async () => {
+        axios.get(`https://api.github.com/rate_limit`, { headers: { "Accept": "application/vnd.github.v3+json", "Authorization": "token " + token } })
+          .then((response: any) => console.log("", getTimeFromDate(new Date()), isItemDefined(response.data) && isItemDefined(response.data.rate) && isItemDefined(response.data.rate.used) ? response.data.rate.used : 0))
+          ;
+      }, 10000);
+    return () => clearInterval(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);*/
   let stop = true, y_pos = -1, old_pos = -1, down = false, start = false;
   document.ondragover = () => { };
   document.ondragenter = () => { };

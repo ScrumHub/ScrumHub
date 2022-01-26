@@ -302,14 +302,14 @@ export const reducerFunction = (initState: IState) => {
       let newState = _.cloneDeep(state);
       return updateTasksSWR(newState, payload.payload.response as ITaskList);
     },
+    [Actions.fetchPBITasksThunk.rejected.toString()]: (state: IState, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
+      let newState = _.cloneDeep(state);
+      return { ...newState, error: getError(payload.payload), loading: false };
+    },
     [Actions.updateTasks.type]: (state: IState, payload: PayloadAction<any>) => {
       let newState = _.cloneDeep(state);
       const item = payload.payload as IBacklogItem;
       return updateStatePBI(newState, item);
-    },
-    [Actions.fetchPBITasksThunk.rejected.toString()]: (state: IState, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
-      let newState = _.cloneDeep(state);
-      return { ...newState, error: getError(payload.payload), loading: false };
     },
     [Actions.addUnassignedTasksToPBI.pending.toString()]: (state: IState, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
       let newState = _.cloneDeep(state);
@@ -320,6 +320,19 @@ export const reducerFunction = (initState: IState) => {
       return addStateUnassignedTaskToPBI(newState, payload.payload.response as ITaskList);
     },
     [Actions.addUnassignedTasksToPBI.rejected.toString()]: (state: IState, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
+      let newState = _.cloneDeep(state);
+      return { ...newState, error: getError(payload.payload), loading: false };
+    },
+    [Actions.fetchRepoTasksThunk.pending.toString()]: (state: IState, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
+      let newState = _.cloneDeep(state);
+      return { ...newState, loading: true };
+    },
+    [Actions.fetchRepoTasksThunk.fulfilled.toString()]: (state: IState, payload: PayloadAction<RequestResponse<ITaskList, number>>) => {
+      let newState = _.cloneDeep(state);
+      const tasks = payload.payload.response as ITaskList;
+      return({...newState,tasks:isArrayValid(tasks.list)?tasks:[] as ITask[], loading:false,error:initError});
+    },
+    [Actions.fetchRepoTasksThunk.rejected.toString()]: (state: IState, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
       let newState = _.cloneDeep(state);
       return { ...newState, error: getError(payload.payload), loading: false };
     },

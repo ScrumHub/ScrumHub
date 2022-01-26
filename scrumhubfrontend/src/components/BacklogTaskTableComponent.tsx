@@ -16,23 +16,24 @@ export const TaskTableComponent = React.memo((props: any) => {
   const token = useSelector((appState: IState) => appState.loginState.token);
   const loadingKeys = useSelector((appState: IState) => appState.loadingKeys.pbiKeys as number[]);
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : "";
-  useEffect(() => {
+  /*useEffect(() => {
     const timer = setInterval(
       async () => {
+
         const res = await axios.get(
           `${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/PBI/${props.item && props.item.id ? props.item.id : 0}`,
           { headers: getHeader(token, config) }
         ).then(response => { console.log(response);return (response.data); });
-        axios.get(`https://api.github.com/rate_limit`, { headers: { "Accept": "application/vnd.github.v3+json", "Authorization": "token " + token } })
+        
           //.then((response: any) => console.log("", getTimeFromDate(new Date()), isItemDefined(response.data) && isItemDefined(response.data.rate) && isItemDefined(response.data.rate.used) ? response.data.rate.used : 0))
-          ;/*RATE LIMIT*/
+          ;
         if (!_.isEqual(res.list, props.item.tasks)) {
           store.dispatch(Actions.updateTasks({ ...props.item, tasks: res.list }));
         }
       }, 10000);
     return () => clearInterval(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, []);*/
   return (<Table
     size="small"
     loading={!props.item || (props.item && loadingKeys.includes(props.item.id))}
