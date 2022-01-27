@@ -33,8 +33,6 @@ export function Main(props: any) {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
-  //window.devicePixelRatio = 1.2;
-  //console.log(window.devicePixelRatio);
   message.config({ maxCount: 1 });
   useEffect(() => {
     if (logout || (!isLoggedIn)) {
@@ -71,7 +69,7 @@ export function Main(props: any) {
         localStorage.setItem("sprintID", JSON.stringify(activeSprintNumber));
         setSelectedSiderKey('ActiveSprint');
         store.dispatch(Actions.fetchOneSprintThunk({ token: token, ownerName: ownerName, sprintNumber: Number(localStorage.getItem("sprintID") as string) }));
-        store.dispatch(Actions.fetchPeopleThunk({ ownerName, token }));
+        //store.dispatch(Actions.fetchPeopleThunk({ ownerName, token }));
         navigate(newPath, { replace: true });
       }
     }
@@ -110,16 +108,6 @@ export function Main(props: any) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser, load, isLoggedIn, location]);
-  /*useEffect(() => {
-    const timer = setInterval(
-      async () => {
-        axios.get(`https://api.github.com/rate_limit`, { headers: { "Accept": "application/vnd.github.v3+json", "Authorization": "token " + token } })
-          .then((response: any) => console.log("", getTimeFromDate(new Date()), isItemDefined(response.data) && isItemDefined(response.data.rate) && isItemDefined(response.data.rate.used) ? response.data.rate.used : 0))
-          ;
-      }, 10000);
-    return () => clearInterval(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);*/
   let stop = true, y_pos = -1, old_pos = -1, down = false, start = false;
   document.ondragover = () => { };
   document.ondragenter = () => { };

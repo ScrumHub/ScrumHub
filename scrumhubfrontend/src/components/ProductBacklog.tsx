@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { initModalVals } from './utility/commonInitValues';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
-import { canDropPBI, canDropTask, getTimeFromDate, isItemDefined, } from './utility/commonFunctions';
+import { canDropPBI, canDropTask, getTimeFromDate, isArrayValid, isItemDefined, } from './utility/commonFunctions';
 import { taskColumns, dragCmpnts, pbiColumns, sprintColumns } from './utility/BodyRowsAndColumns';
 import { PBITableComponent } from './BacklogPBITableComponent';
 import { SprintTableComponent } from './BacklogSprintTableComponent';
@@ -49,7 +49,8 @@ export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
   message.config({ maxCount: 1 });
   useEffect(() => {
     if (initialRefresh) {
-      if (!localStorage.getItem("sprintID")) {
+      console.log(initialRefresh);
+      if (!localStorage.getItem("sprintID")){// ||!isArrayValid(sprintPage.list) || !isArrayValid(pbiPage.list)) {
         store.dispatch(Actions.clearPBIsList());
         store.dispatch(Actions.clearSprintList());
       }
@@ -165,17 +166,7 @@ export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
       style={{ cursor: isDraggable ? "move" : "default", ...style }} {...restProps} />
     );
   };
-  const TaskTableforPBI: React.FC<IBacklogItem> = (item: IBacklogItem) => {return (<TaskTableComponent peopleFilter={props.peopleFilter} 
-    item={item} taskColumns={taskColumns(props.peopleFilter, token, ownerName, people, setIsModal, isModal)} taskComponents={dragCmpnts(DraggableBodyRow)} />)};
-
-  const PBITableforSprint: React.FC<ISprint> = (item: ISprint) => {
-    return (<PBITableComponent sortedInfo={props.sortedInfo} filteredInfo={props.filteredInfo} sortSelected={function (items: any): void { props.sortSelected(items) }} 
-    itemSelected={function (items: number[]): void { props.itemSelected(items) }} TaskTableforPBI={TaskTableforPBI} 
-    nameFilter={props.nameFilter} peopleFilter={props.peopleFilter} item={item} 
-    pbiColumns={pbiColumns(props.nameFilter, props.sortedInfo,props.filteredInfo,setSelectedPBI,isModal,setIsModal,pbiKeys,token, ownerName)} 
-    nestedcomponents={dragCmpnts(DraggableBodyRow)} />)
-  };
- /* let x = 0;
+   /* let x = 0;
   useEffect(() => {
     const timer = setInterval(
       async () => {
@@ -197,6 +188,16 @@ export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
       }, 8000);
     return () => clearInterval(timer);
   }, []);*/
+  const TaskTableforPBI: React.FC<IBacklogItem> = (item: IBacklogItem) => {return (<TaskTableComponent peopleFilter={props.peopleFilter} 
+    item={item} taskColumns={taskColumns(props.peopleFilter, token, ownerName, people, setIsModal, isModal)} taskComponents={dragCmpnts(DraggableBodyRow)} />)};
+
+  const PBITableforSprint: React.FC<ISprint> = (item: ISprint) => {
+    return (<PBITableComponent sortedInfo={props.sortedInfo} filteredInfo={props.filteredInfo} sortSelected={function (items: any): void { props.sortSelected(items) }} 
+    itemSelected={function (items: number[]): void { props.itemSelected(items) }} TaskTableforPBI={TaskTableforPBI} 
+    nameFilter={props.nameFilter} peopleFilter={props.peopleFilter} item={item} 
+    pbiColumns={pbiColumns(props.nameFilter, props.sortedInfo,props.filteredInfo,setSelectedPBI,isModal,setIsModal,pbiKeys,token, ownerName)} 
+    nestedcomponents={dragCmpnts(DraggableBodyRow)} />)
+  };
   return (<div className='baccklogScroll' >
     <SprintTableComponent filteredInfo={props.filteredInfo} sortedInfo={props.sortedInfo ? props.sortedInfo.order : ""} nameFilter={props.nameFilter} keys={0} peopleFilter={props.peopleFilter} loading={refreshRequired || initialRefresh} data={[{
       goal: "", finishDate: "", isCurrent: false, status: "", isCompleted: false, sprintNumber: 0, title: "", backlogItems: pbiPage.list

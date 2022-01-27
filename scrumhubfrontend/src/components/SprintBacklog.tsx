@@ -65,8 +65,8 @@ export function SprintBacklog() {
     finally {
         setIsModal({ ...isModal, estimatePBI: false });
         setSelectedPBI({} as IBacklogItem);
-        setInitialRefresh(true);
-    }
+      //setInitialRefresh(true);
+    }  
   };
   const editPBI = (pbi: IAddBI) => {
     setIsModal({ ...isModal, editPBI: false });//check if all elements of acceptanceCriteria array are defined    
@@ -91,7 +91,7 @@ export function SprintBacklog() {
       } catch (err) { console.error("Failed to finish the pbis: ", err); }
       finally {
         setSelectedPBI({} as IBacklogItem);
-        setInitialRefresh(true);
+        //setInitialRefresh(true);
       }}
   const deletePBI = (item: IBacklogItem) => {
     setIsModal({ ...isModal, editPBI: false });
@@ -130,7 +130,7 @@ export function SprintBacklog() {
         sprintNumber: sprintNr,
         isFailure: value
       }));
-      setInitialRefresh(true);
+      //setInitialRefresh(true);
   };
   const addTaskToPBI = (input: IFilters) => {
     setIsModal({ ...isModal, addTask: false });
@@ -157,16 +157,24 @@ export function SprintBacklog() {
       },
       drop: (item: any) => {
         if (typeof (index_row) !== "undefined") {
+
+          /*item {index: 30, bodyType: 'ITask', record: {…}}bodyType: "ITask" index: 30
+          record: {pbiID: 23, taskID: 30, sprintNumber: 3, estimated: true}[[Prototype]]:
+           Object {pbiID: 24, taskID: -2, sprintNumber: 3, estimated: true}*/
+          //console.log("item",item,);
+          //console.log("item",item.record.taskID,);
+          //console.log("item",sprintPage.backlogItems,);
+          //console.log("record",record,);
           if (!item.record.estimated) {
             message.info("Cannot assign not estimated pbi", 5);
           }
           else if (item.bodyType === "ITask" && canDropTask(record.pbiID, item.index, item.record.pbiID)) {
-            updateTask(record.pbiID,item.record.pbiID, item.index,pbiKeys, token, ownerName);
-            setInitialRefresh(true);
+            updateTask(record.pbiID, item.index, item.record.pbiID, pbiKeys, token, ownerName);
+            //setInitialRefresh(true);
           }
           else if (item.bodyType === "ITask" && record.pbiID === -2 && record.sprintNumber === 0 && item.index !== -2 && item.record.pbiID !== -2) {
             updateTask(0, item.index,item.record.pbiID,pbiKeys, token, ownerName);
-            setInitialRefresh(true);
+            //setInitialRefresh(true);
           }
         }
       },

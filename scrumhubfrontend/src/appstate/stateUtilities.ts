@@ -142,6 +142,7 @@ export function updateStateTasks(newState: IState, task: ITask) {
 
 export function filterPBIsList(pbis: IBacklogItem[], task: ITask) {
   let list = _.cloneDeep(pbis);
+  //console.log(task);
   return (list.map((pbi: IBacklogItem) => {
     if (pbi.id === task.pbiId) {
       return ({ ...pbi, tasks: isArrayValid(pbi.tasks) ? pbi.tasks.concat([task]) : [task] });
