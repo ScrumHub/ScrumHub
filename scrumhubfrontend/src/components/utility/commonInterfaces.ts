@@ -48,3 +48,18 @@ export interface ILoginData {
   isLoading: boolean,
   errorMessage: string
 }
+
+export interface IProductBacklogProps {
+  /** function for updating sort values */
+  sortSelected: (arg0: ISortedInfo) => void, 
+  /** function for updating filter values */
+  itemSelected: (arg0: number[]) => void, 
+  /** current sort values */
+  sortedInfo: ISortedInfo,
+  /** current Backlog Item priority and Sprint Completeness values values */
+  filteredInfo: IFilteredInfo, 
+  /** current people filter values */
+  peopleFilter: string[], 
+  /** current name filter values */
+  nameFilter: string[]
+}

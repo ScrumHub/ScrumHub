@@ -1,6 +1,6 @@
 // index.tsx
 /**
- * File doc comment for index.tsx
+ * Entry point for the application
  * @packageDocumentation
  */
 import ReactDOM from 'react-dom';

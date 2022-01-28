@@ -1,7 +1,7 @@
 
 import config from "../configuration/config";
 import { initError, initPeopleList, initPerson, initBI, initBacklogItemList, initRepository, initRepositoryList, initSprint, initSprintList, initTaskList, initTask, initKeys, initLoadingKeys } from "./stateInitValues";
-import { ILoginState, IBacklogItemList, IRepositoryList, ISprintList, IState, ITaskList } from "./stateInterfaces";
+import { ILoginState, IBacklogItemList, IRepositoryList, ISprintList, IState, ITaskList, ITask } from "./stateInterfaces";
 import { validateUri } from "./stateUtilities";
 
 export const testLoginState: ILoginState = {
@@ -41,7 +41,7 @@ export const initTestState: IState = {
   changedRepo: ""
 };
 
-export const testRepositoryList: IRepositoryList  = {
+export const testRepositoryList: IRepositoryList = {
   pageNumber: 1,
   pageCount: 1,
   pageSize: 10,
@@ -74,21 +74,21 @@ export const testTaskList: ITaskList = {
 }
 
 export const tstConf = {
-  ownerName:"ownerName",
+  ownerName: "ownerName",
   url: `${config.backend.ip}:${config.backend.port}/api`,
-  pbiId:0,
-  sprintNr:0,
-  hours:2,
-  editedPBI:{
+  pbiId: 0,
+  sprintNr: 0,
+  hours: 2,
+  editedPBI: {
     "name": initBI.name,
     "priority": initBI.priority,
     "acceptanceCriteria": initBI.acceptanceCriteria
   },
-  name:"taskName",
-  taskId:0,
-  login:"userLogin",
-  isAssign:true,
-  hotfix:true
+  name: "taskName",
+  taskId: 0,
+  login: "userLogin",
+  isAssign: true,
+  hotfix: true
 }
 
 export const testConnectionError = {
@@ -102,7 +102,7 @@ export const testConnectionError = {
 }
 export const testFilters = { pageSize: config.defaultFilters.page, pageNumber: config.defaultFilters.size }
 
-export const testFetchReposVals={
+export const testFetchReposVals = {
   filters: testFilters,
   token: config.token,
 }

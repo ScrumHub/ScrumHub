@@ -6,6 +6,10 @@ import { IRowIds } from "./utility/commonInterfaces";
 import _ from "lodash";
 import React from "react";
 
+/**
+ * @returns TaskTableComponent Component that displays all {@linkcode ITask} items
+ * // for the given {@linkcode IBacklogItem}
+ */
 export const TaskTableComponent = React.memo((props: any) => {
   const loadingKeys = useSelector(
     (appState: IState) => appState.loadingKeys.pbiKeys as number[]);

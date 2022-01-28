@@ -1,6 +1,5 @@
 import { IFilters } from "../../appstate/stateInterfaces";
 import config from "../../configuration/config";
-import { backlogPriorities } from "./TableUtilities";
 import { IFilteredInfo, ILoginData, IModals, IRowIds, ISortedInfo } from "./commonInterfaces";
 
 export const initIDs: IFilters = {
@@ -44,7 +43,8 @@ export const initFilterMenu = {
   filterMenuVisible: false,
   openKeys: [] as string[]
 };
-
+export const backlogPriorities = ["Could", "Should", "Must"];
+export const backlogColors = ["green", "blue", "red"];
 export const pbiFilterVals =
   [{ text: backlogPriorities[0], value: 0, },
   { text: backlogPriorities[1], value: 1, },

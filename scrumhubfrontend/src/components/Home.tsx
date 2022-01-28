@@ -16,6 +16,9 @@ import { dateFormat, isArrayValid } from './utility/commonFunctions';
 import { initReposFilters } from './utility/commonInitValues';
 const { Meta } = Card;
 
+/**
+ * @return {Element} Home Component with an infinite list of repositories
+ */
 export function Home() {
   const isLoggedIn = useSelector((appState: IState) => appState.loginState.isLoggedIn);
   const token = useSelector((appState: IState) => appState.loginState.token);

@@ -9,11 +9,11 @@ import { sprintNrCol, sprintTitleCol, sprintDateCol, sprintStoryPtsCol, sprintSt
 import { taskNameCol, taskStatusCol, taskPplCol, taskBranchCol, taskGhLinkCol } from './TaskTableColumns';
 
 export const dragCmpnts = (DraggableBodyRow: any) => { return ({ body: { row: DraggableBodyRow, }, }) };
-export const backlogPriorities = ["Could", "Should", "Must"];
-export const backlogColors = ["green", "blue", "red"];
+
 
 /**
- * Returns columns for Task Table
+ * Renders name, status, assignees, createBranch, GitHub link columns
+ * @returns columns for Task Table
  */
 export const taskColumns = (peopleFilter: string[], token: string, ownerName: string, people: IPeopleList,
   setIsModal: React.Dispatch<React.SetStateAction<IModals>>, isModal: IModals) => {
@@ -22,7 +22,8 @@ export const taskColumns = (peopleFilter: string[], token: string, ownerName: st
 };
 
 /**
- * Returns columns for Backlog Item Table
+ * Renders Name, Progress, toDo, Story Points, Status, addTask columns
+ * @returns columns for Backlog Item Table
  */
 export const pbiColumns = (nameFilter: string[], sortedInfo: ISortedInfo, filteredInfo: IFilteredInfo,
   setSelectedPBI: React.Dispatch<React.SetStateAction<IBacklogItem>>, isModal: IModals,
@@ -36,7 +37,8 @@ export const pbiColumns = (nameFilter: string[], sortedInfo: ISortedInfo, filter
 };
 
 /**
- * Returns columns for Sprint/Product Backlog Table
+ * Renders Number, Title, Goal, Deadline, Story Points, Status, Update columns
+ * @returns  columns for Sprint/Product Backlog Table
  */
 export const sprintColumns = (ownerName: string, navigate: NavigateFunction, sortedInfo: ISortedInfo, filteredInfo: IFilteredInfo,
   setSelectedSprint: React.Dispatch<React.SetStateAction<ISprint>>, isModal: IModals,
@@ -47,7 +49,8 @@ export const sprintColumns = (ownerName: string, navigate: NavigateFunction, sor
 }
 
 /**
- * Returns routes for the given location
+ * Renders breadcrumb for the given location
+ @returns @param routes for the given location
  */
 export const routes = (ownerName: string | null, sprintID: string, location: any) =>
   [

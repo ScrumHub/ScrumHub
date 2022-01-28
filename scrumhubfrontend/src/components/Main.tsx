@@ -17,6 +17,10 @@ import { isNull } from 'lodash';
 const { Header, Footer, Content, Sider } = Layout;
 const { SubMenu } = Menu;
 
+/**
+ * @returns {Element} Main Component that contains header, footer, sidebar
+ * // along with the routes to all other subviews
+ */
 export function Main(props: any) {
   const isLoggedIn = useSelector((appState: IState) => appState.loginState.isLoggedIn);
   const token = useSelector((appState: IState) => appState.loginState.token);

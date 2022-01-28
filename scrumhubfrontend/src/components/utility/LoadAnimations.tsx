@@ -8,8 +8,7 @@ import "../Home.css";
 import { isArrayValid, isNameFilterValid } from "./commonFunctions";
 import { useEffect } from "react";
 import SubMenu from "antd/lib/menu/SubMenu";
-import { backlogColors, backlogPriorities } from "./TableUtilities";
-import { initFilteredInfo, initSortedInfo } from "./commonInitValues";
+import { backlogColors, backlogPriorities, initFilteredInfo, initSortedInfo } from "./commonInitValues";
 
 export default function SkeletonList(props: any) {
     const number = props.number ? props.number : 0;

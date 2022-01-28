@@ -4,6 +4,7 @@ import type { RequestResponse } from "./response";
 import * as Fetching from "./fetching";
 import { IAddBI, IFilters, IFiltersAndToken, ILoginState, IPeopleList, IPerson, IBacklogItem, IBacklogItemList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList } from "./stateInterfaces";
 
+/** Thunk that waits for response from function {@linkcode fetchRepos} that sends a request fetching {@linkcode IRepositoryList}*/
 export const fetchReposThunk = createAsyncThunk<
   RequestResponse<IRepositoryList, number>,
   { filters: IFilters; token: string },
@@ -13,7 +14,7 @@ export const fetchReposThunk = createAsyncThunk<
   if (response.code !== 200) { return rejectWithValue(response as RequestResponse<IRepositoryList, number>); }
   return response as RequestResponse<IRepositoryList, number>;
 });
-
+/**  Thunk that waits for response from function {@linkcode fetchPeople} that sends a request fetching {@linkcode IPeopleList}*/
 export const fetchPeopleThunk = createAsyncThunk<
   RequestResponse<IPeopleList, number>,
   { ownerName: string; token: string },
@@ -23,7 +24,7 @@ export const fetchPeopleThunk = createAsyncThunk<
   if (response.code !== 200) { return rejectWithValue(response as RequestResponse<IPeopleList, number>); }
   return response as RequestResponse<IPeopleList, number>;
 });
-
+/** Thunk that waits for response from function {@linkcode getCurrentUser} that sends a request fetching {@linkcode IPerson} currentUser*/
 export const getCurrentUserThunk = createAsyncThunk<
   RequestResponse<IPerson, number>,
   { token: string },
@@ -33,7 +34,7 @@ export const getCurrentUserThunk = createAsyncThunk<
   if (response.code !== 200) { return rejectWithValue(response as RequestResponse<IPeopleList, number>); }
   return response as RequestResponse<IPeopleList, number>;
 });
-
+/** Thunk that waits for response from function {@linkcode addRepo} that sends a request adding {@linkcode IRepository} repository to ScrumHub*/
 export const addRepositoryThunk = createAsyncThunk<
   RequestResponse<IRepository, number>,
   { id: number; token: string },
@@ -48,7 +49,7 @@ export const addRepositoryThunk = createAsyncThunk<
   if (response.code !== 201) { return rejectWithValue(response as RequestResponse<IRepository, number>); }
   return response as RequestResponse<IRepository, number>;
 });
-
+/** Thunk that waits for response from function {@linkcode fetchPBIs} that sends a request fetching {@linkcode IBacklogItemList} backlogItemList*/
 export const fetchPBIsThunk = createAsyncThunk<
   RequestResponse<IBacklogItemList, number>,
   { ownerName: string; token: string; filters: IFilters; },
@@ -59,7 +60,7 @@ export const fetchPBIsThunk = createAsyncThunk<
   if (response.code !== 200) { return rejectWithValue(response as RequestResponse<undefined, undefined>); }
   return response as RequestResponse<IBacklogItemList, number>;
 });
-
+/** Thunk that waits for response from function {@linkcode finishPBI} that sends a request that completes {@linkcode IBacklogItem} backlogItem*/
 export const finishPBIThunk = createAsyncThunk<
   RequestResponse<IBacklogItem, number>,
   { ownerName: string; token: string; pbiId: number; },
@@ -70,7 +71,7 @@ export const finishPBIThunk = createAsyncThunk<
   if (response.code !== 200) { return rejectWithValue(response as RequestResponse<undefined, number>); }
   return response as RequestResponse<IBacklogItem, number>;
 });
-
+/** Thunk that waits for response from function {@linkcode deletePBI} that sends a request that deletes {@linkcode IBacklogItem} backlogItem*/
 export const deletePBIThunk = createAsyncThunk<
   RequestResponse<any, any>,
   { ownerName: string; token: string; pbiId: number; },
@@ -81,7 +82,7 @@ export const deletePBIThunk = createAsyncThunk<
   if (response.code !== 204) { return rejectWithValue(response as RequestResponse<undefined, undefined>); }
   return response as RequestResponse<any, any>;
 });
-
+/** Thunk that waits for response from function {@linkcode addPBI} that sends a request that adds new {@linkcode IBacklogItem} backlogItem*/
 export const addPBIThunk = createAsyncThunk<
   RequestResponse<IBacklogItem, number>,
   { ownerName: string; token: string; pbi: IAddBI; },
@@ -92,7 +93,7 @@ export const addPBIThunk = createAsyncThunk<
   if (response.code !== 201) { return rejectWithValue(response as RequestResponse<IBacklogItem, number>); }
   return response as RequestResponse<IBacklogItem, number>;
 });
-
+/** Thunk that waits for response from function {@linkcode estimatePBI} that sends a request that estimates StoryPoints for the given {@linkcode IBacklogItem} backlogItem*/
 export const estimatePBIThunk = createAsyncThunk<
   RequestResponse<IBacklogItem, number>,
   { ownerName: string; token: string; pbiId: number; hours: number; },
@@ -106,7 +107,7 @@ export const estimatePBIThunk = createAsyncThunk<
   if (response.code !== 200) { return rejectWithValue(response as RequestResponse<IBacklogItem, number>); }
   return response as RequestResponse<IBacklogItem, number>;
 });
-
+/** Thunk that waits for response from function {@linkcode editPBI} that sends a request that updates {@linkcode IBacklogItem} backlogItem*/
 export const editPBIThunk = createAsyncThunk<
   RequestResponse<IBacklogItem, number>,
   { ownerName: string; token: string; pbi: IAddBI; pbiId: number; },
@@ -119,6 +120,7 @@ export const editPBIThunk = createAsyncThunk<
 });
 
 //SPRINTS
+/** Thunk that waits for response from function {@linkcode fetchSprints} that sends a request that fetches {@linkcode ISprintList} sprintList*/
 export const fetchSprintsThunk = createAsyncThunk<
   RequestResponse<ISprintList, number>,
   { token: string, ownerName: string; filters: IFilters; },
@@ -128,7 +130,7 @@ export const fetchSprintsThunk = createAsyncThunk<
   if (response.code !== 200) { return rejectWithValue(response as RequestResponse<ISprintList, number>); }
   return response as RequestResponse<ISprintList, number>;
 });
-
+/** Thunk that waits for response from function {@linkcode fetchSprints} that sends a request that fetches one {@linkcode ISprint} sprint*/
 export const fetchOneSprintThunk = createAsyncThunk<
   RequestResponse<ISprint, number>,
   { token: string, ownerName: string; sprintNumber: number; },
@@ -138,7 +140,7 @@ export const fetchOneSprintThunk = createAsyncThunk<
   if (response.code !== 200) { return rejectWithValue(response as RequestResponse<ISprint, number>); }
   return response as RequestResponse<ISprint, number>;
 });
-
+/** Thunk that waits for response from function {@linkcode updateOneSprint} that sends a request that updates one {@linkcode ISprint} sprint*/
 export const updateOneSprintThunk = createAsyncThunk<
   RequestResponse<ISprint, number>,
   { token: string, ownerName: string; sprintNumber: number; sprint: any; },
@@ -151,7 +153,7 @@ export const updateOneSprintThunk = createAsyncThunk<
   if (response.code !== 200) { return rejectWithValue(response as RequestResponse<undefined, undefined>); }
   return response as RequestResponse<ISprint, number>;
 });
-
+/** Thunk that waits for response from function {@linkcode completeOneSprint} that sends a request that completes {@linkcode ISprint} sprint */
 export const completeOneSprintThunk = createAsyncThunk<
   RequestResponse<ISprint, number>,
   { token: string, ownerName: string; sprintNumber: number; isFailure: boolean },
@@ -164,7 +166,7 @@ export const completeOneSprintThunk = createAsyncThunk<
   if (response.code !== 200) { return rejectWithValue(response as RequestResponse<ISprint, number>); }
   return response as RequestResponse<ISprint, number>;
 });
-
+/** Thunk that waits for response from function {@linkcode addSprint} that sends a request that adds new {@linkcode ISprint} sprint */
 export const addSprintThunk = createAsyncThunk<
   RequestResponse<ISprint, number>,
   { token: string, ownerName: string; sprint: ISprint | any; },
@@ -176,6 +178,7 @@ export const addSprintThunk = createAsyncThunk<
 });
 
 //TASKS
+/** Thunk that waits for response from function {@linkcode fetchPBITasks} that sends a request that fetches {@linkcode ITaskList} taskList for the given {@linkcode IBacklogItem} backlogItem */
 export const fetchPBITasksThunk = createAsyncThunk<
   RequestResponse<ITaskList, number>,
   { token: string, ownerName: string; pbiId: number; },
@@ -185,7 +188,7 @@ export const fetchPBITasksThunk = createAsyncThunk<
   if (response.code !== 200) { return rejectWithValue(response as RequestResponse<ITaskList, number>); }
   return response as RequestResponse<ITaskList, number>;
 });
-
+/** Thunk that waits for response from function {@linkcode addUnassignedTasksToPBI} that sends a request that fetches {@linkcode ITaskList} taskList of unassiggned {@linkcode ITask} tasks */
 export const addUnassignedTasksToPBI = createAsyncThunk<
   RequestResponse<ITaskList, number>,
   { token: string, ownerName: string; pbiId: number; },
@@ -195,7 +198,7 @@ export const addUnassignedTasksToPBI = createAsyncThunk<
   if (response.code !== 200) { return rejectWithValue(response as RequestResponse<ITaskList, number>); }
   return response as RequestResponse<ITaskList, number>;
 });
-
+/** Thunk that waits for response from function {@linkcode fetchAllRepoTasks} that sends a request that fetches {@linkcode ITaskList} taskList for the given {@linkcode IRepository} */
 export const fetchRepoTasksThunk = createAsyncThunk<
   RequestResponse<ITaskList, number>,
   { token: string, ownerName: string; },
@@ -207,7 +210,7 @@ export const fetchRepoTasksThunk = createAsyncThunk<
   if (response.code !== 200) { return rejectWithValue(response as RequestResponse<ITask, number>); }
   return response as RequestResponse<ITaskList, number>;
 });
-
+/** Thunk that waits for response from function {@linkcode addTask} that sends a request that adds {@linkcode ITask} task to the given {@linkcode IBacklogItem} */
 export const addTaskThunk = createAsyncThunk<
   RequestResponse<ITask, number>,
   { token: string, ownerName: string; pbiId: number; name: string },
@@ -231,7 +234,7 @@ export const getPBINamesThunk = createAsyncThunk<
   if (response.code !== 200) { return rejectWithValue(response as RequestResponse<IBacklogItemList, number>); }
   return response as RequestResponse<IBacklogItemList, number>;
 });
-
+/** Thunk that waits for response from function {@linkcode assignTaskToPBI} that sends a request that assigns {@linkcode ITask} task to the given {@linkcode IBacklogItem} */
 export const assignTaskToPBIThunk = createAsyncThunk<
   RequestResponse<ITask, number>,
   { token: string, ownerName: string; pbiId: number; taskId: number },
@@ -241,7 +244,7 @@ export const assignTaskToPBIThunk = createAsyncThunk<
   if (response.code !== 200) { return rejectWithValue(response as RequestResponse<ITask, number>); }
   return response as RequestResponse<ITask, number>;
 });
-
+/** Thunk that waits for response from function {@linkcode updatePersonInTask} that sends a request that un/assigns {@linkcode IPerson[]} people to the given {@linkcode ITask} task */
 export const updatePersonInTaskThunk = createAsyncThunk<
   RequestResponse<ITask, number>,
   { token: string, ownerName: string; login: string; taskId: number, isAssign:boolean },
@@ -251,7 +254,7 @@ export const updatePersonInTaskThunk = createAsyncThunk<
   if (response.code !== 200) { return rejectWithValue(response as RequestResponse<ITask, number>); }
   return response as RequestResponse<ITask, number>;
 });
-
+/** Thunk that waits for response from function {@linkcode startBranchForTask} that sends a request that starts new GitHub branch for the given {@linkcode ITask} task */
 export const startTaskThunk = createAsyncThunk<
   RequestResponse<ITask, number>,
   { token: string, ownerName: string; hotfix: boolean; taskId: number },

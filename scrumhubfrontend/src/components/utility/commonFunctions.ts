@@ -109,7 +109,7 @@ export function clearProjectLocalStorage() {
   localStorage.removeItem("sprintID");
 }
 
-export function setLocalStorage(token: string | undefined) {
+export function setLoginStateLocalStorage(token: string | undefined) {
   if (isMessageValid(token)) {
     localStorage.setItem("isLoggedIn", JSON.stringify(true));
     localStorage.setItem("token", JSON.stringify(token));

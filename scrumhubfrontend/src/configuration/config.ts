@@ -1,3 +1,6 @@
+/**
+ * Configuration of the application, can be in development or in production
+ */
 export type Config = {
   environment_name: string;
   backend: {
@@ -13,6 +16,9 @@ export type Config = {
   token:string;
 };
 
+/**
+ * Renders default configuration
+ */
 const configObject: Config = require(process.env.NODE_ENV === "development"
   ? "./development.json"
   : "./production.json");

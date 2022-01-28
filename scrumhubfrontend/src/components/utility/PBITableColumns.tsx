@@ -10,8 +10,7 @@ import { PBIMenuWithPriorities } from "./LoadAnimations";
 import { store } from "../../appstate/store";
 import { useSelector } from "react-redux";
 import { IFilteredInfo, IModals, ISortedInfo } from "./commonInterfaces";
-import { pbiFilterVals } from "./commonInitValues";
-import { backlogColors, backlogPriorities } from "./TableUtilities";
+import { backlogColors, backlogPriorities, pbiFilterVals } from "./commonInitValues";
 
 /**
  * Renders priority tag for the given Backlog Item

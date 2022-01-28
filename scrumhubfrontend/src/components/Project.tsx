@@ -1,3 +1,7 @@
+// Project.tsx
+/**
+ * @packageDocumentation
+ */
 import { useEffect, useState } from 'react';
 import { Avatar, Badge, Button, Dropdown, Input, Space, } from 'antd';
 import 'antd/dist/antd.css';
@@ -15,8 +19,12 @@ import { AddSprintPopup } from './popups/AddSprintPopup';
 import { initAddPBI, initSprint } from '../appstate/stateInitValues';
 import { initFilterMenu, initFilterSortInfo, initSortedInfo } from './utility/commonInitValues';
 import { isArrayValid } from './utility/commonFunctions';
+import { ISortedInfo } from './utility/commonInterfaces';
 const { Search } = Input;
 
+/**
+ * Renders Product Backlog View
+ */
 export const Project = React.memo((props: any) => {
   const isLoggedIn = useSelector((appState: IState) => appState.loginState.isLoggedIn);
   const token = useSelector((appState: IState) => appState.loginState.token);
@@ -41,7 +49,7 @@ export const Project = React.memo((props: any) => {
           ownerName: ownerName,
           token: token,
           pbi: pbi
-        }) 
+        })
       );
     } catch (err) { console.error("Failed to add the pbis: ", err); }
     finally {
@@ -71,7 +79,7 @@ export const Project = React.memo((props: any) => {
   const updateInputPplFilter = (e: { target: { value: string; }; }) => {
     setInputPplFilter(e.target.value);
   };
-  const onSearch = (value: string) => {setFiltersPBI({ ...filterPBI, nameFilter: value!==""?[value.toLowerCase()]:[] }); };
+  const onSearch = (value: string) => { setFiltersPBI({ ...filterPBI, nameFilter: value !== "" ? [value.toLowerCase()] : [] }); };
   useEffect(() => {
     if (isLoggedIn && (ownerName !== "" || initialRefresh)) {
       setInitialRefresh(false);
@@ -91,11 +99,11 @@ export const Project = React.memo((props: any) => {
   return (
     <div id="projectDiv" className='projectDiv'>
       <Space wrap direction="horizontal" split={true} onMouseLeave={() => setFilterMenu(initFilterMenu)}
-        className='projectSpace' style={{marginBottom:"0.5%"}}>
+        className='projectSpace' style={{ marginBottom: "0.5%" }}>
         <Button type="primary" onClick={() => { setIsAddSprint(true); }}>{"Create Sprint"}</Button>
         <Button type="primary" onClick={() => { setIsAddPBI(true); }}>{"Add Product Backlog Item"}</Button>
         <Search autoComplete='on' onMouseEnter={() => setFilterMenu(initFilterMenu)} placeholder="Input Backlog Item name" onSearch={onSearch} enterButton />
-        <Badge status={"error"} count={isArrayValid(infos.filteredInfo.complete)||isArrayValid(infos.filteredInfo.pbiPriority)?2:0} overflowCount={1} style={{ borderColor: "transparent", zIndex:20 }}><Dropdown.Button
+        <Badge status={"error"} count={isArrayValid(infos.filteredInfo.complete) || isArrayValid(infos.filteredInfo.pbiPriority) ? 2 : 0} overflowCount={1} style={{ borderColor: "transparent", zIndex: 20 }}><Dropdown.Button
           className='projectDropBtn'
           placement="bottomCenter"
           visible={filterMenu.filterMenuVisible}
@@ -106,16 +114,16 @@ export const Project = React.memo((props: any) => {
           React.cloneElement(<Button type="primary" onMouseEnter={() => { setFilterMenu({ ...filterMenu, filterMenuVisible: true }); }} icon={<FilterOutlined className='projectWhIcon'></FilterOutlined>}>Filter</Button>),
           ]} >
         </Dropdown.Button></Badge>
-        <Badge status={"error"} count={infos.sortedInfo!==initSortedInfo?2:0} overflowCount={1} style={{ borderColor: "transparent", zIndex:20 }}>
-        <Dropdown.Button
-          className='projectDropBtn'
-          placement="bottomCenter"
-          overlay={<MenuWithSorting itemSelected={function (items: any): void { setInfos({ ...infos, sortedInfo: items }); }} sortedInfo={infos.sortedInfo} />}
-          buttonsRender={() => [
-            <></>,
-            React.cloneElement(<Button onMouseEnter={() => setFilterMenu(initFilterMenu)} type="primary" icon={<DownOutlined prefix='Sort' className='projectWhIcon'></DownOutlined>}>{"Sort"}</Button>),
-          ]} >
-        </Dropdown.Button></Badge>
+        <Badge status={"error"} count={infos.sortedInfo !== initSortedInfo ? 2 : 0} overflowCount={1} style={{ borderColor: "transparent", zIndex: 20 }}>
+          <Dropdown.Button
+            className='projectDropBtn'
+            placement="bottomCenter"
+            overlay={<MenuWithSorting itemSelected={function (items: any): void { setInfos({ ...infos, sortedInfo: items }); }} sortedInfo={infos.sortedInfo} />}
+            buttonsRender={() => [
+              <></>,
+              React.cloneElement(<Button onMouseEnter={() => setFilterMenu(initFilterMenu)} type="primary" icon={<DownOutlined prefix='Sort' className='projectWhIcon'></DownOutlined>}>{"Sort"}</Button>),
+            ]} >
+          </Dropdown.Button></Badge>
         <Dropdown.Button
           className='projectDropBtn'
           placement="bottomCenter"
@@ -134,8 +142,11 @@ export const Project = React.memo((props: any) => {
         }
       </Space>
 
-      <ProductBacklog sortSelected={function (items: any): void { setInfos({ ...infos, sortedInfo: items }); }} itemSelected={function (items: number[]): void { setInfos({ ...infos, filteredInfo: { complete: infos.filteredInfo.complete, pbiPriority: items } }); }}
-        sortedInfo={infos.sortedInfo} filteredInfo={infos.filteredInfo} peopleFilter={filterPBI.peopleFilter} nameFilter={filterPBI.nameFilter} />
+      <ProductBacklog sortSelected={function (items: ISortedInfo): void { setInfos({ ...infos, sortedInfo: items }); }}
+        itemSelected={function (items: number[]):
+          void { setInfos({ ...infos, filteredInfo: { complete: infos.filteredInfo.complete, pbiPriority: items } }); }}
+        sortedInfo={infos.sortedInfo} filteredInfo={infos.filteredInfo} peopleFilter={filterPBI.peopleFilter}
+        nameFilter={filterPBI.nameFilter} />
       {isAddSprint && <AddSprintPopup error={error.erorMessage} data={initSprint} visible={isAddSprint}
         onCreate={function (values: any): void { addSprint(values); }}
         onCancel={() => { setIsAddSprint(false); }} pbiData={pbiPage.list} />}

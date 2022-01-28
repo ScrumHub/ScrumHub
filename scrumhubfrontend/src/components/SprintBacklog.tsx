@@ -16,7 +16,7 @@ import { assignPerson, startTask, updateTask } from './utility/BacklogHandlers';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
 import { useDrop, useDrag, DndProvider } from 'react-dnd';
 import { type } from './ProductBacklog';
-import { initModalVals } from './utility/commonInitValues';
+import { backlogColors, backlogPriorities, initModalVals } from './utility/commonInitValues';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import moment from 'moment';
 import { useLocation } from 'react-router';
@@ -28,8 +28,10 @@ import { UpdateSprintPopup } from './popups/UpdateSprintPopup';
 import { date } from 'joi';
 import { pbiProgressCol, pbiToDoCol, pbiStatusCol } from './utility/PBITableColumns';
 import { taskNameCol, taskStatusCol, peopleDropdown, taskGhLinkCol } from './utility/TaskTableColumns';
-import { backlogPriorities, backlogColors } from './utility/TableUtilities';
 
+/**
+ * @returns Sprint Backlog View
+ */
 export function SprintBacklog() {
   const token = useSelector((appState: IState) => appState.loginState.token);
   const pbiKeys = useSelector((appState: IState) => appState.loadingKeys.pbiKeys as number[]);

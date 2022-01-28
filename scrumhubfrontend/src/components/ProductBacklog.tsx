@@ -11,7 +11,7 @@ import { store } from '../appstate/store';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { initModalVals } from './utility/commonInitValues';
-import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
+import { BodyRowProps, IModals, IProductBacklogProps, IRowIds } from './utility/commonInterfaces';
 import { canDropPBI, canDropTask, isItemDefined, useStateAndRefLoading, useTasksRef, } from './utility/commonFunctions';
 import { taskColumns, dragCmpnts, pbiColumns, sprintColumns } from './utility/TableUtilities';
 import { PBITableComponent } from './BacklogPBITableComponent';
@@ -28,7 +28,11 @@ import _ from 'lodash';
 import { requestFetchAllRepoTasks, requestFetchRateLimit } from '../appstate/fetching';
 export const type = 'DraggableBodyRow';
 
-export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
+/**
+ * Returns Rendered Tables representing Sprint and Product Backlogs
+ * // {@linkcode IProductBacklogProps} props Arguments of ProductBacklog functional component
+ */
+export const ProductBacklog: React.FC<IProductBacklogProps> = React.memo((props:IProductBacklogProps) => {
   const token = useSelector((appState: IState) => appState.loginState.token);
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : "";
   const sprintPage = useSelector((state: IState) => state.sprintPage as ISprintList);
@@ -177,7 +181,7 @@ export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
     });
     drop(drag(ref));
     return (<tr ref={ref as any} className={`${className}${isOver ? dropClassName : ''}`}
-style={{ cursor: isDraggable ? "move" : "default", ...style }} {...restProps} />
+      style={{ cursor: isDraggable ? "move" : "default", ...style }} {...restProps} />
     );
   };
 
@@ -204,22 +208,22 @@ style={{ cursor: isDraggable ? "move" : "default", ...style }} {...restProps} />
       data={sprintPage.list as ISprint[]} components={dragCmpnts(DraggableBodyRow)}
       columns={sprintColumns(ownerName, navigate, props.sortedInfo, props.filteredInfo, setSelectedSprint, isModal, setIsModal)}
       PBITableforSprint={PBITableforSprint} />
-    <EditPBIPopup data={selectedPBI} visible={isModal.editPBI}
+    {isModal.editPBI && <EditPBIPopup data={selectedPBI} visible={isModal.editPBI}
       onCreate={function (values: any): void { editPBI(values) }} onDelete={() => { deletePBI(selectedPBI) }}
       onFinish={() => { finishPBI(selectedPBI) }}
-      onCancel={() => { setIsModal({ ...isModal, editPBI: false }); setSelectedPBI({} as IBacklogItem); }} />
-    <EstimatePBIPopup data={selectedPBI as IBacklogItem} visible={isModal.estimatePBI}
+      onCancel={() => { setIsModal({ ...isModal, editPBI: false }); setSelectedPBI({} as IBacklogItem); }} />}
+    {isModal.estimatePBI && <EstimatePBIPopup data={selectedPBI as IBacklogItem} visible={isModal.estimatePBI}
       onCreate={function (values: any): void { estimatePBI(values) }}
-      onCancel={() => { setIsModal({ ...isModal, estimatePBI: false }); setSelectedPBI({} as IBacklogItem); }} />
+      onCancel={() => { setIsModal({ ...isModal, estimatePBI: false }); setSelectedPBI({} as IBacklogItem); }} />}
     <AddTaskPopup data={{ name: "" } as IFilters} visible={isModal.addTask}
       onCreate={function (values: any): void { addTaskToPBI(values); }}
       onCancel={() => { setIsModal({ ...isModal, addTask: false }); }} />
-    <UpdateSprintPopup data={selectedSprint} visible={isModal.updateSprint && !loading}
+    {isModal.updateSprint && <UpdateSprintPopup data={selectedSprint} visible={isModal.updateSprint && !loading}
       onCreate={function (values: any): void { updateSprint(values) }}
-      onCancel={() => { setIsModal({ ...isModal, updateSprint: false }); setSelectedSprint({} as ISprint); }} />
-    <CompleteSprintPopup data={selectedSprint} visible={isModal.completeSprint && !loading}
+      onCancel={() => { setIsModal({ ...isModal, updateSprint: false }); setSelectedSprint({} as ISprint); }} />}
+    {isModal.completeSprint && <CompleteSprintPopup data={selectedSprint} visible={isModal.completeSprint && !loading}
       onComplete={function (value: boolean): void { completeSprint(value) }}
-      onCancel={() => { setIsModal({ ...isModal, completeSprint: false }); setSelectedSprint({} as ISprint); }} />
+      onCancel={() => { setIsModal({ ...isModal, completeSprint: false }); setSelectedSprint({} as ISprint); }} />}
   </div>
   );
 });

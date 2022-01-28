@@ -11,6 +11,10 @@ import { isArrayValid, useIsMounted } from "./utility/commonFunctions";
 import React from "react";
 import _ from "lodash";
 
+/**
+ * @returns SprintTableComponent Component that displays each {@linkcode ISprint} from
+ * // the given list of Sprints 
+ */
 export const SprintTableComponent = React.memo((props: any) => {
   const keys = useSelector((appState: IState) => appState.keys.sprintKeys as number[]);
   const pbiKeys = useSelector((appState: IState) => appState.keys.pbiKeys as number[]);
