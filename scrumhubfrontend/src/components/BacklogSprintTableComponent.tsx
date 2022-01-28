@@ -4,10 +4,10 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { IPerson, IBacklogItem, ISprint, IState, ITask } from "../appstate/stateInterfaces";
 import { store } from "../appstate/store";
-import { initFilteredInfo, initRowIds, initSortedInfo } from "./utility/commonInitValues";
+import { initFilteredInfo, initRowIds } from "./utility/commonInitValues";
 import * as Actions from '../appstate/actions';
 import { useSelector } from "react-redux";
-import { isArrayValid, isNameFilterValid, useIsMounted } from "./utility/commonFunctions";
+import { isArrayValid, useIsMounted } from "./utility/commonFunctions";
 import React from "react";
 import _ from "lodash";
 

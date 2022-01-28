@@ -225,15 +225,22 @@ export function addUnassignedTasksToPBI(token: string, ownerName: string, pbiId:
   );
 }
 
+export function requestFetchAllRepoTasks(token:string, ownerName:string): Promise<AxiosResponse<ITask, any>>{
+  return axios.get(
+    `${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}?onePage=true`,
+    { headers: getHeader(token, config) }
+  );
+}
+
+export function requestFetchRateLimit(token:string): Promise<AxiosResponse<any, any>>{
+   return axios.get(`https://api.github.com/rate_limit`, { headers: { "Accept": "application/vnd.github.v3+json", "Authorization": "token " + token } });  
+}
+
 export function fetchAllRepoTasks(token: string, ownerName: string,
   ): Promise<RequestResponse<ITask, number>> {
-    return getResponse(
-      axios.get(
-        `${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}?onePage=true`,
-        { headers: getHeader(token, config) }
-      )
-    );
+    return getResponse(requestFetchAllRepoTasks(token, ownerName));
   }
+
 
 export function addTask(token: string, ownerName: string, pbiId: number, name: string,
 ): Promise<RequestResponse<ITask, number>> {

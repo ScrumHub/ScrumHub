@@ -1,4 +1,4 @@
-import { ISprint } from "../../appstate/stateInterfaces"
+import { ISprint, ITask } from "../../appstate/stateInterfaces"
 import { useCallback, useEffect, useRef } from "react";
 import moment from 'moment';
 import { isNull } from "lodash";
@@ -138,17 +138,13 @@ export function formatSprintStatus(status: string) {
   return status.replace("Not", "Not ").replace("In", "In ");
 }
 
-export function isTaskTableInViewPort(tasksEl: Element | null) {
-  if (!isNull(tasksEl)) {
-    const rect = tasksEl.getBoundingClientRect();
-    return (
-      rect.top >= 0 &&
-      rect.left >= 0 &&
-      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-
-    );
-  } else {
-    return (false)
-  }
+export function useTasksRef(initial: ITask[]) {
+  const valueRef = useRef(initial);
+  valueRef.current = initial;
+  return valueRef;
+}
+export function useStateAndRefLoading(initial: boolean) {
+  const valueRef = useRef(initial);
+  valueRef.current = initial;
+  return { loading: initial, loadingRef: valueRef };
 }

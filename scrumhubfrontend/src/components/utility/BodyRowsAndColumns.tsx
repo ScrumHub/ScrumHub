@@ -144,8 +144,7 @@ export const pbiStatusCol = (sortedInfo:ISortedInfo)=>{return({
   title: 'Status', align: "center" as const, width: "8%", key: 'status',
   sorter: (a: IBacklogItem, b: IBacklogItem) => Number(a.id===0?a.priority:a.finished) - Number(b.id===0?b.priority:b.finished),
   sortOrder: sortedInfo && sortedInfo.columnKey === 'status' && sortedInfo.order,
-  render: (item: IBacklogItem) => item.finished ? <CheckOutlined style={{ color: "green" }}
-    hidden={item.id === 0} /> : <CloseOutlined style={{ color: "red" }} hidden={item.id === 0} />
+  render: (item: IBacklogItem) => <Progress className={item.id === 0?'transparentItem':''} style={{alignItems:"center", verticalAlign:"super"}} width={15} size='small' type="circle" percent={100} status={`${item.finished ? "success" : "exception"}`} />
 
 })};
 

@@ -105,7 +105,17 @@ export const initSprint: ISprint = {
   backlogItems: [initBI],
   finishDate: "",
   isCurrent: false,
-  status: "New",
+  status: "NotFinished",
+  isCompleted: false,
+}
+export const initProductBacklog: ISprint = {
+  sprintNumber: 0,
+  title: "Product Backlog",
+  goal: "",
+  backlogItems: [],
+  finishDate: "",
+  isCurrent: false,
+  status: "NotFinished",
   isCompleted: false,
 }
 export const initSprint2: ISprint = {
@@ -114,7 +124,7 @@ export const initSprint2: ISprint = {
   backlogItems: [],
   finishDate: "",
   isCurrent: false,
-  status: "New",
+  status: "NotFinished",
   isCompleted: false,
   title: ""
 };

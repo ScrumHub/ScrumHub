@@ -313,7 +313,8 @@ export const reducerFunction = (initState: IState) => {
     },
     [Actions.updateAllTasks.type]: (state: IState, payload: PayloadAction<any>) => {
       let newState = _.cloneDeep(state);
-      return updateAllTasksSWR(newState, payload.payload.response as ITaskList);
+      //console.log(payload);
+      return updateAllTasksSWR(newState, payload.payload as ITask[]);
     },
     [Actions.addUnassignedTasksToPBI.pending.toString()]: (state: IState, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
       let newState = _.cloneDeep(state);

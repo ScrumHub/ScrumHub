@@ -5,14 +5,13 @@ import { IRowIds } from "./utility/commonInterfaces";
 import * as Actions from '../appstate/actions';
 import { store } from "../appstate/store";
 import { useSelector } from "react-redux";
-import { isArrayValid, useIsMounted } from "./utility/commonFunctions";
-import React, { useEffect, useState } from "react";
+import { isArrayValid } from "./utility/commonFunctions";
+import React from "react";
 import _ from "lodash";
 
 export const PBITableComponent = React.memo((props: any) =>{
   let keys = useSelector((appState: IState) => appState.keys.pbiKeys as number[]);
   const loadPbiKeys = useSelector((appState: IState) => appState.loadingKeys.pbiKeys as number[]);
-  const [wait, setWait] = useState(false);
   const loadSprintKeys = useSelector((appState: IState) => appState.loadingKeys.sprintKeys as number[]);
   const updateExpandedRowKeys = (record: IBacklogItem) => {
     store.dispatch(Actions.updatePBIKeys([record.id]));

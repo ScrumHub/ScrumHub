@@ -12,11 +12,11 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { initModalVals } from './utility/commonInitValues';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
-import { canDropPBI, canDropTask, getTimeFromDate, isArrayValid, isItemDefined, } from './utility/commonFunctions';
+import { canDropPBI, canDropTask, isItemDefined, useStateAndRefLoading, useTasksRef, } from './utility/commonFunctions';
 import { taskColumns, dragCmpnts, pbiColumns, sprintColumns } from './utility/BodyRowsAndColumns';
 import { PBITableComponent } from './BacklogPBITableComponent';
 import { SprintTableComponent } from './BacklogSprintTableComponent';
-import { initPBIFilter } from '../appstate/stateInitValues';
+import { initPBIFilter, initProductBacklog } from '../appstate/stateInitValues';
 import { updatePBI, updateTask, fetchPBIsAndUnassigned } from './utility/BacklogHandlers';
 import { AddTaskPopup } from './popups/AddTaskPopup';
 import { CompleteSprintPopup } from './popups/CompleteSprintPopup';
@@ -24,20 +24,18 @@ import { EditPBIPopup } from './popups/EditPBIPopup';
 import { EstimatePBIPopup } from './popups/EstimatePBIPopup';
 import { UpdateSprintPopup } from './popups/UpdateSprintPopup';
 import { TaskTableComponent } from './BacklogTaskTableComponent';
-import config from '../configuration/config';
-import axios from 'axios';
 import _ from 'lodash';
-import { getHeader } from '../appstate/stateUtilities';
+import { requestFetchAllRepoTasks, requestFetchRateLimit } from '../appstate/fetching';
 export const type = 'DraggableBodyRow';
 
 export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
   const token = useSelector((appState: IState) => appState.loginState.token);
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : "";
   const sprintPage = useSelector((state: IState) => state.sprintPage as ISprintList);
-  const loading = useSelector((appState: IState) => appState.loading as boolean);
+  const { loading, loadingRef } = useStateAndRefLoading(useSelector((appState: IState) => appState.loading as boolean));
   const pbiPage = useSelector((appState: IState) => appState.pbiPage as IBacklogItemList);
   const people = useSelector((appState: IState) => appState.people as IPeopleList);
-  const tasks = useSelector((appState: IState) => appState.tasks as ITask[]);
+  const tasks = useTasksRef(useSelector((appState: IState) => appState.tasks as ITask[]));
   const pbiKeys = useSelector((appState: IState) => appState.loadingKeys.pbiKeys as number[]);
   const refreshRequired = useSelector((appState: IState) => appState.productRequireRefresh as boolean);
   const sprintRefreshRequired = useSelector((appState: IState) => appState.sprintRequireRefresh as boolean);
@@ -50,10 +48,11 @@ export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
   useEffect(() => {
     if (initialRefresh) {
       console.log(initialRefresh);
-      if (!localStorage.getItem("sprintID")){// ||!isArrayValid(sprintPage.list) || !isArrayValid(pbiPage.list)) {
+      if (!localStorage.getItem("sprintID")) {// ||!isArrayValid(sprintPage.list) || !isArrayValid(pbiPage.list)) {
         store.dispatch(Actions.clearPBIsList());
         store.dispatch(Actions.clearSprintList());
       }
+      store.dispatch(Actions.fetchRepoTasksThunk({ token: token, ownerName: ownerName }));
       localStorage.removeItem("sprintID");
       setInitialRefresh(false);
     }
@@ -67,7 +66,8 @@ export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
 
   const addTaskToPBI = (input: IFilters) => {
     setIsModal({ ...isModal, addTask: false });
-    try {store.dispatch(Actions.addTaskThunk({ token: token, ownerName: ownerName, pbiId: selectedPBI.id, name: input.name }));
+    try {
+      store.dispatch(Actions.addTaskThunk({ token: token, ownerName: ownerName, pbiId: selectedPBI.id, name: input.name }));
     } catch (err) { console.error("Failed to add the pbis: ", err); }
     finally { setSelectedPBI({} as IBacklogItem); }
   };
@@ -92,7 +92,8 @@ export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
   };
   const finishPBI = (item: IBacklogItem) => {
     setIsModal({ ...isModal, editPBI: false });
-    try {store.dispatch(Actions.finishPBIThunk({ownerName: ownerName,token: token,pbiId: item.id }));
+    try {
+      store.dispatch(Actions.finishPBIThunk({ ownerName: ownerName, token: token, pbiId: item.id }));
     } catch (err) { console.error("Failed to finish the pbis: ", err); }
     finally {
       setSelectedPBI({} as IBacklogItem);
@@ -104,7 +105,7 @@ export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
       .then((response: any) => {
         if (response.payload && response.payload.code === 204) {
           if (item.isInSprint) { store.dispatch(Actions.clearSprintList()) }
-          else {store.dispatch(Actions.clearPBIsList());} setSelectedPBI({} as IBacklogItem);
+          else { store.dispatch(Actions.clearPBIsList()); } setSelectedPBI({} as IBacklogItem);
         }
       })
   }
@@ -114,11 +115,13 @@ export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
     const ids = sprint.backlogItems.map((value: IBacklogItem) => { return ((value.sprintNumber === Number(sprintID) ? value.id.toString() : "")) }).filter((x) => x !== "");
     try {
       store.dispatch(Actions.updateOneSprintThunk({
-        token: token as string,ownerName: ownerName,sprintNumber: Number(sprintID),
-        sprint: {"title": sprint.title,"finishDate": moment((sprint.finishDate as any)._d).format("YYYY-MM-DDTHH:mm:ss") + "Z",
-         "goal": sprint.goal, "pbIs": ids}
+        token: token as string, ownerName: ownerName, sprintNumber: Number(sprintID),
+        sprint: {
+          "title": sprint.title, "finishDate": moment((sprint.finishDate as any)._d).format("YYYY-MM-DDTHH:mm:ss") + "Z",
+          "goal": sprint.goal, "pbIs": ids
+        }
       }));
-    } catch (err) {console.error("Failed to update the pbis: ", err); }
+    } catch (err) { console.error("Failed to update the pbis: ", err); }
     finally {
       setSelectedSprint({} as ISprint);
     }
@@ -166,51 +169,49 @@ export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
       style={{ cursor: isDraggable ? "move" : "default", ...style }} {...restProps} />
     );
   };
-   /* let x = 0;
+  let ratio = 0;
   useEffect(() => {
     const timer = setInterval(
       async () => {
-        ++x;
-        const data = await axios.get(`https://api.github.com/rate_limit`, { headers: { "Accept": "application/vnd.github.v3+json", "Authorization": "token " + token } })
-          .then((response: any) => { console.log("", getTimeFromDate(new Date()), isItemDefined(response.data) && isItemDefined(response.data.rate) && isItemDefined(response.data.rate.used) ? response.data.rate.used : 0); 
-          return (isItemDefined(response.data) && isItemDefined(response.data.rate) && isItemDefined(response.data.rate.used) ? response.data.rate.used as number : 0); });
-        console.log("", data, x);
-          if (isItemDefined(data) && typeof (data) === "number" && (data < 4000 || (data > 4000 && x % 2 === 0))) {
-          const res = await axios.get(
-            `${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}?onePage=true`,
-            { headers: getHeader(token, config) }
-          ).then(response => { return (response.data); });
-          console.log(res.list, tasks);
-          if (!_.isEqual(res.list, tasks)) {
-            store.dispatch(Actions.updateAllTasks(res));
+        ++ratio;
+        const usedRequestRate = await requestFetchRateLimit(token).then((response: any) => { return (isItemDefined(response.data) && isItemDefined(response.data.rate) && isItemDefined(response.data.rate.used) ? response.data.rate.used as number : 5000); });
+        if (!loadingRef.current && isItemDefined(usedRequestRate) && typeof (usedRequestRate) === "number" && (usedRequestRate < 3000 || (usedRequestRate >= 3000 && ratio % 3 === 0))) {
+          const res = await requestFetchAllRepoTasks(token, ownerName).then((response: any) => { return (response && response.status === 200 ? response.data : null); });
+          if (isItemDefined(res) && isItemDefined(res.list) && !_.isEqual(res.list, tasks.current)) {
+            store.dispatch(Actions.updateAllTasks(res.list));
           }
         }
-      }, 8000);
+      }, 6000);
     return () => clearInterval(timer);
-  }, []);*/
-  const TaskTableforPBI: React.FC<IBacklogItem> = (item: IBacklogItem) => {return (<TaskTableComponent peopleFilter={props.peopleFilter} 
-    item={item} taskColumns={taskColumns(props.peopleFilter, token, ownerName, people, setIsModal, isModal)} taskComponents={dragCmpnts(DraggableBodyRow)} />)};
-
+  }, []);
+  const TaskTableforPBI: React.FC<IBacklogItem> = (item: IBacklogItem) => {
+    return (<TaskTableComponent peopleFilter={props.peopleFilter}
+      item={item} taskColumns={taskColumns(props.peopleFilter, token, ownerName, people, setIsModal, isModal)} taskComponents={dragCmpnts(DraggableBodyRow)} />)
+  };
   const PBITableforSprint: React.FC<ISprint> = (item: ISprint) => {
-    return (<PBITableComponent sortedInfo={props.sortedInfo} filteredInfo={props.filteredInfo} sortSelected={function (items: any): void { props.sortSelected(items) }} 
-    itemSelected={function (items: number[]): void { props.itemSelected(items) }} TaskTableforPBI={TaskTableforPBI} 
-    nameFilter={props.nameFilter} peopleFilter={props.peopleFilter} item={item} 
-    pbiColumns={pbiColumns(props.nameFilter, props.sortedInfo,props.filteredInfo,setSelectedPBI,isModal,setIsModal,pbiKeys,token, ownerName)} 
-    nestedcomponents={dragCmpnts(DraggableBodyRow)} />)
+    return (<PBITableComponent sortedInfo={props.sortedInfo} filteredInfo={props.filteredInfo} sortSelected={function (items: any): void { props.sortSelected(items) }}
+      itemSelected={function (items: number[]): void { props.itemSelected(items) }} TaskTableforPBI={TaskTableforPBI}
+      nameFilter={props.nameFilter} peopleFilter={props.peopleFilter} item={item}
+      pbiColumns={pbiColumns(props.nameFilter, props.sortedInfo, props.filteredInfo, setSelectedPBI, isModal, setIsModal, pbiKeys, token, ownerName)}
+      nestedcomponents={dragCmpnts(DraggableBodyRow)} />)
   };
   return (<div className='baccklogScroll' >
-    <SprintTableComponent filteredInfo={props.filteredInfo} sortedInfo={props.sortedInfo ? props.sortedInfo.order : ""} nameFilter={props.nameFilter} keys={0} peopleFilter={props.peopleFilter} loading={refreshRequired || initialRefresh} data={[{
-      goal: "", finishDate: "", isCurrent: false, status: "", isCompleted: false, sprintNumber: 0, title: "", backlogItems: pbiPage.list
-    } as ISprint] as ISprint[]}
-      components={dragCmpnts(DraggableBodyRow)} columns={sprintColumns(ownerName,navigate,props.sortedInfo, props.filteredInfo, setSelectedSprint, isModal, setIsModal)} PBITableforSprint={PBITableforSprint} />
-    {(<SprintTableComponent filteredInfo={props.filteredInfo} sortedInfo={props.sortedInfo ? props.sortedInfo.order : ""} nameFilter={props.nameFilter} keys={1} peopleFilter={props.peopleFilter} loading={sprintRefreshRequired || initialRefresh}
-      data={sprintPage.list as ISprint[]} components={dragCmpnts(DraggableBodyRow)} columns={sprintColumns(ownerName,navigate,props.sortedInfo, props.filteredInfo, setSelectedSprint, isModal, setIsModal)} PBITableforSprint={PBITableforSprint} />)
-    }
+    <SprintTableComponent filteredInfo={props.filteredInfo} sortedInfo={props.sortedInfo ? props.sortedInfo.order : ""}
+      nameFilter={props.nameFilter} keys={0} peopleFilter={props.peopleFilter} loading={refreshRequired || initialRefresh}
+      data={[{ ...initProductBacklog, backlogItems: pbiPage.list } as ISprint] as ISprint[]} components={dragCmpnts(DraggableBodyRow)}
+      columns={sprintColumns(ownerName, navigate, props.sortedInfo, props.filteredInfo, setSelectedSprint, isModal, setIsModal)}
+      PBITableforSprint={PBITableforSprint} />
+    <SprintTableComponent filteredInfo={props.filteredInfo} sortedInfo={props.sortedInfo ? props.sortedInfo.order : ""}
+      nameFilter={props.nameFilter} keys={1} peopleFilter={props.peopleFilter} loading={sprintRefreshRequired || initialRefresh}
+      data={sprintPage.list as ISprint[]} components={dragCmpnts(DraggableBodyRow)}
+      columns={sprintColumns(ownerName, navigate, props.sortedInfo, props.filteredInfo, setSelectedSprint, isModal, setIsModal)}
+      PBITableforSprint={PBITableforSprint} />
     {isModal.editPBI && selectedPBI && selectedPBI.id && <EditPBIPopup data={selectedPBI} visible={isModal.editPBI}
-      onCreate={function (values: any): void { editPBI(values) }} onDelete={() => { deletePBI(selectedPBI) }} onFinish={() => { finishPBI(selectedPBI) }}
+      onCreate={function (values: any): void { editPBI(values) }} onDelete={() => { deletePBI(selectedPBI) }}
+      onFinish={() => { finishPBI(selectedPBI) }} 
       onCancel={() => { setIsModal({ ...isModal, editPBI: false }); setSelectedPBI({} as IBacklogItem); }} />}
-    {isModal.estimatePBI && selectedPBI && selectedPBI.id && <EstimatePBIPopup data={selectedPBI as IBacklogItem} visible={isModal.estimatePBI}
-      onCreate={function (values: any): void { estimatePBI(values) }} onCancel={() => { setIsModal({ ...isModal, estimatePBI: false }); setSelectedPBI({} as IBacklogItem); }} />}
+    {isModal.estimatePBI && selectedPBI && selectedPBI.id && <EstimatePBIPopup data={selectedPBI as IBacklogItem} 
+    visible={isModal.estimatePBI} onCreate={function (values: any): void { estimatePBI(values) }} onCancel={() => { setIsModal({ ...isModal, estimatePBI: false }); setSelectedPBI({} as IBacklogItem); }} />}
     {isModal.addTask && <AddTaskPopup data={{ name: "" } as IFilters} visible={isModal.addTask}
       onCreate={function (values: any): void { addTaskToPBI(values); }} onCancel={() => { setIsModal({ ...isModal, addTask: false }); }} />}
     {isModal.updateSprint && !loading && <UpdateSprintPopup data={selectedSprint} visible={isModal.updateSprint} onCreate={function (values: any): void { updateSprint(values) }}
