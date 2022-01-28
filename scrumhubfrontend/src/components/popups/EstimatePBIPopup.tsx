@@ -6,6 +6,7 @@ import { NumberOutlined } from '@ant-design/icons';
 import VirtualList from 'rc-virtual-list';
 import "../ProductBacklog.css";
 import { IEstimatePBICollectionCreateFormProps } from './popupInterfaces';
+import { isArrayValid, isItemDefined } from '../utility/commonFunctions';
 
 export const EstimatePBIPopup: React.FC<IEstimatePBICollectionCreateFormProps> = ({
   data,
@@ -17,15 +18,15 @@ export const EstimatePBIPopup: React.FC<IEstimatePBICollectionCreateFormProps> =
   const [slicedData, setSlicedData] = useState([] as IFilters[]);
   useEffect(() => {
     if (slicedData.length < 1) {
-      setSlicedData(data.acceptanceCriteria.slice(0, 2).map((data, key) => { return { "key": key, "acceptanceCriteria": data } }));
+      setSlicedData(isItemDefined(data) && isArrayValid(data.acceptanceCriteria) ? data.acceptanceCriteria.slice(0, 2).map((data, key) => { return { "key": key, "acceptanceCriteria": data } }) : []);
     }
     else {
-      setSlicedData(data.acceptanceCriteria.slice(0, slicedData.length + 2).map((data, key) => { return { "key": key, "acceptanceCriteria": data } }));
+      setSlicedData(isItemDefined(data) && isArrayValid(data.acceptanceCriteria) ? data.acceptanceCriteria.slice(0, slicedData.length + 2).map((data, key) => { return { "key": key, "acceptanceCriteria": data } }) : []);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const [value, setValue] = useState(data.expectedTimeInHours);
-  const marks = {0: 0,1: 1, 2: 2,3: 3, 5: 5,8: 8,13: 13,20: 20};
+  const marks = { 0: 0, 1: 1, 2: 2, 3: 3, 5: 5, 8: 8, 13: 13, 20: 20 };
   return (
     <Modal
       centered={true}
@@ -39,7 +40,7 @@ export const EstimatePBIPopup: React.FC<IEstimatePBICollectionCreateFormProps> =
       onOk={() => {
         form
           .validateFields()
-          .then((values: {expectedTimeInHours: number}) => {
+          .then((values: { expectedTimeInHours: number }) => {
             form.resetFields();
             onCreate({ expectedTimeInHours: value });
           })
@@ -82,7 +83,7 @@ export const EstimatePBIPopup: React.FC<IEstimatePBICollectionCreateFormProps> =
             >{item => (
               <List.Item key={item.key}>
                 <List.Item.Meta
-                  avatar={<span><NumberOutlined></NumberOutlined>{" "}{item.key+1}</span>}
+                  avatar={<span><NumberOutlined></NumberOutlined>{" "}{item.key + 1}</span>}
                   title={item.acceptanceCriteria}
                 />
               </List.Item>

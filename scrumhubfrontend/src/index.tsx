@@ -1,3 +1,8 @@
+// index.tsx
+/**
+ * File doc comment for index.tsx
+ * @packageDocumentation
+ */
 import ReactDOM from 'react-dom';
 import './index.css';
 import {App} from './App';
@@ -10,7 +15,7 @@ export const ReactStrictMode = <React.StrictMode>
     <App />
   </Provider>
 </React.StrictMode>
-
+  
 export const rootElement = document.getElementById('root')
 
 ReactDOM.render(

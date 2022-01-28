@@ -1,6 +1,6 @@
 import _, { isNull } from "lodash";
 import { isArrayValid, isItemDefined, isNameFilterValid } from "../components/utility/commonFunctions";
-import { initBI2, initError, initBacklogItemList, unassignedBI, initBI } from "./stateInitValues";
+import { initError, initBacklogItemList, unassignedBI } from "./stateInitValues";
 import { IError, IFilters, IBacklogItem, ISprint, ITask, ITaskList, IState, IRepositoryList, IRepository } from "./stateInterfaces";
 
 /**
@@ -281,11 +281,6 @@ export function updateAllTasksSWR(state: IState, temp: ITask[]) {
   if (newState.pbiPage && isArrayValid(newState.pbiPage.list) ) {
     newState.pbiPage.list = newState.pbiPage.list.map((item: IBacklogItem) => {
       const filtered = item.id===0? tasks.filter((t:ITask)=>t.pbiId===0 || isNull(t.pbiId) ) : tasks.filter((t:ITask)=>t.pbiId===item.id) ;
-     console.log("tasks", {...item.tasks});
-      console.log("filtered", {...filtered});
-      //console.log("equal",_.isEqual({...item.tasks.sort()}, filtered.sort()));
-      //console.log("items", item.tasks);
-      //console.log(item.tasks.filter((t)=>filtered.includes(t)));
       return {...item,tasks:filtered.sort((a,b)=>a.id-b.id) };
     });
   }

@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router';
 import { initModalVals } from './utility/commonInitValues';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
 import { canDropPBI, canDropTask, isItemDefined, useStateAndRefLoading, useTasksRef, } from './utility/commonFunctions';
-import { taskColumns, dragCmpnts, pbiColumns, sprintColumns } from './utility/BodyRowsAndColumns';
+import { taskColumns, dragCmpnts, pbiColumns, sprintColumns } from './utility/TableUtilities';
 import { PBITableComponent } from './BacklogPBITableComponent';
 import { SprintTableComponent } from './BacklogSprintTableComponent';
 import { initPBIFilter, initProductBacklog } from '../appstate/stateInitValues';
@@ -47,7 +47,6 @@ export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
   message.config({ maxCount: 1 });
   useEffect(() => {
     if (initialRefresh) {
-      console.log(initialRefresh);
       if (!localStorage.getItem("sprintID")) {// ||!isArrayValid(sprintPage.list) || !isArrayValid(pbiPage.list)) {
         store.dispatch(Actions.clearPBIsList());
         store.dispatch(Actions.clearSprintList());
@@ -63,7 +62,21 @@ export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
       store.dispatch(Actions.fetchSprintsThunk({ token: token, ownerName: ownerName as string, filters: { ...initPBIFilter, onePage: true } }));
     }
   }, [sprintRefreshRequired]);
-
+  let ratio = 0;
+  useEffect(() => {
+    const timer = setInterval(
+      async () => {
+        ++ratio;
+        const usedRequestRate = await requestFetchRateLimit(token).then((response: any) => { return (isItemDefined(response.data) && isItemDefined(response.data.rate) && isItemDefined(response.data.rate.used) ? response.data.rate.used as number : 5000); });
+        if (!loadingRef.current && isItemDefined(usedRequestRate) && typeof (usedRequestRate) === "number" && (usedRequestRate < 3000 || (usedRequestRate >= 3000 && ratio % 3 === 0))) {
+          const res = await requestFetchAllRepoTasks(token, ownerName).then((response: any) => { return (response && response.status === 200 ? response.data : null); });
+          if (isItemDefined(res) && isItemDefined(res.list) && !_.isEqual(res.list, tasks.current)) {
+            store.dispatch(Actions.updateAllTasks(res.list));
+          }
+        }
+      }, 6000);
+    return () => clearInterval(timer);
+  }, []);
   const addTaskToPBI = (input: IFilters) => {
     setIsModal({ ...isModal, addTask: false });
     try {
@@ -143,9 +156,7 @@ export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
       },
       drop: (item: any) => {
         if (typeof (index_row) !== "undefined") {
-          if (!item.record.estimated) {
-            message.info("Cannot assign not estimated pbi", 5);
-          }
+          if (!item.record.estimated) { message.info("Cannot assign not estimated pbi", 5) }
           else if (item.bodyType === "IProductBacklogItem" && canDropPBI(item.index, item.record.sprintNumber, record.sprintNumber)) {
             updatePBI(item.index, item.record.sprintNumber, record.sprintNumber, sprintPage, token, ownerName);
           }
@@ -166,27 +177,14 @@ export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
     });
     drop(drag(ref));
     return (<tr ref={ref as any} className={`${className}${isOver ? dropClassName : ''}`}
-      style={{ cursor: isDraggable ? "move" : "default", ...style }} {...restProps} />
+style={{ cursor: isDraggable ? "move" : "default", ...style }} {...restProps} />
     );
   };
-  let ratio = 0;
-  useEffect(() => {
-    const timer = setInterval(
-      async () => {
-        ++ratio;
-        const usedRequestRate = await requestFetchRateLimit(token).then((response: any) => { return (isItemDefined(response.data) && isItemDefined(response.data.rate) && isItemDefined(response.data.rate.used) ? response.data.rate.used as number : 5000); });
-        if (!loadingRef.current && isItemDefined(usedRequestRate) && typeof (usedRequestRate) === "number" && (usedRequestRate < 3000 || (usedRequestRate >= 3000 && ratio % 3 === 0))) {
-          const res = await requestFetchAllRepoTasks(token, ownerName).then((response: any) => { return (response && response.status === 200 ? response.data : null); });
-          if (isItemDefined(res) && isItemDefined(res.list) && !_.isEqual(res.list, tasks.current)) {
-            store.dispatch(Actions.updateAllTasks(res.list));
-          }
-        }
-      }, 6000);
-    return () => clearInterval(timer);
-  }, []);
+
   const TaskTableforPBI: React.FC<IBacklogItem> = (item: IBacklogItem) => {
-    return (<TaskTableComponent peopleFilter={props.peopleFilter}
-      item={item} taskColumns={taskColumns(props.peopleFilter, token, ownerName, people, setIsModal, isModal)} taskComponents={dragCmpnts(DraggableBodyRow)} />)
+    return (<TaskTableComponent peopleFilter={props.peopleFilter} item={item}
+      taskColumns={taskColumns(props.peopleFilter, token, ownerName, people, setIsModal, isModal)}
+      taskComponents={dragCmpnts(DraggableBodyRow)} />)
   };
   const PBITableforSprint: React.FC<ISprint> = (item: ISprint) => {
     return (<PBITableComponent sortedInfo={props.sortedInfo} filteredInfo={props.filteredInfo} sortSelected={function (items: any): void { props.sortSelected(items) }}
@@ -206,18 +204,22 @@ export const ProductBacklog: React.FC<any> = React.memo((props: any) => {
       data={sprintPage.list as ISprint[]} components={dragCmpnts(DraggableBodyRow)}
       columns={sprintColumns(ownerName, navigate, props.sortedInfo, props.filteredInfo, setSelectedSprint, isModal, setIsModal)}
       PBITableforSprint={PBITableforSprint} />
-    {isModal.editPBI && selectedPBI && selectedPBI.id && <EditPBIPopup data={selectedPBI} visible={isModal.editPBI}
+    <EditPBIPopup data={selectedPBI} visible={isModal.editPBI}
       onCreate={function (values: any): void { editPBI(values) }} onDelete={() => { deletePBI(selectedPBI) }}
-      onFinish={() => { finishPBI(selectedPBI) }} 
-      onCancel={() => { setIsModal({ ...isModal, editPBI: false }); setSelectedPBI({} as IBacklogItem); }} />}
-    {isModal.estimatePBI && selectedPBI && selectedPBI.id && <EstimatePBIPopup data={selectedPBI as IBacklogItem} 
-    visible={isModal.estimatePBI} onCreate={function (values: any): void { estimatePBI(values) }} onCancel={() => { setIsModal({ ...isModal, estimatePBI: false }); setSelectedPBI({} as IBacklogItem); }} />}
-    {isModal.addTask && <AddTaskPopup data={{ name: "" } as IFilters} visible={isModal.addTask}
-      onCreate={function (values: any): void { addTaskToPBI(values); }} onCancel={() => { setIsModal({ ...isModal, addTask: false }); }} />}
-    {isModal.updateSprint && !loading && <UpdateSprintPopup data={selectedSprint} visible={isModal.updateSprint} onCreate={function (values: any): void { updateSprint(values) }}
-      onCancel={() => { setIsModal({ ...isModal, updateSprint: false }); setSelectedSprint({} as ISprint); }} />}
-    {isModal.completeSprint && !loading && <CompleteSprintPopup data={selectedSprint} visible={isModal.completeSprint} onComplete={function (value: boolean): void { completeSprint(value) }}
-      onCancel={() => { setIsModal({ ...isModal, completeSprint: false }); setSelectedSprint({} as ISprint); }} />}
+      onFinish={() => { finishPBI(selectedPBI) }}
+      onCancel={() => { setIsModal({ ...isModal, editPBI: false }); setSelectedPBI({} as IBacklogItem); }} />
+    <EstimatePBIPopup data={selectedPBI as IBacklogItem} visible={isModal.estimatePBI}
+      onCreate={function (values: any): void { estimatePBI(values) }}
+      onCancel={() => { setIsModal({ ...isModal, estimatePBI: false }); setSelectedPBI({} as IBacklogItem); }} />
+    <AddTaskPopup data={{ name: "" } as IFilters} visible={isModal.addTask}
+      onCreate={function (values: any): void { addTaskToPBI(values); }}
+      onCancel={() => { setIsModal({ ...isModal, addTask: false }); }} />
+    <UpdateSprintPopup data={selectedSprint} visible={isModal.updateSprint && !loading}
+      onCreate={function (values: any): void { updateSprint(values) }}
+      onCancel={() => { setIsModal({ ...isModal, updateSprint: false }); setSelectedSprint({} as ISprint); }} />
+    <CompleteSprintPopup data={selectedSprint} visible={isModal.completeSprint && !loading}
+      onComplete={function (value: boolean): void { completeSprint(value) }}
+      onCancel={() => { setIsModal({ ...isModal, completeSprint: false }); setSelectedSprint({} as ISprint); }} />
   </div>
   );
 });

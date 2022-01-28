@@ -34,7 +34,7 @@ export const isBranchNotCreated = (message: string): boolean => {
 
 
 export const isArrayValid = (objectArray: any[]) => {
-  return objectArray && objectArray.length > 0;
+  return !isNull(objectArray) && typeof (objectArray) !== "undefined" && objectArray.length > 0;
 }
 
 export const isItemDefined = (item: any) => {

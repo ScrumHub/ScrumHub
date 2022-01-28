@@ -1,6 +1,6 @@
 import { IFilters } from "../../appstate/stateInterfaces";
 import config from "../../configuration/config";
-import { backlogPriorities } from "./BodyRowsAndColumns";
+import { backlogPriorities } from "./TableUtilities";
 import { IFilteredInfo, ILoginData, IModals, IRowIds, ISortedInfo } from "./commonInterfaces";
 
 export const initIDs: IFilters = {
@@ -17,7 +17,7 @@ export const initModalVals: IModals = {
   updateSprint: false,
   editPBI: false,
   estimatePBI: false,
-  startBranchId:-1
+  startBranchId: -1
 }
 
 export const initRowIds: IRowIds = {
@@ -34,9 +34,9 @@ export const formItemLayoutWithOutLabel = {
   },
 };
 export const initFilteredInfo = { complete: [] as number[], pbiPriority: [] as number[] } as IFilteredInfo;
-export const initSortedInfo = {order: "",columnKey: ""} as ISortedInfo;
+export const initSortedInfo = { order: "", columnKey: "" } as ISortedInfo;
 
-export const initFilterSortInfo =  {
+export const initFilterSortInfo = {
   filteredInfo: initFilteredInfo,
   sortedInfo: initSortedInfo
 };
@@ -45,15 +45,19 @@ export const initFilterMenu = {
   openKeys: [] as string[]
 };
 
-export const pbiFilterVals = 
-[{text: backlogPriorities[0], value: 0, },
-{text: backlogPriorities[1],value: 1,}, 
-{text: backlogPriorities[2],value: 2,},];
+export const pbiFilterVals =
+  [{ text: backlogPriorities[0], value: 0, },
+  { text: backlogPriorities[1], value: 1, },
+  { text: backlogPriorities[2], value: 2, },];
 
-export const pbiStatusVals = 
-[{text: "Not Finished", value: false, },
-{text: "Finished",value: true,}, ];
+export const pbiStatusVals =
+  [{ text: "Not Finished", value: false, },
+  { text: "Finished", value: true, },];
 
+export const sprintStatusVals =
+  [{ text: "Complete", value: 1, },
+   { text: "Not Complete", value: 0, }
+  ];
 
 export const loginDataError = {
   isLoading: false,

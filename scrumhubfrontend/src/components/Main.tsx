@@ -10,7 +10,7 @@ import './Main.css';
 import './ProductBacklog.css';
 import { useSelector } from 'react-redux';
 import { ISprint, IState } from '../appstate/stateInterfaces';
-import { routes } from './utility/BodyRowsAndColumns';
+import { routes } from './utility/TableUtilities';
 import { clearLocalStorage, clearProjectLocalStorage, isMessageValid } from './utility/commonFunctions';
 import { ItemRender } from './utility/LoginAndMainHandlers';
 import { isNull } from 'lodash';

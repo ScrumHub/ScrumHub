@@ -8,7 +8,7 @@ import "../Home.css";
 import { isArrayValid, isNameFilterValid } from "./commonFunctions";
 import { useEffect } from "react";
 import SubMenu from "antd/lib/menu/SubMenu";
-import { backlogColors, backlogPriorities } from "./BodyRowsAndColumns";
+import { backlogColors, backlogPriorities } from "./TableUtilities";
 import { initFilteredInfo, initSortedInfo } from "./commonInitValues";
 
 export default function SkeletonList(props: any) {

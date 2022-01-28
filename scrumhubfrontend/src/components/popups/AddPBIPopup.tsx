@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Modal, Form, Input, Radio, Tag } from 'antd';
 import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
-import { backlogColors, backlogPriorities } from '../utility/BodyRowsAndColumns';
+import { backlogColors, backlogPriorities } from '../utility/TableUtilities';
 import { formItemLayoutWithOutLabel } from '../utility/commonInitValues';
 import { IAddPBICollectionCreateFormProps } from './popupInterfaces';
 import { IAddBI } from '../../appstate/stateInterfaces';

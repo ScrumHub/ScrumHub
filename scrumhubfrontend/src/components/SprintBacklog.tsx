@@ -10,7 +10,6 @@ import { BranchesOutlined, CalendarOutlined, DownOutlined, EditOutlined } from '
 import { store } from '../appstate/store';
 import {PBITableComponent} from './BacklogPBITableComponent';
 import {TaskTableComponent} from './BacklogTaskTableComponent';
-import { taskNameCol, taskStatusCol, taskGhLinkCol, pbiProgressCol, pbiToDoCol, backlogPriorities, backlogColors, peopleDropdown, pbiStatusCol } from './utility/BodyRowsAndColumns';
 import { canDropTask, dateFormat, isBranchNotCreated, isInReviewOrFinished, isSprintLoaded } from './utility/commonFunctions';
 import SkeletonList, { PBIMenuWithPeople } from './utility/LoadAnimations';
 import { assignPerson, startTask, updateTask } from './utility/BacklogHandlers';
@@ -27,6 +26,9 @@ import { EditPBIPopup } from './popups/EditPBIPopup';
 import { EstimatePBIPopup } from './popups/EstimatePBIPopup';
 import { UpdateSprintPopup } from './popups/UpdateSprintPopup';
 import { date } from 'joi';
+import { pbiProgressCol, pbiToDoCol, pbiStatusCol } from './utility/PBITableColumns';
+import { taskNameCol, taskStatusCol, peopleDropdown, taskGhLinkCol } from './utility/TaskTableColumns';
+import { backlogPriorities, backlogColors } from './utility/TableUtilities';
 
 export function SprintBacklog() {
   const token = useSelector((appState: IState) => appState.loginState.token);
@@ -157,24 +159,14 @@ export function SprintBacklog() {
       },
       drop: (item: any) => {
         if (typeof (index_row) !== "undefined") {
-
-          /*item {index: 30, bodyType: 'ITask', record: {…}}bodyType: "ITask" index: 30
-          record: {pbiID: 23, taskID: 30, sprintNumber: 3, estimated: true}[[Prototype]]:
-           Object {pbiID: 24, taskID: -2, sprintNumber: 3, estimated: true}*/
-          //console.log("item",item,);
-          //console.log("item",item.record.taskID,);
-          //console.log("item",sprintPage.backlogItems,);
-          //console.log("record",record,);
           if (!item.record.estimated) {
             message.info("Cannot assign not estimated pbi", 5);
           }
           else if (item.bodyType === "ITask" && canDropTask(record.pbiID, item.index, item.record.pbiID)) {
             updateTask(record.pbiID, item.index, item.record.pbiID, pbiKeys, token, ownerName);
-            //setInitialRefresh(true);
           }
           else if (item.bodyType === "ITask" && record.pbiID === -2 && record.sprintNumber === 0 && item.index !== -2 && item.record.pbiID !== -2) {
             updateTask(0, item.index,item.record.pbiID,pbiKeys, token, ownerName);
-            //setInitialRefresh(true);
           }
         }
       },
