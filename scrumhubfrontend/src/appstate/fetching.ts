@@ -3,10 +3,10 @@ import config from "../configuration/config";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import axios, { AxiosResponse } from "axios";
 import { IAddBI, IFilters, IPeopleList, IPerson, IBacklogItem, IBacklogItemList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList } from "./stateInterfaces";
-import { filterUrlString, getHeader, getHeaderAcceptAll, getHeaderWithContent } from "./stateUtilities";
 import { isNull } from "lodash";
 import { errorObject } from "./stateInitValues";
 import { isItemDefined } from "../components/utility/commonFunctions";
+import { filterUrlString, getHeader, getHeaderWithContent, getHeaderAcceptAll } from "./stateUtitlities";
 
 /** 
  * Awaits for the promise and returns response as custom object {@linkcode RequestResponse}

@@ -10,7 +10,7 @@ import { initPerson, initBI, initRepository, initSprint, initTask, initPBIFilter
 import axios, { AxiosResponse } from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { tstConf, testFilters, testPBIList, testRepositoryList, testSprintList, testTaskList } from "../appstate/stateTestValues";
-import { filterUrlString, getHeader } from "../appstate/stateUtilities";
+import { filterUrlString, getHeader } from "../appstate/stateUtitlities";
 
 test("getResponseResultsInNetworkError", async () => {
   const mock = new MockAdapter(axios);

@@ -4,12 +4,12 @@ import { RequestResponse } from "./response";
 import { IAssignBI, ILoginState, IPeopleList, IPerson, IBacklogItem, IBacklogItemList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, IState } from "./stateInterfaces";
 import { initError, loggedOutLoginState, unassignedBI } from "./stateInitValues";
 import { isArrayValid, isNameFilterValid } from "../components/utility/commonFunctions";
-import { getError, updateStateTasks, updateStateKeys, addStateTask, addStateUnassignedTaskToPBI, updateStatePBI, updateTasksSWR, fetchStateRepos, updateStateOneSprint, addStateRepo, addStatePBI, addStateSprint, updateOnDragStateTasks, updateAllTasksSWR } from "./stateUtilities";
+import { getError, updateStateTasks, updateStateKeys, addStateTask, addStateUnassignedTaskToPBI, updateStatePBI, updateTasksSWR, updateStateRepos, updateStateOneSprint, addStateRepo, addStatePBI, addStateSprint, updateOnDragStateTasks, updateAllTasksSWR } from "./reducerUtilities";
 import { isNull } from "lodash";
 import config from "../configuration/config";
 var _ = require('lodash');
 
-/** Creates reducer for given {@linkcode IState} {@linkcode initState}*/
+/** Creates reducer for given {@linkcode IState} initState*/
 export const reducerFunction = (initState: IState) => {
   return (createReducer(initState, {
     [Actions.clearError.type]: (state: IState, payload: any) => {
@@ -84,7 +84,7 @@ export const reducerFunction = (initState: IState) => {
     },
     [Actions.fetchReposThunk.fulfilled.toString()]: (state: IState, payload: PayloadAction<RequestResponse<IRepositoryList, number>>) => {
       let newState = _.cloneDeep(state);
-      return fetchStateRepos(newState, payload.payload.response as IRepositoryList, _.get(payload, ["meta", "arg", "filters", "pageNumber"], config.defaultFilters.page),
+      return updateStateRepos(newState, payload.payload.response as IRepositoryList, _.get(payload, ["meta", "arg", "filters", "pageNumber"], config.defaultFilters.page),
        _.get(payload, ["meta", "arg", "filters", "pageSize"], config.defaultFilters.size),_.get(payload.payload.response, ["pageCount"], 1));
     },
     [Actions.fetchReposThunk.rejected.toString()]: (state: IState, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {

@@ -16,15 +16,13 @@ import * as Actions from '../appstate/actions';
 import React from 'react';
 import { AddPBIPopup } from './popups/AddPBIPopup';
 import { AddSprintPopup } from './popups/AddSprintPopup';
-import { initAddPBI, initSprint } from '../appstate/stateInitValues';
+import { initSprint } from '../appstate/stateInitValues';
 import { initFilterMenu, initFilterSortInfo, initSortedInfo } from './utility/commonInitValues';
 import { isArrayValid } from './utility/commonFunctions';
 import { ISortedInfo } from './utility/commonInterfaces';
 const { Search } = Input;
 
-/**
- * Renders Product Backlog View
- */
+/** Renders Product Backlog View*/
 export const Project = React.memo((props: any) => {
   const isLoggedIn = useSelector((appState: IState) => appState.loginState.isLoggedIn);
   const token = useSelector((appState: IState) => appState.loginState.token);

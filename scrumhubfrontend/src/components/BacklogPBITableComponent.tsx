@@ -7,7 +7,6 @@ import { store } from "../appstate/store";
 import { useSelector } from "react-redux";
 import { isArrayValid } from "./utility/commonFunctions";
 import React from "react";
-import _ from "lodash";
 
 /**
  * @returns PBITableComponent Component that displays each {@linkcode IBacklogItem} for
@@ -15,8 +14,8 @@ import _ from "lodash";
  */
 export const PBITableComponent = React.memo((props: any) =>{
   let keys = useSelector((appState: IState) => appState.keys.pbiKeys as number[]);
-  const loadPbiKeys = useSelector((appState: IState) => appState.loadingKeys.pbiKeys as number[]);
-  const loadSprintKeys = useSelector((appState: IState) => appState.loadingKeys.sprintKeys as number[]);
+  //const loadPbiKeys = useSelector((appState: IState) => appState.loadingKeys.pbiKeys as number[]);
+  //const loadSprintKeys = useSelector((appState: IState) => appState.loadingKeys.sprintKeys as number[]);
   const updateExpandedRowKeys = (record: IBacklogItem) => {
     store.dispatch(Actions.updatePBIKeys([record.id]));
   };

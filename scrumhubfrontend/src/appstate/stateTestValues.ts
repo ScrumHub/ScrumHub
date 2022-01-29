@@ -1,8 +1,8 @@
 
 import config from "../configuration/config";
 import { initError, initPeopleList, initPerson, initBI, initBacklogItemList, initRepository, initRepositoryList, initSprint, initSprintList, initTaskList, initTask, initKeys, initLoadingKeys } from "./stateInitValues";
-import { ILoginState, IBacklogItemList, IRepositoryList, ISprintList, IState, ITaskList, ITask } from "./stateInterfaces";
-import { validateUri } from "./stateUtilities";
+import { ILoginState, IBacklogItemList, IRepositoryList, ISprintList, IState, ITaskList } from "./stateInterfaces";
+import { validateUri } from "./reducerUtilities";
 
 export const testLoginState: ILoginState = {
   isLoggedIn: false,

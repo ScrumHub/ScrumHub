@@ -11,9 +11,8 @@ export const canDropTask = (pbiId: number, taskId: number, oldPbiId: number) => 
   return (pbiId !== -2 && pbiId !== null && taskId !== -2 && taskId !== null && oldPbiId !== pbiId);
 }
 /**
- * 
- * @param nameFilter  
  * Checks if string is not null or empty
+ * @param nameFilter  
  */
 export const isNameFilterValid = (nameFilter: string) => {
   return !isNull(nameFilter) && nameFilter !== "";

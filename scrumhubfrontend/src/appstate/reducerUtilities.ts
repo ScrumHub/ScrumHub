@@ -1,51 +1,9 @@
 import _, { isNull } from "lodash";
 import { isArrayValid, isItemDefined, isNameFilterValid } from "../components/utility/commonFunctions";
 import { initError, initBacklogItemList, unassignedBI } from "./stateInitValues";
-import { IError, IFilters, IBacklogItem, ISprint, ITask, ITaskList, IState, IRepositoryList, IRepository } from "./stateInterfaces";
+import { IError, IBacklogItem, ISprint, ITask, ITaskList, IState, IRepositoryList, IRepository } from "./stateInterfaces";
 
-/**
- * @returns Request header
- * @param {String} token User validation
- * @param {Object} config Configuration of port and id, can be in Production or Development
- */
-export const getHeader = (token: string, config: any) => {
-  return ({
-    'Accept': "application/json",
-    'authToken': token,
-    'Access-Control-Allow-Origin': `*`,
-  });
-};
-
-/**
- * @returns Request header with "application/json" content type
- * @param {String} token User validation
- * @param {Object} config Configuration of port and id, can be in Production or Development
- */
-export const getHeaderWithContent = (token: string, config: any) => {
-  return ({
-    'authToken': token,
-    'Accept': "application/json",
-    'contentType': "application/json",
-    'Access-Control-Allow-Origin': `*`,
-  } as IFilters);
-};
-
-/**
- * @returns Request header that accepts all responses type
- * @param {String} token User validation
- * @param {Object} config Configuration of port and id, can be in Production or Development
- */
-export const getHeaderAcceptAll = (token: string, config: any) => {
-  return ({
-    'authToken': token,
-    'Accept': "*/*",
-    'Access-Control-Allow-Origin': `*`,
-  } as IFilters);
-};
-
-/**
- * @returns Error object after validation
- */
+/** Returns Error object after validation*/
 export const getError = (res: any) => { return ({ hasError: true, errorCode: res ? res.code : -1, erorMessage: isItemDefined(res) && isItemDefined(res.response) ? (res.response as IError).Message : "", }) };
 
 /**
@@ -53,21 +11,6 @@ export const getError = (res: any) => { return ({ hasError: true, errorCode: res
  * @returns {String} Empty string on undefined uri
  */
 export function validateUri(uri: string | undefined) { return (typeof (uri) === "undefined" ? "" : uri); }
-
-/**
- * @param {IFilters} filters Filters to validate and concatenate into string
- * @returns {String} Filters' names and values combined into one string 
- */
-export function filterUrlString(filters: IFilters) {
-  return (typeof (filters) === "undefined" ? ""
-    : Object.keys(filters)
-      .map((filterName: string) => {
-        const value = String(filters[filterName]).trim();
-        return value && value !== "null" && value !== "undefined" ? `${filterName}=${value}` : "";
-      })
-      .filter((x) => x !== "")
-      .join("&"));
-}
 
 /**
  * Removes duplicate tasks
@@ -97,24 +40,22 @@ export function updateTaskInTasksList(tasks: ITask[], newTask: ITask): ITask[] {
   if (isArrayValid(tasks)) {
     const index = tasks.findIndex((task: ITask) => task.id === newTask.id);
     return (index === -1 ? tasks.concat([newTask]) : tasks.splice(1, index, newTask));
-  } else {
-    return ([newTask]);
-  }
+  } else {return ([newTask]); }
 }
 
-/** Removes duplicate key and concates expanded keys arrays*/
+/** Removes duplicate key and concatenates expanded keys arrays*/
 export function updateStateKeys(oldKeys: number[], newKeys: number[]): number[] {
   return ((oldKeys.filter((key: number) => !newKeys.includes(key))).concat(newKeys.filter((key: number) => !oldKeys.includes(key))));
 };
 
-
-export function updateStateTasks(newState: IState, task: ITask) {
-  newState.error = initError;
-  if (newState.openSprint && isArrayValid(newState.openSprint.backlogItems) && newState.openSprint.backlogItems.findIndex((pbi: IBacklogItem) => pbi.id === task.pbiId) !== -1) {
-    const index = newState.openSprint.backlogItems.findIndex((pbi: IBacklogItem) => pbi.id === task.pbiId);
-    newState.openSprint.backlogItems[index] = {
-      ...newState.openSprint.backlogItems[index],
-      tasks: newState.openSprint.backlogItems[index].tasks.map((t: ITask) => {
+/** Updates state of given {@linkcode ITask} task for the given {@linkcode IState} state*/
+export function updateStateTasks(state: IState, task: ITask) {
+  state.error = initError;
+  if (state.openSprint && isArrayValid(state.openSprint.backlogItems) && state.openSprint.backlogItems.findIndex((pbi: IBacklogItem) => pbi.id === task.pbiId) !== -1) {
+    const index = state.openSprint.backlogItems.findIndex((pbi: IBacklogItem) => pbi.id === task.pbiId);
+    state.openSprint.backlogItems[index] = {
+      ...state.openSprint.backlogItems[index],
+      tasks: state.openSprint.backlogItems[index].tasks.map((t: ITask) => {
         if (t.id === task.id) {
           return task;
         }
@@ -122,11 +63,11 @@ export function updateStateTasks(newState: IState, task: ITask) {
       })
     };
   }
-  if (newState.pbiPage && isArrayValid(newState.pbiPage.list) && (task.isAssignedToPBI ? newState.pbiPage.list.findIndex((pbi: IBacklogItem) => pbi.id === task.pbiId) : newState.pbiPage.list.findIndex((pbi: IBacklogItem) => pbi.id === 0)) !== -1) {
-    const index = task.isAssignedToPBI ? newState.pbiPage.list.findIndex((pbi: IBacklogItem) => pbi.id === task.pbiId) : newState.pbiPage.list.findIndex((pbi: IBacklogItem) => pbi.id === 0);
-    newState.pbiPage.list[index] = {
-      ...newState.pbiPage.list[index],
-      tasks: newState.pbiPage.list[index].tasks.map((t: ITask) => {
+  if (state.pbiPage && isArrayValid(state.pbiPage.list) && (task.isAssignedToPBI ? state.pbiPage.list.findIndex((pbi: IBacklogItem) => pbi.id === task.pbiId) : state.pbiPage.list.findIndex((pbi: IBacklogItem) => pbi.id === 0)) !== -1) {
+    const index = task.isAssignedToPBI ? state.pbiPage.list.findIndex((pbi: IBacklogItem) => pbi.id === task.pbiId) : state.pbiPage.list.findIndex((pbi: IBacklogItem) => pbi.id === 0);
+    state.pbiPage.list[index] = {
+      ...state.pbiPage.list[index],
+      tasks: state.pbiPage.list[index].tasks.map((t: ITask) => {
         if (t.id === task.id) {
           return task;
         }
@@ -134,8 +75,8 @@ export function updateStateTasks(newState: IState, task: ITask) {
       })
     };
   }
-  else if (newState.sprintPage && isArrayValid(newState.sprintPage.list)) {
-    newState.sprintPage.list = newState.sprintPage.list.map((sprint: ISprint) => {
+  else if (state.sprintPage && isArrayValid(state.sprintPage.list)) {
+    state.sprintPage.list = state.sprintPage.list.map((sprint: ISprint) => {
       sprint.backlogItems = sprint.backlogItems.map((item: IBacklogItem) => {
         if (item.id === task.pbiId && isArrayValid(item.tasks)) {
           item.tasks = item.tasks.map((t: ITask) => {
@@ -150,13 +91,13 @@ export function updateStateTasks(newState: IState, task: ITask) {
       return sprint;
     });
   }
-  newState.loading = false;
-  return (newState)
+  state.loading = false;
+  return (state)
 };
 
+/** Updates state of given {@linkcode ITask} task for the given {@linkcode IBacklogItem} backlogItem*/
 export function filterPBIsList(pbis: IBacklogItem[], task: ITask) {
   let list = _.cloneDeep(pbis);
-  //console.log(task);
   return (list.map((pbi: IBacklogItem) => {
     if (pbi.id === task.pbiId) {
       return ({ ...pbi, tasks: isArrayValid(pbi.tasks) ? pbi.tasks.concat([task]) : [task] });
@@ -166,25 +107,27 @@ export function filterPBIsList(pbis: IBacklogItem[], task: ITask) {
   }));
 }
 
-export function updateOnDragStateTasks(newState: IState, task: ITask) {
-  newState.error = initError;
-  if (newState.openSprint && isArrayValid(newState.openSprint.backlogItems)) {
-    newState.openSprint = { ...newState.openSprint, backlogItems: filterPBIsList(newState.openSprint.backlogItems, task) }
+/** Updates state of given {@linkcode ITask} task after dragging and dropping, for the given {@linkcode IState} state*/
+export function updateOnDragStateTasks(state: IState, task: ITask) {
+  state.error = initError;
+  if (state.openSprint && isArrayValid(state.openSprint.backlogItems)) {
+    state.openSprint = { ...state.openSprint, backlogItems: filterPBIsList(state.openSprint.backlogItems, task) }
   }
-  if (newState.pbiPage && isArrayValid(newState.pbiPage.list)) {
-    newState.pbiPage = { ...newState.pbiPage, list: filterPBIsList(newState.pbiPage.list, task) }
+  if (state.pbiPage && isArrayValid(state.pbiPage.list)) {
+    state.pbiPage = { ...state.pbiPage, list: filterPBIsList(state.pbiPage.list, task) }
   }
-  if (newState.sprintPage && isArrayValid(newState.sprintPage.list)) {
-    newState.sprintPage = {
-      ...newState.sprintPage, list: newState.sprintPage.list.map((sprint: ISprint) => {
+  if (state.sprintPage && isArrayValid(state.sprintPage.list)) {
+    state.sprintPage = {
+      ...state.sprintPage, list: state.sprintPage.list.map((sprint: ISprint) => {
         return ({ ...sprint, backlogItems: filterPBIsList(sprint.backlogItems, task) });
       })
     }
   }
-  newState.loading = false;
-  return (newState);
+  state.loading = false;
+  return (state);
 };
 
+/** Adds {@linkcode ITask} task to the given {@linkcode IState} state*/
 export function addStateTask(state: IState, task: ITask) {
   let newState = state;
   newState.error = initError;
@@ -215,6 +158,7 @@ export function addStateTask(state: IState, task: ITask) {
   return (newState)
 };
 
+/** Adds {@linkcode ITaskList} taskList of unnassigned tasks to {@linkcode IBacklogItemList} backlogItems for the given {@linkcode IState} state*/
 export function addStateUnassignedTaskToPBI(state: IState, temp: ITaskList) {
   let newState = state;
   const pbisList = [unassignedBI] as IBacklogItem[];
@@ -241,6 +185,7 @@ export function addStateUnassignedTaskToPBI(state: IState, temp: ITaskList) {
   return (newState);
 }
 
+/** Updates {@linkcode ITaskList} tasks of {@linkcode IBacklogItem} backlogItem from the given {@linkcode IState} state*/
 export function updateTasksSWR(state: IState, temp: ITaskList) {
   let newState = state;
   newState.error = initError;
@@ -273,6 +218,7 @@ export function updateTasksSWR(state: IState, temp: ITaskList) {
   return (newState);
 }
 
+/** Updates all {@linkcode ITaskList} tasks from the given {@linkcode IState} state*/
 export function updateAllTasksSWR(state: IState, temp: ITask[]) {
   let newState = state;
   newState.error = initError;
@@ -304,9 +250,9 @@ newState.productRequireRefresh = false;
 newState.error = initError;
 newState.loading = false;
 return (newState);
-
 }
 
+/** Updates {@linkcode IBacklogItem} backlogItem from the given {@linkcode IState} state*/
 export function updateStatePBI(state: IState, pbi: IBacklogItem) {
   let newState = state;
   if (pbi.isInSprint) {
@@ -331,7 +277,8 @@ export function updateStatePBI(state: IState, pbi: IBacklogItem) {
   return (newState);
 }
 
-export function fetchStateRepos(newState: IState, repos: IRepositoryList, pageNumber: number, pageSize: number, pageCount: number) {
+/** Updates {@linkcode IRepositoryList} repositoryList from the given {@linkcode IState} state*/
+export function updateStateRepos(newState: IState, repos: IRepositoryList, pageNumber: number, pageSize: number, pageCount: number) {
   const temp = isNameFilterValid(newState.changedRepo) ? repos.list.filter((r: IRepository) => r.name !== newState.changedRepo) : repos.list;
   if (newState.repositories == null || !isArrayValid(newState.repositories) || pageNumber === 1) {
     newState = { ...newState, repositories: (temp).slice(0, (pageNumber + 1) * pageSize) };
@@ -350,6 +297,7 @@ export function fetchStateRepos(newState: IState, repos: IRepositoryList, pageNu
   return (newState);
 }
 
+/** Updates {@linkcode ISprint} sprint from the given {@linkcode IState} state*/
 export function updateStateOneSprint(newState: IState, sprint: ISprint) {
   const objIndex = newState.sprintPage.list.findIndex((s: ISprint) => s.sprintNumber === sprint.sprintNumber);
   if (objIndex !== -1) { newState.sprintPage.list[objIndex] = sprint };
@@ -360,6 +308,7 @@ export function updateStateOneSprint(newState: IState, sprint: ISprint) {
   return (newState);
 }
 
+/** Adds {@linkcode ISprint} sprint to the given {@linkcode IState} state*/
 export function addStateRepo(newState: IState, repo: IRepository) {
   if (isArrayValid(newState.repositories)) {
     const index = newState.repositories.findIndex((el: IRepository) => el.gitHubId === repo.gitHubId);
@@ -369,6 +318,7 @@ export function addStateRepo(newState: IState, repo: IRepository) {
   newState.error = initError;
   return (newState);
 }
+/** Adds {@linkcode IBacklogItem} backlogItem to the given {@linkcode IState} state*/
 export function addStatePBI(newState: IState, pbi: IBacklogItem) {
   if (newState.pbiPage && isArrayValid(newState.pbiPage.list)) {
     newState.pbiPage.list = newState.pbiPage.list.concat([pbi]);
@@ -378,6 +328,7 @@ export function addStatePBI(newState: IState, pbi: IBacklogItem) {
   return (newState);
 }
 
+/** Adds {@linkcode ISprint} sprint to the given {@linkcode IState} state*/
 export function addStateSprint(newState: IState, sprint: ISprint) {
   if (isArrayValid(sprint.backlogItems) && newState.pbiPage && isArrayValid(newState.pbiPage.list)) {
     newState.pbiPage = { ...newState.pbiPage, list: newState.pbiPage.list.filter((pbi: IBacklogItem) => !sprint.backlogItems.filter((pbi2: IBacklogItem) => pbi.id === pbi2.id).length) };
@@ -391,7 +342,3 @@ export function addStateSprint(newState: IState, sprint: ISprint) {
   newState.loading = false;
   return (newState);
 }
-
-
-
-

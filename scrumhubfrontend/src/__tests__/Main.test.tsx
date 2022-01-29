@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import { Provider } from "react-redux";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import { initTestState } from "../appstate/stateTestValues";
 import * as Actions from "../appstate/actions";
 import { configureStore } from "@reduxjs/toolkit";

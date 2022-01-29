@@ -2,10 +2,8 @@
  * @jest-environment jsdom
  */
 import expect from "expect"; // You can use any testing library
-import { IPerson, IBacklogItem, IBacklogItemList, IRepository, IRepositoryList, ISprint, ISprintList } from "../appstate/stateInterfaces";
 import config from "../configuration/config";
 import * as Fetching from "../appstate/fetching";
-import { RequestResponse } from "../appstate/response";
 import { errorObject, initAddPBI, initSprint } from "../appstate/stateInitValues";
 import { testConnectionError, testFilters } from "../appstate/stateTestValues";
 const axios = require('axios');
