@@ -150,7 +150,7 @@ export const Project = React.memo((props: any) => {
       {isAddSprint && <AddSprintPopup error={error.erorMessage} data={initSprint} visible={isAddSprint}
         onCreate={function (values: any): void { addSprint(values); }}
         onCancel={() => { setIsAddSprint(false); }} pbiData={pbiPage.list} />}
-      {isAddPBI && <AddPBIPopup data={initAddPBI} visible={isAddPBI}
+      {isAddPBI && <AddPBIPopup visible={isAddPBI}
         onCreate={function (values: any): void { addPBI(values) }}
         onCancel={() => { setIsAddPBI(false); }} />}
 

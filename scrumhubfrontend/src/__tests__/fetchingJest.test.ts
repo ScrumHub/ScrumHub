@@ -12,87 +12,136 @@ const axios = require('axios');
 
 /* At the same scope with `require`*/
 jest.mock('axios');
-test('responseIsEqualToFullfiled', async () => {
-  const response = await Fetching.getResponse(axios.get(`https://api.github.com/rate_limit`, 
-  { headers: { "Accept": "application/vnd.github.v3+json"}}));
-  expect(response).toEqual(testConnectionError);
-})
-
-test("adding the repository with a wrong token results in an error", async () => {
-  const data: RequestResponse<IRepository, undefined> =
-    await Fetching.addRepo(0, config.token);
-  expect(data).toEqual(errorObject);
+describe("getResponse", () => {
+  describe("when the token is wrong and API call is unsuccessful", () => {
+    it("should return Connection Error", async () => {
+      axios.get.mockResolvedValueOnce(testConnectionError);
+      const result = await Fetching.getResponse(axios.get(`https://api.github.com/rate_limit`, 
+      { headers: { "Accept": "application/vnd.github.v3+json"}}));
+      expect(axios.get).toHaveBeenCalledWith(`https://api.github.com/rate_limit`, 
+      { headers: { "Accept": "application/vnd.github.v3+json"}});
+      expect(result).toEqual(testConnectionError);
+    });
+  });
+});
+  
+describe("addRepo", () => {
+  describe("when the token is wrong and API call is unsuccessful", () => {
+    it("should return Connection Error", async () => {
+      axios.post.mockResolvedValueOnce(testConnectionError);
+      const result = await Fetching.addRepo(0, config.token);
+      expect(result).toEqual(errorObject);
+    });
+  });
 });
 
-test("fetching the repositories with a wrong token results in an error", async () => {
-    const data: RequestResponse<IRepositoryList, undefined> =
-      await Fetching.fetchRepos(testFilters,config.token);
-    expect(data).toEqual(errorObject);
+describe("fetchRepos", () => {
+  describe("when the token is wrong and API call is unsuccessful", () => {
+    it("should return Connection Error", async () => {
+      axios.get.mockResolvedValueOnce(testConnectionError);
+      const result = await Fetching.fetchRepos(testFilters,config.token);
+      expect(result).toEqual(errorObject);
+    });
   });
+});
 
-  test("fetching the pbis with a wrong token results in an error", async () => {
-    const data: RequestResponse<IBacklogItemList, undefined> =
-      await Fetching.fetchPBIs("", config.token,testFilters,);
-    expect(data).toEqual(errorObject);
+describe("fetchPBIs", () => {
+  describe("when the token is wrong and API call is unsuccessful", () => {
+    it("should return Connection Error", async () => {
+      axios.get.mockResolvedValueOnce(testConnectionError);
+      const result = await Fetching.fetchPBIs("", config.token,testFilters,);
+      expect(result).toEqual(errorObject);
+    });
   });
+});
 
-  test("add the pbi with a wrong token results in an error", async () => {
-    const data: RequestResponse<IBacklogItem, undefined> =
-      await Fetching.addPBI("", config.token,initAddPBI,);
-    expect(data).toEqual(errorObject);
+describe("addPBI", () => {
+  describe("when the token is wrong and API call is unsuccessful", () => {
+    it("should return Connection Error", async () => {
+      axios.post.mockResolvedValueOnce(testConnectionError);
+      const result = await Fetching.addPBI("", config.token,initAddPBI,);
+      expect(result).toEqual(errorObject);
+    });
   });
+});
 
-  test("finish the pbi with a wrong token results in an error", async () => {
-    const data: RequestResponse<IBacklogItem, undefined> =
-      await Fetching.finishPBI("", config.token,0,);
-    expect(data).toEqual(errorObject);
+describe("finishPBI", () => {
+  describe("when the token is wrong and API call is unsuccessful", () => {
+    it("should return Connection Error", async () => {
+      axios.patch.mockResolvedValueOnce(testConnectionError);
+      const result = await Fetching.finishPBI("", config.token,0);
+      expect(result).toEqual(errorObject);
+    });
   });
+});
 
-  test("estimate the pbi with a wrong token results in an error", async () => {
-    const data: RequestResponse<IBacklogItem, undefined> =
-      await Fetching.estimatePBI("", config.token,0,0);
-    expect(data).toEqual(errorObject);
-  });
 
-  
-  test("delete the pbi with a wrong token results in an error", async () => {
-    const data: RequestResponse<number, undefined> =
-      await Fetching.deletePBI("", config.token,0);
-    expect(data).toEqual(errorObject);
+describe("estimatePBI", () => {
+  describe("when the token is wrong and API call is unsuccessful", () => {
+    it("should return Connection Error", async () => {
+      axios.patch.mockResolvedValueOnce(testConnectionError);
+      const result = await Fetching.estimatePBI("", config.token,0,0);
+      expect(result).toEqual(errorObject);
+    });
   });
+});
 
-  test("fetch the sprints with a wrong token results in an error", async () => {
-    const data: RequestResponse<ISprintList, undefined> =
-      await Fetching.fetchSprints("", config.token,{});
-    expect(data).toEqual(errorObject);
+describe("deletePBI", () => {
+  describe("when the token is wrong and API call is unsuccessful", () => {
+    it("should return Connection Error", async () => {
+      axios.delete.mockResolvedValueOnce(testConnectionError);
+      const result = await Fetching.deletePBI("", config.token,0);
+      expect(result).toEqual(errorObject);
+    });
   });
+});
 
-  test("fetch one sprint with a wrong token results in an error", async () => {
-    const data: RequestResponse<ISprint, undefined> =
-      await Fetching.fetchOneSprint("", config.token,0);
-    expect(data).toEqual(errorObject);
+describe("fetchSprints", () => {
+  describe("when the token is wrong and API call is unsuccessful", () => {
+    it("should return Connection Error", async () => {
+      axios.get.mockResolvedValueOnce(testConnectionError);
+      const result = await Fetching.fetchSprints("", config.token,{});
+      expect(result).toEqual(errorObject);
+    });
   });
+});
 
-  test("fetch sprints with a wrong token results in an error", async () => {
-    const data: RequestResponse<ISprintList, undefined> =
-      await Fetching.fetchSprints("", config.token,{});
-    expect(data).toEqual(errorObject);
+describe("fetchOneSprint", () => {
+  describe("when the token is wrong and API call is unsuccessful", () => {
+    it("should return Connection Error", async () => {
+      axios.get.mockResolvedValueOnce(testConnectionError);
+      const result = await Fetching.fetchOneSprint("", config.token,0);
+      expect(result).toEqual(errorObject);
+    });
   });
+});
 
-  test("fetching current user with a wrong token results in an error", async () => {
-    const data: RequestResponse<IPerson, undefined> =
-      await Fetching.getCurrentUser(config.token);
-    expect(data).toEqual(errorObject);
+describe("getCurrentUser", () => {
+  describe("when the token is wrong and API call is unsuccessful", () => {
+    it("should return Connection Error", async () => {
+      axios.get.mockResolvedValueOnce(testConnectionError);
+      const result = await Fetching.getCurrentUser(config.token);
+      expect(result).toEqual(errorObject);
+    });
   });
+});
 
-  test("updating one sprint with a wrong token results in an error", async () => {
-    const data: RequestResponse<ISprint, undefined> =
-      await Fetching.updateOneSprint(config.token, "", 0,initSprint);
-    expect(data).toEqual(errorObject);
+describe("updateOneSprint", () => {
+  describe("when the token is wrong and API call is unsuccessful", () => {
+    it("should return Connection Error", async () => {
+      axios.put.mockResolvedValueOnce(testConnectionError);
+      const result = await Fetching.updateOneSprint(config.token,"", 0,initSprint);
+      expect(result).toEqual(errorObject);
+    });
   });
+});
 
-  test("completing one sprint with a wrong token results in an error", async () => {
-    const data: RequestResponse<ISprint, number> =
-      await Fetching.completeOneSprint(config.token, "", 0,true);
-    expect(data).toEqual(errorObject);
+describe("completeOneSprint", () => {
+  describe("when the token is wrong and API call is unsuccessful", () => {
+    it("should return Connection Error", async () => {
+      axios.put.mockResolvedValueOnce(testConnectionError);
+      const result = await Fetching.completeOneSprint(config.token, "", 0,true);
+      expect(result).toEqual(errorObject);
+    });
   });
+});

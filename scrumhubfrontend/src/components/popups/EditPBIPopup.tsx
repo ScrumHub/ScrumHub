@@ -5,15 +5,12 @@ import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import { backlogColors, backlogPriorities, formItemLayoutWithOutLabel } from '../utility/commonInitValues';
 import { IEditPBICollectionCreateFormProps } from './popupInterfaces';
 import { IAddBI } from '../../appstate/stateInterfaces';
-
-export const EditPBIPopup: React.FC<IEditPBICollectionCreateFormProps> = ({
-  data,
-  visible,
-  onCreate,
-  onCancel,
-  onDelete,
-  onFinish
-}) => {
+/**
+ * Returns Popup with a form for editing the given {@linkcode IBacklogItem} backlogitem
+ */
+export function EditPBIPopup({
+  data, visible, onCreate, onCancel, onDelete, onFinish
+}:IEditPBICollectionCreateFormProps): JSX.Element {
   const [form] = Form.useForm();
   return (
     <Modal
@@ -27,7 +24,7 @@ export const EditPBIPopup: React.FC<IEditPBICollectionCreateFormProps> = ({
           key="delInEditPopup"
           title="Are you sure you want to delete this backlog item?"
           onConfirm={onDelete}
-          onCancel={(e) => { message.info(data.name + " was not deleted") }}
+          onCancel={(e) => { message.info(data.name + " was not deleted"); } }
           okText="Yes"
           cancelText="No"
           icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
@@ -36,10 +33,10 @@ export const EditPBIPopup: React.FC<IEditPBICollectionCreateFormProps> = ({
         </Popconfirm>,
         <Button key="CancelInEditPopup" onClick={onCancel}>Cancel</Button>,
         <Popconfirm
-        key="finInEditPopup"
+          key="finInEditPopup"
           title="Are you sure you want to finish this backlog item?"
           onConfirm={onFinish}
-          onCancel={(e) => { message.info(data.name + " was not finished") }}
+          onCancel={(e) => { message.info(data.name + " was not finished"); } }
           okText="Yes"
           cancelText="No"
           icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
@@ -56,7 +53,7 @@ export const EditPBIPopup: React.FC<IEditPBICollectionCreateFormProps> = ({
             .catch((info: any) => {
               console.error('Validate Failed:', info);
             });
-        }}>
+        } }>
           Save
         </Button>
       ]}
@@ -83,11 +80,11 @@ export const EditPBIPopup: React.FC<IEditPBICollectionCreateFormProps> = ({
           key="priority"
           rules={[{ required: true, message: 'Please input the priority of the new backlog item!' }]}
         >
-          <Radio.Group value={data.priority} onChange={(e)=>{ form.setFieldsValue({"priority":e.target.value});}}>
-          {backlogPriorities.map((item: string, key: number) => {
-              return <Radio  key={"key"+key} value={key}><Tag key={"tag"+key} color={backlogColors[key]}>{item}</Tag></Radio>
+          <Radio.Group value={data.priority} onChange={(e) => { form.setFieldsValue({ "priority": e.target.value }); } }>
+            {backlogPriorities.map((item: string, key: number) => {
+              return <Radio key={"key" + key} value={key}><Tag key={"tag" + key} color={backlogColors[key]}>{item}</Tag></Radio>;
             })}
-            </Radio.Group>
+          </Radio.Group>
 
         </Form.Item>
         <FormItemLabel prefixCls="acceptanceCriteria" label="Acceptance Criteria" required={true} />
@@ -95,20 +92,20 @@ export const EditPBIPopup: React.FC<IEditPBICollectionCreateFormProps> = ({
           {(fields, { add, remove }) => (
             <>
               {fields.map(({ key, name }) => (
-                <Form.Item {...formItemLayoutWithOutLabel} key={"key"+key} style={{ marginBottom: "4px" }}>
+                <Form.Item {...formItemLayoutWithOutLabel} key={"key" + key} style={{ marginBottom: "4px" }}>
                   <Form.Item
                     noStyle
-                    key={"inner"+key}
+                    key={"inner" + key}
                     name={name}
-                    rules={[{ required: form.getFieldValue("acceptanceCriteria").length < 2  ? true : false, whitespace: true, message: 'Please input at least one acceptance criteria!' }]}
+                    rules={[{ required: form.getFieldValue("acceptanceCriteria").length < 2 ? true : false, whitespace: true, message: 'Please input at least one acceptance criteria!' }]}
                   >
-                    <Input key={"input"+key} style={{ width: "95%" }} placeholder={`Input New Cirterion`} />
+                    <Input key={"input" + key} style={{ width: "95%" }} placeholder={`Input New Cirterion`} />
                   </Form.Item>
-                  <MinusCircleOutlined style={{ width: "5%", alignSelf:"flex-end"}} className="dynamic-delete-button" onClick={() => remove(name)} />
+                  <MinusCircleOutlined style={{ width: "5%", alignSelf: "flex-end" }} className="dynamic-delete-button" onClick={() => remove(name)} />
                 </Form.Item>
               ))}
               <Form.Item key="add_criterion">
-              <Button style={{ marginTop: "20px",width: "95%"  }} type="dashed" onClick={() => add()} block icon={<PlusCircleOutlined />}>
+                <Button style={{ marginTop: "20px", width: "95%" }} type="dashed" onClick={() => add()} block icon={<PlusCircleOutlined />}>
                   Add criterion
                 </Button>
               </Form.Item>
@@ -119,4 +116,4 @@ export const EditPBIPopup: React.FC<IEditPBICollectionCreateFormProps> = ({
       </Form>
     </Modal>
   );
-};
+}

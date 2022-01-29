@@ -30,7 +30,8 @@ export const type = 'DraggableBodyRow';
 
 /**
  * Returns Rendered Tables representing Sprint and Product Backlogs
- * // {@linkcode IProductBacklogProps} props Arguments of ProductBacklog functional component
+ * 
+ * {@linkcode IProductBacklogProps} props Arguments of ProductBacklog functional component
  */
 export const ProductBacklog: React.FC<IProductBacklogProps> = React.memo((props:IProductBacklogProps) => {
   const token = useSelector((appState: IState) => appState.loginState.token);

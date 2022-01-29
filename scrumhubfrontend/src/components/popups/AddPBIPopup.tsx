@@ -6,12 +6,12 @@ import { IAddPBICollectionCreateFormProps } from './popupInterfaces';
 import { IAddBI } from '../../appstate/stateInterfaces';
 import { backlogPriorities, backlogColors, formItemLayoutWithOutLabel } from '../utility/commonInitValues';
 
-export const AddPBIPopup: React.FC<IAddPBICollectionCreateFormProps> = ({
-  data,
-  visible,
-  onCreate,
-  onCancel,
-}) => {
+/**
+ * Returns Popup with a form for adding new {@linkcode IBacklogItem} backlogitem
+ */
+export function AddPBIPopup({
+  visible, onCreate, onCancel
+}:IAddPBICollectionCreateFormProps): JSX.Element {
   const [form] = Form.useForm();
   const [value, setValue] = React.useState(0);
   return (
@@ -24,7 +24,7 @@ export const AddPBIPopup: React.FC<IAddPBICollectionCreateFormProps> = ({
       onCancel={onCancel}
       onOk={() => {
         form
-          .validateFields()         
+          .validateFields()
           .then((values: IAddBI) => {
             form.resetFields();
             onCreate(values);
@@ -32,7 +32,7 @@ export const AddPBIPopup: React.FC<IAddPBICollectionCreateFormProps> = ({
           .catch((info: any) => {
             console.error('Validate Failed:', info);
           });
-      }}
+      } }
     >
       <Form
         form={form}
@@ -55,9 +55,9 @@ export const AddPBIPopup: React.FC<IAddPBICollectionCreateFormProps> = ({
           name="priority"
           rules={[{ required: true, message: 'Please input the priority of the new backlog item!' }]}
         >
-          <Radio.Group value={value} onChange={(e) => { setValue(e.target.value); form.setFieldsValue({ "priority": e.target.value }); }}>
+          <Radio.Group value={value} onChange={(e) => { setValue(e.target.value); form.setFieldsValue({ "priority": e.target.value }); } }>
             {backlogPriorities.map((item: string, key: number) => {
-              return <Radio key={"key" + key} value={key}><Tag key={"tag" + key} color={backlogColors[key]}>{item}</Tag></Radio>
+              return <Radio key={"key" + key} value={key}><Tag key={"tag" + key} color={backlogColors[key]}>{item}</Tag></Radio>;
             })}
           </Radio.Group>
         </Form.Item>
@@ -91,4 +91,4 @@ export const AddPBIPopup: React.FC<IAddPBICollectionCreateFormProps> = ({
       </Form>
     </Modal>
   );
-};
+}

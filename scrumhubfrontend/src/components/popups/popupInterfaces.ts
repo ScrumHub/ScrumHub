@@ -2,7 +2,6 @@ import { IAddBI, IFilters, IBacklogItem, ISprint } from "../../appstate/stateInt
 import { Moment } from "moment";
 //pbi
 export interface IAddPBICollectionCreateFormProps {
-    data: IAddBI;
     visible: boolean;
     onCreate: (values: IAddBI) => void;
     onCancel: () => void;

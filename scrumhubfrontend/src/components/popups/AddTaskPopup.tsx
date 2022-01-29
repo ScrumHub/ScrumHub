@@ -2,25 +2,24 @@ import React from 'react';
 import { Modal, Form, Input } from 'antd';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import { IAddTaskCollectionCreateFormProps } from './popupInterfaces';
-
-export const AddTaskPopup: React.FC<IAddTaskCollectionCreateFormProps> = ({
-  data,
-  visible,
-  onCreate,
-  onCancel,
-}) => {
+/**
+ * Returns Popup with a form for adding new {@linkcode ITask} task
+ */
+export function AddTaskPopup({
+  data, visible, onCreate, onCancel,
+}:IAddTaskCollectionCreateFormProps): JSX.Element {
   const [form] = Form.useForm();
-  const okForm =() => {
+  const okForm = () => {
     form
       .validateFields()
-      .then((values: {name:string}) => {
+      .then((values: { name: string; }) => {
         form.resetFields();
         onCreate(values);
       })
       .catch((info: any) => {
         console.error('Validate Failed:', info);
       });
-  }
+  };
   return (
     <Modal
       centered={true}
@@ -43,13 +42,13 @@ export const AddTaskPopup: React.FC<IAddTaskCollectionCreateFormProps> = ({
           name="name"
           rules={[{ required: true, message: 'Please input the name of the new task!', whitespace: true }]}
         >
-          <Input minLength={1} autoComplete='on'onKeyPress={event => {
-                if (event.key === 'Enter') {
-                  okForm();
-                }
-              }} />
+          <Input minLength={1} autoComplete='on' onKeyPress={event => {
+            if (event.key === 'Enter') {
+              okForm();
+            }
+          } } />
         </Form.Item>
       </Form>
     </Modal>
   );
-};
+}

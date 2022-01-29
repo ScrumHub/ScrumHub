@@ -257,26 +257,40 @@ export const updatePersonInTaskThunk = createAsyncThunk<
 /** Thunk that waits for response from function {@linkcode startBranchForTask} that sends a request that starts new GitHub branch for the given {@linkcode ITask} task */
 export const startTaskThunk = createAsyncThunk<
   RequestResponse<ITask, number>,
-  { token: string, ownerName: string; hotfix: boolean; taskId: number },
+  { token: string, ownerName: string; isHotfix: boolean; taskId: number },
   { rejectValue: RequestResponse<ITask, number> }
->("startTaskThunk", async (item: { token: string; ownerName: string; hotfix: boolean; taskId: number; }, { rejectWithValue }) => {
-  const response: RequestResponse<ITask, number> = await Fetching.startBranchForTask(item.token, item.ownerName, item.hotfix, item.taskId);
+>("startTaskThunk", async (item: { token: string; ownerName: string; isHotfix: boolean; taskId: number; }, { rejectWithValue }) => {
+  const response: RequestResponse<ITask, number> = await Fetching.startBranchForTask(item.token, item.ownerName, item.isHotfix, item.taskId);
   if (response.code !== 200) { return rejectWithValue(response as RequestResponse<ITask, number>); }
   return response as RequestResponse<ITask, number>;
 });
-
+/** Action for saving authorization in the {@linkcode store} */
 export const login = createAction<any>("login");
+/** Action for deleting authorization from the {@linkcode store} */
 export const logout = createAction("logout");
+/** Action for updating the error value in the {@linkcode store} */
 export const clearError = createAction<string>("clearError");
+/** Action for restoring the {@linkcode store} to its initial state*/
 export const clearState = createAction("clearState");
+/** Action for restoring the state of the project in the {@linkcode store} to its initial state*/
 export const clearProject = createAction("clearProject");
+/** Action for restoring the {@linkcode ISprintList} sprintsList in the {@linkcode store} to its initial state*/
 export const clearSprintList = createAction("clearSprintList");
+/** Action for restoring the {@linkcode ISprint} sprint that is open in {@linkcode SprintBacklog} in the {@linkcode store} to its initial state*/
 export const clearSprint = createAction("clearSprint");
+/** Action for restoring the {@linkcode IRepositoryList} respositoryList in the {@linkcode store} to its initial state*/
 export const clearReposList = createAction("clearReposList");
+/** Action for restoring the {@linkcode IBacklogItemList} backlogItemsList in the {@linkcode store} to its initial state*/
 export const clearPBIsList = createAction("clearPBIsList");
+/** Action for updating {@linkcode store} with keys of {@linkcode ISprint} sprints that are expanded*/
 export const updateSprintKeys = createAction<number[]>("updateSprintKeys");
+/** Action for updating {@linkcode store} with keys of {@linkcode IBacklogItem} backlogItems that are expanded*/
 export const updatePBIKeys = createAction<number[]>("updatePBIKeys");
+/** Action for updating {@linkcode store} with keys of {@linkcode ISprint} sprints that are loading*/
 export const updateSprintLoadingKeys = createAction<number[]>("updateSprintLoadingKeys");
+/** Action for updating {@linkcode store} with keys of {@linkcode IBacklogItem} backlogItems that are loading*/
 export const updatePBILoadingKeys = createAction<number[]>("updatePBILoadingKeys");
+/** Action for updating {@linkcode store} with {@linkcode ITask} tasks for given {@linkcode IBacklogItem} backlogItem*/
 export const updateTasks = createAction<IBacklogItem>("updateTasks");
+/** Action for updating {@linkcode store} with {@linkcode ITask} tasks for given {@linkcode IRepository} respository*/
 export const updateAllTasks = createAction<ITask[]>("updateAllTasks");

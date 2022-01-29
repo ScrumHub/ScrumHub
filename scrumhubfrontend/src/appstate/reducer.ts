@@ -9,6 +9,7 @@ import { isNull } from "lodash";
 import config from "../configuration/config";
 var _ = require('lodash');
 
+/** Creates reducer for given {@linkcode IState} {@linkcode initState}*/
 export const reducerFunction = (initState: IState) => {
   return (createReducer(initState, {
     [Actions.clearError.type]: (state: IState, payload: any) => {

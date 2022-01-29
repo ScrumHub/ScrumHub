@@ -7,22 +7,19 @@ import TextArea from 'antd/lib/input/TextArea';
 import _ from 'lodash';
 import { disabledDate } from '../utility/commonFunctions';
 import { IAddSprintCollectionCreateFormProps } from './popupInterfaces';
-
-export const AddSprintPopup: React.FC<IAddSprintCollectionCreateFormProps> = ({
-  data,
-  error,
-  pbiData,
-  visible,
-  onCreate,
-  onCancel,
-}) => {
+/**
+ * Returns Popup with a form for adding new {@linkcode ISprint} sprint
+ */
+export function AddSprintPopup({
+  data, error, pbiData, visible, onCreate, onCancel,
+}:IAddSprintCollectionCreateFormProps): JSX.Element {
   const [form] = Form.useForm();
   const filteredData = pbiData.filter((item) => item.estimated !== false && item.id !== 0);
   const [temp, setTemp] = useState(filteredData);
   return (
     <Modal
-    visible={visible}
-    closable={false}
+      visible={visible}
+      closable={false}
       centered={true}
       title="Create Sprint"
       okText="Save"
@@ -33,12 +30,12 @@ export const AddSprintPopup: React.FC<IAddSprintCollectionCreateFormProps> = ({
           .validateFields()
           .then((values: ISprint) => {
             form.resetFields();
-            onCreate({...values,backlogItems:temp});
+            onCreate({ ...values, backlogItems: temp });
           })
           .catch((info: any) => {
             console.error('Validate Failed:', info);
           });
-      }}
+      } }
     >
       <Form
         form={form}
@@ -53,8 +50,7 @@ export const AddSprintPopup: React.FC<IAddSprintCollectionCreateFormProps> = ({
           name="finishDate"
           rules={[{ required: true, message: 'Please input the deadline of this sprint!' }]}
         >
-          <DatePicker showToday={true} disabledDate={disabledDate} format={"YYYY-MM-DD"}
-          />
+          <DatePicker showToday={true} disabledDate={disabledDate} format={"YYYY-MM-DD"} />
         </Form.Item>
         <FormItemLabel prefixCls="title" label="Title" required={true} />
         <Form.Item
@@ -62,8 +58,7 @@ export const AddSprintPopup: React.FC<IAddSprintCollectionCreateFormProps> = ({
           name="title"
           rules={[{ required: true, message: 'Please input the title of this sprint!', whitespace: true }]}
         >
-          <Input required={true} autoComplete="on" maxLength={60}
-          />
+          <Input required={true} autoComplete="on" maxLength={60} />
         </Form.Item>
         <FormItemLabel prefixCls="goal" label="Goal" required={true} />
         <Form.Item
@@ -72,24 +67,23 @@ export const AddSprintPopup: React.FC<IAddSprintCollectionCreateFormProps> = ({
           rules={[{ required: true, message: 'Please input the goal of this sprint!', whitespace: true }]}
         >
           <TextArea required={true}
-            maxLength={105}
-          />
+            maxLength={105} />
         </Form.Item>
 
-        {filteredData && filteredData.length>0 && <FormItemLabel prefixCls="backlogItems" label="Backlog Items" required={true} />}
-        {filteredData && filteredData.length>0 && <Form.List name="backlogItems" initialValue={filteredData}>
+        {filteredData && filteredData.length > 0 && <FormItemLabel prefixCls="backlogItems" label="Backlog Items" required={true} />}
+        {filteredData && filteredData.length > 0 && <Form.List name="backlogItems" initialValue={filteredData}>
           {(fields) => (
             <>
               {fields.map(({ key, name }) => (
-                  <Form.Item key={key} name={key} style={{ marginBottom: "4px" }}>
-                    <Checkbox checked={temp[key].isInSprint === true}
-                      onClick={() => {
-                        const temp2 = _.cloneDeep(temp);
-                        temp2[key].isInSprint = !temp2[key].isInSprint;
-                        setTemp(temp2);
-                        form.setFieldsValue({ "backlogItems": temp2 });
-                      }}>{filteredData[key].name + (filteredData[key].isInSprint ? " from Sprint " + filteredData[key].sprintNumber : "")}</Checkbox>
-                  </Form.Item>
+                <Form.Item key={key} name={key} style={{ marginBottom: "4px" }}>
+                  <Checkbox checked={temp[key].isInSprint === true}
+                    onClick={() => {
+                      const temp2 = _.cloneDeep(temp);
+                      temp2[key].isInSprint = !temp2[key].isInSprint;
+                      setTemp(temp2);
+                      form.setFieldsValue({ "backlogItems": temp2 });
+                    } }>{filteredData[key].name + (filteredData[key].isInSprint ? " from Sprint " + filteredData[key].sprintNumber : "")}</Checkbox>
+                </Form.Item>
               ))}
             </>
           )}
@@ -98,4 +92,4 @@ export const AddSprintPopup: React.FC<IAddSprintCollectionCreateFormProps> = ({
       </Form>
     </Modal>
   );
-};
+}

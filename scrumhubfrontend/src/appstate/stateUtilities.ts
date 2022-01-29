@@ -86,6 +86,7 @@ export function filterTasksById(tasks: ITask[]) {
 export function filterPbiTasksById(pbi: IBacklogItem): IBacklogItem {
   return { ...pbi, tasks: isArrayValid(pbi.tasks) ? filterTasksById(pbi.tasks) : [] };
 }
+
 /**
  * Updates a task in tasks array, adds the task if tasks does not contain it
  * @param {ITask[]} tasks List of tasks to be updated
@@ -101,12 +102,11 @@ export function updateTaskInTasksList(tasks: ITask[], newTask: ITask): ITask[] {
   }
 }
 
-/**
- * Removes duplicate key and concates expanded keys arrays
- **/
+/** Removes duplicate key and concates expanded keys arrays*/
 export function updateStateKeys(oldKeys: number[], newKeys: number[]): number[] {
   return ((oldKeys.filter((key: number) => !newKeys.includes(key))).concat(newKeys.filter((key: number) => !oldKeys.includes(key))));
 };
+
 
 export function updateStateTasks(newState: IState, task: ITask) {
   newState.error = initError;

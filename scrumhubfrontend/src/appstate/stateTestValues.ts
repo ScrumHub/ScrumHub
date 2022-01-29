@@ -95,7 +95,7 @@ export const testConnectionError = {
   "code": 0,
   "response": {
     "data": null,
-    "message": "Connection error",
+    "Message": "Connection error",
     "metadata": null,
     "successful": false,
   },
