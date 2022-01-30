@@ -9,7 +9,7 @@ import { RequestResponse } from "../appstate/response";
 import { initPerson, initBI, initRepository, initSprint, initTask, initPBIFilter, errorObject } from "../appstate/stateInitValues";
 import axios, { AxiosResponse } from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import { tstConf, testFilters, testPBIList, testRepositoryList, testSprintList, testTaskList } from "../appstate/stateTestValues";
+import { tstConf, testFilters, testBItemList, testRepositoryList, testSprintList, testTaskList } from "../appstate/stateTestValues";
 import { filterUrlString, getHeader } from "../appstate/stateUtitlities";
 
 test("getResponseResultsInNetworkError", async () => {
@@ -59,10 +59,10 @@ test("addRepoIsSuccessful", async () => {
 
 test("fetchPeopleIsSuccessful", async () => {
   const mock = new MockAdapter(axios);
-  mock.onGet(`${tstConf.url}/People/${tstConf.ownerName}`).reply(200, testPBIList);
+  mock.onGet(`${tstConf.url}/People/${tstConf.ownerName}`).reply(200, testBItemList);
   const response: RequestResponse<IPeopleList, number> =
     await Fetching.fetchPeople(tstConf.ownerName, config.token);
-  expect(response).toEqual({ code: 200, response: testPBIList });
+  expect(response).toEqual({ code: 200, response: testBItemList });
 });
 
 test("getCurrentUserIsSuccessful", async () => {
@@ -75,10 +75,10 @@ test("getCurrentUserIsSuccessful", async () => {
 
 test("fetchPBItemsIsSuccessful", async () => {
   const mock = new MockAdapter(axios);
-  mock.onGet(`${tstConf.url}/BacklogItem/${tstConf.ownerName}?${filterUrlString(testFilters)}`).reply(200, testPBIList);
+  mock.onGet(`${tstConf.url}/BacklogItem/${tstConf.ownerName}?${filterUrlString(testFilters)}`).reply(200, testBItemList);
   const response: RequestResponse<IBacklogItemList, number> =
     await Fetching.fetchPBIs(tstConf.ownerName, config.token,testFilters);
-  expect(response).toEqual({ code: 200, response: testPBIList });
+  expect(response).toEqual({ code: 200, response: testBItemList });
 });
 
 test("finishPBItemIsSuccessful", async () => {
@@ -194,10 +194,10 @@ test("addTaskIsSuccessful", async () => {
 
 test("getPBINamesIsSuccessful", async () => {
   const mock = new MockAdapter(axios);
-  mock.onGet(`${tstConf.url}/BacklogItem/${tstConf.ownerName}?${filterUrlString(testFilters)}`).reply(200, testPBIList);
+  mock.onGet(`${tstConf.url}/BacklogItem/${tstConf.ownerName}?${filterUrlString(testFilters)}`).reply(200, testBItemList);
   const response: RequestResponse<IBacklogItemList, number> =
     await Fetching.getPBINames(tstConf.ownerName, config.token,testFilters);
-  expect(response).toEqual({ code: 200, response: testPBIList });
+  expect(response).toEqual({ code: 200, response: testBItemList });
 });
 
 

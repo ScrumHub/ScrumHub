@@ -3,7 +3,7 @@ import { store } from "../../appstate/store";
 import * as Actions from '../../appstate/actions';
 import { initPBIFilter } from "../../appstate/stateInitValues";
 import { isArrayValid } from "./commonFunctions";
-import { IModals } from "./commonInterfaces";
+import { BodyRowProps, IModals } from "./commonInterfaces";
 
 /**
  * Dispatches an action for unassigning and assigning {@linkcode IPerson} person for the given {@linkcode ITask} task
@@ -170,4 +170,11 @@ export const addTaskToPBI = (input: IFilters, token:string,ownerName:string,sele
   .then((response: any) => { setIsModal({ ...isModal, addTask: false });setSelectedPBI({} as IBacklogItem); }).catch((info: any) => {
     console.error('Validate Failed:', info);
   });
+};
+
+/** Draggable row of the table, intended for testing */
+export const TestDraggableBodyRow = ({ index: index_row, bodyType, record, className, style, ...restProps }: BodyRowProps) => {
+  return (<tr className={`${className}${''}`}
+    style={{ cursor: "default", ...style }} {...restProps} />
+  );
 };

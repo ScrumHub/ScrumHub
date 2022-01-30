@@ -1,12 +1,9 @@
 import { isNull } from "lodash";
 import { unmountComponentAtNode } from "react-dom";
 import { act } from "react-dom/test-utils";
-import TestRenderer from "react-test-renderer";
 import { mount } from 'enzyme';
 import EnzymeToJson from 'enzyme-to-json';
 import { render } from "@testing-library/react";
-import { initAddPBI, initBI, initSprint } from "../appstate/stateInitValues";
-import { AddSprintPopup } from "../components/popups/AddSprintPopup";
 import { AddTaskPopup } from "../components/popups/AddTaskPopup";
 import { IFilters } from "../appstate/stateInterfaces";
 

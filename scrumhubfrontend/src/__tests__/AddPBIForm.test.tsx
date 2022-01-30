@@ -1,14 +1,11 @@
 /**
  * @jest-environment jsdom
  */
-
-import TestRenderer from "react-test-renderer";
 import { Form } from "antd";
 import { configure, shallow } from 'enzyme';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import React from "react";
 import { AddPBIForm } from "../components/popups/AddPBIForm";
-const { act: actTest } = TestRenderer;
 jest.mock('react', () => ({
   ...jest.requireActual('react'),
   useState: jest.fn(),
@@ -21,6 +18,7 @@ describe('AddPBIForm component in container', () => {
   beforeEach(() => {
     setState = jest.fn();
     useStateMock = (initState: any) => [initState, setState];
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     useStateSpy = jest.spyOn(React, 'useState').mockImplementation(useStateMock);
     Object.defineProperty(window, 'matchMedia', {
       writable: true,

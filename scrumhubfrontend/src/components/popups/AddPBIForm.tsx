@@ -1,9 +1,7 @@
 import React from 'react';
-import { Button, Modal, Form, Input, Radio, Tag, FormInstance } from 'antd';
+import { Button, Form, Input, Radio, Tag, FormInstance } from 'antd';
 import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
-import { IAddPBICollectionCreateFormProps } from './popupInterfaces';
-import { IAddBI } from '../../appstate/stateInterfaces';
 import { backlogPriorities, backlogColors, formItemLayoutWithOutLabel } from '../utility/commonInitValues';
 
 /**

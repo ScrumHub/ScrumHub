@@ -41,6 +41,8 @@ export const initTestState: IState = {
   changedRepo: ""
 };
 
+
+
 export const testRepositoryList: IRepositoryList = {
   pageNumber: 1,
   pageCount: 1,
@@ -49,7 +51,7 @@ export const testRepositoryList: IRepositoryList = {
   list: [initRepository],
 }
 
-export const testPBIList: IBacklogItemList = {
+export const testBItemList: IBacklogItemList = {
   pageNumber: 1,
   pageCount: 1,
   pageSize: 10,
@@ -111,3 +113,34 @@ export const initTestUseState = {
   "action": "POP",
   "location": { "hash": "", "key": "default", "pathname": "/", "search": "", "state": null }
 }
+
+export const updatedTestState: IState = {
+  loading: false,
+  error: initError,
+  pbiPage: testBItemList,
+  sprintPage: testSprintList,
+  taskPage: testTaskList,
+  repositories: testRepositoryList,
+  openSprint: initSprint,
+  reposLastPage: false,
+  reposRequireRefresh: false,
+  productLastPage: false,
+  productRequireRefresh: false,
+  sprintLastPage: false,
+  sprintRequireRefresh: false,
+  taskLastPage: false,
+  taskRequireRefresh: false,
+  tasks: [initTask],
+  namedPBI: [],
+  repoId: -1,
+  people: initPeopleList,
+  currentUser: initPerson,
+  activeSprintNumber: -1,
+  keys: {
+    sprintKeys: [0,1],
+    pbiKeys: [0,1]
+  },
+  loadingKeys: initLoadingKeys,
+  loginState: testLoginState,
+  changedRepo: ""
+};

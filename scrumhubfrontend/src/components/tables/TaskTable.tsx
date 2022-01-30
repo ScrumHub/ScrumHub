@@ -1,8 +1,8 @@
 import { Table } from "antd";
 import { useSelector } from "react-redux";
-import { ITask, IState } from "../appstate/stateInterfaces";
-import { initRowIds } from "./utility/commonInitValues";
-import { IRowIds } from "./utility/commonInterfaces";
+import { ITask, IState } from "../../appstate/stateInterfaces";
+import { initRowIds } from "../utility/commonInitValues";
+import { IRowIds } from "../utility/commonInterfaces";
 import React from "react";
 
 /**
@@ -25,7 +25,7 @@ export const TaskTableComponent = React.memo((props: any) => {
     pagination={false}
     onRow={(row, id) => {
       const index = row.id;
-      const record = { ...initRowIds, sprintNumber: props.item.sprintNumber, pbiID: row.pbiId ? row.pbiId : 0, taskID: row.id, } as IRowIds;
+      const record = { estimated: true, sprintNumber: props.item.sprintNumber, pbiID: row.pbiId ? row.pbiId : 0, taskID: row.id, } as IRowIds;
       const bodyType = "ITask"; return ({
         index,
         record,

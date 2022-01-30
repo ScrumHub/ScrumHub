@@ -8,14 +8,13 @@ import config from '../configuration/config';
 import { useSelector } from 'react-redux';
 import { BranchesOutlined, CalendarOutlined, DownOutlined, EditOutlined } from '@ant-design/icons';
 import { store } from '../appstate/store';
-import { PBITableComponent } from './BacklogPBITableComponent';
-import { TaskTableComponent } from './BacklogTaskTableComponent';
+import { PBITableComponent } from './tables/PBITable';
+import { TaskTableComponent } from './tables/TaskTable';
 import { canDropTask, dateFormat, isBranchNotCreated, isInReviewOrFinished, isItemDefined, isSprintLoaded, useStateAndRefLoading, useTasksRef } from './utility/commonFunctions';
 import SkeletonList, { PBIMenuWithPeople } from './utility/LoadAnimations';
 import { addTaskToPBI, assignPerson, startTask, updateTask } from './utility/BacklogHandlers';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
 import { useDrop, useDrag, DndProvider } from 'react-dnd';
-import { type } from './ProductBacklog';
 import { backlogColors, backlogPriorities, initFilterSortInfo, initModalVals } from './utility/commonInitValues';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import moment from 'moment';
@@ -30,6 +29,7 @@ import { pbiProgressCol, pbiToDoCol, pbiStatusCol } from './utility/PBITableColu
 import { taskNameCol, taskStatusCol, peopleDropdown, taskGhLinkCol } from './utility/TaskTableColumns';
 import _ from 'lodash';
 import { requestFetchRateLimit, requestFetchAllRepoTasks } from '../appstate/fetching';
+import { type } from './ProductBacklog';
 
 /**
  * @returns Sprint Backlog View

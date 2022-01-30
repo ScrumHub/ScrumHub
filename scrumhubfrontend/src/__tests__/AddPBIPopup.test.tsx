@@ -1,13 +1,11 @@
 import { isNull } from "lodash";
 import { unmountComponentAtNode } from "react-dom";
 import { act } from "react-dom/test-utils";
-import TestRenderer from "react-test-renderer";
 import { AddPBIPopup } from "../components/popups/AddPBIPopup";
 import { mount } from 'enzyme';
 import EnzymeToJson from 'enzyme-to-json';
 import { render } from "@testing-library/react";
 import { initAddPBI } from "../appstate/stateInitValues";
-const { act: actTester } = TestRenderer;
 
 describe('AddPBIPopup component in container', () => {
   let tempContainer: any;

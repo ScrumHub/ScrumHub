@@ -1,11 +1,11 @@
 import { Table } from "antd";
-import { IPerson, IBacklogItem, IState, ITask } from "../appstate/stateInterfaces";
-import { initRowIds, initSortedInfo } from "./utility/commonInitValues";
-import { IRowIds } from "./utility/commonInterfaces";
-import * as Actions from '../appstate/actions';
-import { store } from "../appstate/store";
+import { IPerson, IBacklogItem, IState, ITask } from "../../appstate/stateInterfaces";
+import { initRowIds, initSortedInfo } from "../utility/commonInitValues";
+import { IRowIds } from "../utility/commonInterfaces";
+import * as Actions from '../../appstate/actions';
+import { store } from "../../appstate/store";
 import { useSelector } from "react-redux";
-import { isArrayValid } from "./utility/commonFunctions";
+import { isArrayValid } from "../utility/commonFunctions";
 import React from "react";
 
 /**
@@ -57,7 +57,7 @@ export const PBITableComponent = React.memo((props: any) =>{
       }}
       components={props.nestedcomponents}
       onChange={(pagination: any, filters: any, sorter: any)=>{handleChange(pagination, filters, sorter)}}
-      dataSource={props.item.backlogItems}
+      dataSource={props.item?props.item.backlogItems:[]}
       pagination={false}
       onRow={(row: { id: any; estimated: any; }, id: any) => {
         const index = row.id;

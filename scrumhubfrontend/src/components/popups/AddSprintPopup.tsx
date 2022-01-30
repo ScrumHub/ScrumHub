@@ -1,7 +1,6 @@
 
 import React, { useState } from 'react';
 import { Modal, Form, Typography, Checkbox, Input, DatePicker, Button } from 'antd';
-import { ISprint } from '../../appstate/stateInterfaces';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import TextArea from 'antd/lib/input/TextArea';
 import _ from 'lodash';

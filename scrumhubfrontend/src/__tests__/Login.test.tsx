@@ -12,7 +12,6 @@ import { initTestState, initTestUseState } from "../appstate/stateTestValues";
 import { reducerFunction } from "../appstate/reducer";
 import { Login } from "../components/Login";
 import React from "react";
-import * as Actions from "../appstate/actions";
 
 jest.mock('react', () => ({
   ...jest.requireActual('react'),
