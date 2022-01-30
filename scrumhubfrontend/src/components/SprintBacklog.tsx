@@ -11,7 +11,7 @@ import { PBITableComponent } from './tables/PBITable';
 import { TaskTableComponent } from './tables/TaskTable';
 import { canDropTask, dateFormat, isItemDefined, isSprintLoaded, useStateAndRefLoading, useTasksRef } from './utility/commonFunctions';
 import SkeletonList from './utility/LoadAnimations';
-import { addPBIToRepo, addPBIToSprint, addTaskToPBI, updateTask } from './utility/BacklogHandlers';
+import { addPBIToRepo, addTaskToPBI, updateTask } from './utility/BacklogHandlers';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
 import { useDrop, useDrag, DndProvider } from 'react-dnd';
 import { initFilterSortInfo, initModalVals } from './utility/commonInitValues';
@@ -26,7 +26,7 @@ import { UpdateSprintPopup } from './popups/UpdateSprintPopup';
 import _ from 'lodash';
 import { requestFetchRateLimit, requestFetchAllRepoTasks } from '../appstate/fetching';
 import { type } from './ProductBacklog';
-import { pbiColumns, taskColumns } from './utility/TableUtilities';
+import { pbiColumns, pbiSprintColumns, taskColumns } from './utility/TableUtilities';
 import { AddPBIPopup } from './popups/AddPBIPopup';
 
 /**
@@ -267,15 +267,12 @@ export function SprintBacklog() {
         <Button key="updateSprint" type="link" onClick={() => { setIsModal({ ...isModal, updateSprint: true }); }}>
           {isSprintLoaded(sprintID, sprintPage, true) ? "Update Sprint" : ""}
         </Button>
-        <Button key="addSprintBItem" type="link" onClick={() => { setIsModal({ ...isModal, addPBI: true }); }}>
-          {isSprintLoaded(sprintID, sprintPage, true) ? "Update Sprint" : ""}
-        </Button>
       </Space>
       <DndProvider backend={HTML5Backend} key={"dnd_sprint"}>
         {sprintPage && sprintPage.backlogItems && isSprintLoaded(sprintID, sprintPage, true) &&
           <PBITableComponent loading={loading || initialRefresh} sortedInfo={infos.sortedInfo} TaskTableforPBI={TaskTableforPBI}
             nameFilter={filterPBI.nameFilter} peopleFilter={filterPBI.peopleFilter} item={sprintPage}
-            pbiColumns={pbiColumns(filterPBI.nameFilter, infos.sortedInfo, infos.filteredInfo, setSelectedPBI, isModal, setIsModal, pbiKeys, token, ownerName)} nestedcomponents={nestedcomponents} />}
+            pbiColumns={pbiSprintColumns(infos.sortedInfo,pbiKeys, token, ownerName, setSelectedPBI, isModal, setIsModal)} nestedcomponents={nestedcomponents} />}
       </DndProvider>
       {isModal.editPBI && selectedPBI && selectedPBI.id &&
         <EditPBIPopup data={selectedPBI} visible={isModal.editPBI}
@@ -300,9 +297,7 @@ export function SprintBacklog() {
         <CompleteSprintPopup data={sprintPage} visible={isModal.completeSprint}
           onComplete={function (value: boolean): void { completeSprint(value) }}
           onCancel={() => { setIsModal({ ...isModal, completeSprint: false }); }} />}
-      {isModal.addPBI && <AddPBIPopup visible={isModal.addPBI}
-        onCreate={function (values: any): void { addPBIToSprint(sprintPage, values, ownerName, token, ()=>{setIsModal({ ...isModal, addPBI: false });}) }}
-        onCancel={() => { setIsModal({ ...isModal, addPBI: false });  }} />}
     </div>
   );
 }
+

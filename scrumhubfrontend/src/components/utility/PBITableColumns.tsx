@@ -5,7 +5,7 @@ import "../Home.css";
 import "../Main.css";
 import { EditOutlined, SyncOutlined } from "@ant-design/icons";
 import { isArrayValid } from "./commonFunctions";
-import React from "react";
+import React, { useState } from "react";
 import { PBIMenuWithPriorities } from "./LoadAnimations";
 import { store } from "../../appstate/store";
 import { useSelector } from "react-redux";
@@ -22,7 +22,8 @@ export const priorityPBItem = (item: IBacklogItem) => {
 /**
  * Renders name for the given Backlog Item
  */
-export const pbiNameCol = (nameFilter, sortedInfo, setSelectedPBI: React.Dispatch<React.SetStateAction<IBacklogItem>>, isModal: IModals, setIsModal: React.Dispatch<React.SetStateAction<IModals>>) => {
+export const pbiNameCol = (nameFilter, sortedInfo, setSelectedPBI: React.Dispatch<React.SetStateAction<IBacklogItem>>,
+   isModal: IModals, setIsModal: React.Dispatch<React.SetStateAction<IModals>>) => {
   return ({
     title: 'Name', width: "33%", ellipsis: true, sorter: (a: IBacklogItem, b: IBacklogItem) => a.name.length - b.name.length,
     sortOrder: sortedInfo && sortedInfo.columnKey === 'name' && sortedInfo.order,
@@ -101,7 +102,6 @@ export const pbiActionCol = (setSelectedPBI: React.Dispatch<React.SetStateAction
  */
 export function PriorityDropdown(props: { loading: boolean; token: string; ownerName: string; record: IBacklogItem; }) {
   const keys = useSelector((appState: IState) => appState.loadingKeys.pbiKeys);
-  let change = true;
   return (
     <Dropdown.Button trigger={["click"]} style={{ cursor: "pointer" }} placement='bottomCenter' type="text"
       overlay={<PBIMenuWithPriorities itemSelected={function (priority: number): void {
@@ -114,12 +114,12 @@ export function PriorityDropdown(props: { loading: boolean; token: string; owner
             .then((response: any) => {
               if (response.payload && response.payload.code === 200) {
                 store.dispatch(Actions.updatePBILoadingKeys([props.record.id]));
-              } change = false;
+              } 
             })
         }
       }} visible={true} priority={props.record.priority} />}
       buttonsRender={() => [
-        <></>, props.loading && change ?
+        <></>, props.loading ?
           <Tag icon={<SyncOutlined spin />} color="processing"> SYNCING</Tag> :
           props.record.id !== 0 ?
             <Tag style={{ cursor: "pointer" }} color={backlogColors[props.record.priority % 3]}>
