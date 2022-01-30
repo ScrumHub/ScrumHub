@@ -1,4 +1,4 @@
-import { IPerson, IBacklogItem, ISprint, ISprintList, IFilters } from "../../appstate/stateInterfaces";
+import { IPerson, IBacklogItem, ISprint, ISprintList, IFilters, IAddBI } from "../../appstate/stateInterfaces";
 import { store } from "../../appstate/store";
 import * as Actions from '../../appstate/actions';
 import { initPBIFilter } from "../../appstate/stateInitValues";
@@ -171,6 +171,70 @@ export const addTaskToPBI = (input: IFilters, token:string,ownerName:string,sele
     console.error('Validate Failed:', info);
   });
 };
+
+/** Dispatches an action that adds {@linkcode IBacklogItem} backlogItem to {@linkcode IRepository} repository */
+export function addPBIToRepo(pbi: IAddBI, ownerName:string, token:string,setIsAddPBI:React.Dispatch<React.SetStateAction<boolean>> ) {
+  pbi.acceptanceCriteria = pbi.acceptanceCriteria.filter((value: any) => { return (typeof (value) === "string"); });
+  store.dispatch(
+    Actions.addPBIThunk({
+      ownerName: ownerName,
+      token: token,
+      pbi: pbi
+    })
+  ).then((response: any) => { setIsAddPBI(false); }).catch((info: any) => {
+    console.error('Validate Failed:', info);
+  });
+}
+/** Dispatches an action that adds {@linkcode IBacklogItem} backlogItem to {@linkcode ISprint} sprint */
+export function addPBIToSprint(sprint:ISprint,pbi: IAddBI, ownerName:string, token:string,setIsAddPBI:React.Dispatch<React.SetStateAction<boolean>> ) {
+  pbi.acceptanceCriteria = pbi.acceptanceCriteria.filter((value: any) => { return (typeof (value) === "string"); });
+  store.dispatch(
+    Actions.addPBIThunk({
+      ownerName: ownerName,
+      token: token,
+      pbi: pbi
+    })
+  ).then((response: any) => { 
+    if(response.payload && response.payload.response && response.payload?.code ===201){
+      const pbiId = response.payload.response.id;
+      store.dispatch(Actions.updateOneSprintThunk({ token: token, ownerName: ownerName, sprintNumber: sprint.sprintNumber, 
+        sprint:{
+          "goal": sprint.goal as string, "pbIs": sprint.backlogItems.map((i: IBacklogItem) => { return (i.id.toString()); }).concat([pbiId.toString()]) as string[],
+          "title": sprint.title, "finishDate": new Date(sprint.finishDate as string)
+         }}))
+        .then((response: any) => {
+          if (response.payload && response.payload?.code === 200) {
+            store.dispatch(Actions.updateSprintLoadingKeys([sprint.sprintNumber]));
+            store.dispatch(Actions.fetchPBIsThunk({ ownerName: ownerName, token: token, filters: { ...initPBIFilter, inSprint: false, onePage: true } }))
+              .then((response: any) => {
+                if (response.payload && response.payload?.code === 200) { store.dispatch(Actions.updateSprintLoadingKeys([0]));
+                  setIsAddPBI(false); }
+              });
+          }
+        });
+    }
+
+   }).catch((info: any) => {
+    console.error('Validate Failed:', info);
+  });
+
+}
+
+
+
+/** Dispatches an action that adds {@linkcode ISprint} sprint to {@linkcode IRepository} repository */
+export function addSprintToRepo(sprint: ISprint, ownerName:string, token:string,setIsAddSprint:React.Dispatch<React.SetStateAction<boolean>>) {
+  const ids = sprint.backlogItems.map((value: IBacklogItem) => { return ((value.isInSprint ? value.id.toString() : "")); }).filter((x: string) => x !== "");
+  store.dispatch(
+    Actions.addSprintThunk({
+      token: token as string,
+      ownerName: ownerName as string,
+      sprint: { "title": sprint.title, "finishDate": sprint.finishDate, "goal": sprint.goal, "pbIs": ids }
+    })
+  ).then((response: any) => { setIsAddSprint(false); }).catch((info: any) => {
+    console.error('Validate Failed:', info);
+  });
+}
 
 /** Draggable row of the table, intended for testing */
 export const TestDraggableBodyRow = ({ index: index_row, bodyType, record, className, style, ...restProps }: BodyRowProps) => {

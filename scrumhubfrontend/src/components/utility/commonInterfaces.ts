@@ -13,6 +13,7 @@ export interface BodyRowProps {
 
 export interface IModals {
   addTask: boolean,
+  addPBI:boolean,
   assgnTask: boolean,
   assgnPpl: boolean,
   completeSprint: boolean,

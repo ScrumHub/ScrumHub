@@ -1,35 +1,33 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Badge, Button, Dropdown, message, Popconfirm, Popover, Space, Tag, Typography, } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
+import { Button, message, Space, Typography, } from 'antd';
 import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
 import { IAddBI, IFilters, IPeopleList, IBacklogItem, ISprint, ITask, IState } from '../appstate/stateInterfaces';
-import config from '../configuration/config';
 import { useSelector } from 'react-redux';
-import { BranchesOutlined, CalendarOutlined, DownOutlined, EditOutlined } from '@ant-design/icons';
+import { CalendarOutlined } from '@ant-design/icons';
 import { store } from '../appstate/store';
 import { PBITableComponent } from './tables/PBITable';
 import { TaskTableComponent } from './tables/TaskTable';
-import { canDropTask, dateFormat, isBranchNotCreated, isInReviewOrFinished, isItemDefined, isSprintLoaded, useStateAndRefLoading, useTasksRef } from './utility/commonFunctions';
-import SkeletonList, { PBIMenuWithPeople } from './utility/LoadAnimations';
-import { addTaskToPBI, assignPerson, startTask, updateTask } from './utility/BacklogHandlers';
+import { canDropTask, dateFormat, isItemDefined, isSprintLoaded, useStateAndRefLoading, useTasksRef } from './utility/commonFunctions';
+import SkeletonList from './utility/LoadAnimations';
+import { addPBIToRepo, addPBIToSprint, addTaskToPBI, updateTask } from './utility/BacklogHandlers';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
 import { useDrop, useDrag, DndProvider } from 'react-dnd';
-import { backlogColors, backlogPriorities, initFilterSortInfo, initModalVals } from './utility/commonInitValues';
+import { initFilterSortInfo, initModalVals } from './utility/commonInitValues';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import moment from 'moment';
-import { useLocation } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { AddTaskPopup } from './popups/AddTaskPopup';
 import { CompleteSprintPopup } from './popups/CompleteSprintPopup';
 import { EditPBIPopup } from './popups/EditPBIPopup';
 import { EstimatePBIPopup } from './popups/EstimatePBIPopup';
 import { UpdateSprintPopup } from './popups/UpdateSprintPopup';
-import { date } from 'joi';
-import { pbiProgressCol, pbiToDoCol, pbiStatusCol } from './utility/PBITableColumns';
-import { taskNameCol, taskStatusCol, peopleDropdown, taskGhLinkCol } from './utility/TaskTableColumns';
 import _ from 'lodash';
 import { requestFetchRateLimit, requestFetchAllRepoTasks } from '../appstate/fetching';
 import { type } from './ProductBacklog';
+import { pbiColumns, taskColumns } from './utility/TableUtilities';
+import { AddPBIPopup } from './popups/AddPBIPopup';
 
 /**
  * @returns Sprint Backlog View
@@ -43,6 +41,7 @@ export function SprintBacklog() {
   const [filterPBI, setFiltersPBI] = useState<IFilters>({ nameFilter: "", peopleFilter: [] });
   const people = useSelector((appState: IState) => appState.people as IPeopleList);
   const [isModal, setIsModal] = useState<IModals>(initModalVals);
+  const navigate = useNavigate();
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : "";
   const sprintID = localStorage.getItem("sprintID") ? Number(localStorage.getItem("sprintID")) : -1;
   const [initialRefresh, setInitialRefresh] = useState(true);
@@ -195,7 +194,7 @@ export function SprintBacklog() {
     );
   };
   const nestedcomponents = { body: { row: DraggableBodyRow, }, };
-  const taskColumns = [taskNameCol, taskStatusCol,
+  /*const taskColumns = [taskNameCol, taskStatusCol,
     {
       key: "isAssignedToPBI", title: "Assignees", width: "22%", align: "center" as const,
       render: (record: ITask) => peopleDropdown(record, token, ownerName, people),
@@ -213,9 +212,12 @@ export function SprintBacklog() {
           <Button key={"action" + record.id} size='small' type="link" onClick={() => { setIsModal({ ...isModal, startBranchId: record.id }) }}>
             <span>{"Create "}<BranchesOutlined /></span></Button></Popover> :
         <div><span hidden={isInReviewOrFinished(record.status)}>Created <BranchesOutlined /></span></div>
-    }, taskGhLinkCol,];
-  const TaskTableforPBI: React.FC<IBacklogItem> = (item: IBacklogItem) => { return (<TaskTableComponent peopleFilter={filterPBI.peopleFilter} item={item} taskColumns={taskColumns} taskComponents={nestedcomponents} />) };
-  const pbiColumns = [
+    }, taskGhLinkCol,];*/
+  const TaskTableforPBI: React.FC<IBacklogItem> = (item: IBacklogItem) => {
+    return (<TaskTableComponent peopleFilter={filterPBI.peopleFilter} item={item}
+      taskColumns={taskColumns(filterPBI.peopleFilter, token, ownerName, people, setIsModal, isModal)} taskComponents={nestedcomponents} />)
+  };
+  /*const pbiColumns = [
     {
       title: 'Name', width: "25%", sorter: {
         compare: (a: IBacklogItem, b: IBacklogItem) => a.priority - b.priority,
@@ -244,7 +246,7 @@ export function SprintBacklog() {
           <Button size='small' type="link" onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, addTask: true }); }} >
             {"Add Task"}</Button></span>)
       }
-    },];
+    },];*/
   return (
     <div style={{ marginLeft: "2%", marginRight: "2%", marginTop: 0, marginBottom: "1%" }}>
       <SkeletonList width={true} loading={sprintPage == null || isSprintLoaded(sprintID, sprintPage, false)} number={2} />
@@ -262,31 +264,45 @@ export function SprintBacklog() {
         </CalendarOutlined>
           {" " + dateFormat(sprintPage.finishDate as unknown as Date)}
         </span>}
-        <Button key="1" type="link" onClick={() => { setIsModal({ ...isModal, updateSprint: true }); }}>{isSprintLoaded(sprintID, sprintPage, true) ? "Update Sprint" : ""} </Button>
+        <Button key="updateSprint" type="link" onClick={() => { setIsModal({ ...isModal, updateSprint: true }); }}>
+          {isSprintLoaded(sprintID, sprintPage, true) ? "Update Sprint" : ""}
+        </Button>
+        <Button key="addSprintBItem" type="link" onClick={() => { setIsModal({ ...isModal, addPBI: true }); }}>
+          {isSprintLoaded(sprintID, sprintPage, true) ? "Update Sprint" : ""}
+        </Button>
       </Space>
       <DndProvider backend={HTML5Backend} key={"dnd_sprint"}>
         {sprintPage && sprintPage.backlogItems && isSprintLoaded(sprintID, sprintPage, true) &&
           <PBITableComponent loading={loading || initialRefresh} sortedInfo={infos.sortedInfo} TaskTableforPBI={TaskTableforPBI}
-            nameFilter={filterPBI.nameFilter} peopleFilter={filterPBI.peopleFilter}
-            item={sprintPage} pbiColumns={pbiColumns} nestedcomponents={nestedcomponents} />}
+            nameFilter={filterPBI.nameFilter} peopleFilter={filterPBI.peopleFilter} item={sprintPage}
+            pbiColumns={pbiColumns(filterPBI.nameFilter, infos.sortedInfo, infos.filteredInfo, setSelectedPBI, isModal, setIsModal, pbiKeys, token, ownerName)} nestedcomponents={nestedcomponents} />}
       </DndProvider>
-      {isModal.editPBI && selectedPBI && selectedPBI.id && <EditPBIPopup data={selectedPBI} visible={isModal.editPBI}
-        onCreate={function (values: any): void { editPBI(values) }} onDelete={() => { deletePBI(selectedPBI) }}
-        onFinish={() => { finishPBI(selectedPBI) }}
-        onCancel={() => { setIsModal({ ...isModal, editPBI: false }); setSelectedPBI({} as IBacklogItem); }} />}
-      {isModal.estimatePBI && selectedPBI && selectedPBI.id && <EstimatePBIPopup data={selectedPBI as IBacklogItem}
-        visible={isModal.estimatePBI}
-        onCreate={function (values: any): void { estimatePBI(values) }}
-        onCancel={() => { setIsModal({ ...isModal, estimatePBI: false }); setSelectedPBI({} as IBacklogItem); }} />}
-      {isModal.addTask && <AddTaskPopup data={{ name: "" } as IFilters} visible={isModal.addTask}
-        onCreate={function (values: any): void { addTaskToPBI(values, token,ownerName,selectedPBI.id, setIsModal, isModal, setSelectedPBI); }}
-        onCancel={() => { setIsModal({ ...isModal, addTask: false }); }} />}
-      {isModal.updateSprint && !loading && <UpdateSprintPopup data={sprintPage} visible={isModal.updateSprint}
-        onCreate={function (values: any): void { updateSprint(values) }}
-        onCancel={() => { setIsModal({ ...isModal, updateSprint: false }); }} />}
-      {isModal.completeSprint && !loading && <CompleteSprintPopup data={sprintPage} visible={isModal.completeSprint}
-        onComplete={function (value: boolean): void { completeSprint(value) }}
-        onCancel={() => { setIsModal({ ...isModal, completeSprint: false }); }} />}
+      {isModal.editPBI && selectedPBI && selectedPBI.id &&
+        <EditPBIPopup data={selectedPBI} visible={isModal.editPBI}
+          onCreate={function (values: any): void { editPBI(values) }} onDelete={() => { deletePBI(selectedPBI) }}
+          onFinish={() => { finishPBI(selectedPBI) }}
+          onCancel={() => { setIsModal({ ...isModal, editPBI: false }); setSelectedPBI({} as IBacklogItem); }} />}
+      {isModal.estimatePBI && selectedPBI && selectedPBI.id &&
+        <EstimatePBIPopup data={selectedPBI as IBacklogItem} visible={isModal.estimatePBI}
+          onCreate={function (values: any): void { estimatePBI(values) }}
+          onCancel={() => { setIsModal({ ...isModal, estimatePBI: false }); setSelectedPBI({} as IBacklogItem); }} />}
+      {isModal.addTask &&
+        <AddTaskPopup data={{ name: "" } as IFilters} visible={isModal.addTask}
+          onCreate={function (values: any): void {
+            addTaskToPBI(values, token, ownerName, selectedPBI.id, setIsModal, isModal, setSelectedPBI);
+          }}
+          onCancel={() => { setIsModal({ ...isModal, addTask: false }); }} />}
+      {isModal.updateSprint && !loading &&
+        <UpdateSprintPopup data={sprintPage} visible={isModal.updateSprint}
+          onCreate={function (values: any): void { updateSprint(values) }}
+          onCancel={() => { setIsModal({ ...isModal, updateSprint: false }); }} />}
+      {isModal.completeSprint && !loading &&
+        <CompleteSprintPopup data={sprintPage} visible={isModal.completeSprint}
+          onComplete={function (value: boolean): void { completeSprint(value) }}
+          onCancel={() => { setIsModal({ ...isModal, completeSprint: false }); }} />}
+      {isModal.addPBI && <AddPBIPopup visible={isModal.addPBI}
+        onCreate={function (values: any): void { addPBIToSprint(sprintPage, values, ownerName, token, ()=>{setIsModal({ ...isModal, addPBI: false });}) }}
+        onCancel={() => { setIsModal({ ...isModal, addPBI: false });  }} />}
     </div>
   );
 }

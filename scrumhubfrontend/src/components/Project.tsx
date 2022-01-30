@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { Avatar, Badge, Button, Dropdown, Input, Space, } from 'antd';
 import 'antd/dist/antd.css';
 import "./Project.css";
-import { IAddBI, IFilters, IPeopleList, IBacklogItem, IBacklogItemList, ISprint, IState } from '../appstate/stateInterfaces';
+import { IFilters, IPeopleList, IBacklogItemList, IState } from '../appstate/stateInterfaces';
 import { useSelector } from 'react-redux';
 import { DownOutlined, FilterOutlined, UserOutlined } from '@ant-design/icons';
 import { ProductBacklog } from './ProductBacklog';
@@ -20,6 +20,7 @@ import { initSprint } from '../appstate/stateInitValues';
 import { initFilterMenu, initFilterSortInfo, initSortedInfo } from './utility/commonInitValues';
 import { isArrayValid } from './utility/commonFunctions';
 import { ISortedInfo } from './utility/commonInterfaces';
+import { addPBIToRepo, addSprintToRepo } from './utility/BacklogHandlers';
 const { Search } = Input;
 
 /** Renders Product Backlog View*/
@@ -39,37 +40,8 @@ export const Project = React.memo((props: any) => {
   const [isAddSprint, setIsAddSprint] = useState(false);
   const error = useSelector((appState: IState) => appState.error);
 
-  const addPBI = (pbi: IAddBI) => {
-    pbi.acceptanceCriteria = pbi.acceptanceCriteria.filter((value: any) => { return (typeof (value) === "string"); });
-      store.dispatch(
-        Actions.addPBIThunk({
-          ownerName: ownerName,
-          token: token,
-          pbi: pbi
-        })
-      ).then((response: any) => { setIsAddPBI(false); }).catch((info: any) => {
-        console.error('Validate Failed:', info);
-      });
-  };
-
-  const addSprint = (sprint: ISprint) => {
-    const ids = sprint.backlogItems.map((value: IBacklogItem) => { return ((value.isInSprint ? value.id.toString() : "")) }).filter((x: string) => x !== "");
-      store.dispatch(
-        Actions.addSprintThunk({
-          token: token as string,
-          ownerName: ownerName as string,
-          sprint: { "title": sprint.title, "finishDate": sprint.finishDate, "goal": sprint.goal, "pbIs": ids }
-        })
-      ).then((response: any) => { setIsAddSprint(false); }).catch((info: any) => {
-        console.error('Validate Failed:', info);
-      });
-  };
-  const updatePplFilter = (items: string[]) => {
-    setFiltersPBI({ ...filterPBI, peopleFilter: items });
-  };
-  const updateInputPplFilter = (e: { target: { value: string; }; }) => {
-    setInputPplFilter(e.target.value);
-  };
+  const updatePplFilter = (items: string[]) => { setFiltersPBI({ ...filterPBI, peopleFilter: items }); };
+  const updateInputPplFilter = (e: { target: { value: string; }; }) => { setInputPplFilter(e.target.value); };
   const onSearch = (value: string) => { setFiltersPBI({ ...filterPBI, nameFilter: value !== "" ? [value.toLowerCase()] : [] }); };
   useEffect(() => {
     if (isLoggedIn && (ownerName !== "" || initialRefresh)) {
@@ -94,57 +66,67 @@ export const Project = React.memo((props: any) => {
         <Button type="primary" onClick={() => { setIsAddSprint(true); }}>{"Create Sprint"}</Button>
         <Button type="primary" onClick={() => { setIsAddPBI(true); }}>{"Add Product Backlog Item"}</Button>
         <Search autoComplete='on' onMouseEnter={() => setFilterMenu(initFilterMenu)} placeholder="Input Backlog Item name" onSearch={onSearch} enterButton />
-        <Badge status={"error"} count={isArrayValid(infos.filteredInfo.complete) || isArrayValid(infos.filteredInfo.pbiPriority) ? 2 : 0} overflowCount={1} style={{ borderColor: "transparent", zIndex: 20 }}><Dropdown.Button
-          className='projectDropBtn'
-          placement="bottomCenter"
-          visible={filterMenu.filterMenuVisible}
-          overlay={<MenuWithFilters openKeys={filterMenu.openKeys} setOpenKeys={function (keys: string[]): void { setFilterMenu({ ...filterMenu, openKeys: keys }); }}
-            onVisibilityChange={function (flag: boolean): void { setFilterMenu(initFilterMenu); }}
-            itemSelected={function (items: any): void { setFilterMenu({ ...filterMenu, filterMenuVisible: true }); setInfos({ ...infos, filteredInfo: items }); }} filteredInfo={infos.filteredInfo} />}
-          buttonsRender={() => [<></>,
-          React.cloneElement(<Button type="primary" onMouseEnter={() => { setFilterMenu({ ...filterMenu, filterMenuVisible: true }); }} icon={<FilterOutlined className='projectWhIcon'></FilterOutlined>}>Filter</Button>),
-          ]} >
-        </Dropdown.Button></Badge>
+        <Badge status={"error"} count={isArrayValid(infos.filteredInfo.complete) || isArrayValid(infos.filteredInfo.pbiPriority) ? 2 : 0}
+          overflowCount={1} style={{ borderColor: "transparent", zIndex: 20 }}>
+          <Dropdown.Button
+            className='projectDropBtn'
+            placement="bottomCenter"
+            visible={filterMenu.filterMenuVisible}
+            overlay={<MenuWithFilters openKeys={filterMenu.openKeys}
+              setOpenKeys={function (keys: string[]): void { setFilterMenu({ ...filterMenu, openKeys: keys }); }}
+              onVisibilityChange={function (flag: boolean): void { setFilterMenu(initFilterMenu); }}
+              itemSelected={function (items: any): void {
+                setFilterMenu({ ...filterMenu, filterMenuVisible: true });
+                setInfos({ ...infos, filteredInfo: items });
+              }}
+              filteredInfo={infos.filteredInfo} />}
+            buttonsRender={() => [<></>,
+            React.cloneElement(<Button type="primary" onMouseEnter={() => { setFilterMenu({ ...filterMenu, filterMenuVisible: true }); }}
+              icon={<FilterOutlined className='projectWhIcon'></FilterOutlined>}>Filter</Button>),
+            ]} >
+          </Dropdown.Button>
+        </Badge>
         <Badge status={"error"} count={infos.sortedInfo !== initSortedInfo ? 2 : 0} overflowCount={1} style={{ borderColor: "transparent", zIndex: 20 }}>
           <Dropdown.Button
             className='projectDropBtn'
             placement="bottomCenter"
-            overlay={<MenuWithSorting itemSelected={function (items: any): void { setInfos({ ...infos, sortedInfo: items }); }} sortedInfo={infos.sortedInfo} />}
-            buttonsRender={() => [
-              <></>,
-              React.cloneElement(<Button onMouseEnter={() => setFilterMenu(initFilterMenu)} type="primary" icon={<DownOutlined prefix='Sort' className='projectWhIcon'></DownOutlined>}>{"Sort"}</Button>),
+            overlay={<MenuWithSorting itemSelected={function (items: any): void { setInfos({ ...infos, sortedInfo: items }); }}
+              sortedInfo={infos.sortedInfo} />}
+            buttonsRender={() => [<></>,
+            React.cloneElement(<Button onMouseEnter={() => setFilterMenu(initFilterMenu)} type="primary"
+              icon={<DownOutlined prefix='Sort' className='projectWhIcon'></DownOutlined>}>{"Sort"}</Button>),
             ]} >
           </Dropdown.Button></Badge>
         <Dropdown.Button
           className='projectDropBtn'
           placement="bottomCenter"
-          overlay={<MenuWithPeople itemSelected={function (items: string[]): void { updatePplFilter(items); }} people={people} peopleFilter={filterPBI.peopleFilter} inputFilter={inputPplFilter} />}
+          overlay={<MenuWithPeople itemSelected={function (items: string[]): void { updatePplFilter(items); }} people={people}
+            peopleFilter={filterPBI.peopleFilter} inputFilter={inputPplFilter} />}
           buttonsRender={([a, b]) => [
             <></>,
-            React.cloneElement(<Input type="search" prefix={<UserOutlined className='projectColIcon' />} placeholder="Input user login" className='projectInputPpl' onChange={updateInputPplFilter} />),
+            React.cloneElement(<Input type="search" prefix={<UserOutlined className='projectColIcon' />}
+              placeholder="Input user login" className='projectInputPpl' onChange={updateInputPplFilter} />),
           ]} >
         </Dropdown.Button>
         {currentUser.isCurrentUser &&
-          <div onClick={() => { updatePplFilter(updateStringList(filterPBI.peopleFilter, currentUser.login)) }} className={filterPBI.peopleFilter.includes(currentUser.login) ? 'projectCurUserShadowDiv' : 'projectCurUserDiv'}>
+          <div onClick={() => { updatePplFilter(updateStringList(filterPBI.peopleFilter, currentUser.login)) }}
+            className={filterPBI.peopleFilter.includes(currentUser.login) ? 'projectCurUserShadowDiv' : 'projectCurUserDiv'}>
             <Badge status={"success"} style={{ borderColor: "transparent" }} dot={filterPBI.peopleFilter.includes(currentUser.login)}>
-              <Avatar src={`${currentUser.avatarLink}`} >
-              </Avatar></Badge>
-          </div>
-        }
+              <Avatar src={`${currentUser.avatarLink}`} />
+            </Badge>
+          </div>}
       </Space>
-
       <ProductBacklog sortSelected={function (items: ISortedInfo): void { setInfos({ ...infos, sortedInfo: items }); }}
         itemSelected={function (items: number[]):
           void { setInfos({ ...infos, filteredInfo: { complete: infos.filteredInfo.complete, pbiPriority: items } }); }}
         sortedInfo={infos.sortedInfo} filteredInfo={infos.filteredInfo} peopleFilter={filterPBI.peopleFilter}
         nameFilter={filterPBI.nameFilter} />
       {isAddSprint && <AddSprintPopup error={error.erorMessage} data={initSprint} visible={isAddSprint}
-        onCreate={function (values: any): void { addSprint(values); }}
+        onCreate={function (values: any): void { addSprintToRepo(values, ownerName, token, setIsAddSprint); }}
         onCancel={() => { setIsAddSprint(false); }} pbiData={pbiPage.list} />}
       {isAddPBI && <AddPBIPopup visible={isAddPBI}
-        onCreate={function (values: any): void { addPBI(values) }}
+        onCreate={function (values: any): void { addPBIToRepo(values, ownerName, token, setIsAddPBI) }}
         onCancel={() => { setIsAddPBI(false); }} />}
-
     </div>
   );
 });
