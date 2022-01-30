@@ -19,7 +19,6 @@
     "react": "^17.0.2",
     "react-dnd": "^14.0.4",
     "react-dnd-html5-backend": "^14.0.2",
-    "react-dnd-preview": "^6.0.2",
     "react-dom": "^17.0.2",
     "react-drag-listview": "^0.1.8",
     "react-infinite-scroll-component": "^6.1.0",
@@ -55,6 +54,11 @@
       "last 1 safari version"
     ]
   },
+  "jest": {
+    "transformIgnorePatterns": [
+      "/node_modules/(?!antd|@ant-design|rc-.+?|@babel/runtime).+(js|jsx)$"
+    ]
+  },
   "devDependencies": {
     "@ant-design/icons": "^4.7.0",
     "@babel/core": "^7.16.0",
@@ -74,10 +78,12 @@
     "@types/react-test-renderer": "^17.0.1",
     "@types/redux-mock-store": "^1.0.3",
     "@types/styled-components": "^5.1.15",
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.6.6",
     "antd": "^4.17.2",
     "axios-mock-adapter": "^1.20.0",
     "concurrently": "^6.4.0",
     "enzyme": "^3.11.0",
+    "enzyme-to-json": "^3.6.2",
     "nodemon": "^2.0.15",
     "react-cookie": "^4.1.1",
     "react-highlight-words": "^0.17.0",

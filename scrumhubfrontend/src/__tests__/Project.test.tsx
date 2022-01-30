@@ -15,6 +15,7 @@ import renderer, {create} from 'react-test-renderer';
 import { Project } from "../components/Project";
 import { Home } from "../components/Home";
 import { getByText } from "@testing-library/react";
+import * as Actions from "../appstate/actions";
 import TestRenderer from "react-test-renderer";
 const { act: actTest } = TestRenderer;
 

@@ -1,3 +1,6 @@
+ /**
+ * @jest-environment jsdom
+ */
  import moment from "moment"
  import { canDropPBI, canDropTask, disabledDate, getIndex, isArrayValid, isBranchNotCreated, isMessageValid, isNameFilterValid, updateRowKeys, validateString } from "../components/utility/commonFunctions"
 import { initTask, initSprint } from "../appstate/stateInitValues";

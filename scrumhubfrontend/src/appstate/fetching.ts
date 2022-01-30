@@ -151,7 +151,7 @@ export function fetchOneSprint(token: string, ownerName: string, sprintNumber: n
 }
 /** Updates {@linkcode ISprint} sprint for opened {@linkcode IRepository} repository */
 export function updateOneSprint(token: string, ownerName: string, sprintNumber: number, sprint: any)
-: Promise<RequestResponse<ISprint, number>> {
+  : Promise<RequestResponse<ISprint, number>> {
   return getResponse(
     axios.put(`${config.backend.ip}:${config.backend.port}/api/Sprints/${ownerName}/${sprintNumber}`,
       sprint, { headers: getHeaderWithContent(token, config) }
@@ -160,7 +160,7 @@ export function updateOneSprint(token: string, ownerName: string, sprintNumber: 
 }
 /** Completes {@linkcode ISprint} sprint for opened {@linkcode IRepository} repository */
 export function completeOneSprint(token: string, ownerName: string, sprintNumber: number, isFailure: boolean)
-: Promise<RequestResponse<ISprint, number>> {
+  : Promise<RequestResponse<ISprint, number>> {
   return getResponse(
     axios.put(`${config.backend.ip}:${config.backend.port}/api/Sprints/${ownerName}/${sprintNumber}/finish?failed=${isFailure}`,
       {}, { headers: getHeader(token, config) }
@@ -170,7 +170,7 @@ export function completeOneSprint(token: string, ownerName: string, sprintNumber
 /** Adds {@linkcode ISprint} sprint to {@linkcode ISprintList} sprintList in opened {@linkcode IRepository} repository */
 export function addSprint(token: string, ownerName: string, sprint: any): Promise<RequestResponse<ISprint, number>> {
   return getResponse(
-    axios.post( `${config.backend.ip}:${config.backend.port}/api/Sprints/${ownerName}`,
+    axios.post(`${config.backend.ip}:${config.backend.port}/api/Sprints/${ownerName}`,
       sprint, { headers: getHeader(token, config) }
     )
   );
@@ -200,8 +200,8 @@ export function requestFetchAllRepoTasks(token: string, ownerName: string): Prom
 }
 /** Fetches request rate limit for currently logged in {@linkcode IPerson} user */
 export function requestFetchRateLimit(token: string): Promise<AxiosResponse<any, any>> {
-  return axios.get(`https://api.github.com/rate_limit`, 
-  { headers: { "Accept": "application/vnd.github.v3+json", "Authorization": "token " + token } });
+  return axios.get(`https://api.github.com/rate_limit`,
+    { headers: { "Accept": "application/vnd.github.v3+json", "Authorization": "token " + token } });
 }
 /** Fetches all {@linkcode ITask} tasks for opened {@linkcode IRepository} repository */
 export function fetchAllRepoTasks(token: string, ownerName: string,): Promise<RequestResponse<ITask, number>> {
@@ -211,7 +211,7 @@ export function fetchAllRepoTasks(token: string, ownerName: string,): Promise<Re
 export function addTask(token: string, ownerName: string, pbiId: number, name: string,): Promise<RequestResponse<ITask, number>> {
   return getResponse(
     axios.post(`${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}`,
-      {"name": name,"pbiId": pbiId.toString() }, { headers: getHeader(token, config) }
+      { "name": name, "pbiId": pbiId.toString() }, { headers: getHeader(token, config) }
     )
   );
 }
@@ -239,7 +239,8 @@ export function updatePersonInTask(token: string, ownerName: string, login: stri
     )
   );
 }
-/** Creates branch for given {@linkcode ITask}
+/** 
+ * Creates branch for given {@linkcode ITask}
  * @param {boolean} isHotfix For true starts a hotfix branch, for false starts feature branch
  */
 export function startBranchForTask(token: string, ownerName: string, isHotfix: boolean, taskId: number): Promise<RequestResponse<ITask, number>> {
@@ -250,3 +251,4 @@ export function startBranchForTask(token: string, ownerName: string, isHotfix: b
     )
   );
 }
+

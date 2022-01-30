@@ -4,6 +4,7 @@
 import expect from "expect"; // You can use any testing library
 import { configureStore } from '@reduxjs/toolkit';
 import axios from 'axios';
+//import { store } from '../appstate/store';
 import { reducerFunction } from "../appstate/reducer";
 import { initTestState, testFetchReposVals, testFilters, testRepositoryList, tstConf } from "../appstate/stateTestValues";
 import * as Actions from "../appstate/actions";
@@ -14,7 +15,7 @@ import { filterUrlString } from "../appstate/stateUtitlities";
 describe('fetching Repos', () => {
   test('should pass', async () => {
     const mock = new MockAdapter(axios);
-  mock.onGet(`${tstConf.url}/Repositories?${filterUrlString(testFilters)}`).reply(200, testRepositoryList);
+    mock.onGet(`${tstConf.url}/Repositories?${filterUrlString(testFilters)}`).reply(200, testRepositoryList);
     const store = configureStore({
       reducer: reducerFunction(initTestState),
     });

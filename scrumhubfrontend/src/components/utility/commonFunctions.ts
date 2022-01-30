@@ -36,7 +36,7 @@ export const isArrayValid = (objectArray: any[]) => {
   return !isNull(objectArray) && typeof (objectArray) !== "undefined" && objectArray.length > 0;
 }
 
-export const isItemDefined = (item: any) => {
+export const isItemDefined = (item: any|undefined) => {
   return typeof (item) !== "undefined" && !isNull(item);
 }
 

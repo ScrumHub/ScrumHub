@@ -54,3 +54,5 @@ export const getHeaderAcceptAll = (token: string, config: any) => {
       .filter((x) => x !== "")
       .join("&"));
 };
+
+

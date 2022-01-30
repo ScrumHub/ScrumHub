@@ -13,6 +13,7 @@ import { reducerFunction } from "../appstate/reducer";
 import { initTestState } from "../appstate/stateTestValues";
 import renderer from 'react-test-renderer';
 import { Home } from "../components/Home";
+import * as Actions from "../appstate/actions";
 
 describe('Home component succesfully rendered', () => {
   let container: any;

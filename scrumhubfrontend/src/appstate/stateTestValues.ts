@@ -106,3 +106,8 @@ export const testFetchReposVals = {
   filters: testFilters,
   token: config.token,
 }
+
+export const initTestUseState = {
+  "action": "POP",
+  "location": { "hash": "", "key": "default", "pathname": "/", "search": "", "state": null }
+}

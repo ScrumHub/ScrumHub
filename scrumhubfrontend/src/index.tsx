@@ -10,7 +10,8 @@ import { Provider } from 'react-redux'
 import { store } from './appstate/store';
 import React from 'react';
 
-export const ReactStrictMode = <React.StrictMode>
+export const ReactStrictMode = 
+<React.StrictMode>
   <Provider store={store}>
     <App />
   </Provider>

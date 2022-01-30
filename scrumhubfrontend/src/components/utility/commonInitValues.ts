@@ -8,6 +8,8 @@ export const initIDs: IFilters = {
 
 export const fixedType = 'NonDraggableBodyRow';
 
+export const initLoginData: ILoginData = { errorMessage: "", isLoading: false };
+
 export const initModalVals: IModals = {
   addTask: false,
   assgnTask: false,
@@ -56,7 +58,7 @@ export const pbiStatusVals =
 
 export const sprintStatusVals =
   [{ text: "Complete", value: 1, },
-   { text: "Not Complete", value: 0, }
+  { text: "Not Complete", value: 0, }
   ];
 
 export const loginDataError = {

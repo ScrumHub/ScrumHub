@@ -30,23 +30,23 @@ export interface IRowIds {
 }
 
 export interface tableKeys {
-  sprintKeys: number[],
-  pbiKeys: number[],
+  sprintKeys: number[];
+  pbiKeys: number[];
 }
 
 export interface IFilteredInfo {
-  complete: number[],
-  pbiPriority: number[]
+  complete: number[];
+  pbiPriority: number[];
 }
 
 export interface ISortedInfo {
-  order: string,
-  columnKey: string
+  order: string;
+  columnKey: string;
 }
 
 export interface ILoginData {
-  isLoading: boolean,
-  errorMessage: string
+  errorMessage: string;
+  isLoading: boolean;
 }
 
 export interface IProductBacklogProps {
