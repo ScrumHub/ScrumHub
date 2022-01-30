@@ -1,7 +1,8 @@
 import React from 'react';
-import { Modal, Form, Input } from 'antd';
+import { Modal, Form, Input, Button } from 'antd';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import { IAddTaskCollectionCreateFormProps } from './popupInterfaces';
+import { onOkAddTaskPopup } from './popupUtilities';
 /**
  * Returns Popup with a form for adding new {@linkcode ITask} task
  */
@@ -9,27 +10,28 @@ export function AddTaskPopup({
   data, visible, onCreate, onCancel,
 }:IAddTaskCollectionCreateFormProps): JSX.Element {
   const [form] = Form.useForm();
-  const okForm = () => {
-    form
-      .validateFields()
-      .then((values: { name: string; }) => {
-        form.resetFields();
-        onCreate(values);
-      })
-      .catch((info: any) => {
-        console.error('Validate Failed:', info);
-      });
-  };
+  const [loading, setLoading] = React.useState(false);
+  if(!visible && loading){
+   form.resetFields();
+   setLoading(false);
+  }
   return (
     <Modal
+    title="Add New Task"
       centered={true}
       visible={visible}
-      closable={false}
-      title="Add New Task"
-      okText="Save"
-      cancelText="Cancel"
+      destroyOnClose={true}
+      closable={true}
       onCancel={onCancel}
-      onOk={okForm}
+      footer={[
+        <Button key="CancelInAddTaskPopup" id="CancelInAddTaskPopup" onClick={onCancel}>
+          Cancel
+        </Button>,
+        <Button loading={loading} type="primary" id="SaveInAddTaskPopup" key="SaveInAddTaskPopup"
+        onClick={() => {setLoading(true);onOkAddTaskPopup(form, onCreate); }}>
+          Save
+        </Button>
+      ]}
     >
       <Form
         form={form}
@@ -42,9 +44,9 @@ export function AddTaskPopup({
           name="name"
           rules={[{ required: true, message: 'Please input the name of the new task!', whitespace: true }]}
         >
-          <Input minLength={1} autoComplete='on' onKeyPress={event => {
+          <Input id="InputInAddTaskPopup" minLength={1} autoComplete='on' onKeyPress={event => {
             if (event.key === 'Enter') {
-              okForm();
+              setLoading(true);onOkAddTaskPopup(form, onCreate); 
             }
           } } />
         </Form.Item>

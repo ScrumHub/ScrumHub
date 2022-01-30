@@ -12,7 +12,7 @@ import { PBITableComponent } from './BacklogPBITableComponent';
 import { TaskTableComponent } from './BacklogTaskTableComponent';
 import { canDropTask, dateFormat, isBranchNotCreated, isInReviewOrFinished, isItemDefined, isSprintLoaded, useStateAndRefLoading, useTasksRef } from './utility/commonFunctions';
 import SkeletonList, { PBIMenuWithPeople } from './utility/LoadAnimations';
-import { assignPerson, startTask, updateTask } from './utility/BacklogHandlers';
+import { addTaskToPBI, assignPerson, startTask, updateTask } from './utility/BacklogHandlers';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
 import { useDrop, useDrag, DndProvider } from 'react-dnd';
 import { type } from './ProductBacklog';
@@ -147,17 +147,6 @@ export function SprintBacklog() {
       sprintNumber: sprintNr,
       isFailure: value
     }));
-    //setInitialRefresh(true);
-  };
-  const addTaskToPBI = (input: IFilters) => {
-    setIsModal({ ...isModal, addTask: false });
-    try {
-      store.dispatch(Actions.addTaskThunk({ token: token, ownerName: ownerName, pbiId: selectedPBI.id, name: input.name }) //filters
-      );
-    } catch (err) { console.error("Failed to add the pbis: ", err); }
-    finally {
-      setSelectedPBI({} as IBacklogItem);
-    }
   };
   const [selectedPBI, setSelectedPBI] = useState({} as IBacklogItem);
   const DraggableBodyRow = ({ index: index_row, bodyType, record, className, style, ...restProps }: BodyRowProps) => {
@@ -290,7 +279,7 @@ export function SprintBacklog() {
         onCreate={function (values: any): void { estimatePBI(values) }}
         onCancel={() => { setIsModal({ ...isModal, estimatePBI: false }); setSelectedPBI({} as IBacklogItem); }} />}
       {isModal.addTask && <AddTaskPopup data={{ name: "" } as IFilters} visible={isModal.addTask}
-        onCreate={function (values: any): void { addTaskToPBI(values); }}
+        onCreate={function (values: any): void { addTaskToPBI(values, token,ownerName,selectedPBI.id, setIsModal, isModal, setSelectedPBI); }}
         onCancel={() => { setIsModal({ ...isModal, addTask: false }); }} />}
       {isModal.updateSprint && !loading && <UpdateSprintPopup data={sprintPage} visible={isModal.updateSprint}
         onCreate={function (values: any): void { updateSprint(values) }}

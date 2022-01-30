@@ -41,35 +41,28 @@ export const Project = React.memo((props: any) => {
 
   const addPBI = (pbi: IAddBI) => {
     pbi.acceptanceCriteria = pbi.acceptanceCriteria.filter((value: any) => { return (typeof (value) === "string"); });
-    try {
       store.dispatch(
         Actions.addPBIThunk({
           ownerName: ownerName,
           token: token,
           pbi: pbi
         })
-      );
-    } catch (err) { console.error("Failed to add the pbis: ", err); }
-    finally {
-      setIsAddPBI(false);
-    }
+      ).then((response: any) => { setIsAddPBI(false); }).catch((info: any) => {
+        console.error('Validate Failed:', info);
+      });
   };
 
   const addSprint = (sprint: ISprint) => {
     const ids = sprint.backlogItems.map((value: IBacklogItem) => { return ((value.isInSprint ? value.id.toString() : "")) }).filter((x: string) => x !== "");
-    try {
       store.dispatch(
         Actions.addSprintThunk({
           token: token as string,
           ownerName: ownerName as string,
           sprint: { "title": sprint.title, "finishDate": sprint.finishDate, "goal": sprint.goal, "pbIs": ids }
         })
-      );
-    } catch (err) {
-      console.error("Failed to add the sprint: ", err);
-    } finally {
-      setIsAddSprint(false);
-    }
+      ).then((response: any) => { setIsAddSprint(false); }).catch((info: any) => {
+        console.error('Validate Failed:', info);
+      });
   };
   const updatePplFilter = (items: string[]) => {
     setFiltersPBI({ ...filterPBI, peopleFilter: items });

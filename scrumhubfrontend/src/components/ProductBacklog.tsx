@@ -17,7 +17,7 @@ import { taskColumns, dragCmpnts, pbiColumns, sprintColumns } from './utility/Ta
 import { PBITableComponent } from './BacklogPBITableComponent';
 import { SprintTableComponent } from './BacklogSprintTableComponent';
 import { initPBIFilter, initProductBacklog } from '../appstate/stateInitValues';
-import { updatePBI, updateTask, fetchPBIsAndUnassigned } from './utility/BacklogHandlers';
+import { updatePBI, updateTask, fetchPBIsAndUnassigned, addTaskToPBI } from './utility/BacklogHandlers';
 import { AddTaskPopup } from './popups/AddTaskPopup';
 import { CompleteSprintPopup } from './popups/CompleteSprintPopup';
 import { EditPBIPopup } from './popups/EditPBIPopup';
@@ -82,13 +82,6 @@ export const ProductBacklog: React.FC<IProductBacklogProps> = React.memo((props:
       }, 6000);
     return () => clearInterval(timer);
   }, []);
-  const addTaskToPBI = (input: IFilters) => {
-    setIsModal({ ...isModal, addTask: false });
-    try {
-      store.dispatch(Actions.addTaskThunk({ token: token, ownerName: ownerName, pbiId: selectedPBI.id, name: input.name }));
-    } catch (err) { console.error("Failed to add the pbis: ", err); }
-    finally { setSelectedPBI({} as IBacklogItem); }
-  };
   const estimatePBI = (pbi: IBacklogItem) => {
     try {
       store.dispatch(Actions.estimatePBIThunk({ ownerName: ownerName, token: token, pbiId: selectedPBI.id, hours: pbi.expectedTimeInHours }));
@@ -217,7 +210,7 @@ export const ProductBacklog: React.FC<IProductBacklogProps> = React.memo((props:
       onCreate={function (values: any): void { estimatePBI(values) }}
       onCancel={() => { setIsModal({ ...isModal, estimatePBI: false }); setSelectedPBI({} as IBacklogItem); }} />}
     <AddTaskPopup data={{ name: "" } as IFilters} visible={isModal.addTask}
-      onCreate={function (values: any): void { addTaskToPBI(values); }}
+      onCreate={function (values: any): void { addTaskToPBI(values, token,ownerName,selectedPBI.id, setIsModal, isModal, setSelectedPBI); }}
       onCancel={() => { setIsModal({ ...isModal, addTask: false }); }} />
     {isModal.updateSprint && <UpdateSprintPopup data={selectedSprint} visible={isModal.updateSprint && !loading}
       onCreate={function (values: any): void { updateSprint(values) }}

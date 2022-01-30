@@ -13,6 +13,7 @@ export function AddPBIForm(form:FormInstance<any>,value:number, setValue:React.D
   return(
        <Form
         form={form}
+        id="Addform"
         layout="vertical"
         name="form_in_modal"
         initialValues={{ modifier: 'public' }}

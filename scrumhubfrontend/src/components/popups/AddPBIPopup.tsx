@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Form } from 'antd';
+import { Modal, Form, Button } from 'antd';
 import { IAddPBICollectionCreateFormProps } from './popupInterfaces';
 import { AddPBIForm } from './AddPBIForm';
 import { onOkAddPBIPopup } from './popupUtilities';
@@ -9,21 +9,28 @@ import { onOkAddPBIPopup } from './popupUtilities';
  */
 export function AddPBIPopup({
   visible, onCreate, onCancel
-}:IAddPBICollectionCreateFormProps): JSX.Element {
+}: IAddPBICollectionCreateFormProps): JSX.Element {
   const [form] = Form.useForm();
   const [value, setValue] = React.useState(0);
+  const [loading, setLoading] = React.useState(false);
   return (
     <Modal
-      className='modalAdd'
+    title="Add Product Backlog Item"
       visible={visible}
-      closable={false}
-      title="Add Product Backlog Item"
-      okText="Save"
-      cancelText="Cancel"
+      destroyOnClose={true}
+      closable={true}
       onCancel={onCancel}
-      onOk={()=>{onOkAddPBIPopup(form, onCreate)}}
+      footer={[
+        <Button key="CancelInAddPBIPopup" id="CancelInAddPBIPopup" onClick={onCancel}>
+          Cancel
+        </Button>,
+        <Button loading={loading} type="primary" id="SaveInAddPBIPopup" key="SaveInAddPBIPopup"
+        onClick={() => {setLoading(true);onOkAddPBIPopup(form, onCreate); }}>
+          Save
+        </Button>
+      ]}
     >
-      {AddPBIForm(form,value, setValue)}
+      {AddPBIForm(form, value, setValue)}
     </Modal>
   );
 }

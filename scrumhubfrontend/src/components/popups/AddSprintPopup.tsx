@@ -1,12 +1,13 @@
 
 import React, { useState } from 'react';
-import { Modal, Form, Typography, Checkbox, Input, DatePicker } from 'antd';
+import { Modal, Form, Typography, Checkbox, Input, DatePicker, Button } from 'antd';
 import { ISprint } from '../../appstate/stateInterfaces';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import TextArea from 'antd/lib/input/TextArea';
 import _ from 'lodash';
 import { disabledDate } from '../utility/commonFunctions';
 import { IAddSprintCollectionCreateFormProps } from './popupInterfaces';
+import { onOkAddSprintPopup } from './popupUtilities';
 /**
  * Returns Popup with a form for adding new {@linkcode ISprint} sprint
  */
@@ -14,28 +15,25 @@ export function AddSprintPopup({
   data, error, pbiData, visible, onCreate, onCancel,
 }:IAddSprintCollectionCreateFormProps): JSX.Element {
   const [form] = Form.useForm();
+  const [loading, setLoading] = React.useState(false);
   const filteredData = pbiData.filter((item) => item.estimated !== false && item.id !== 0);
   const [temp, setTemp] = useState(filteredData);
   return (
     <Modal
-      visible={visible}
-      closable={false}
-      centered={true}
       title="Create Sprint"
-      okText="Save"
-      cancelText="Cancel"
+      visible={visible}
+      destroyOnClose={true}
+      closable={true}
       onCancel={onCancel}
-      onOk={() => {
-        form
-          .validateFields()
-          .then((values: ISprint) => {
-            form.resetFields();
-            onCreate({ ...values, backlogItems: temp });
-          })
-          .catch((info: any) => {
-            console.error('Validate Failed:', info);
-          });
-      } }
+      footer={[
+        <Button key="CancelInAddSprintPopup" id="CancelInAddSprintPopup" onClick={onCancel}>
+          Cancel
+        </Button>,
+        <Button loading={loading} type="primary" id="SaveInAddSprintPopup" key="SaveInAddSprintPopup"
+        onClick={() => {setLoading(true);onOkAddSprintPopup(form, onCreate,temp); }}>
+          Save
+        </Button>
+      ]}
     >
       <Form
         form={form}
@@ -69,7 +67,6 @@ export function AddSprintPopup({
           <TextArea required={true}
             maxLength={105} />
         </Form.Item>
-
         {filteredData && filteredData.length > 0 && <FormItemLabel prefixCls="backlogItems" label="Backlog Items" required={true} />}
         {filteredData && filteredData.length > 0 && <Form.List name="backlogItems" initialValue={filteredData}>
           {(fields) => (

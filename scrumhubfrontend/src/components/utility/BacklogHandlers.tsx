@@ -1,8 +1,9 @@
-import { IPerson, IBacklogItem, ISprint, ISprintList } from "../../appstate/stateInterfaces";
+import { IPerson, IBacklogItem, ISprint, ISprintList, IFilters } from "../../appstate/stateInterfaces";
 import { store } from "../../appstate/store";
 import * as Actions from '../../appstate/actions';
 import { initPBIFilter } from "../../appstate/stateInitValues";
 import { isArrayValid } from "./commonFunctions";
+import { IModals } from "./commonInterfaces";
 
 /**
  * Dispatches an action for unassigning and assigning {@linkcode IPerson} person for the given {@linkcode ITask} task
@@ -163,3 +164,10 @@ export function updateDragPBIs(refreshRequired: boolean, shouldClearKey: boolean
     });
   }
 }
+/** Dispatches an action that adds {@linkcode ITask} task to {@linkcode IBacklogItem} backlogItem */
+export const addTaskToPBI = (input: IFilters, token:string,ownerName:string,selectedPBIid:number, setIsModal:React.Dispatch<React.SetStateAction<IModals>>, isModal:IModals, setSelectedPBI:React.Dispatch<React.SetStateAction<IBacklogItem>> ) => {
+  store.dispatch(Actions.addTaskThunk({ token: token, ownerName: ownerName, pbiId: selectedPBIid, name: input.name }))
+  .then((response: any) => { setIsModal({ ...isModal, addTask: false });setSelectedPBI({} as IBacklogItem); }).catch((info: any) => {
+    console.error('Validate Failed:', info);
+  });
+};

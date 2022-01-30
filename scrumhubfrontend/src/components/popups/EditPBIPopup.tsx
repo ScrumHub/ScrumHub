@@ -17,6 +17,7 @@ export function EditPBIPopup({
       centered={true}
       title="Edit Backlog Item"
       visible={visible}
+      destroyOnClose={true}
       closable={true}
       onCancel={onCancel}
       footer={[

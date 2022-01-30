@@ -7,22 +7,35 @@ exports[`AddPBIPopup component in container is the same as snapshot 1`] = `
   visible={true}
 >
   <Modal
-    cancelText="Cancel"
-    className="modalAdd"
-    closable={false}
+    closable={true}
     confirmLoading={false}
-    okText="Save"
+    destroyOnClose={true}
+    footer={
+      Array [
+        <Button
+          id="CancelInAddPBIPopup"
+          onClick={[Function]}
+        >
+          Cancel
+        </Button>,
+        <Button
+          id="SaveInAddPBIPopup"
+          loading={false}
+          onClick={[Function]}
+          type="primary"
+        >
+          Save
+        </Button>,
+      ]
+    }
     okType="primary"
     onCancel={[Function]}
-    onOk={[Function]}
     title="Add Product Backlog Item"
     visible={true}
     width={520}
   >
     <Dialog
-      cancelText="Cancel"
-      className="modalAdd"
-      closable={false}
+      closable={true}
       closeIcon={
         <span
           className="ant-modal-close-x"
@@ -33,27 +46,30 @@ exports[`AddPBIPopup component in container is the same as snapshot 1`] = `
         </span>
       }
       confirmLoading={false}
+      destroyOnClose={true}
       focusTriggerAfterClose={true}
       footer={
-        <LocaleReceiver
-          componentName="Modal"
-          defaultLocale={
-            Object {
-              "cancelText": "Cancel",
-              "justOkText": "OK",
-              "okText": "OK",
-            }
-          }
-        >
-          [Function]
-        </LocaleReceiver>
+        Array [
+          <Button
+            id="CancelInAddPBIPopup"
+            onClick={[Function]}
+          >
+            Cancel
+          </Button>,
+          <Button
+            id="SaveInAddPBIPopup"
+            loading={false}
+            onClick={[Function]}
+            type="primary"
+          >
+            Save
+          </Button>,
+        ]
       }
       maskTransitionName="ant-fade"
-      okText="Save"
       okType="primary"
       onCancel={[Function]}
       onClose={[Function]}
-      onOk={[Function]}
       prefixCls="ant-modal"
       title="Add Product Backlog Item"
       transitionName="ant-zoom"
@@ -83,7 +99,7 @@ exports[`AddPBIPopup component in container is the same as snapshot 1`] = `
                     tabindex="-1"
                   >
                     <div
-                      class="ant-modal modalAdd"
+                      class="ant-modal"
                       role="document"
                       style="width: 520px;"
                     >
@@ -95,6 +111,35 @@ exports[`AddPBIPopup component in container is the same as snapshot 1`] = `
                       <div
                         class="ant-modal-content"
                       >
+                        <button
+                          aria-label="Close"
+                          class="ant-modal-close"
+                          type="button"
+                        >
+                          <span
+                            class="ant-modal-close-x"
+                          >
+                            <span
+                              aria-label="close"
+                              class="anticon anticon-close ant-modal-close-icon"
+                              role="img"
+                            >
+                              <svg
+                                aria-hidden="true"
+                                data-icon="close"
+                                fill="currentColor"
+                                focusable="false"
+                                height="1em"
+                                viewBox="64 64 896 896"
+                                width="1em"
+                              >
+                                <path
+                                  d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"
+                                />
+                              </svg>
+                            </span>
+                          </span>
+                        </button>
                         <div
                           class="ant-modal-header"
                         >
@@ -110,7 +155,7 @@ exports[`AddPBIPopup component in container is the same as snapshot 1`] = `
                         >
                           <form
                             class="ant-form ant-form-vertical"
-                            id="form_in_modal"
+                            id="Addform"
                           >
                             <div
                               class="ant-col name-item-label"
@@ -359,6 +404,7 @@ exports[`AddPBIPopup component in container is the same as snapshot 1`] = `
                         >
                           <button
                             class="ant-btn"
+                            id="CancelInAddPBIPopup"
                             type="button"
                           >
                             <span>
@@ -367,6 +413,7 @@ exports[`AddPBIPopup component in container is the same as snapshot 1`] = `
                           </button>
                           <button
                             class="ant-btn ant-btn-primary"
+                            id="SaveInAddPBIPopup"
                             type="button"
                           >
                             <span>
@@ -388,9 +435,7 @@ exports[`AddPBIPopup component in container is the same as snapshot 1`] = `
           >
             <Dialog
               afterClose={[Function]}
-              cancelText="Cancel"
-              className="modalAdd"
-              closable={false}
+              closable={true}
               closeIcon={
                 <span
                   className="ant-modal-close-x"
@@ -401,30 +446,32 @@ exports[`AddPBIPopup component in container is the same as snapshot 1`] = `
                 </span>
               }
               confirmLoading={false}
-              destroyOnClose={false}
+              destroyOnClose={true}
               focusTriggerAfterClose={true}
               footer={
-                <LocaleReceiver
-                  componentName="Modal"
-                  defaultLocale={
-                    Object {
-                      "cancelText": "Cancel",
-                      "justOkText": "OK",
-                      "okText": "OK",
-                    }
-                  }
-                >
-                  [Function]
-                </LocaleReceiver>
+                Array [
+                  <Button
+                    id="CancelInAddPBIPopup"
+                    onClick={[Function]}
+                  >
+                    Cancel
+                  </Button>,
+                  <Button
+                    id="SaveInAddPBIPopup"
+                    loading={false}
+                    onClick={[Function]}
+                    type="primary"
+                  >
+                    Save
+                  </Button>,
+                ]
               }
               getContainer={[Function]}
               getOpenCount={[Function]}
               maskTransitionName="ant-fade"
-              okText="Save"
               okType="primary"
               onCancel={[Function]}
               onClose={[Function]}
-              onOk={[Function]}
               prefixCls="ant-modal"
               scrollLocker={
                 ScrollLocker {
@@ -451,7 +498,7 @@ exports[`AddPBIPopup component in container is the same as snapshot 1`] = `
                             tabindex="-1"
                           >
                             <div
-                              class="ant-modal modalAdd"
+                              class="ant-modal"
                               role="document"
                               style="width: 520px;"
                             >
@@ -463,6 +510,35 @@ exports[`AddPBIPopup component in container is the same as snapshot 1`] = `
                               <div
                                 class="ant-modal-content"
                               >
+                                <button
+                                  aria-label="Close"
+                                  class="ant-modal-close"
+                                  type="button"
+                                >
+                                  <span
+                                    class="ant-modal-close-x"
+                                  >
+                                    <span
+                                      aria-label="close"
+                                      class="anticon anticon-close ant-modal-close-icon"
+                                      role="img"
+                                    >
+                                      <svg
+                                        aria-hidden="true"
+                                        data-icon="close"
+                                        fill="currentColor"
+                                        focusable="false"
+                                        height="1em"
+                                        viewBox="64 64 896 896"
+                                        width="1em"
+                                      >
+                                        <path
+                                          d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"
+                                        />
+                                      </svg>
+                                    </span>
+                                  </span>
+                                </button>
                                 <div
                                   class="ant-modal-header"
                                 >
@@ -478,7 +554,7 @@ exports[`AddPBIPopup component in container is the same as snapshot 1`] = `
                                 >
                                   <form
                                     class="ant-form ant-form-vertical"
-                                    id="form_in_modal"
+                                    id="Addform"
                                   >
                                     <div
                                       class="ant-col name-item-label"
@@ -727,6 +803,7 @@ exports[`AddPBIPopup component in container is the same as snapshot 1`] = `
                                 >
                                   <button
                                     class="ant-btn"
+                                    id="CancelInAddPBIPopup"
                                     type="button"
                                   >
                                     <span>
@@ -735,6 +812,7 @@ exports[`AddPBIPopup component in container is the same as snapshot 1`] = `
                                   </button>
                                   <button
                                     class="ant-btn ant-btn-primary"
+                                    id="SaveInAddPBIPopup"
                                     type="button"
                                   >
                                     <span>
@@ -813,9 +891,7 @@ exports[`AddPBIPopup component in container is the same as snapshot 1`] = `
                   <Content
                     afterClose={[Function]}
                     ariaId="rcDialogTitle0"
-                    cancelText="Cancel"
-                    className="modalAdd"
-                    closable={false}
+                    closable={true}
                     closeIcon={
                       <span
                         className="ant-modal-close-x"
@@ -826,33 +902,35 @@ exports[`AddPBIPopup component in container is the same as snapshot 1`] = `
                       </span>
                     }
                     confirmLoading={false}
-                    destroyOnClose={false}
+                    destroyOnClose={true}
                     focusTriggerAfterClose={true}
                     footer={
-                      <LocaleReceiver
-                        componentName="Modal"
-                        defaultLocale={
-                          Object {
-                            "cancelText": "Cancel",
-                            "justOkText": "OK",
-                            "okText": "OK",
-                          }
-                        }
-                      >
-                        [Function]
-                      </LocaleReceiver>
+                      Array [
+                        <Button
+                          id="CancelInAddPBIPopup"
+                          onClick={[Function]}
+                        >
+                          Cancel
+                        </Button>,
+                        <Button
+                          id="SaveInAddPBIPopup"
+                          loading={false}
+                          onClick={[Function]}
+                          type="primary"
+                        >
+                          Save
+                        </Button>,
+                      ]
                     }
                     getContainer={[Function]}
                     getOpenCount={[Function]}
                     maskTransitionName="ant-fade"
                     motionName="ant-zoom"
-                    okText="Save"
                     okType="primary"
                     onCancel={[Function]}
                     onClose={[Function]}
                     onMouseDown={[Function]}
                     onMouseUp={[Function]}
-                    onOk={[Function]}
                     onVisibleChanged={[Function]}
                     prefixCls="ant-modal"
                     scrollLocker={
@@ -880,7 +958,7 @@ exports[`AddPBIPopup component in container is the same as snapshot 1`] = `
                                   tabindex="-1"
                                 >
                                   <div
-                                    class="ant-modal modalAdd"
+                                    class="ant-modal"
                                     role="document"
                                     style="width: 520px;"
                                   >
@@ -892,6 +970,35 @@ exports[`AddPBIPopup component in container is the same as snapshot 1`] = `
                                     <div
                                       class="ant-modal-content"
                                     >
+                                      <button
+                                        aria-label="Close"
+                                        class="ant-modal-close"
+                                        type="button"
+                                      >
+                                        <span
+                                          class="ant-modal-close-x"
+                                        >
+                                          <span
+                                            aria-label="close"
+                                            class="anticon anticon-close ant-modal-close-icon"
+                                            role="img"
+                                          >
+                                            <svg
+                                              aria-hidden="true"
+                                              data-icon="close"
+                                              fill="currentColor"
+                                              focusable="false"
+                                              height="1em"
+                                              viewBox="64 64 896 896"
+                                              width="1em"
+                                            >
+                                              <path
+                                                d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"
+                                              />
+                                            </svg>
+                                          </span>
+                                        </span>
+                                      </button>
                                       <div
                                         class="ant-modal-header"
                                       >
@@ -907,7 +1014,7 @@ exports[`AddPBIPopup component in container is the same as snapshot 1`] = `
                                       >
                                         <form
                                           class="ant-form ant-form-vertical"
-                                          id="form_in_modal"
+                                          id="Addform"
                                         >
                                           <div
                                             class="ant-col name-item-label"
@@ -1156,6 +1263,7 @@ exports[`AddPBIPopup component in container is the same as snapshot 1`] = `
                                       >
                                         <button
                                           class="ant-btn"
+                                          id="CancelInAddPBIPopup"
                                           type="button"
                                         >
                                           <span>
@@ -1164,6 +1272,7 @@ exports[`AddPBIPopup component in container is the same as snapshot 1`] = `
                                         </button>
                                         <button
                                           class="ant-btn ant-btn-primary"
+                                          id="SaveInAddPBIPopup"
                                           type="button"
                                         >
                                           <span>
@@ -1199,12 +1308,12 @@ exports[`AddPBIPopup component in container is the same as snapshot 1`] = `
                       onAppearPrepare={[Function]}
                       onEnterPrepare={[Function]}
                       onVisibleChanged={[Function]}
-                      removeOnLeave={false}
+                      removeOnLeave={true}
                       visible={true}
                     >
                       <DomWrapper>
                         <div
-                          className="ant-modal modalAdd"
+                          className="ant-modal"
                           key="dialog-element"
                           onMouseDown={[Function]}
                           onMouseUp={[Function]}
@@ -1233,6 +1342,91 @@ exports[`AddPBIPopup component in container is the same as snapshot 1`] = `
                             <div
                               className="ant-modal-content"
                             >
+                              <button
+                                aria-label="Close"
+                                className="ant-modal-close"
+                                onClick={[Function]}
+                                type="button"
+                              >
+                                <span
+                                  className="ant-modal-close-x"
+                                >
+                                  <ForwardRef(CloseOutlined)
+                                    className="ant-modal-close-icon"
+                                  >
+                                    <AntdIcon
+                                      className="ant-modal-close-icon"
+                                      icon={
+                                        Object {
+                                          "icon": Object {
+                                            "attrs": Object {
+                                              "focusable": "false",
+                                              "viewBox": "64 64 896 896",
+                                            },
+                                            "children": Array [
+                                              Object {
+                                                "attrs": Object {
+                                                  "d": "M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z",
+                                                },
+                                                "tag": "path",
+                                              },
+                                            ],
+                                            "tag": "svg",
+                                          },
+                                          "name": "close",
+                                          "theme": "outlined",
+                                        }
+                                      }
+                                    >
+                                      <span
+                                        aria-label="close"
+                                        className="anticon anticon-close ant-modal-close-icon"
+                                        role="img"
+                                      >
+                                        <IconReact
+                                          icon={
+                                            Object {
+                                              "icon": Object {
+                                                "attrs": Object {
+                                                  "focusable": "false",
+                                                  "viewBox": "64 64 896 896",
+                                                },
+                                                "children": Array [
+                                                  Object {
+                                                    "attrs": Object {
+                                                      "d": "M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z",
+                                                    },
+                                                    "tag": "path",
+                                                  },
+                                                ],
+                                                "tag": "svg",
+                                              },
+                                              "name": "close",
+                                              "theme": "outlined",
+                                            }
+                                          }
+                                        >
+                                          <svg
+                                            aria-hidden="true"
+                                            data-icon="close"
+                                            fill="currentColor"
+                                            focusable="false"
+                                            height="1em"
+                                            key="svg-close"
+                                            viewBox="64 64 896 896"
+                                            width="1em"
+                                          >
+                                            <path
+                                              d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"
+                                              key="svg-close-svg-0"
+                                            />
+                                          </svg>
+                                        </IconReact>
+                                      </span>
+                                    </AntdIcon>
+                                  </ForwardRef(CloseOutlined)>
+                                </span>
+                              </button>
                               <div
                                 className="ant-modal-header"
                               >
@@ -1272,6 +1466,7 @@ exports[`AddPBIPopup component in container is the same as snapshot 1`] = `
                                       "validateFields": [Function],
                                     }
                                   }
+                                  id="Addform"
                                   initialValues={
                                     Object {
                                       "modifier": "public",
@@ -1308,7 +1503,7 @@ exports[`AddPBIPopup component in container is the same as snapshot 1`] = `
                                           "validateFields": [Function],
                                         }
                                       }
-                                      id="form_in_modal"
+                                      id="Addform"
                                       initialValues={
                                         Object {
                                           "modifier": "public",
@@ -1319,7 +1514,7 @@ exports[`AddPBIPopup component in container is the same as snapshot 1`] = `
                                     >
                                       <form
                                         className="ant-form ant-form-vertical"
-                                        id="form_in_modal"
+                                        id="Addform"
                                         onReset={[Function]}
                                         onSubmit={[Function]}
                                       >
@@ -2717,95 +2912,90 @@ exports[`AddPBIPopup component in container is the same as snapshot 1`] = `
                               <div
                                 className="ant-modal-footer"
                               >
-                                <LocaleReceiver
-                                  componentName="Modal"
-                                  defaultLocale={
-                                    Object {
-                                      "cancelText": "Cancel",
-                                      "justOkText": "OK",
-                                      "okText": "OK",
-                                    }
-                                  }
+                                <Button
+                                  id="CancelInAddPBIPopup"
+                                  key="CancelInAddPBIPopup"
+                                  onClick={[Function]}
                                 >
-                                  <Button
-                                    onClick={[Function]}
+                                  <Wave
+                                    disabled={false}
                                   >
-                                    <Wave
-                                      disabled={false}
+                                    <button
+                                      className="ant-btn"
+                                      id="CancelInAddPBIPopup"
+                                      onClick={[Function]}
+                                      type="button"
                                     >
-                                      <button
-                                        className="ant-btn"
-                                        onClick={[Function]}
-                                        type="button"
+                                      <LoadingIcon
+                                        existIcon={false}
+                                        loading={false}
+                                        prefixCls="ant-btn"
                                       >
-                                        <LoadingIcon
-                                          existIcon={false}
-                                          loading={false}
-                                          prefixCls="ant-btn"
+                                        <CSSMotion
+                                          motionName="ant-btn-loading-icon-motion"
+                                          onAppearActive={[Function]}
+                                          onAppearStart={[Function]}
+                                          onEnterActive={[Function]}
+                                          onEnterStart={[Function]}
+                                          onLeaveActive={[Function]}
+                                          onLeaveStart={[Function]}
+                                          removeOnLeave={true}
+                                          visible={false}
                                         >
-                                          <CSSMotion
-                                            motionName="ant-btn-loading-icon-motion"
-                                            onAppearActive={[Function]}
-                                            onAppearStart={[Function]}
-                                            onEnterActive={[Function]}
-                                            onEnterStart={[Function]}
-                                            onLeaveActive={[Function]}
-                                            onLeaveStart={[Function]}
-                                            removeOnLeave={true}
-                                            visible={false}
-                                          >
-                                            <DomWrapper />
-                                          </CSSMotion>
-                                        </LoadingIcon>
-                                        <span
-                                          key=".0"
-                                        >
-                                          Cancel
-                                        </span>
-                                      </button>
-                                    </Wave>
-                                  </Button>
-                                  <Button
-                                    loading={false}
-                                    onClick={[Function]}
-                                    type="primary"
+                                          <DomWrapper />
+                                        </CSSMotion>
+                                      </LoadingIcon>
+                                      <span
+                                        key=".0"
+                                      >
+                                        Cancel
+                                      </span>
+                                    </button>
+                                  </Wave>
+                                </Button>
+                                <Button
+                                  id="SaveInAddPBIPopup"
+                                  key="SaveInAddPBIPopup"
+                                  loading={false}
+                                  onClick={[Function]}
+                                  type="primary"
+                                >
+                                  <Wave
+                                    disabled={false}
                                   >
-                                    <Wave
-                                      disabled={false}
+                                    <button
+                                      className="ant-btn ant-btn-primary"
+                                      id="SaveInAddPBIPopup"
+                                      onClick={[Function]}
+                                      type="button"
                                     >
-                                      <button
-                                        className="ant-btn ant-btn-primary"
-                                        onClick={[Function]}
-                                        type="button"
+                                      <LoadingIcon
+                                        existIcon={false}
+                                        loading={false}
+                                        prefixCls="ant-btn"
                                       >
-                                        <LoadingIcon
-                                          existIcon={false}
-                                          loading={false}
-                                          prefixCls="ant-btn"
+                                        <CSSMotion
+                                          motionName="ant-btn-loading-icon-motion"
+                                          onAppearActive={[Function]}
+                                          onAppearStart={[Function]}
+                                          onEnterActive={[Function]}
+                                          onEnterStart={[Function]}
+                                          onLeaveActive={[Function]}
+                                          onLeaveStart={[Function]}
+                                          removeOnLeave={true}
+                                          visible={false}
                                         >
-                                          <CSSMotion
-                                            motionName="ant-btn-loading-icon-motion"
-                                            onAppearActive={[Function]}
-                                            onAppearStart={[Function]}
-                                            onEnterActive={[Function]}
-                                            onEnterStart={[Function]}
-                                            onLeaveActive={[Function]}
-                                            onLeaveStart={[Function]}
-                                            removeOnLeave={true}
-                                            visible={false}
-                                          >
-                                            <DomWrapper />
-                                          </CSSMotion>
-                                        </LoadingIcon>
-                                        <span
-                                          key=".0"
-                                        >
-                                          Save
-                                        </span>
-                                      </button>
-                                    </Wave>
-                                  </Button>
-                                </LocaleReceiver>
+                                          <DomWrapper />
+                                        </CSSMotion>
+                                      </LoadingIcon>
+                                      <span
+                                        key=".0"
+                                      >
+                                        Save
+                                      </span>
+                                    </button>
+                                  </Wave>
+                                </Button>
                               </div>
                             </div>
                           </Component>
