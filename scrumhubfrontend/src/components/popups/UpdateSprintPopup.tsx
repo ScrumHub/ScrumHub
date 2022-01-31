@@ -45,7 +45,7 @@ export function UpdateSprintPopup({
           name="finishDate"
           rules={[{ required: true, message: 'Please input the deadline of this sprint!' }]}
         >
-          <DatePicker dateRender={renderDateSprint} defaultValue={moment(data.finishDate, "YYYY-MM-DD")} showToday={true} format={"YYYY-MM-DD"} />
+          <DatePicker defaultValue={moment(data.finishDate, "YYYY-MM-DD")} showToday={true} format={"YYYY-MM-DD"} />
         </Form.Item>
         <FormItemLabel prefixCls="title" label="Title" required={true} />
         <Form.Item

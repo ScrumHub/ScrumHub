@@ -3,19 +3,23 @@ import React, { useState } from 'react';
 import { Modal, Form, Typography, Checkbox, Input, DatePicker, Button } from 'antd';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import TextArea from 'antd/lib/input/TextArea';
-import _ from 'lodash';
+import _, { isNull } from 'lodash';
 import { IAddSprintCollectionCreateFormProps } from './popupInterfaces';
 import { onOkAddSprintPopup } from './popupUtilities';
 import { renderDateSprint } from '../utility/LoadAnimations';
+import { IBacklogItem } from '../../appstate/stateInterfaces';
+import { isArrayValid } from '../utility/commonFunctions';
 /**
  * Returns Popup with a form for adding new {@linkcode ISprint} sprint
  */
 export function AddSprintPopup({
-  data, error, pbiData, visible, onCreate, onCancel,
+  data, pbiData, sprintData, error, visible, onCreate, onCancel,
 }:IAddSprintCollectionCreateFormProps): JSX.Element {
   const [form] = Form.useForm();
   const [loading, setLoading] = React.useState(false);
-  const filteredData = pbiData.filter((item) => item.estimated !== false && item.id !== 0);
+  const filteredData = (isArrayValid(sprintData) ? sprintData.flatMap((sprintData) => sprintData.backlogItems):[] as IBacklogItem[])
+  .concat(isArrayValid(pbiData)?pbiData:[]).filter((item:IBacklogItem) => item.estimated !== false && item.id !== 0).map((b:IBacklogItem)=>{return({...b,isInSprint:false});});
+
   const [temp, setTemp] = useState(filteredData);
   return (
     <Modal
@@ -66,11 +70,11 @@ export function AddSprintPopup({
           <TextArea required={true}
             maxLength={200} />
         </Form.Item>
-        {filteredData && filteredData.length > 0 && <FormItemLabel prefixCls="backlogItems" label="Backlog Items" required={true} />}
-        {filteredData && filteredData.length > 0 && <Form.List name="backlogItems" initialValue={filteredData}>
-          {(fields) => (
+        {filteredData && isArrayValid(filteredData) && <FormItemLabel prefixCls="backlogItems" label="Backlog Items" required={true} />}
+        {filteredData && isArrayValid(filteredData) && <Form.List name="backlogItems" initialValue={filteredData}>
+          { (fields) => (
             <>
-              {fields.map(({ key, name }) => (
+              {isArrayValid(fields) && fields.map(({ key, name }) => (
                 <Form.Item key={key} name={key} style={{ marginBottom: "4px" }}>
                   <Checkbox checked={temp[key].isInSprint === true}
                     onClick={() => {
@@ -78,7 +82,7 @@ export function AddSprintPopup({
                       temp2[key].isInSprint = !temp2[key].isInSprint;
                       setTemp(temp2);
                       form.setFieldsValue({ "backlogItems": temp2 });
-                    } }>{filteredData[key].name + (filteredData[key].isInSprint ? " from Sprint " + filteredData[key].sprintNumber : "")}</Checkbox>
+                    } }>{filteredData[key].name + (!isNull(filteredData[key].sprintNumber) ? " from Sprint " + filteredData[key].sprintNumber : "")}</Checkbox>
                 </Form.Item>
               ))}
             </>

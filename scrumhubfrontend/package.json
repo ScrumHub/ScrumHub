@@ -30,6 +30,7 @@
   "scripts": {
     "start": "concurrently \"set NODE_OPTIONS='--no-warnings --loader ts-node/esm' && nodemon -e ts,tsx --exec node --loader ts-node/esm server/index.ts \" \"react-scripts --openssl-legacy-provider start\" ",
     "startWeb": "react-scripts --openssl-legacy-provider start",
+    "prod": "concurrently \"set NODE_OPTIONS='--no-warnings --loader ts-node/esm' && nodemon -e ts,tsx --exec node --loader ts-node/esm server/index.ts \" \"set NODE_ENV=production && react-scripts --openssl-legacy-provider start\" ",
     "build": "react-scripts --openssl-legacy-provider build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

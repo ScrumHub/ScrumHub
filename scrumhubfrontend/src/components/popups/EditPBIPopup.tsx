@@ -5,6 +5,7 @@ import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import { backlogColors, backlogPriorities, formItemLayoutWithOutLabel } from '../utility/commonInitValues';
 import { IEditPBICollectionCreateFormProps } from './popupInterfaces';
 import { IAddBI } from '../../appstate/stateInterfaces';
+import { onOkEditPBIPopup } from './popupUtilities';
 /**
  * Returns Popup with a form for editing the given {@linkcode IBacklogItem} backlogitem
  */
@@ -12,6 +13,11 @@ export function EditPBIPopup({
   data, visible, onCreate, onCancel, onDelete, onFinish
 }:IEditPBICollectionCreateFormProps): JSX.Element {
   const [form] = Form.useForm();
+  const [loading, setLoading] = React.useState({finish:false, save:false});
+  if(!visible && (loading.finish || loading.save)){
+   form.resetFields();
+   setLoading({finish:false, save:false});
+  }
   return (
     <Modal
       centered={true}
@@ -36,25 +42,17 @@ export function EditPBIPopup({
         <Popconfirm
           key="finInEditPopup"
           title="Are you sure you want to finish this backlog item?"
-          onConfirm={onFinish}
+          onConfirm={()=>
+            {setLoading({...loading, finish:true});onFinish();}}
           onCancel={(e) => { message.info(data.name + " was not finished"); } }
           okText="Yes"
           cancelText="No"
           icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-        ><Button hidden={data.finished} type="primary" key="FinishInEditPopup">
+        ><Button loading={loading.finish} hidden={data.finished} type="primary" key="FinishInEditPopup">
             {"Finish"}</Button>
         </Popconfirm>,
-        <Button key="SaveInEditPopup" type="primary" onClick={() => {
-          form
-            .validateFields()
-            .then((values: IAddBI) => {
-              form.resetFields();
-              onCreate(values as IAddBI);
-            })
-            .catch((info: any) => {
-              console.error('Validate Failed:', info);
-            });
-        } }>
+        <Button loading={loading.save} key="SaveInEditPopup" type="primary" onClick={()=>
+        {setLoading({...loading, save:true});onOkEditPBIPopup(form, onCreate);}}>
           Save
         </Button>
       ]}

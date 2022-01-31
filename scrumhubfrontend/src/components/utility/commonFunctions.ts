@@ -1,4 +1,4 @@
-import { ISprint, ITask } from "../../appstate/stateInterfaces"
+import { IBacklogItem, IPeopleList, IPerson, ISprint, ITask } from "../../appstate/stateInterfaces"
 import { useCallback, useEffect, useRef } from "react";
 import moment from 'moment';
 import { isNull } from "lodash";
@@ -36,7 +36,7 @@ export const isArrayValid = (objectArray: any[]) => {
   return !isNull(objectArray) && typeof (objectArray) !== "undefined" && objectArray.length > 0;
 }
 
-export const isItemDefined = (item: any|undefined) => {
+export const isItemDefined = (item: any | undefined) => {
   return typeof (item) !== "undefined" && !isNull(item);
 }
 
@@ -50,7 +50,7 @@ export function disabledDate(current: any) {
 }
 
 export function dateFormat(date: Date) {
-  return new Date(date as Date).toLocaleString(['en-US'], { year: 'numeric', month: 'short', day: 'numeric' });
+  return new Date(date.toString()).toLocaleString(['en-US'], { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
 export function getDate(date: string) {
@@ -146,4 +146,16 @@ export function useStateAndRefLoading(initial: boolean) {
   const valueRef = useRef(initial);
   valueRef.current = initial;
   return { loading: initial, loadingRef: valueRef };
+}
+
+/** Transforms {@linkcode IPeopleList} peoplelist into filters for assignee column of Task Table */
+export function renderPeopleFilters(people: IPeopleList) {
+  const isValid = people && isArrayValid(people.list);
+  return (isValid ? people.list.map((p: IPerson) => { return ({ text: p.login, value: p.gitHubId }); }) : []);
+}
+
+/** Transforms {@linkcode ITask} task for given {@linkcode IBacklogItem} backlogItem into filters for name column of Task Table */
+export function renderNameFilters(item: IBacklogItem) {
+  const isValid = item && isArrayValid(item.tasks);
+  return (isValid ? item.tasks.map((p: ITask) => { return ({ text: p.name, value: p.pbiId }); }) : []);
 }

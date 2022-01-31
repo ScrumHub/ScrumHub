@@ -9,6 +9,7 @@ import {App} from './App';
 import { Provider } from 'react-redux'
 import { store } from './appstate/store';
 import React from 'react';
+require('dotenv').config();
 
 export const ReactStrictMode = 
 <React.StrictMode>

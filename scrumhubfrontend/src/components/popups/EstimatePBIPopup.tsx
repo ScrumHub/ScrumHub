@@ -25,6 +25,10 @@ export function EstimatePBIPopup({
     else { setSlicedData(isItemDefined(data) && isArrayValid(data.acceptanceCriteria) ? data.acceptanceCriteria.slice(0, slicedData.length + 2).map((data, key) => { return { "key": key, "acceptanceCriteria": data }; }) : []); }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  if(!visible && loading){
+   form.resetFields();
+   setLoading(false);
+  }
   return (
     <Modal
       width={"50vw"}

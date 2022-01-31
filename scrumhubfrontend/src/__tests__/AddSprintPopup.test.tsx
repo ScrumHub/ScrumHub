@@ -39,16 +39,16 @@ describe('AddSprintPopup component in container', () => {
     const onClickValue = { ...initAddPBI, priority: 1 };
     const onCreate = jest.fn().mockReturnValue(initAddPBI).mockReturnValueOnce(initAddPBI).mockReturnValueOnce(onClickValue);
     await render(<AddSprintPopup visible={true}
-      onCreate={function (values: any): void { onCreate()} }
-      onCancel={() => { } } data={initSprint} error={""} pbiData={[initBI]} />);
+    onCreate={function (values: any): void { onCreate(); } }
+    onCancel={() => { } } data={initSprint} error={""} pbiData={[initBI]} sprintData={[]} />);
 
   });
   it('changes on clicking save', async () => {
     const onClickValue = { ...initSprint, title: "Title" };
     const onCreate = jest.fn().mockReturnValue(initSprint).mockReturnValueOnce(initSprint).mockReturnValueOnce(onClickValue);
     const subject = mount(<AddSprintPopup visible={true}
-      onCreate={function (values: any): void { onCreate()} }
-      onCancel={() => { } } data={initSprint} error={""} pbiData={[initBI]} />, { attachTo: document.getElementById('div') });
+    onCreate={function (values: any): void { onCreate(); } }
+    onCancel={() => { } } data={initSprint} error={""} pbiData={[initBI]} sprintData={[]} />, { attachTo: document.getElementById('div') });
       expect(onCreate()).toBe(initSprint);
       await act(async ()=>{
       subject.find("#SaveInAddSprintPopup").at(1).simulate('click');})

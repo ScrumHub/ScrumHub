@@ -1,9 +1,9 @@
 import { Badge, Button, Dropdown, Popconfirm, Popover, Space } from "antd";
-import { IPeopleList, ITask, IPerson } from "../../appstate/stateInterfaces";
+import { IPeopleList, ITask, IPerson, IBacklogItem } from "../../appstate/stateInterfaces";
 import "../Home.css";
 import "../Main.css";
-import { BranchesOutlined, DownOutlined, LoadingOutlined } from "@ant-design/icons";
-import { isArrayValid, isBranchNotCreated, isInReviewOrFinished } from "../utility/commonFunctions";
+import { BranchesOutlined, DownOutlined, LoadingOutlined, SearchOutlined } from "@ant-design/icons";
+import { isArrayValid, isBranchNotCreated, isInReviewOrFinished, renderNameFilters, renderPeopleFilters } from "../utility/commonFunctions";
 import React from "react";
 import { assignPerson, startTask } from "../utility/BacklogHandlers";
 import { PBIMenuWithPeople } from "../utility/LoadAnimations";
@@ -11,15 +11,25 @@ import { IModals } from "../utility/commonInterfaces";
 
 /*task columns functionalities*/
 
-/**
- * Render name for the given Task
- */
+/** Render name for the given Task*/
 export const taskNameCol = {
   title: "Name",
   align: "left" as const,
   dataIndex: "name",
   width: "32%",
   key: "name",
+  sorter: (a:ITask, b:ITask) => a.name.localeCompare(b.name),
+};
+
+/** Render name for the given Task*/
+export const taskNameSprintCol =(item:IBacklogItem)=> {return({
+  title: "Name",
+  align: "left" as const,
+  dataIndex: "name",
+  width: "32%",
+  key: "name",
+  sorter: (a:ITask, b:ITask) => a.name.localeCompare(b.name),
+})
 };
 
 /**
@@ -30,6 +40,11 @@ export const taskStatusCol = {
   key: "finished",
   width: "22%",
   align: "center" as const,
+  sorter: (a, b) => a.status.length - b.status.length,
+  filters:[{text:"In Progress",value:"inprogress" }, {text:"New", value:"new"}, {text:"Finished", value:"finished"},
+   {text:"In Review", value:"inreview"}],
+  filterSearch:true,
+  onFilter: (value:string, record:ITask) => record.status.toLowerCase().includes(value),
   render: (record: ITask) => (
     <span>
       <Badge size='small' status={record.finished ? "success" : "error"} />
@@ -38,13 +53,24 @@ export const taskStatusCol = {
   ),
 };
 
-/**
- * Render people assigned to the given Task
- */
+/** Render people assigned to the given Task*/
 export const taskPplCol = (peopleFilter: string[], token: string, ownerName: string, people: IPeopleList) => {
   return ({
     key: "isAssignedToPBI", title: "Assignees", width: "22%", align: "center" as const,
-    filterIcon: <></>, filters: [], filteredValue: peopleFilter || null,
+    filterIcon: <SearchOutlined/>, filteredValue: peopleFilter || null,
+    filters:renderPeopleFilters(people),
+    onFilter: (value: any, task: ITask) => isArrayValid(peopleFilter) && isArrayValid(task.assigness) ?
+      task.assigness.filter((person: IPerson) => { return (peopleFilter.includes(person.login)) }).length > 0 : '',
+    render: (record: ITask) => peopleDropdown(record, token, ownerName, people),
+  })
+};
+
+/** Render people assigned to the given Task for Sprint Backlog View*/
+ export const taskPplSprintCol = (peopleFilter: string[], token: string, ownerName: string, people: IPeopleList) => {
+  return ({
+    key: "isAssignedToPBI", title: "Assignees", width: "22%", align: "center" as const,
+    filterIcon: <SearchOutlined/>, filterMultiple:true,
+    filters:renderPeopleFilters(people),
     onFilter: (value: any, task: ITask) => isArrayValid(peopleFilter) && isArrayValid(task.assigness) ?
       task.assigness.filter((person: IPerson) => { return (peopleFilter.includes(person.login)) }).length > 0 : '',
     render: (record: ITask) => peopleDropdown(record, token, ownerName, people),
@@ -57,7 +83,7 @@ export const taskPplCol = (peopleFilter: string[], token: string, ownerName: str
 export const taskBranchCol = (token: string, ownerName: string, setIsModal: React.Dispatch<React.SetStateAction<IModals>>, 
   isModal: IModals) => {
   return ({
-    title: "Start Branch", key: "branch", width: "12%", align: "center" as const,
+    title: "Branch", key: "branch", width: "12%", align: "center" as const,
     render: (record: ITask) => {
       let save = false;
       return (save ? <LoadingOutlined /> : isBranchNotCreated(record.status) ?
@@ -86,7 +112,7 @@ export const taskBranchCol = (token: string, ownerName: string, setIsModal: Reac
  * Render github link for the given Task
  */
 export const taskGhLinkCol = {
-  title: "Related Link",
+  title: "",
   dataIndex: "link",
   key: "link",
   width: "12%",

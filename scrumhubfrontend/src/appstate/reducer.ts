@@ -313,7 +313,6 @@ export function reducerFunction(initState: IState) {
     },
     [Actions.updateAllTasks.type]: (state: IState, payload: PayloadAction<any>) => {
       let newState = _.cloneDeep(state);
-      //console.log(payload);
       return updateAllTasksSWR(newState, payload.payload as ITask[]);
     },
     [Actions.addUnassignedTasksToPBI.pending.toString()]: (state: IState, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
@@ -359,7 +358,6 @@ export function reducerFunction(initState: IState) {
     },
     [Actions.assignTaskToPBIThunk.fulfilled.toString()]: (state: IState, payload: PayloadAction<RequestResponse<IBacklogItem, number>>) => {
       let newState = _.cloneDeep(state);
-      //  console.log(payload.payload.response as ITask);
       return updateOnDragStateTasks(newState, payload.payload.response as ITask);
     },
     [Actions.assignTaskToPBIThunk.rejected.toString()]: (state: IState, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {

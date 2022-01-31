@@ -41,7 +41,7 @@ export function Login(props: any) {
         <span className="errorSpan">{data.errorMessage}</span>
         <div className="loginContainer">
           {data.isLoading ?
-            <Button icon={<LoadingOutlined />} type="primary" size="large" className="loginButton">
+            <Button onClick={(e)=>{e.preventDefault()}} icon={<LoadingOutlined/>} type="primary" size="large" className="loginButtonDisabled">
             </Button> :
             <Button size="large" type="primary" href={`https://github.com/login/oauth/authorize?scope=repo&client_id=${loginState.client_id}&redirect_uri=${loginState.redirect_uri}`} className="loginButton">
               {<span className="loginButtonSpan">

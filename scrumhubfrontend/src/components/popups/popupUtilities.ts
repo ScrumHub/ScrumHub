@@ -14,7 +14,6 @@ export function onOkAddPBIPopup(form: FormInstance<any>, onCreate: (values: IAdd
 export function onOkEstimatePBIPopup(form: FormInstance<any>, onCreate: (values: any) => void, estimate:number) {
   form.validateFields()
     .then((values: { expectedTimeInHours: number }) => {
-      form.resetFields();
       onCreate({ expectedTimeInHours: estimate });
     })
     .catch((info: any) => {
@@ -39,6 +38,16 @@ export function onOkAddTaskPopup(form: FormInstance<any>, onCreate: (values: { n
     .validateFields()
     .then((values: { name: string; }) => {
       onCreate(values);
+    })
+    .catch((info: any) => {
+      console.error('Validate Failed:', info);
+    });
+};
+
+export function onOkEditPBIPopup(form: FormInstance<any>, onCreate:(values: IAddBI) => void) {
+  form.validateFields()
+    .then((values: IAddBI) => {
+      onCreate(values as IAddBI);
     })
     .catch((info: any) => {
       console.error('Validate Failed:', info);

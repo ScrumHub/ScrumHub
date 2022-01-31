@@ -17,7 +17,7 @@ export const TaskTableComponent = React.memo((props: any) => {
     id="table"
     size="small"
     loading={!props.item || (props.item && loadingKeys.includes(props.item.id))}
-    showHeader={false}
+    showHeader={props.showHeader}
     rowKey={(record: ITask) => record.id}
     columns={props.taskColumns}
     components={props.taskComponents}

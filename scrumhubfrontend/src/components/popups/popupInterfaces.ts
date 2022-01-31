@@ -48,9 +48,10 @@ export interface IUpdateSprintCollectionCreateFormProps {
     onCancel: () => void;
 }
 export interface IAddSprintCollectionCreateFormProps {
-    data: ISprint;
+    data:ISprint
     error: string;
     pbiData: IBacklogItem[];
+    sprintData: ISprint[];
     visible: boolean;
     onCreate: (values: ISprint) => void;
     onCancel: () => void;

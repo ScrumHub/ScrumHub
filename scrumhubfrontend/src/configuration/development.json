@@ -1,7 +1,7 @@
 {
   "environment_name": "Development",
   "backend": {
-    "ip": "http://localhost",
+    "ip": "https://localhost",
     "port": 7033
   },
   "defaultFilters": {

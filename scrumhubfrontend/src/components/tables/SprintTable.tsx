@@ -52,7 +52,8 @@ export const SprintTableComponent = React.memo((props: any) => {
         style={{ height: "auto", visibility: !props.loading && !isArrayValid(props.data) ? "hidden" : "visible" }}
         scroll={{ x: 800 }}
         size="small"
-        loading={props.loading || (isArrayValid(props.data) && loadingKeys.filter((v: number) => props.data.map((sprint: ISprint) => { return (sprint.sprintNumber) }).includes(v)).length > 0)}
+        loading={props.loading || (isArrayValid(props.data) && 
+          loadingKeys.filter((v: number) => props.data.map((sprint: ISprint) => { return (sprint.sprintNumber) }).includes(v)).length > 0)}
         showHeader={false}
         bordered={false}
         pagination={false}

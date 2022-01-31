@@ -1,14 +1,16 @@
-import { EditOutlined, HomeOutlined } from '@ant-design/icons';
+import { EditOutlined, HomeOutlined, SearchOutlined } from '@ant-design/icons';
 import { Tag, Button } from 'antd';
+import Search from 'antd/lib/input/Search';
 import { NavigateFunction } from 'react-router';
-import { IPeopleList, IBacklogItem, ISprint } from '../../appstate/stateInterfaces';
+import { IPeopleList, IBacklogItem, ISprint, ITask } from '../../appstate/stateInterfaces';
 import "../Home.css";
 import "../Main.css";
+import { isArrayValid } from '../utility/commonFunctions';
 import { backlogPriorities, backlogColors, pbiFilterVals } from '../utility/commonInitValues';
 import { IModals, ISortedInfo, IFilteredInfo } from '../utility/commonInterfaces';
 import { pbiNameCol, pbiProgressCol, pbiToDoCol, pbiPriorityCol, pbiStoryPointsCol, pbiStatusCol, pbiActionCol, PriorityDropdown } from './PBITableColumns';
 import { sprintNrCol, sprintTitleCol, sprintDateCol, sprintStoryPtsCol, sprintStatusCol, sprintActCol } from './SprintTableColumns';
-import { taskNameCol, taskStatusCol, taskPplCol, taskBranchCol, taskGhLinkCol } from './TaskTableColumns';
+import { taskNameCol, taskStatusCol, taskPplCol, taskBranchCol, taskGhLinkCol, taskPplSprintCol, taskNameSprintCol } from './TaskTableColumns';
 
 export const dragCmpnts = (DraggableBodyRow: any) => { return ({ body: { row: DraggableBodyRow, }, }) };
 
@@ -64,11 +66,20 @@ export const routes = (ownerName: string | null, sprintID: string, location: any
       icon: <HomeOutlined />,
     }];
 
-   export  const pbiSprintColumns = (sortedInfo,pbiKeys:number[],token: string, ownerName: string,setSelectedPBI: React.Dispatch<React.SetStateAction<IBacklogItem>>, isModal: IModals,
+/**
+ * Renders Name, Progress, toDo, Story Points, Status, addTask columns
+ * @returns columns for Backlog Item Table in Sprint Backlog View
+ */
+   export  const pbiSprintColumns = (onSearch,sortedInfo,nameFilter, pbiKeys:number[],token: string, ownerName: string,setSelectedPBI: React.Dispatch<React.SetStateAction<IBacklogItem>>, isModal: IModals,
       setIsModal: React.Dispatch<React.SetStateAction<IModals>>) => {
       return ([
       {
-        title: 'Name', width: "33%", ellipsis: true, sorter: {
+        title: 'Name', width: "33%", ellipsis: true,
+        filterIcon: <SearchOutlined/>, filterDropdown:()=>
+        <Search autoComplete='on' placeholder="Input Backlog Item name" onSearch={onSearch} enterButton />,
+        filters: [], filteredValue: nameFilter || null,
+        onFilter: (value: any, record: IBacklogItem) => isArrayValid(nameFilter) ? record.name.toLowerCase().includes(nameFilter.at(0).toLowerCase()) : '',
+        sorter: {
           compare: (a: IBacklogItem, b: IBacklogItem) => a.name > b.name,
           multiple: 1,
         }, align: "left" as const, key: 'name', render: (item: IBacklogItem) => {
@@ -101,3 +112,13 @@ export const routes = (ownerName: string | null, sprintID: string, location: any
       },
       pbiStatusCol(sortedInfo),
       pbiActionCol(setSelectedPBI, isModal, setIsModal)])};
+
+/**
+ * Renders name, status, assignees, createBranch, GitHub link columns
+ * @returns columns for Task Table in Sprint Backlog View
+ */
+export const taskSprintColumns = (item:IBacklogItem, peopleFilter: string[], token: string, ownerName: string, people: IPeopleList,
+  setIsModal: React.Dispatch<React.SetStateAction<IModals>>, isModal: IModals) => {
+  return ([taskNameSprintCol(item), taskStatusCol, taskPplSprintCol(peopleFilter, token, ownerName, people),
+    taskBranchCol(token, ownerName, setIsModal, isModal), taskGhLinkCol])
+};

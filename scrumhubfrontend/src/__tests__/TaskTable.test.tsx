@@ -69,7 +69,7 @@ describe('TaskTable component in container', () => {
   it('is the same as snapshot', () => {
     const subject = shallow(<Provider store={store}>
       <DndProvider backend={HTML5Backend} key={"dnd_sprint"}><TaskTableComponent 
-      peopleFilter={[] as string[]} item={initBI}
+      peopleFilter={[] as string[]} item={initBI} showHeader={true}
       taskColumns={taskColumns([] as string[], "token", "ownerName", initPeopleList, useStateMock, initModalVals)}
       taskComponents={dragCmpnts(TestDraggableBodyRow)} /></DndProvider></Provider>);
       expect(EnzymeToJson(subject)).toMatchSnapshot();

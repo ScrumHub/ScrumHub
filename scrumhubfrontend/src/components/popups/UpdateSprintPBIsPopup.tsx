@@ -49,7 +49,7 @@ export function UpdateSprintPBIsPopup({
           name="finishDate"
           rules={[{ required: true, message: 'Please input the deadline of this sprint!' }]}
         >
-          <DatePicker dateRender={renderDateSprint} showToday={true} format={"YYYY-MM-DD"} />
+          <DatePicker showToday={true} format={"YYYY-MM-DD"} />
         </Form.Item>
         <FormItemLabel prefixCls="title" label="Title" required={true} />
         <Form.Item

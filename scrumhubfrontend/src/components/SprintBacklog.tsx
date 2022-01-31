@@ -11,7 +11,7 @@ import { PBITableComponent } from './tables/PBITable';
 import { TaskTableComponent } from './tables/TaskTable';
 import { canDropTask, dateFormat, isArrayValid, isItemDefined, isSprintLoaded, useStateAndRefLoading, useTasksRef } from './utility/commonFunctions';
 import SkeletonList from './utility/LoadAnimations';
-import { addPBIToRepo, addTaskToPBI, fetchBacklog, updateTask } from './utility/BacklogHandlers';
+import { addPBIToRepo, addTaskToPBI, deletePBItemInRepo, editPBItemInRepo, estimatePBItemInRepo, fetchBacklog, finishPBItemInRepo, updateTask } from './utility/BacklogHandlers';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
 import { useDrop, useDrag, DndProvider } from 'react-dnd';
 import { initFilterSortInfo, initModalVals } from './utility/commonInitValues';
@@ -26,7 +26,7 @@ import { UpdateSprintPopup } from './popups/UpdateSprintPopup';
 import _ from 'lodash';
 import { requestFetchRateLimit, requestFetchAllRepoTasks } from '../appstate/fetching';
 import { type } from './ProductBacklog';
-import { pbiColumns, pbiSprintColumns, taskColumns } from './tables/TableUtilities';
+import { pbiColumns, pbiSprintColumns, taskColumns, taskSprintColumns } from './tables/TableUtilities';
 import { AddPBIPopup } from './popups/AddPBIPopup';
 
 /**
@@ -38,7 +38,7 @@ export function SprintBacklog() {
   const pbiKeys = useSelector((appState: IState) => appState.loadingKeys.pbiKeys as number[]);
   const { loading, loadingRef } = useStateAndRefLoading(useSelector((appState: IState) => appState.loading as boolean));
   const [infos, setInfos] = useState(initFilterSortInfo);
-  const [filterPBI, setFiltersPBI] = useState<IFilters>({ nameFilter: "", peopleFilter: [] });
+  const [filterPBI, setFiltersPBI] = useState<IFilters>({ nameFilter: [] as string[], peopleFilter: [], taskNameFilter:[] as string[] });
   const people = useSelector((appState: IState) => appState.people as IPeopleList);
   const [isModal, setIsModal] = useState<IModals>(initModalVals);
   const navigate = useNavigate();
@@ -48,7 +48,6 @@ export function SprintBacklog() {
   const sprintPage = useSelector((appState: IState) => appState.openSprint as ISprint);
   const pbiPage = useSelector((appState: IState) => appState.pbiPage);
   const sprints = useSelector((appState: IState) => appState.pbiPage);
-
   const location = useLocation();
   useEffect(() => {
     if (initialRefresh) {
@@ -56,8 +55,8 @@ export function SprintBacklog() {
       store.dispatch(Actions.fetchPeopleThunk({ ownerName, token }));
       if(!isArrayValid(sprints.list) || !isArrayValid(pbiPage.list)|| !isArrayValid(tasks.current)){
         fetchBacklog(true,ownerName, token);
-        store.dispatch(Actions.fetchRepoTasksThunk({ token: token, ownerName: ownerName }));
       }
+      store.dispatch(Actions.fetchRepoTasksThunk({ token: token, ownerName: ownerName }));
       setInitialRefresh(false);
     }// eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialRefresh, location]);
@@ -76,53 +75,6 @@ export function SprintBacklog() {
       }, 6000);
     return () => clearInterval(timer);// eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const estimatePBI = (pbi: IBacklogItem) => {
-    try {
-      store.dispatch(Actions.estimatePBIThunk({ ownerName: ownerName, token: token, pbiId: selectedPBI.id, hours: pbi.expectedTimeInHours }));
-    } catch (err) { console.error("Failed to estimate the pbis: ", err); }
-    finally {
-      setIsModal({ ...isModal, estimatePBI: false });
-      setSelectedPBI({} as IBacklogItem);
-      //setInitialRefresh(true);
-    }
-  };
-  const editPBI = (pbi: IAddBI) => {
-    setIsModal({ ...isModal, editPBI: false });//check if all elements of acceptanceCriteria array are defined    
-    pbi.acceptanceCriteria = pbi.acceptanceCriteria.filter((value: any) => { return (typeof (value) === "string"); });
-    try {
-      store.dispatch(Actions.editPBIThunk({ ownerName: ownerName, token: token, pbi: pbi, pbiId: selectedPBI.id, }));
-    } catch (err) { console.error("Failed to edit the pbis: ", err); }
-    finally {
-      setSelectedPBI({} as IBacklogItem);
-    }
-  };
-  const finishPBI = (item: IBacklogItem) => {
-    setIsModal({ ...isModal, editPBI: false });
-    try {
-      store.dispatch(
-        Actions.finishPBIThunk({
-          ownerName: ownerName,
-          token: token,
-          pbiId: item.id
-        })
-      );
-    } catch (err) { console.error("Failed to finish the pbis: ", err); }
-    finally {
-      setSelectedPBI({} as IBacklogItem);
-      //setInitialRefresh(true);
-    }
-  }
-  const deletePBI = (item: IBacklogItem) => {
-    setIsModal({ ...isModal, editPBI: false });
-    store.dispatch(Actions.deletePBIThunk({ ownerName: ownerName, token: token, pbiId: item.id as number }))
-      .then((response: any) => {
-        if (response.payload && response.payload.code === 204) {
-          store.dispatch(Actions.fetchOneSprintThunk({ token: token, ownerName: ownerName, sprintNumber: sprintID }));
-          setSelectedPBI({} as IBacklogItem);
-        }
-      })
-  }
   const updateSprint = (sprint: ISprint) => {
     setIsModal({ ...isModal, updateSprint: false });
     const sprintNr = sprintPage.sprintNumber;
@@ -199,9 +151,11 @@ export function SprintBacklog() {
   };
   const nestedcomponents = { body: { row: DraggableBodyRow, }, };
   const TaskTableforPBI: React.FC<IBacklogItem> = (item: IBacklogItem) => {
-    return (<TaskTableComponent peopleFilter={filterPBI.peopleFilter} item={item}
-      taskColumns={taskColumns(filterPBI.peopleFilter, token, ownerName, people, setIsModal, isModal)} taskComponents={nestedcomponents} />)
+    return (<TaskTableComponent peopleFilter={filterPBI.peopleFilter} item={item} showHeader={true}
+      taskColumns={taskSprintColumns(item, filterPBI.peopleFilter, token, ownerName, people, setIsModal, isModal)} taskComponents={nestedcomponents} />)
   };
+  const onSearch = (value: string) => { setFiltersPBI({ ...filterPBI, nameFilter: value !== "" ? [value.toLowerCase()] : [] }); };
+  const onSearchTask = (value: string) => { setFiltersPBI({ ...filterPBI, taskNameFilter: value !== "" ? [value.toLowerCase()] : [] }); };
   return (
     <div style={{ marginLeft: "2%", marginRight: "2%", marginTop: 0, marginBottom: "1%" }}>
       <SkeletonList width={true} loading={sprintPage == null || isSprintLoaded(sprintID, sprintPage, false)} number={2} />
@@ -227,16 +181,16 @@ export function SprintBacklog() {
         {sprintPage && sprintPage.backlogItems && isSprintLoaded(sprintID, sprintPage, true) &&
           <PBITableComponent loading={loading || initialRefresh} sortedInfo={infos.sortedInfo} TaskTableforPBI={TaskTableforPBI}
             nameFilter={filterPBI.nameFilter} peopleFilter={filterPBI.peopleFilter} item={sprintPage}
-            pbiColumns={pbiSprintColumns(infos.sortedInfo,pbiKeys, token, ownerName, setSelectedPBI, isModal, setIsModal)} nestedcomponents={nestedcomponents} />}
+            pbiColumns={pbiSprintColumns(onSearch,infos.sortedInfo,filterPBI.nameFilter, pbiKeys, token, ownerName, setSelectedPBI, isModal, setIsModal)} nestedcomponents={nestedcomponents} />}
       </DndProvider>
       {isModal.editPBI && selectedPBI && selectedPBI.id &&
         <EditPBIPopup data={selectedPBI} visible={isModal.editPBI}
-          onCreate={function (values: any): void { editPBI(values) }} onDelete={() => { deletePBI(selectedPBI) }}
-          onFinish={() => { finishPBI(selectedPBI) }}
+          onCreate={function (values: any): void { editPBItemInRepo(values,ownerName,token, selectedPBI.id, setIsModal,isModal,setSelectedPBI) }} onDelete={() => { deletePBItemInRepo(selectedPBI,ownerName,token, setIsModal,isModal,setSelectedPBI) }}
+          onFinish={() => { finishPBItemInRepo(selectedPBI,ownerName,token, setIsModal,isModal,setSelectedPBI) }}
           onCancel={() => { setIsModal({ ...isModal, editPBI: false }); setSelectedPBI({} as IBacklogItem); }} />}
       {isModal.estimatePBI && selectedPBI && selectedPBI.id &&
         <EstimatePBIPopup data={selectedPBI as IBacklogItem} visible={isModal.estimatePBI}
-          onCreate={function (values: any): void { estimatePBI(values) }}
+          onCreate={function (values: any): void { estimatePBItemInRepo(values, ownerName,token,selectedPBI.id,setIsModal, isModal, setSelectedPBI) }}
           onCancel={() => { setIsModal({ ...isModal, estimatePBI: false }); setSelectedPBI({} as IBacklogItem); }} />}
       {isModal.addTask &&
         <AddTaskPopup data={{ name: "" } as IFilters} visible={isModal.addTask}

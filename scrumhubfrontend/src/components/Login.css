@@ -67,6 +67,35 @@
   width: 100%;
 }
 
+.loginButtonDisabled {
+  background-color: black;
+  border-color: black;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: clip;
+  width: 100%;
+  pointer-events: none;
+  cursor: default;
+}
+
+.loginButtonDisabled:hover {
+  background-color: black;
+  border-color: black;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: clip;
+  width: 100%;
+}
+
+.loginButtonDisabled::after {
+  background-color: black;
+  border-color: black;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: clip;
+  width: 100%;
+}
+
 .loginButtonSpan {
   color: white;
   font-family: "Montserrat";

@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { Avatar, Badge, Button, Dropdown, Input, Space, } from 'antd';
 import 'antd/dist/antd.css';
 import "./Project.css";
-import { IFilters, IPeopleList, IBacklogItemList, IState } from '../appstate/stateInterfaces';
+import { IFilters, IPeopleList, IBacklogItemList, IState, ISprintList } from '../appstate/stateInterfaces';
 import { useSelector } from 'react-redux';
 import { DownOutlined, FilterOutlined, UserOutlined } from '@ant-design/icons';
 import { ProductBacklog } from './ProductBacklog';
@@ -20,14 +20,16 @@ import { initSprint } from '../appstate/stateInitValues';
 import { initFilterMenu, initFilterSortInfo, initSortedInfo } from './utility/commonInitValues';
 import { isArrayValid } from './utility/commonFunctions';
 import { ISortedInfo } from './utility/commonInterfaces';
-import { addPBIToRepo, addSprintToRepo } from './utility/BacklogHandlers';
+import { addPBIToRepo, addSprintToRepo, unassignPBIsFromSprint } from './utility/BacklogHandlers';
 const { Search } = Input;
 
 /** Renders Product Backlog View*/
 export const Project = React.memo((props: any) => {
   const isLoggedIn = useSelector((appState: IState) => appState.loginState.isLoggedIn);
+  const loading = useSelector((appState: IState) => appState.sprintRequireRefresh || appState.reposRequireRefresh);
   const token = useSelector((appState: IState) => appState.loginState.token);
   const pbiPage = useSelector((appState: IState) => appState.pbiPage as IBacklogItemList);
+  const sprintPage = useSelector((appState: IState) => appState.sprintPage as ISprintList);
   const [initialRefresh, setInitialRefresh] = useState(true);
   const [infos, setInfos] = useState(initFilterSortInfo);
   const [filterMenu, setFilterMenu] = useState(initFilterMenu);
@@ -38,6 +40,7 @@ export const Project = React.memo((props: any) => {
   const people = useSelector((appState: IState) => appState.people as IPeopleList);
   const [isAddPBI, setIsAddPBI] = useState(false);
   const [isAddSprint, setIsAddSprint] = useState(false);
+  const [finishLoad, setFinishLoad] = useState(false);
   const error = useSelector((appState: IState) => appState.error);
 
   const updatePplFilter = (items: string[]) => { setFiltersPBI({ ...filterPBI, peopleFilter: items }); };
@@ -63,7 +66,7 @@ export const Project = React.memo((props: any) => {
     <div id="projectDiv" className='projectDiv'>
       <Space wrap direction="horizontal" split={true} onMouseLeave={() => setFilterMenu(initFilterMenu)}
         className='projectSpace' style={{ marginBottom: "0.5%" }}>
-        <Button type="primary" onClick={() => { setIsAddSprint(true); }}>{"Create Sprint"}</Button>
+        <Button loading={loading || finishLoad} type="primary" onClick={() => { setIsAddSprint(true); }}>{"Create Sprint"}</Button>
         <Button type="primary" onClick={() => { setIsAddPBI(true); }}>{"Add Product Backlog Item"}</Button>
         <Search autoComplete='on' onMouseEnter={() => setFilterMenu(initFilterMenu)} placeholder="Input Backlog Item name" onSearch={onSearch} enterButton />
         <Badge status={"error"} count={isArrayValid(infos.filteredInfo.complete) || isArrayValid(infos.filteredInfo.pbiPriority) ? 2 : 0}
@@ -122,8 +125,9 @@ export const Project = React.memo((props: any) => {
         sortedInfo={infos.sortedInfo} filteredInfo={infos.filteredInfo} peopleFilter={filterPBI.peopleFilter}
         nameFilter={filterPBI.nameFilter} />
       {isAddSprint && <AddSprintPopup error={error.erorMessage} data={initSprint} visible={isAddSprint}
-        onCreate={function (values: any): void { addSprintToRepo(values, ownerName, token, setIsAddSprint); }}
-        onCancel={() => { setIsAddSprint(false); }} pbiData={pbiPage.list} />}
+        onCreate={function (sprint: any): void { 
+          unassignPBIsFromSprint(sprint,setIsAddSprint,sprintPage, token,ownerName, setFinishLoad); }}
+        onCancel={() => { setIsAddSprint(false); }} pbiData={pbiPage && isArrayValid(pbiPage.list)?pbiPage.list:[]} sprintData={sprintPage && isArrayValid(sprintPage.list)?sprintPage.list:[]} />}
       {isAddPBI && <AddPBIPopup visible={isAddPBI}
         onCreate={function (values: any): void { addPBIToRepo(values, ownerName, token, setIsAddPBI) }}
         onCancel={() => { setIsAddPBI(false); }} />}

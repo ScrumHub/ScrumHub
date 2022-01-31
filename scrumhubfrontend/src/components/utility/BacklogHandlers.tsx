@@ -4,6 +4,7 @@ import * as Actions from '../../appstate/actions';
 import { initPBIFilter } from "../../appstate/stateInitValues";
 import { isArrayValid } from "./commonFunctions";
 import { BodyRowProps, IModals } from "./commonInterfaces";
+import { isNull } from "lodash";
 
 /**
  * Dispatches an action for unassigning and assigning {@linkcode IPerson} person for the given {@linkcode ITask} task
@@ -169,12 +170,14 @@ export function fetchBacklog(refreshRequired: boolean, ownerName: any, token: an
                 store.dispatch(Actions.fetchRepoTasksThunk({ token: token, ownerName: ownerName }));
               }
             })
-          }})
-        }});
-
-
+          }
+        })
       }
-    }
+    });
+
+
+  }
+}
 /**
  * Dispatches an action that updates Product BackXlog after {@linkcode IBacklogItem} backlogItem is dragged and dropped
   * @param {boolean} refreshRequired True if Product Backlog should be reloaded
@@ -183,56 +186,149 @@ export function fetchBacklog(refreshRequired: boolean, ownerName: any, token: an
  * @param {string} token Authorization token from GitHub
  */
 export function updateDragPBIs(refreshRequired: boolean, shouldClearKey: boolean, ownerName: any, token: any) {
-      if (refreshRequired && ownerName && ownerName !== "") {
-        store.dispatch(Actions.fetchPBIsThunk({
-          ownerName: ownerName, token: token,
-          filters: { ...initPBIFilter, inSprint: false, onePage: true }
-        })).then((response: any) => {
-          if (response.payload && response.payload?.code === 200 && shouldClearKey) {
-            store.dispatch(Actions.updateSprintLoadingKeys([0]));
-          }
-        });
+  if (refreshRequired && ownerName && ownerName !== "") {
+    store.dispatch(Actions.fetchPBIsThunk({
+      ownerName: ownerName, token: token,
+      filters: { ...initPBIFilter, inSprint: false, onePage: true }
+    })).then((response: any) => {
+      if (response.payload && response.payload?.code === 200 && shouldClearKey) {
+        store.dispatch(Actions.updateSprintLoadingKeys([0]));
       }
-    }
-    /** Dispatches an action that adds {@linkcode ITask} task to {@linkcode IBacklogItem} backlogItem */
-    export const addTaskToPBI = (input: IFilters, token: string, ownerName: string, selectedPBIid: number, setIsModal: React.Dispatch<React.SetStateAction<IModals>>, isModal: IModals, setSelectedPBI: React.Dispatch<React.SetStateAction<IBacklogItem>>) => {
-      store.dispatch(Actions.addTaskThunk({ token: token, ownerName: ownerName, pbiId: selectedPBIid, name: input.name }))
-        .then((response: any) => { setIsModal({ ...isModal, addTask: false }); setSelectedPBI({} as IBacklogItem); }).catch((info: any) => {
-          console.error('Validate Failed:', info);
-        });
-    };
+    });
+  }
+}
+/** Dispatches an action that adds {@linkcode ITask} task to {@linkcode IBacklogItem} backlogItem */
+export const addTaskToPBI = (input: IFilters, token: string, ownerName: string, selectedPBIid: number, setIsModal: React.Dispatch<React.SetStateAction<IModals>>, isModal: IModals, setSelectedPBI: React.Dispatch<React.SetStateAction<IBacklogItem>>) => {
+  store.dispatch(Actions.addTaskThunk({ token: token, ownerName: ownerName, pbiId: selectedPBIid, name: input.name }))
+    .then((response: any) => { setIsModal({ ...isModal, addTask: false }); setSelectedPBI({} as IBacklogItem); }).catch((info: any) => {
+      console.error('Validate Failed:', info);
+    });
+};
 
-    /** Dispatches an action that adds {@linkcode IBacklogItem} backlogItem to {@linkcode IRepository} repository */
-    export function addPBIToRepo(pbi: IAddBI, ownerName: string, token: string, setIsAddPBI: React.Dispatch<React.SetStateAction<boolean>>) {
-      pbi.acceptanceCriteria = pbi.acceptanceCriteria.filter((value: any) => { return (typeof (value) === "string"); });
-      store.dispatch(
-        Actions.addPBIThunk({
-          ownerName: ownerName,
-          token: token,
-          pbi: pbi
-        })
-      ).then((response: any) => { setIsAddPBI(false); }).catch((info: any) => {
-        console.error('Validate Failed:', info);
+/** Dispatches an action that adds {@linkcode IBacklogItem} backlogItem to {@linkcode IRepository} repository */
+export function addPBIToRepo(pbi: IAddBI, ownerName: string, token: string, setIsAddPBI: React.Dispatch<React.SetStateAction<boolean>>) {
+  pbi.acceptanceCriteria = pbi.acceptanceCriteria.filter((value: any) => { return (typeof (value) === "string"); });
+  store.dispatch(
+    Actions.addPBIThunk({
+      ownerName: ownerName,
+      token: token,
+      pbi: pbi
+    })
+  ).then((response: any) => { setIsAddPBI(false); }).catch((info: any) => {
+    console.error('Validate Failed:', info);
+  });
+}
+
+/** Dispatches an action that adds {@linkcode ISprint} sprint to {@linkcode IRepository} repository */
+export function addSprintToRepo(ids: string[], sprint: ISprint, ownerName: string, token: string, setFinishLoad) {
+  store.dispatch(
+    Actions.addSprintThunk({
+      token: token as string,
+      ownerName: ownerName as string,
+      sprint: { "title": sprint.title, "finishDate": sprint.finishDate, "goal": sprint.goal, "pbIs": ids }
+    })
+  ).then((response: any) => { if (response.payload && response.payload.code === 201) {setFinishLoad(false); } }).catch((info: any) => {
+    console.error('Validate Failed:', info);
+  });
+}
+
+/** Draggable row of the table, intended for testing */
+export const TestDraggableBodyRow = ({ index: index_row, bodyType, record, className, style, ...restProps }: BodyRowProps) => {
+  return (<tr className={`${className}${''}`}
+    style={{ cursor: "default", ...style }} {...restProps} />
+  );
+};
+
+/** Dispatches an action that estimates Story Points for {@linkcode IBacklogItem} backlogItem in {@linkcode IRepository} repository */
+export function estimatePBItemInRepo(pbi: IBacklogItem, ownerName: string, token: string, pbiID: number,
+  setIsModal: React.Dispatch<React.SetStateAction<IModals>>, isModal: IModals, setSelectedPBI: React.Dispatch<React.SetStateAction<IBacklogItem>>) {
+  store.dispatch(Actions.estimatePBIThunk({ ownerName: ownerName, token: token, pbiId: pbiID, hours: pbi.expectedTimeInHours }))
+    .then((response: any) => {
+      if (response.payload && response.payload?.code === 200) { setIsModal({ ...isModal, estimatePBI: false }); setSelectedPBI({} as IBacklogItem); }
+    });
+}
+
+/** Dispatches an action that edits Story Points for {@linkcode IBacklogItem} backlogItem in {@linkcode IRepository} repository */
+export function editPBItemInRepo(pbi: IBacklogItem, ownerName: string, token: string, pbiID: number,
+  setIsModal: React.Dispatch<React.SetStateAction<IModals>>, isModal: IModals, setSelectedPBI: React.Dispatch<React.SetStateAction<IBacklogItem>>) {
+  pbi.acceptanceCriteria = pbi.acceptanceCriteria.filter((value: any) => { return (typeof (value) === "string"); });//check if all elements of acceptanceCriteria array are defined    
+  store.dispatch(Actions.editPBIThunk({ ownerName: ownerName, token: token, pbi: pbi, pbiId: pbiID, })).then((response: any) => {
+    if (response.payload && response.payload?.code === 200) { setIsModal({ ...isModal, editPBI: false }); setSelectedPBI({} as IBacklogItem); }
+  });
+};
+/** Dispatches an action that marks {@linkcode IBacklogItem} backlogItem as finished in {@linkcode IRepository} repository */
+export function finishPBItemInRepo(pbi: IBacklogItem, ownerName: string, token: string,
+  setIsModal: React.Dispatch<React.SetStateAction<IModals>>, isModal: IModals, setSelectedPBI: React.Dispatch<React.SetStateAction<IBacklogItem>>) {
+  store.dispatch(Actions.finishPBIThunk({ ownerName: ownerName, token: token, pbiId: pbi.id })).then((response: any) => {
+    if (response.payload && response.payload?.code === 200) { setIsModal({ ...isModal, editPBI: false }); setSelectedPBI({} as IBacklogItem); }
+  });
+}
+
+/** Dispatches an action that deletes {@linkcode IBacklogItem} backlogItem in {@linkcode IRepository} repository */
+export function deletePBItemInRepo(item: IBacklogItem, ownerName: string, token: string,
+  setIsModal: React.Dispatch<React.SetStateAction<IModals>>, isModal: IModals, setSelectedPBI: React.Dispatch<React.SetStateAction<IBacklogItem>>) {
+  store.dispatch(Actions.deletePBIThunk({ ownerName: ownerName, token: token, pbiId: item.id as number }))
+    .then((response: any) => {
+      if (response.payload && response.payload.code === 204) {
+        if (item.isInSprint) { store.dispatch(Actions.clearSprintList()) }
+        else { store.dispatch(Actions.clearPBIsList()); }
+        setSelectedPBI({} as IBacklogItem); setIsModal({ ...isModal, editPBI: false });
+      }
+    })
+}
+
+/**
+ * Removes the {@linkcode IBacklogItem} backlogItems from old {@linkcode ISprint} sprint
+ * @param {ISprintList} sprintPage List of sprints
+ * @param {number} oldSprintId Id of the sprint 
+ * @param {number} pbiIds Id of the backlogItem
+ */
+export function removeItemsFromOldSprint(sprintPage: ISprintList, oldSprintId: number, pbiIds: string[]) {
+  const index = sprintPage.list.findIndex((s: ISprint) => s.sprintNumber === oldSprintId);
+  if (index !== -1) {
+    const oldPbis = sprintPage.list[index].backlogItems.map((i: IBacklogItem) => { return ((pbiIds.includes(i.id.toString()) ? "" : i.id.toString())); }).filter((x: string) => x !== "");
+    return ({
+      "goal": sprintPage.list[index].goal as string, "title": sprintPage.list[index].title as string, "pbIs": oldPbis as string[],
+      "finishDate": new Date(sprintPage.list[index].finishDate as string)
+    });
+  } else {
+    return ({
+      "goal": "", "title": "", "pbIs": {} as string[],
+      "finishDate": new Date(0)
+    });
+  }
+}
+
+export function unassignPBIsFromSprint(sprint: ISprint, setIsAddSprint, sprintPage: ISprintList, token: string, ownerName: string,setFinishLoad) {
+  setIsAddSprint(false);
+  setFinishLoad(true);
+  const ids = sprint.backlogItems.map((value: IBacklogItem) => { return ((value.isInSprint ? value.id.toString() : "")); }).filter((x: string) => x !== "");
+  let unassignIds = sprint.backlogItems.map((value: IBacklogItem) => { return ((value.isInSprint && !isNull(value.sprintNumber) ? value.sprintNumber : -1)); })
+    .filter((x: number) => x !== -1);
+  unassignIds = unassignIds.filter((v, i) => (unassignIds.indexOf(v) === i));
+  const isBacklog = sprint.backlogItems.map((value: IBacklogItem) => { return ((value.isInSprint && isNull(value.sprintNumber) ? value.id : -1)); })
+    .filter((x: number) => x !== -1).length > 0;
+  store.dispatch(Actions.updateSprintLoadingKeys(isBacklog ? [0].concat(unassignIds) : unassignIds));
+  if (isArrayValid(unassignIds)) {
+    unassignIds.map((id: number, index: number) => {
+      store.dispatch(Actions.updateOneSprintThunk({
+        token: token, ownerName: ownerName, sprintNumber: id,
+        sprint: removeItemsFromOldSprint(sprintPage, id, ids)
+      })).then((response: any) => {
+        if (response.payload && response.payload.code === 200 && index + 1 === unassignIds.length) {
+          store.dispatch(Actions.updateSprintLoadingKeys(isBacklog ? [0].concat(unassignIds) : unassignIds));
+          addSprintToRepo(ids, sprint, ownerName, token, setFinishLoad);
+        }
+        else{
+          setFinishLoad(false);
+        }
       });
-    }
+      return (0);
+    })
+  } else {
+    store.dispatch(Actions.updateSprintLoadingKeys(isBacklog?[0]:[]));
+    addSprintToRepo(ids, sprint, ownerName, token, setFinishLoad);
+  }
 
-    /** Dispatches an action that adds {@linkcode ISprint} sprint to {@linkcode IRepository} repository */
-    export function addSprintToRepo(sprint: ISprint, ownerName: string, token: string, setIsAddSprint: React.Dispatch<React.SetStateAction<boolean>>) {
-      const ids = sprint.backlogItems.map((value: IBacklogItem) => { return ((value.isInSprint ? value.id.toString() : "")); }).filter((x: string) => x !== "");
-      store.dispatch(
-        Actions.addSprintThunk({
-          token: token as string,
-          ownerName: ownerName as string,
-          sprint: { "title": sprint.title, "finishDate": sprint.finishDate, "goal": sprint.goal, "pbIs": ids }
-        })
-      ).then((response: any) => { setIsAddSprint(false); }).catch((info: any) => {
-        console.error('Validate Failed:', info);
-      });
-    }
 
-    /** Draggable row of the table, intended for testing */
-    export const TestDraggableBodyRow = ({ index: index_row, bodyType, record, className, style, ...restProps }: BodyRowProps) => {
-      return (<tr className={`${className}${''}`}
-        style={{ cursor: "default", ...style }} {...restProps} />
-      );
-    };
+}
