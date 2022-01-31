@@ -1,7 +1,7 @@
 import { tableKeys } from "../components/utility/commonInterfaces";
 import config from "../configuration/config"
-import { IAddBI, IAssignBI, IFilters, ILoginState, IBIFilter, IPeopleList, IPerson, IBacklogItem, IBacklogItemList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, IState } from "./stateInterfaces";
 import { validateUri } from "./reducerUtilities";
+import { IAddBI, IAssignBI, IFilters, ILoginState, IBIFilter, IPeopleList, IPerson, IBacklogItem, IBacklogItemList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, IState } from "./stateInterfaces";
 const path = require("path");
 require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
 

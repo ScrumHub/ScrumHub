@@ -9,6 +9,7 @@ import { isArrayValid, isNameFilterValid } from "./commonFunctions";
 import { useEffect } from "react";
 import SubMenu from "antd/lib/menu/SubMenu";
 import { backlogColors, backlogPriorities, initFilteredInfo, initSortedInfo } from "./commonInitValues";
+import moment from "moment";
 
 export default function SkeletonList(props: any) {
     const number = props.number ? props.number : 0;
@@ -244,3 +245,16 @@ export function PBIMenuWithPriorities(props:any) {
     </Menu >
     </div>);
 }
+
+export function renderDateSprint(current:any): JSX.Element {
+    const style = {} as any;
+    if (current && current.diff(moment().endOf('day'), 'day') === 13) {
+      style.border = '1px solid #1890ff';
+      style.borderRadius = '50%';
+    }
+    return (
+      <div className="ant-picker-cell-inner" style={style}>
+        {current.date()}
+      </div>
+    );
+  }

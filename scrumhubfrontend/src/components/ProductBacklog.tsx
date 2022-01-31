@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router';
 import { initModalVals } from './utility/commonInitValues';
 import { BodyRowProps, IModals, IProductBacklogProps, IRowIds } from './utility/commonInterfaces';
 import { canDropPBI, canDropTask, isItemDefined, useStateAndRefLoading, useTasksRef, } from './utility/commonFunctions';
-import { taskColumns, dragCmpnts, pbiColumns, sprintColumns } from './utility/TableUtilities';
+import { taskColumns, dragCmpnts, pbiColumns, sprintColumns } from './tables/TableUtilities';
 import { PBITableComponent } from './tables/PBITable';
 import { SprintTableComponent } from './tables/SprintTable';
 import { initPBIFilter, initProductBacklog } from '../appstate/stateInitValues';
@@ -33,7 +33,7 @@ export const type = 'DraggableBodyRow';
  * 
  * {@linkcode IProductBacklogProps} props Arguments of ProductBacklog functional component
  */
-export const ProductBacklog: React.FC<IProductBacklogProps> = React.memo((props:IProductBacklogProps) => {
+export const ProductBacklog: React.FC<IProductBacklogProps> = React.memo((props: IProductBacklogProps) => {
   const token = useSelector((appState: IState) => appState.loginState.token);
   const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : "";
   const sprintPage = useSelector((state: IState) => state.sprintPage as ISprintList);
@@ -210,7 +210,7 @@ export const ProductBacklog: React.FC<IProductBacklogProps> = React.memo((props:
       onCreate={function (values: any): void { estimatePBI(values) }}
       onCancel={() => { setIsModal({ ...isModal, estimatePBI: false }); setSelectedPBI({} as IBacklogItem); }} />}
     <AddTaskPopup data={{ name: "" } as IFilters} visible={isModal.addTask}
-      onCreate={function (values: any): void { addTaskToPBI(values, token,ownerName,selectedPBI.id, setIsModal, isModal, setSelectedPBI); }}
+      onCreate={function (values: any): void { addTaskToPBI(values, token, ownerName, selectedPBI.id, setIsModal, isModal, setSelectedPBI); }}
       onCancel={() => { setIsModal({ ...isModal, addTask: false }); }} />
     {isModal.updateSprint && <UpdateSprintPopup data={selectedSprint} visible={isModal.updateSprint && !loading}
       onCreate={function (values: any): void { updateSprint(values) }}

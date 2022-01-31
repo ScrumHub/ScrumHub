@@ -3,11 +3,11 @@ import { IPeopleList, ITask, IPerson } from "../../appstate/stateInterfaces";
 import "../Home.css";
 import "../Main.css";
 import { BranchesOutlined, DownOutlined, LoadingOutlined } from "@ant-design/icons";
-import { isArrayValid, isBranchNotCreated, isInReviewOrFinished } from "./commonFunctions";
+import { isArrayValid, isBranchNotCreated, isInReviewOrFinished } from "../utility/commonFunctions";
 import React from "react";
-import { assignPerson, startTask } from "./BacklogHandlers";
-import { PBIMenuWithPeople } from "./LoadAnimations";
-import { IModals } from "./commonInterfaces";
+import { assignPerson, startTask } from "../utility/BacklogHandlers";
+import { PBIMenuWithPeople } from "../utility/LoadAnimations";
+import { IModals } from "../utility/commonInterfaces";
 
 /*task columns functionalities*/
 

@@ -3,11 +3,11 @@ import { ISprint } from "../../appstate/stateInterfaces";
 import "../Home.css";
 import "../Main.css";
 import { AuditOutlined, CalendarOutlined, EditOutlined } from "@ant-design/icons";
-import { dateFormat, formatSprintStatus, isArrayValid } from "./commonFunctions";
+import { dateFormat, formatSprintStatus, isArrayValid } from "../utility/commonFunctions";
 import React from "react";
 import { NavigateFunction } from "react-router";
-import { IFilteredInfo, IModals, ISortedInfo } from "./commonInterfaces";
-import { sprintStatusVals } from "./commonInitValues";
+import { IFilteredInfo, IModals, ISortedInfo } from "../utility/commonInterfaces";
+import { sprintStatusVals } from "../utility/commonInitValues";
 
 /*sprint columns functionalities*/
 

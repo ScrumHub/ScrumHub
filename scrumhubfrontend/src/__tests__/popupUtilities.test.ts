@@ -1,12 +1,10 @@
 /**
  * @jest-environment jsdom
  */
-import { Form, FormInstance } from "antd";
-import { useState } from "react";
-import { act } from "react-dom/test-utils";
+import { FormInstance } from "antd";
 import { initAddPBI, initBI, initSprint } from "../appstate/stateInitValues";
 import { IAddBI } from "../appstate/stateInterfaces";
-import { onOkAddPBIPopup, onOkAddSprintPopup, onOkAddTaskPopup } from "../components/popups/popupUtilities"
+import { onOkAddPBIPopup, onOkAddSprintPopup, onOkAddTaskPopup, onOkEstimatePBIPopup } from "../components/popups/popupUtilities"
 
 describe("add pbi popup",()=>{
 test('validates values properly', () => {
@@ -31,6 +29,30 @@ test('catches error', () => {
   expect(onCreate()).toBe(initAddPBI);
 })
 })
+
+describe("estimate pbi popup",()=>{
+  test('validates values properly', () => {
+    let onClickValue = { ...initBI, expectedTimeInHours: 1 };
+    const onCreate = jest.fn().mockReturnValue(initBI).mockReturnValueOnce(onClickValue);
+    let form = {
+      validateFields: jest.fn(() => Promise.resolve({ data: initBI })),
+      resetFields: jest.fn()
+    } as unknown as FormInstance<any>;
+    onOkEstimatePBIPopup(form, onCreate,1);
+    expect(onCreate()).toBe(onClickValue);
+  })
+  test('catches error', () => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    let onClickValue = { ...initBI, expectedTimeInHours: 1 };
+    const onCreate = jest.fn().mockReturnValue(initBI).mockReturnValueOnce(onClickValue);
+    let form = {
+      validateFields: jest.fn(() => Promise.reject("Error!")),
+      resetFields: jest.fn()
+    } as unknown as FormInstance<any>;
+    onOkAddPBIPopup(form, onCreate);
+    expect(onCreate()).toBe(onClickValue);
+  })
+  })
 
 describe("add sprint popup",()=>{
   test('validates values properly', () => {

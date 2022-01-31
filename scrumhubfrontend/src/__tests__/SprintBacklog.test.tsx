@@ -15,6 +15,7 @@ import renderer, {create} from 'react-test-renderer';
 import { Project } from "../components/Project";
 import { Home } from "../components/Home";
 import TestRenderer from "react-test-renderer";
+import { SprintBacklog } from "../components/SprintBacklog";
 const { act: actTest } = TestRenderer;
 
 
@@ -57,8 +58,9 @@ describe('Project component in container', () => {
         <Provider store={store}>
           <Router>
             <Routes>
-              <Route path={`/:owner/:name`} element={<Project />} />
-              <Route path={`/`} element={<Home />} />
+            <Route path={`/:owner/:name/Sprints/:number`} element={<SprintBacklog />} />
+            <Route path={`/:owner/:name/active-sprint`} element={<SprintBacklog />} />
+              <Route path={`/`} element={<></>} />
             </Routes>
           </Router>
         </Provider>,
@@ -75,7 +77,7 @@ describe('Project component in container', () => {
     const temp = renderer.create(
       <Provider store={store}>
         <Router>
-          <Project />
+          <SprintBacklog />
         </Router>
       </Provider>).toJSON();
     expect(temp).toMatchSnapshot();
@@ -86,17 +88,13 @@ describe('Project component in container', () => {
     actTest(() => {createdComp = create(<Provider store={store}>
       <Router>
         <Routes>
-          <Route path={`/:owner/:name`} element={<Project />} />
-          <Route path={`/`} element={<Home />} />
+        <Route path={`/:owner/:name/Sprints/:number`} element={<SprintBacklog />} />
+            <Route path={`/:owner/:name/active-sprint`} element={<SprintBacklog />} />
+              <Route path={`/`} element={<></>} />
         </Routes>
       </Router>
     </Provider>)});
-    //const instance = (createdComp as any).root;
-    /*const button = instance?.findByProps();
-    button.props.onClick();
-    expect(button.props.children).toBe("");*/
-    //expect(instance?).toBe("");
-    //expect(window.localStorage.getItem("name")).toBe(newName);
+   // expect(createdComp.fin)
   });
   it("No Expanded rows", () => {
     let createdComp;

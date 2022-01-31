@@ -5,6 +5,7 @@ import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import TextArea from 'antd/lib/input/TextArea';
 import moment from 'moment';
 import { IUpdateSprintCollectionCreateFormProps, IUpdateSprintValues } from './popupInterfaces';
+import { renderDateSprint } from '../utility/LoadAnimations';
 /**
  * Returns Popup with a form for updating the given {@linkcode ISprint} sprint 
  */
@@ -44,7 +45,7 @@ export function UpdateSprintPopup({
           name="finishDate"
           rules={[{ required: true, message: 'Please input the deadline of this sprint!' }]}
         >
-          <DatePicker defaultValue={moment(data.finishDate, "YYYY-MM-DD")} showToday={true} format={"YYYY-MM-DD"} />
+          <DatePicker dateRender={renderDateSprint} defaultValue={moment(data.finishDate, "YYYY-MM-DD")} showToday={true} format={"YYYY-MM-DD"} />
         </Form.Item>
         <FormItemLabel prefixCls="title" label="Title" required={true} />
         <Form.Item
@@ -52,7 +53,7 @@ export function UpdateSprintPopup({
           name="title"
           rules={[{ required: true, message: 'Please input the title of this sprint!', whitespace: true }]}
         >
-          <Input required={true} />
+          <Input required={true} autoComplete="on" maxLength={60}/>
         </Form.Item>
         <FormItemLabel prefixCls="name" label="Goal" required={true} />
         <Form.Item
@@ -61,8 +62,8 @@ export function UpdateSprintPopup({
           labelAlign="left"
           rules={[{ required: true, message: 'Please input the goal of this sprint!', whitespace: true }]}
         >
-          <TextArea
-            maxLength={105} />
+          <TextArea required={true} autoComplete="on" maxLength={200}
+             />
         </Form.Item>
       </Form>
     </Modal>

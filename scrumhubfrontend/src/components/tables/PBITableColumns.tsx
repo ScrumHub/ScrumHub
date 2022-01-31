@@ -4,13 +4,13 @@ import * as Actions from '../../appstate/actions';
 import "../Home.css";
 import "../Main.css";
 import { EditOutlined, SyncOutlined } from "@ant-design/icons";
-import { isArrayValid } from "./commonFunctions";
+import { isArrayValid } from "../utility/commonFunctions";
 import React, { useState } from "react";
-import { PBIMenuWithPriorities } from "./LoadAnimations";
+import { PBIMenuWithPriorities } from "../utility/LoadAnimations";
 import { store } from "../../appstate/store";
 import { useSelector } from "react-redux";
-import { IFilteredInfo, IModals, ISortedInfo } from "./commonInterfaces";
-import { backlogColors, backlogPriorities, pbiFilterVals } from "./commonInitValues";
+import { IFilteredInfo, IModals, ISortedInfo } from "../utility/commonInterfaces";
+import { backlogColors, backlogPriorities, pbiFilterVals } from "../utility/commonInitValues";
 
 /**
  * Renders priority tag for the given Backlog Item

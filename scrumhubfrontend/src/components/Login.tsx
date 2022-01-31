@@ -23,7 +23,7 @@ export function Login(props: any) {
   useEffect(() => {
     if (hasGithubResponseCode(window.location.href) && loginState.proxy_url !== "") {
       setData({ ...data, isLoading: true });
-      postLoginCodeToGitHub(loginState.proxy_url,window.location.href, navigate, setData);
+      postLoginCodeToGitHub(loginState.proxy_url, window.location.href, navigate, setData);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loginState.isLoggedIn, loginState.token, data, loginState.proxy_url]);
@@ -41,12 +41,11 @@ export function Login(props: any) {
         <span className="errorSpan">{data.errorMessage}</span>
         <div className="loginContainer">
           {data.isLoading ?
-            <Button icon={<LoadingOutlined />} type="primary"
-              style={{ backgroundColor: "black", borderColor: "black", whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "clip", width: "100%" }}>
+            <Button icon={<LoadingOutlined />} type="primary" size="large" className="loginButton">
             </Button> :
-            <Button type="primary" href={`https://github.com/login/oauth/authorize?scope=repo&client_id=${loginState.client_id}&redirect_uri=${loginState.redirect_uri}`}
-              style={{ backgroundColor: "black", borderColor: "black", whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "clip", width: "100%" }}>
-              {<span style={{ color: "white", fontFamily: 'Montserrat', whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "clip", width: "100%", textTransform: "uppercase" }}>{loginState.isLoggedIn && !data.errorMessage ? "Logged in  " : "Login  "}    <GithubOutlined /></span>}
+            <Button size="large" type="primary" href={`https://github.com/login/oauth/authorize?scope=repo&client_id=${loginState.client_id}&redirect_uri=${loginState.redirect_uri}`} className="loginButton">
+              {<span className="loginButtonSpan">
+                {loginState.isLoggedIn && !data.errorMessage ? "Logged in  " : "Login  "}<GithubOutlined /></span>}
             </Button>
           }
         </div>

@@ -9,7 +9,7 @@ import { shallow } from 'enzyme';
 import EnzymeToJson from 'enzyme-to-json';
 import { initFilteredInfo, initModalVals, initSortedInfo } from '../components/utility/commonInitValues';
 import { initSprint } from '../appstate/stateInitValues';
-import { dragCmpnts, pbiColumns, sprintColumns } from '../components/utility/TableUtilities';
+import { dragCmpnts, pbiColumns, sprintColumns } from '../components/tables/TableUtilities';
 import { TestDraggableBodyRow } from '../components/utility/BacklogHandlers';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';

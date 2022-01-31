@@ -4,9 +4,9 @@ import { Modal, Form, Typography, Checkbox, Input, DatePicker, Button } from 'an
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import TextArea from 'antd/lib/input/TextArea';
 import _ from 'lodash';
-import { disabledDate } from '../utility/commonFunctions';
 import { IAddSprintCollectionCreateFormProps } from './popupInterfaces';
 import { onOkAddSprintPopup } from './popupUtilities';
+import { renderDateSprint } from '../utility/LoadAnimations';
 /**
  * Returns Popup with a form for adding new {@linkcode ISprint} sprint
  */
@@ -47,7 +47,7 @@ export function AddSprintPopup({
           name="finishDate"
           rules={[{ required: true, message: 'Please input the deadline of this sprint!' }]}
         >
-          <DatePicker showToday={true} disabledDate={disabledDate} format={"YYYY-MM-DD"} />
+          <DatePicker dateRender={renderDateSprint} showToday={true} format={"YYYY-MM-DD"} />
         </Form.Item>
         <FormItemLabel prefixCls="title" label="Title" required={true} />
         <Form.Item
@@ -64,7 +64,7 @@ export function AddSprintPopup({
           rules={[{ required: true, message: 'Please input the goal of this sprint!', whitespace: true }]}
         >
           <TextArea required={true}
-            maxLength={105} />
+            maxLength={200} />
         </Form.Item>
         {filteredData && filteredData.length > 0 && <FormItemLabel prefixCls="backlogItems" label="Backlog Items" required={true} />}
         {filteredData && filteredData.length > 0 && <Form.List name="backlogItems" initialValue={filteredData}>

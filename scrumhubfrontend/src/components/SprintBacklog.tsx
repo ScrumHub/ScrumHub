@@ -9,9 +9,9 @@ import { CalendarOutlined } from '@ant-design/icons';
 import { store } from '../appstate/store';
 import { PBITableComponent } from './tables/PBITable';
 import { TaskTableComponent } from './tables/TaskTable';
-import { canDropTask, dateFormat, isItemDefined, isSprintLoaded, useStateAndRefLoading, useTasksRef } from './utility/commonFunctions';
+import { canDropTask, dateFormat, isArrayValid, isItemDefined, isSprintLoaded, useStateAndRefLoading, useTasksRef } from './utility/commonFunctions';
 import SkeletonList from './utility/LoadAnimations';
-import { addPBIToRepo, addTaskToPBI, updateTask } from './utility/BacklogHandlers';
+import { addPBIToRepo, addTaskToPBI, fetchBacklog, updateTask } from './utility/BacklogHandlers';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
 import { useDrop, useDrag, DndProvider } from 'react-dnd';
 import { initFilterSortInfo, initModalVals } from './utility/commonInitValues';
@@ -26,7 +26,7 @@ import { UpdateSprintPopup } from './popups/UpdateSprintPopup';
 import _ from 'lodash';
 import { requestFetchRateLimit, requestFetchAllRepoTasks } from '../appstate/fetching';
 import { type } from './ProductBacklog';
-import { pbiColumns, pbiSprintColumns, taskColumns } from './utility/TableUtilities';
+import { pbiColumns, pbiSprintColumns, taskColumns } from './tables/TableUtilities';
 import { AddPBIPopup } from './popups/AddPBIPopup';
 
 /**
@@ -46,14 +46,18 @@ export function SprintBacklog() {
   const sprintID = localStorage.getItem("sprintID") ? Number(localStorage.getItem("sprintID")) : -1;
   const [initialRefresh, setInitialRefresh] = useState(true);
   const sprintPage = useSelector((appState: IState) => appState.openSprint as ISprint);
+  const pbiPage = useSelector((appState: IState) => appState.pbiPage);
+  const sprints = useSelector((appState: IState) => appState.pbiPage);
 
   const location = useLocation();
   useEffect(() => {
     if (initialRefresh) {
-      //if(sprintPage===null || people === initPeopleList || (sprintID!==-1 &&sprintID !== sprintPage.sprintNumber)){
       store.dispatch(Actions.fetchOneSprintThunk({ token: token, ownerName: ownerName, sprintNumber: sprintID }));
       store.dispatch(Actions.fetchPeopleThunk({ ownerName, token }));
-      //}
+      if(!isArrayValid(sprints.list) || !isArrayValid(pbiPage.list)|| !isArrayValid(tasks.current)){
+        fetchBacklog(true,ownerName, token);
+        store.dispatch(Actions.fetchRepoTasksThunk({ token: token, ownerName: ownerName }));
+      }
       setInitialRefresh(false);
     }// eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialRefresh, location]);
@@ -194,59 +198,10 @@ export function SprintBacklog() {
     );
   };
   const nestedcomponents = { body: { row: DraggableBodyRow, }, };
-  /*const taskColumns = [taskNameCol, taskStatusCol,
-    {
-      key: "isAssignedToPBI", title: "Assignees", width: "22%", align: "center" as const,
-      render: (record: ITask) => peopleDropdown(record, token, ownerName, people),
-    }, {
-      title: "Start Branch",
-      key: "branch",
-      width: "12%",
-      align: "right" as const,
-      render: (record: ITask) => isBranchNotCreated(record.status) ?
-        <Popover visible={isModal.startBranchId === record.id}
-          content={<><div style={{ alignSelf: "center", marginBottom: "10%", textAlign: "center" }}>Start New Branch</div><Space style={{ alignItems: "flex-end" }}>
-            <Popconfirm title={"Are you sure you want to start a feature branch?"} onConfirm={() => { startTask(token, ownerName, false, record.id); setIsModal({ ...isModal, startBranchId: -1 }); }}><Button key={"hotfix"} size='small' type="primary" >Feature</Button></Popconfirm>
-            <Popconfirm title={"Are you sure you want to start a hotfix branch?"} onConfirm={() => { startTask(token, ownerName, true, record.id); setIsModal({ ...isModal, startBranchId: -1 }); }}><Button key={"hotfix"} size='small' type="primary" color="deeppink">Hotfix</Button></Popconfirm>
-          </Space></>} trigger="click">
-          <Button key={"action" + record.id} size='small' type="link" onClick={() => { setIsModal({ ...isModal, startBranchId: record.id }) }}>
-            <span>{"Create "}<BranchesOutlined /></span></Button></Popover> :
-        <div><span hidden={isInReviewOrFinished(record.status)}>Created <BranchesOutlined /></span></div>
-    }, taskGhLinkCol,];*/
   const TaskTableforPBI: React.FC<IBacklogItem> = (item: IBacklogItem) => {
     return (<TaskTableComponent peopleFilter={filterPBI.peopleFilter} item={item}
       taskColumns={taskColumns(filterPBI.peopleFilter, token, ownerName, people, setIsModal, isModal)} taskComponents={nestedcomponents} />)
   };
-  /*const pbiColumns = [
-    {
-      title: 'Name', width: "25%", sorter: {
-        compare: (a: IBacklogItem, b: IBacklogItem) => a.priority - b.priority,
-        multiple: 1,
-      }, align: "left" as const, key: 'name', render: (item: IBacklogItem) => { return (<div className={item.id === 0 ? '' : 'link-button'} onClick={() => { if (item.id !== 0) { setSelectedPBI(item); setIsModal({ ...isModal, editPBI: true }); } }}>{item.name}</div>) },
-    },
-    pbiProgressCol, pbiToDoCol,
-    {
-      title: 'Priority', sorter: { compare: (a: IBacklogItem, b: IBacklogItem) => a.priority - b.priority, multiple: 1, }, align: "center" as const, width: "20%", key: 'pbiPriority',
-      filters: [{ text: backlogPriorities[0], value: 0, }, { text: backlogPriorities[1], value: 1, }, { text: backlogPriorities[2], value: 2, },], onFilter: (value: any, item: IBacklogItem) => item.priority === value,
-      render: (item: IBacklogItem) => item.id !== 0 ? <Tag style={{ cursor: "pointer" }} color={backlogColors[item.priority % 3]}>{backlogPriorities[item.priority % 3]}</Tag> : <Tag style={{ color: "transparent", backgroundColor: "transparent", borderColor: "transparent" }} color={backlogColors[0]}>{backlogPriorities[0]}</Tag>
-    },
-    pbiStatusCol,
-    {
-      title: 'Story Points', sorter: {
-        compare: (a: IBacklogItem, b: IBacklogItem) => a.priority - b.priority,
-        multiple: 1,
-      }, width: "15%", key: 'storyPoints', align: "center" as const, render: (item: IBacklogItem) => {
-        return (item.id !== 0 ? <Tag style={{ cursor: "pointer" }} color={item.estimated ? (item.expectedTimeInHours > 10 ? "red" : "green") : "purple"} onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, estimatePBI: true }); }}>
-          {item.estimated ? (item.expectedTimeInHours + " SP ") : "Not estimated "}{<EditOutlined />}</Tag> : <Tag style={{ color: "transparent", backgroundColor: "transparent", borderColor: "transparent" }} color={backlogColors[0]}>{"Not estimated "}{<EditOutlined />}</Tag>)
-      }
-    },
-    {
-      title: 'Action', align: "center" as const, width: "15%", key: 'actions', render: (item: IBacklogItem) => {
-        return (<span >
-          <Button size='small' type="link" onClick={() => { setSelectedPBI(item); setIsModal({ ...isModal, addTask: true }); }} >
-            {"Add Task"}</Button></span>)
-      }
-    },];*/
   return (
     <div style={{ marginLeft: "2%", marginRight: "2%", marginTop: 0, marginBottom: "1%" }}>
       <SkeletonList width={true} loading={sprintPage == null || isSprintLoaded(sprintID, sprintPage, false)} number={2} />
@@ -289,11 +244,11 @@ export function SprintBacklog() {
             addTaskToPBI(values, token, ownerName, selectedPBI.id, setIsModal, isModal, setSelectedPBI);
           }}
           onCancel={() => { setIsModal({ ...isModal, addTask: false }); }} />}
-      {isModal.updateSprint && !loading &&
+      {isModal.updateSprint &&
         <UpdateSprintPopup data={sprintPage} visible={isModal.updateSprint}
           onCreate={function (values: any): void { updateSprint(values) }}
           onCancel={() => { setIsModal({ ...isModal, updateSprint: false }); }} />}
-      {isModal.completeSprint && !loading &&
+      {isModal.completeSprint &&
         <CompleteSprintPopup data={sprintPage} visible={isModal.completeSprint}
           onComplete={function (value: boolean): void { completeSprint(value) }}
           onCancel={() => { setIsModal({ ...isModal, completeSprint: false }); }} />}

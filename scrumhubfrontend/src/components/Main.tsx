@@ -10,7 +10,7 @@ import './Main.css';
 import './ProductBacklog.css';
 import { useSelector } from 'react-redux';
 import { ISprint, IState } from '../appstate/stateInterfaces';
-import { routes } from './utility/TableUtilities';
+import { routes } from './tables/TableUtilities';
 import { clearLocalStorage, clearProjectLocalStorage, isMessageValid } from './utility/commonFunctions';
 import { ItemRender } from './utility/LoginAndMainHandlers';
 import { isNull } from 'lodash';
@@ -79,7 +79,7 @@ export function Main(props: any) {
     }
   }
   useEffect(() => {
-    if (error.hasError && isMessageValid(error.erorMessage)&&hasError) {
+    if (error.hasError && isMessageValid(error.erorMessage) && hasError) {
       setHasError(false);
       message.error(error.erorMessage, 2);
       if (error.erorMessage.includes("not found in ScrumHub") && location.pathname !== "/") {
@@ -90,7 +90,7 @@ export function Main(props: any) {
         store.dispatch(Actions.clearError(""));
         message.info("The scope of of authorization was changed. You need to login again", 2);
         setLogout(true);
-      }else if(error.erorMessage.includes("Connection error")){
+      } else if (error.erorMessage.includes("Connection error")) {
         store.dispatch(Actions.clearError(""));
         setLogout(true);
       }
@@ -170,36 +170,50 @@ export function Main(props: any) {
   return (
     <section id="parentSection" className="container" >
       <Layout id="scrollableDiv" onDragStart={handleDragEnter} onDragOver={handleDragOver} onDragEnd={handleDragLeave} className={'scrollDiv'}>
-        {!location.pathname.includes("login") && <Header className="clearfix" style={{ position: 'fixed', zIndex: 100, padding: 0, height: "5vh", lineHeight: "5vh", width: "100%", backgroundColor: "#f0f0f0" }}>
-          <Menu mode="horizontal" theme="light" className="mainMenu">
-            <SubMenu popupOffset={[-18,2]} key="SubMenu0" title={currentUser.isCurrentUser ? currentUser.login : ""} icon={
-              currentUser.isCurrentUser ? <Avatar style={{ transform: "scale(0.8)", marginBottom: "0.4vh" }} size="small" src={`${currentUser.avatarLink}`} ></Avatar> : <></>}>
-              {currentUser.isCurrentUser && <Menu.Item key="SubMenu4">
-                <a href={"https://github.com/" + currentUser.login}>See on Github</a>
-              </Menu.Item>}
-            </SubMenu>
-            <Menu.Item className='mainMenuItem' key="proj" onClick={() => handleProjects()}><span style={{ maxHeight: "1vh" }}>Projects</span></Menu.Item>
-            <SubMenu popupOffset={[-50,2]}  key="SubMenu1" title="Settings">
-            <Menu.Item icon={<GithubOutlined/>} key="sett"><a href={`https://github.com/settings/connections/applications/${client_id}`}><span>{"Set Permissions "}</span> </a></Menu.Item>
-            </SubMenu>
-            <Menu.Item className='mainMenuItem' key="logout" onClick={() => handleLogout()} >Logout</Menu.Item>
-          </Menu>
-        </Header>}
+        {!location.pathname.includes("login") &&
+          <Header className="clearfix"
+            style={{ position: 'fixed', zIndex: 100, padding: 0, height: "5vh", lineHeight: "5vh", width: "100%", backgroundColor: "#f0f0f0" }}>
+            <Menu mode="horizontal" theme="light" className="mainMenu">
+              <SubMenu popupOffset={[-18, 2]} key="SubMenu0" title={currentUser.isCurrentUser ? currentUser.login : ""} icon={
+                currentUser.isCurrentUser ? <Avatar className='userAvatar' size="small" src={`${currentUser.avatarLink}`} ></Avatar> : <></>}>
+                {currentUser.isCurrentUser && <Menu.Item key="SubMenu4">
+                  <a href={"https://github.com/" + currentUser.login}>See on Github</a>
+                </Menu.Item>}
+              </SubMenu>
+              <Menu.Item className='mainMenuItem' key="proj" onClick={() => handleProjects()}>
+                <span style={{ maxHeight: "1vh" }}>Projects</span></Menu.Item>
+              <SubMenu popupOffset={[-50, 2]} key="SubMenu1" title="Settings">
+                <Menu.Item icon={<GithubOutlined />} key="sett">
+                  <a href={`https://github.com/settings/connections/applications/${client_id}`}>
+                    <span>{"Set Permissions "}</span> </a>
+                </Menu.Item>
+              </SubMenu>
+              <Menu.Item className='mainMenuItem' key="logout" onClick={() => handleLogout()} >Logout</Menu.Item>
+            </Menu>
+          </Header>}
         <Content className="content">
           <Layout className="site-layout-background">
-            {!location.pathname.includes("login") && <Sider hidden={location.pathname.includes("login") || ownerName === ""} theme="light" collapsedWidth={40} style={{ marginTop: "5vh", height: 'auto', backgroundColor: "white", borderColor: "transparent" }} onCollapse={() => setIsCollapsed(!isCollapsed)} collapsible={true} collapsed={isCollapsed} className="site-layout-background" width={200}>
-              <Menu mode="inline" style={{ position: "fixed", width: isCollapsed ? 40 : 200 }} defaultSelectedKeys={[selectedSiderKey]}>
-                <Menu.Item key="ProductBacklog" onClick={() => handlePBacklog()} icon={<DatabaseOutlined />}>
-                  <span>Product Backlog</span></Menu.Item>
-                <Menu.Item key="ActiveSprint" onClick={() => handleActiveSprint()} disabled={activeSprintNumber === -1} icon={<ProjectOutlined />}>
-                  <span>Active Sprint</span></Menu.Item>
-              </Menu>
-            </Sider>}
+            {!location.pathname.includes("login") &&
+              <Sider hidden={location.pathname.includes("login") || ownerName === ""} theme="light" collapsedWidth={40} width={200}
+                style={{ marginTop: "5vh", height: 'auto', backgroundColor: "white", borderColor: "transparent" }}
+                onCollapse={() => setIsCollapsed(!isCollapsed)} collapsible={true} collapsed={isCollapsed} className="site-layout-background">
+                <Menu mode="inline" style={{ position: "fixed", width: isCollapsed ? 40 : 200 }} defaultSelectedKeys={[selectedSiderKey]}>
+                  <Menu.Item key="ProductBacklog" onClick={() => handlePBacklog()} icon={<DatabaseOutlined />}>
+                    <span>Product Backlog</span></Menu.Item>
+                  <Menu.Item key="ActiveSprint" onClick={() => handleActiveSprint()} disabled={activeSprintNumber === -1}
+                    icon={<ProjectOutlined />}>
+                    <span>Active Sprint</span>
+                  </Menu.Item>
+                </Menu>
+              </Sider>}
             <Content style={location.pathname.includes("login") || ownerName === "" ? {} : { padding: '0 50px' }}>
               <div style={{ minHeight: "90vh", margin: 0 }}>
                 {ownerName !== "" && <PageHeader className="pageHeader"
-                  title={<div style={{ fontWeight: "bold", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "clip", width: "85vw", lineHeight: 1.25, paddingTop: 0, marginTop: 0, }}>{sprintID && sprintID !== "0" && sprintPage && sprintPage.title && Number(sprintID) === sprintPage.sprintNumber ? sprintPage.title : location.pathname.includes("sprint") ? "" : "Product Backlog"}</div>}
-                  breadcrumb={<Breadcrumb style={{ marginTop: 0, marginBottom: 0, }} itemRender={ItemRender} routes={routes(ownerName, sprintID, location)} />}
+                  title={<div className='contentTitle' >
+                    {sprintID && sprintID !== "0" && sprintPage && sprintPage.title && Number(sprintID) === sprintPage.sprintNumber ?
+                      sprintPage.title : location.pathname.includes("sprint") ? "" : "Product Backlog"}
+                  </div>}
+                  breadcrumb={<Breadcrumb className='contentBreadcrumb' itemRender={ItemRender} routes={routes(ownerName, sprintID, location)} />}
                 >
                 </PageHeader>}
                 <AppRouter />
@@ -219,10 +233,8 @@ export function Main(props: any) {
                 {"  © Created by BomSymbols"}
               </Footer>
             </Content>
-
           </Layout>
         </Content>
-
       </Layout >
     </section >
   );

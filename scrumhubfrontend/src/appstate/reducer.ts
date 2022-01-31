@@ -3,9 +3,9 @@ import { RequestResponse } from "./response";
 import { IAssignBI, ILoginState, IPeopleList, IPerson, IBacklogItem, IBacklogItemList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, IState } from "./stateInterfaces";
 import { initError, loggedOutLoginState, unassignedBI } from "./stateInitValues";
 import { isArrayValid, isNameFilterValid } from "../components/utility/commonFunctions";
-import { getError, updateStateTasks, updateStateKeys, addStateTask, addStateUnassignedTaskToPBI, updateStatePBI, updateTasksSWR, updateStateRepos, updateStateOneSprint, addStateRepo, addStatePBI, addStateSprint, updateOnDragStateTasks, updateAllTasksSWR } from "./reducerUtilities";
 import { isNull } from "lodash";
 import config from "../configuration/config";
+import { updateStateKeys, updateStateRepos, getError, addStateRepo, updateStatePBI, addStatePBI, updateStateOneSprint, addStateSprint, updateTasksSWR, updateAllTasksSWR, addStateUnassignedTaskToPBI, addStateTask, updateOnDragStateTasks, updateStateTasks } from "./reducerUtilities";
 var _ = require('lodash');
 /** Creates reducer for given {@linkcode IState} initState*/
 export function reducerFunction(initState: IState) {

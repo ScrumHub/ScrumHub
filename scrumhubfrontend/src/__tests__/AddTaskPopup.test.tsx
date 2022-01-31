@@ -2,10 +2,8 @@ import { isNull } from "lodash";
 import { unmountComponentAtNode } from "react-dom";
 import { act } from "react-dom/test-utils";
 import { mount } from 'enzyme';
-import EnzymeToJson from 'enzyme-to-json';
 import { render } from "@testing-library/react";
 import { AddTaskPopup } from "../components/popups/AddTaskPopup";
-import { IFilters } from "../appstate/stateInterfaces";
 
 describe('AddTaskPopup component in container', () => {
   let tempContainer: any;
@@ -35,12 +33,6 @@ describe('AddTaskPopup component in container', () => {
       tempContainer.remove();
       tempContainer = null;
     }
-  });
-  it('is the same as snapshot', () => {
-    const subject = mount(<AddTaskPopup visible={true}
-    onCreate={function (values: any): void { } }
-    onCancel={() => { } } data={{ name: "" } as IFilters} />);
-    expect(EnzymeToJson(subject)).toMatchSnapshot();
   });
   it('renders without crashing', async () => {
     const initValue = { name:"" };

@@ -15,7 +15,7 @@ export function AddPBIPopup({
   const [loading, setLoading] = React.useState(false);
   return (
     <Modal
-    title="Add Product Backlog Item"
+      title="Add Product Backlog Item"
       visible={visible}
       destroyOnClose={true}
       closable={true}
@@ -25,7 +25,7 @@ export function AddPBIPopup({
           Cancel
         </Button>,
         <Button loading={loading} type="primary" id="SaveInAddPBIPopup" key="SaveInAddPBIPopup"
-        onClick={() => {setLoading(true);onOkAddPBIPopup(form, onCreate); }}>
+          onClick={() => { setLoading(true); onOkAddPBIPopup(form, onCreate); }}>
           Save
         </Button>
       ]}

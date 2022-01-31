@@ -2,7 +2,6 @@ import { isNull } from "lodash";
 import { unmountComponentAtNode } from "react-dom";
 import { act } from "react-dom/test-utils";
 import { mount } from 'enzyme';
-import EnzymeToJson from 'enzyme-to-json';
 import { render } from "@testing-library/react";
 import { initAddPBI, initBI, initSprint } from "../appstate/stateInitValues";
 import { AddSprintPopup } from "../components/popups/AddSprintPopup";
@@ -35,12 +34,6 @@ describe('AddSprintPopup component in container', () => {
       tempContainer.remove();
       tempContainer = null;
     }
-  });
-  it('is the same as snapshot', () => {
-    const subject = mount(<AddSprintPopup visible={true}
-    onCreate={function (values: any): void { } }
-    onCancel={() => { } } data={initSprint} error={""} pbiData={[initBI]} />);
-    expect(EnzymeToJson(subject)).toMatchSnapshot();
   });
   it('renders without crashing', async () => {
     const onClickValue = { ...initAddPBI, priority: 1 };

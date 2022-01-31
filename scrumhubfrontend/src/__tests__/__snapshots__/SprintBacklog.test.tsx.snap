@@ -1,0 +1,62 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Project component in container project component rendered is the same as snapshot 1`] = `
+<div
+  style={
+    Object {
+      "marginBottom": "1%",
+      "marginLeft": "2%",
+      "marginRight": "2%",
+      "marginTop": 0,
+    }
+  }
+>
+  <section
+    className="card"
+    style={
+      Object {
+        "width": "100%",
+      }
+    }
+  />
+  <section
+    className="card"
+    style={
+      Object {
+        "width": "100%",
+      }
+    }
+  />
+  <div
+    className="ant-space ant-space-horizontal ant-space-align-center"
+    style={Object {}}
+  >
+    <div
+      className="ant-space-item"
+      style={Object {}}
+    >
+      <article
+        className="ant-typography"
+      >
+        
+      </article>
+    </div>
+  </div>
+  <br />
+  <div
+    className="ant-space ant-space-horizontal ant-space-align-center"
+    style={Object {}}
+  >
+    <div
+      className="ant-space-item"
+      style={Object {}}
+    >
+      <button
+        className="ant-btn ant-btn-link"
+        onClick={[Function]}
+        type="button"
+      />
+    </div>
+  </div>
+</div>
+`;

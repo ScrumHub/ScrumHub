@@ -57,6 +57,9 @@
   "jest": {
     "transformIgnorePatterns": [
       "/node_modules/(?!antd|@ant-design|rc-.+?|@babel/runtime).+(js|jsx)$"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/src/components/utility/commonInterfaces.ts","/src/components/popups/popupInterfaces.ts","/src/appstate/stateInterfaces.ts"
     ]
   },
   "devDependencies": {
