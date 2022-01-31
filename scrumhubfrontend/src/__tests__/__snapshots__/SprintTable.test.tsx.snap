@@ -1,0 +1,162 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SprintTable component in container is the same as snapshot 1`] = `
+<ContextProvider
+  value={
+    Object {
+      "store": Object {
+        "@@observable": [Function],
+        "dispatch": [Function],
+        "getState": [Function],
+        "replaceReducer": [Function],
+        "subscribe": [Function],
+      },
+      "subscription": Object {
+        "addNestedSub": [Function],
+        "getListeners": [Function],
+        "handleChangeWrapper": [Function],
+        "isSubscribed": [Function],
+        "notifyNestedSubs": [Function],
+        "onStateChange": [Function],
+        "trySubscribe": [Function],
+        "tryUnsubscribe": [Function],
+      },
+    }
+  }
+>
+  <Memo(DndProvider)
+    backend={[Function]}
+    key="dnd_sprint"
+  >
+    <Memo()
+      PBITableforSprint={[Function]}
+      columns={
+        Array [
+          Object {
+            "align": "left",
+            "key": "sprintNumber",
+            "render": [Function],
+            "title": "Number",
+            "width": "15%",
+          },
+          Object {
+            "align": "center",
+            "dataIndex": "title",
+            "ellipsis": true,
+            "key": "sprintTitle",
+            "title": "Title",
+            "width": "27%",
+          },
+          Object {
+            "align": "center",
+            "dataIndex": "finishDate",
+            "key": "finishDate",
+            "render": [Function],
+            "title": "Deadline",
+            "width": "15%",
+          },
+          Object {
+            "align": "center",
+            "key": "finishDate",
+            "render": [Function],
+            "title": "Story Points",
+            "width": "15%",
+          },
+          Object {
+            "align": "center",
+            "filteredValue": Array [],
+            "filters": Array [
+              Object {
+                "text": "Complete",
+                "value": 1,
+              },
+              Object {
+                "text": "Not Complete",
+                "value": 0,
+              },
+            ],
+            "key": "isCompleted",
+            "onFilter": [Function],
+            "render": [Function],
+            "sortOrder": false,
+            "sorter": [Function],
+            "title": "completed",
+            "width": "15%",
+          },
+          Object {
+            "align": "right",
+            "key": "action",
+            "render": [Function],
+            "title": "Action",
+            "width": "8%",
+          },
+        ]
+      }
+      components={
+        Object {
+          "body": Object {
+            "row": [Function],
+          },
+        }
+      }
+      data={
+        Array [
+          Object {
+            "backlogItems": Array [
+              Object {
+                "acceptanceCriteria": Array [
+                  "criteria",
+                  "criteria2",
+                ],
+                "estimated": true,
+                "expectedTimeInHours": 2,
+                "finished": false,
+                "id": 0,
+                "isInSprint": false,
+                "name": "Item",
+                "priority": 0,
+                "sprintNumber": 0,
+                "tasks": Array [
+                  Object {
+                    "assigness": Array [],
+                    "finished": false,
+                    "id": 0,
+                    "isAssignedToPBI": false,
+                    "link": "",
+                    "name": "",
+                    "pbiId": 0,
+                    "status": "",
+                  },
+                ],
+                "timeSpentInHours": 0,
+              },
+            ],
+            "finishDate": "",
+            "goal": "",
+            "isCompleted": false,
+            "isCurrent": false,
+            "sprintNumber": 1,
+            "status": "NotFinished",
+            "title": "",
+          },
+        ]
+      }
+      filteredInfo={
+        Object {
+          "complete": Array [],
+          "pbiPriority": Array [],
+        }
+      }
+      loading={true}
+      nameFilter={Array []}
+      peopleFilter={Array []}
+      sortedInfo={
+        Object {
+          "columnKey": "",
+          "order": "",
+        }
+      }
+    />
+  </Memo(DndProvider)>
+</ContextProvider>
+`;

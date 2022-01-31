@@ -1,54 +1,54 @@
-import React, { useEffect, useState } from 'react';
-import { Modal, Form, InputNumber, Slider, Progress, List } from 'antd';
+import React from 'react';
+import { Modal, Form, InputNumber, Slider, Progress, List, Button } from 'antd';
 import { IFilters, ITask } from '../../appstate/stateInterfaces';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import { NumberOutlined } from '@ant-design/icons';
 import VirtualList from 'rc-virtual-list';
 import "../ProductBacklog.css";
 import { IEstimatePBICollectionCreateFormProps } from './popupInterfaces';
-
-export const EstimatePBIPopup: React.FC<IEstimatePBICollectionCreateFormProps> = ({
-  data,
-  visible,
-  onCreate,
-  onCancel,
-}) => {
+import { isArrayValid, isItemDefined } from '../utility/commonFunctions';
+import { onOkEstimatePBIPopup } from './popupUtilities';
+/** 
+ *  Returns Popup with a form for estimating the given {@linkcode IBacklogItem} backlogitem */
+export function EstimatePBIPopup({
+  data, visible, onCreate, onCancel,
+}: IEstimatePBICollectionCreateFormProps): JSX.Element {
   const [form] = Form.useForm();
-  const [slicedData, setSlicedData] = useState([] as IFilters[]);
-  useEffect(() => {
+  const [slicedData, setSlicedData] = React.useState([] as IFilters[]);
+  const [loading, setLoading] = React.useState(false);
+  const [value, setValue] = React.useState(data.expectedTimeInHours);
+  const marks = { 0: 0, 1: 1, 2: 2, 3: 3, 5: 5, 8: 8, 13: 13, 20: 20 };
+  React.useEffect(() => {
     if (slicedData.length < 1) {
-      setSlicedData(data.acceptanceCriteria.slice(0, 2).map((data, key) => { return { "key": key, "acceptanceCriteria": data } }));
+      setSlicedData(isItemDefined(data) && isArrayValid(data.acceptanceCriteria) ? data.acceptanceCriteria.slice(0, 2).map((data, key) => { return { "key": key, "acceptanceCriteria": data }; }) : []);
     }
-    else {
-      setSlicedData(data.acceptanceCriteria.slice(0, slicedData.length + 2).map((data, key) => { return { "key": key, "acceptanceCriteria": data } }));
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    else { setSlicedData(isItemDefined(data) && isArrayValid(data.acceptanceCriteria) ? data.acceptanceCriteria.slice(0, slicedData.length + 2).map((data, key) => { return { "key": key, "acceptanceCriteria": data }; }) : []); }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const [value, setValue] = useState(data.expectedTimeInHours);
-  const marks = {0: 0,1: 1, 2: 2,3: 3, 5: 5,8: 8,13: 13,20: 20};
+  if(!visible && loading){
+   form.resetFields();
+   setLoading(false);
+  }
   return (
     <Modal
-      centered={true}
-      visible={visible}
-      closable={false}
       width={"50vw"}
+      visible={visible}
       title="Estimate Backlog Item"
-      okText="Save"
-      cancelText="Cancel"
+      centered={true}
+      destroyOnClose={true}
+      closable={true}
       onCancel={onCancel}
-      onOk={() => {
-        form
-          .validateFields()
-          .then((values: {expectedTimeInHours: number}) => {
-            form.resetFields();
-            onCreate({ expectedTimeInHours: value });
-          })
-          .catch((info: any) => {
-            console.error('Validate Failed:', info);
-          });
-      }}
+      footer={[
+        <Button key="CancelInEstimatePBIPopup" id="CancelInEstimatePBIPopup" onClick={onCancel}>
+          Cancel
+        </Button>,
+        <Button  id="SaveInEstimatePBIPopup" key="SaveInEstimatePBIPopup"
+        type="primary" loading={loading} onClick={() => { setLoading(true); onOkEstimatePBIPopup(form, onCreate, value); }}>
+          Save
+        </Button>
+      ]}
     >
-      <Form
+      <Form id="form"
         form={form}
         layout="vertical"
         name="form_in_modal"
@@ -61,12 +61,12 @@ export const EstimatePBIPopup: React.FC<IEstimatePBICollectionCreateFormProps> =
           style={{ width: "87%" }}
         >  <>
             <Progress percent={data.tasks && data.tasks.length > 0 ? (100 * data.tasks.filter((item: ITask) => !item.assigness || item.assigness.length < 1).length / data.tasks.length) : 100}
-              format={percent => `${data.tasks && data.tasks.length > 0 ? data.tasks.filter((item: ITask) => !item.assigness || item.assigness.length < 1).length : 0} Assigned`} ></Progress>
+              format={percent => `${data.tasks && data.tasks.length > 0 ? data.tasks.filter((item: ITask) => !item.assigness || item.assigness.length < 1).length : 0} Assigned`}></Progress>
             <br />
             <Progress percent={data.tasks && data.tasks.length > 0 ? (100 * data.tasks.filter((item: ITask) => item.finished).length / data.tasks.length) : 100}
-              format={percent => `${data.tasks && data.tasks.length > 0 ? data.tasks.filter((item: ITask) => item.finished).length : 0} To Do`} ></Progress>
+              format={percent => `${data.tasks && data.tasks.length > 0 ? data.tasks.filter((item: ITask) => item.finished).length : 0} To Do`}></Progress>
             <Progress percent={data.tasks && data.tasks.length > 0 ? (100 * data.tasks.filter((item: ITask) => !item.finished).length / data.tasks.length) : 100}
-              format={percent => `${data.tasks && data.tasks.length > 0 ? data.tasks.filter((item: ITask) => !item.finished).length : 0} Done`} ></Progress>
+              format={percent => `${data.tasks && data.tasks.length > 0 ? data.tasks.filter((item: ITask) => !item.finished).length : 0} Done`}></Progress>
           </>
         </Form.Item>
         <FormItemLabel prefixCls="acceptanceCriteria" label="Acceptance Criteria" required={true} />
@@ -75,16 +75,15 @@ export const EstimatePBIPopup: React.FC<IEstimatePBICollectionCreateFormProps> =
             <VirtualList
               data={slicedData}
               key="virtual_list"
-              height={70}
+              height={80}
               itemHeight={42}
               itemKey="acceptanceCriteria"
-              onScroll={(e: any) => { if (e.target.scrollHeight - e.target.scrollTop > 0) { setSlicedData(data.acceptanceCriteria.slice(0, slicedData.length + 2).map((data, key) => { return { "key": key, "acceptanceCriteria": data } })) } }}
+              onScroll={(e: any) => { if (e.target.scrollHeight - e.target.scrollTop > 0) { setSlicedData(data.acceptanceCriteria.slice(0, slicedData.length + 2).map((data, key) => { return { "key": key, "acceptanceCriteria": data }; })); } }}
             >{item => (
               <List.Item key={item.key}>
                 <List.Item.Meta
-                  avatar={<span><NumberOutlined></NumberOutlined>{" "}{item.key}</span>}
-                  title={item.acceptanceCriteria}
-                />
+                  avatar={<span><NumberOutlined></NumberOutlined>{" "}{item.key + 1}</span>}
+                  title={item.acceptanceCriteria} />
               </List.Item>
             )}
             </VirtualList>
@@ -101,9 +100,8 @@ export const EstimatePBIPopup: React.FC<IEstimatePBICollectionCreateFormProps> =
             marks={marks}
             min={0}
             max={20}
-            onChange={(e) => { setValue(e); form.setFieldsValue({ "expectedTimeInHours": e }) }}
-            value={(typeof value) === 'number' ? value : 0}
-          />
+            onChange={(e) => { setValue(e); form.setFieldsValue({ "expectedTimeInHours": e }); }}
+            value={(typeof value) === 'number' ? value : 0} />
         </Form.Item>
         <FormItemLabel prefixCls="expectedTimeInHours" label="Estimate Story Points" required={true} />
         <Form.Item
@@ -118,10 +116,9 @@ export const EstimatePBIPopup: React.FC<IEstimatePBICollectionCreateFormProps> =
             max={999}
             type="number"
             value={value}
-            onChange={(e) => { setValue(e); form.setFieldsValue({ "expectedTimeInHours": e }) }}
-          />
+            onChange={(e) => { setValue(e); form.setFieldsValue({ "expectedTimeInHours": e }); }} />
         </Form.Item>
       </Form>
-    </Modal >
+    </Modal>
   );
-};
+}

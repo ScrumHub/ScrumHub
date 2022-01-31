@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Home component succesfully rendered home component rendered is the same as snapshot 1`] = `
+<div>
+  <div
+    className="infinite-scroll-component__outerdiv"
+    style={Object {}}
+  >
+    <div
+      className="infinite-scroll-component "
+      style={
+        Object {
+          "WebkitOverflowScrolling": "touch",
+          "height": "auto",
+          "overflow": "auto",
+        }
+      }
+    >
+      <div
+        className="reposGrid"
+      >
+        <section
+          className="card"
+          style={
+            Object {
+              "width": "85%",
+            }
+          }
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;

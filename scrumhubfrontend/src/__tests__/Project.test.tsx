@@ -10,19 +10,18 @@ import { Provider } from "react-redux";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { configureStore } from "@reduxjs/toolkit";
 import { reducerFunction } from "../appstate/reducer";
-import { initTestState } from "../appstate/stateTestValues";
+import { initTestState, updatedTestState } from "../appstate/stateTestValues";
 import renderer, {create} from 'react-test-renderer';
 import { Project } from "../components/Project";
 import { Home } from "../components/Home";
-import { getByText } from "@testing-library/react";
 import TestRenderer from "react-test-renderer";
 const { act: actTest } = TestRenderer;
-
 
 describe('Project component in container', () => {
   let container: any;
   let store: any;
   beforeEach(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
       value: jest.fn().mockImplementation(query => ({
@@ -39,7 +38,7 @@ describe('Project component in container', () => {
     container = document.createElement('div');
     document.body.appendChild(container);
     store = configureStore({
-      reducer: reducerFunction(initTestState),
+      reducer: reducerFunction(updatedTestState),
     });
   });
 
@@ -52,7 +51,7 @@ describe('Project component in container', () => {
     }
   });
 
-  it("Rendered list of repos", async () => {
+  it("Rendered Backlog tables", async () => {
     await act(async () => {
       render(
         <Provider store={store}>
@@ -83,8 +82,7 @@ describe('Project component in container', () => {
   });
 
   it("Submitting a name via the input field changes the name state value", () => {
-    let createdComp;
-    actTest(() => {createdComp = create(<Provider store={store}>
+    actTest(() => {create(<Provider store={store}>
       <Router>
         <Routes>
           <Route path={`/:owner/:name`} element={<Project />} />
@@ -92,11 +90,62 @@ describe('Project component in container', () => {
         </Routes>
       </Router>
     </Provider>)});
-    const instance = (createdComp as any).root;
-    /*const button = instance?.findByProps();
-    button.props.onClick();
-    expect(button.props.children).toBe("PROCEED TO CHECKOUT");*/
-    //expect(instance?).toBe("");
-    //expect(window.localStorage.getItem("name")).toBe(newName);
+  });
+  it("No Expanded rows", () => {
+    store = configureStore({
+      reducer: reducerFunction(initTestState),
+    });
+    actTest(() => {create(<Provider store={store}>
+      <Router>
+        <Routes>
+          <Route path={`/:owner/:name`} element={<Project />} />
+          <Route path={`/`} element={<Home />} />
+        </Routes>
+      </Router>
+    </Provider>)});
+  });
+  it("Rendered backlog tables", async () => {
+    store = configureStore({
+      reducer: reducerFunction(initTestState),
+    });
+    await act(async () => {
+      render(
+        <Provider store={store}>
+          <Router>
+            <Routes>
+              <Route path={`/:owner/:name`} element={<Project />} />
+              <Route path={`/`} element={<Home />} />
+            </Routes>
+          </Router>
+        </Provider>,
+        container
+      );
+    });
+    expect(
+      container?.getElementsByClassName("container").length
+    ).toBeGreaterThanOrEqual(0);
+    expect(container.textContent).toBe("");
+  });
+  it('project component loading', async () => {
+    store = configureStore({
+      reducer: reducerFunction({...initTestState, loading:true}),
+    });
+    await act(async () => {
+      render(
+        <Provider store={store}>
+          <Router>
+            <Routes>
+              <Route path={`/:owner/:name`} element={<Project />} />
+              <Route path={`/`} element={<Home />} />
+            </Routes>
+          </Router>
+        </Provider>,
+        container
+      );
+    });
+    expect(
+      container?.getElementsByClassName("container").length
+    ).toBeGreaterThanOrEqual(0);
+    expect(container.textContent).toBe("");
   });
 });

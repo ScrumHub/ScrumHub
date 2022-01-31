@@ -2,9 +2,8 @@
  * @jest-environment jsdom
  */
 import { Provider } from "react-redux";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import { initTestState } from "../appstate/stateTestValues";
-import * as Actions from "../appstate/actions";
 import { configureStore } from "@reduxjs/toolkit";
 import { act } from "react-dom/test-utils";
 import { render, unmountComponentAtNode } from "react-dom";
@@ -13,6 +12,7 @@ import { isNull } from "lodash";
 import TestRenderer from "react-test-renderer";
 import { reducerFunction } from "../appstate/reducer";
 import { Main } from "../components/Main";
+import * as Actions from "../appstate/actions";
 const {act:actTester} = TestRenderer;
 describe('Main component in container', () => {
   let container: any;
@@ -47,7 +47,6 @@ describe('Main component in container', () => {
   it("Rendered list of repos successfully", async () => {
     await act(async () => {
       render(
-
         <Provider store={store}>
           <Router>
             <Main />
@@ -56,7 +55,6 @@ describe('Main component in container', () => {
         container
       );
     });
-    //console.log(container);
     expect(
       container?.getElementsByClassName("container").length
     ).toBeGreaterThanOrEqual(0);
@@ -96,7 +94,6 @@ describe('Main component when user is logged in', () => {
     });
     
     await store.dispatch(Actions.login({token:"token", isLoggedIn:true}));
-    //console.log(container);
     expect(
       secondContainer?.getElementsByClassName("container").length
     ).toBeGreaterThanOrEqual(0);

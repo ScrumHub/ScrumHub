@@ -8,8 +8,8 @@ import "../Home.css";
 import { isArrayValid, isNameFilterValid } from "./commonFunctions";
 import { useEffect } from "react";
 import SubMenu from "antd/lib/menu/SubMenu";
-import { backlogColors, backlogPriorities } from "./BodyRowsAndColumns";
-import { initFilteredInfo } from "./commonInitValues";
+import { backlogColors, backlogPriorities, initFilteredInfo, initSortedInfo } from "./commonInitValues";
+import moment from "moment";
 
 export default function SkeletonList(props: any) {
     const number = props.number ? props.number : 0;
@@ -89,7 +89,7 @@ export function MenuWithSorting(props: any) {
     const [sortedInfo, setSortedInfo] = useState([] as IFilters);
     const handleList = (item: any) => {
         if (item.columnKey === props.sortedInfo.columnKey && item.order === props.sortedInfo.order) {
-            props.itemSelected({ columnKey: "", order: "" })
+            props.itemSelected(initSortedInfo)
         }
         else { props.itemSelected(item); }
     };
@@ -122,11 +122,10 @@ export function MenuWithSorting(props: any) {
             </Space>
 
         </MenuItem>
-        <MenuItem key={"clear"} onClick={() => { handleList({ columnKey: "", order: "" }); }}>
+        <MenuItem key={"clear"} onClick={() => { handleList(initSortedInfo); }}>
             <Space>
                 <div style={{ minWidth: "6vw" }} >{"Clear Sorting"}</div>
             </Space>
-
         </MenuItem>
     </Menu >);
 }
@@ -246,3 +245,16 @@ export function PBIMenuWithPriorities(props:any) {
     </Menu >
     </div>);
 }
+
+export function renderDateSprint(current:any): JSX.Element {
+    const style = {} as any;
+    if (current && current.diff(moment().endOf('day'), 'day') === 13) {
+      style.border = '1px solid #1890ff';
+      style.borderRadius = '50%';
+    }
+    return (
+      <div className="ant-picker-cell-inner" style={style}>
+        {current.date()}
+      </div>
+    );
+  }

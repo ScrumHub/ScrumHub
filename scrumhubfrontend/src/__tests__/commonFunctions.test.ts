@@ -1,3 +1,6 @@
+ /**
+ * @jest-environment jsdom
+ */
  import moment from "moment"
  import { canDropPBI, canDropTask, disabledDate, getIndex, isArrayValid, isBranchNotCreated, isMessageValid, isNameFilterValid, updateRowKeys, validateString } from "../components/utility/commonFunctions"
 import { initTask, initSprint } from "../appstate/stateInitValues";
@@ -39,7 +42,7 @@ import { initTask, initSprint } from "../appstate/stateInitValues";
  })
  
  test('cannot create a branch', () => {
- expect(isBranchNotCreated("")).toBe(false)
+ expect(isBranchNotCreated("InReview")).toBe(false)
  })
  
  test('array is valid', () => {

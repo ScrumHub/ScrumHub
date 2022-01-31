@@ -1,20 +1,20 @@
 import { Table } from "antd";
-import { IPerson, IProductBacklogItem, IState, ITask } from "../appstate/stateInterfaces";
-import { initRowIds, initSortedInfo } from "./utility/commonInitValues";
-import { IRowIds } from "./utility/commonInterfaces";
-import * as Actions from '../appstate/actions';
-import { store } from "../appstate/store";
+import { IPerson, IBacklogItem, IState, ITask } from "../../appstate/stateInterfaces";
+import { initRowIds, initSortedInfo } from "../utility/commonInitValues";
+import { IRowIds } from "../utility/commonInterfaces";
+import * as Actions from '../../appstate/actions';
+import { store } from "../../appstate/store";
 import { useSelector } from "react-redux";
-import { isArrayValid, useIsMounted } from "./utility/commonFunctions";
-import React, { useEffect, useState } from "react";
-import _ from "lodash";
+import { isArrayValid } from "../utility/commonFunctions";
+import React from "react";
 
+/**
+ * @returns PBITableComponent Component that displays each {@linkcode IBacklogItem} for
+ * // the given {@linkcode ISprint}
+ */
 export const PBITableComponent = React.memo((props: any) =>{
   let keys = useSelector((appState: IState) => appState.keys.pbiKeys as number[]);
-  const loadPbiKeys = useSelector((appState: IState) => appState.loadingKeys.pbiKeys as number[]);
-  const [wait, setWait] = useState(false);
-  const loadSprintKeys = useSelector((appState: IState) => appState.loadingKeys.sprintKeys as number[]);
-  const updateExpandedRowKeys = (record: IProductBacklogItem) => {
+  const updateExpandedRowKeys = (record: IBacklogItem) => {
     store.dispatch(Actions.updatePBIKeys([record.id]));
   };
   const handleChange = (pagination: any, filters: any, sorter: any) => {
@@ -37,25 +37,25 @@ export const PBITableComponent = React.memo((props: any) =>{
       showHeader={true}
       //loading={(props.item && isArrayValid(props.item.backlogItems) && pbiKeys.filter((nr:number)=>props.item.backlogItems.map((pbi:IProductBacklogItem)=>{return(pbi.id)}).includes(nr)).length>0)}
       columns={props.pbiColumns}
-      rowKey={(record: IProductBacklogItem) => record.id}
+      rowKey={(record: IBacklogItem) => record.id}
       expandable={{
         expandedRowRender: props.TaskTableforPBI,
         expandedRowKeys: keys,
-        onExpand: (expanded: any, record: IProductBacklogItem) => {
+        onExpand: (expanded: any, record: IBacklogItem) => {
           updateExpandedRowKeys(record);
         },
-        rowExpandable: (record: IProductBacklogItem) => isArrayValid(record.tasks) &&
+        rowExpandable: (record: IBacklogItem) => (isArrayValid(record.tasks) &&
            (isArrayValid(props.peopleFilter) ? record.tasks.filter((task: ITask) => {
               return (task.assigness.filter((person: IPerson) => {
                 return (props.peopleFilter.includes(person.login))
               }).length > 0)
             }).length > 0
-            : true)
+            : true)) || record.id===0
 
       }}
       components={props.nestedcomponents}
       onChange={(pagination: any, filters: any, sorter: any)=>{handleChange(pagination, filters, sorter)}}
-      dataSource={props.item.backlogItems}
+      dataSource={props.item?props.item.backlogItems:[]}
       pagination={false}
       onRow={(row: { id: any; estimated: any; }, id: any) => {
         const index = row.id;

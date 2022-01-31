@@ -39,18 +39,69 @@
   color: black;
   font-size: 2rem;
   margin-bottom: 20px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
 .imgLoginNone {
   display: none;
 }
 
-.imgLoginTemp{
-  width: 20vh;margin-bottom:2vh; height: 20vh; 
+.imgLoginTemp {
+  width: 20vh;
+  margin-bottom: 2vh;
+  height: 20vh;
   animation: "spin 2s linear infinite";
 }
 
-.imgLoginLogo{
-  width: 20vh;margin-bottom:2vh;
+.imgLoginLogo {
+  width: 20vh;
+  margin-bottom: 2vh;
+}
+
+.loginButton {
+  background-color: black;
+  border-color: black;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: clip;
+  width: 100%;
+}
+
+.loginButtonDisabled {
+  background-color: black;
+  border-color: black;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: clip;
+  width: 100%;
+  pointer-events: none;
+  cursor: default;
+}
+
+.loginButtonDisabled:hover {
+  background-color: black;
+  border-color: black;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: clip;
+  width: 100%;
+}
+
+.loginButtonDisabled::after {
+  background-color: black;
+  border-color: black;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: clip;
+  width: 100%;
+}
+
+.loginButtonSpan {
+  color: white;
+  font-family: "Montserrat";
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: clip;
+  width: 100%;
+  text-transform: uppercase;
 }

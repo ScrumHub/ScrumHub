@@ -1,13 +1,14 @@
 import { IFilters } from "../../appstate/stateInterfaces";
 import config from "../../configuration/config";
-import { backlogPriorities } from "./BodyRowsAndColumns";
-import { IModals, IRowIds, tableKeys } from "./commonInterfaces";
+import { IFilteredInfo, ILoginData, IModals, IRowIds, ISortedInfo } from "./commonInterfaces";
 
 export const initIDs: IFilters = {
   oldSprintId: -1, newSprintId: -1, pbiId: -1, dropped: false
 };
 
 export const fixedType = 'NonDraggableBodyRow';
+
+export const initLoginData: ILoginData = { errorMessage: "", isLoading: false };
 
 export const initModalVals: IModals = {
   addTask: false,
@@ -17,7 +18,8 @@ export const initModalVals: IModals = {
   updateSprint: false,
   editPBI: false,
   estimatePBI: false,
-  startBranchId:-1
+  startBranchId: -1,
+  addPBI: false
 }
 
 export const initRowIds: IRowIds = {
@@ -33,10 +35,10 @@ export const formItemLayoutWithOutLabel = {
     sm: { offset: 0 },
   },
 };
-export const initFilteredInfo = { complete: [] as number[], pbiPriority: [] as number[] };
-export const initSortedInfo = {order: '',columnKey: '',};
+export const initFilteredInfo = { complete: [] as number[], pbiPriority: [] as number[] } as IFilteredInfo;
+export const initSortedInfo = { order: "", columnKey: "" } as ISortedInfo;
 
-export const initFilterSortInfo =  {
+export const initFilterSortInfo = {
   filteredInfo: initFilteredInfo,
   sortedInfo: initSortedInfo
 };
@@ -44,17 +46,26 @@ export const initFilterMenu = {
   filterMenuVisible: false,
   openKeys: [] as string[]
 };
+export const backlogPriorities = ["Could", "Should", "Must"];
+export const backlogColors = ["green", "blue", "red"];
+export const pbiFilterVals =
+  [{ text: backlogPriorities[0], value: 0, },
+  { text: backlogPriorities[1], value: 1, },
+  { text: backlogPriorities[2], value: 2, },];
 
-export const pbiFilterVals = 
-[{text: backlogPriorities[0], value: 0, },
-{text: backlogPriorities[1],value: 1,}, 
-{text: backlogPriorities[2],value: 2,},];
+export const pbiStatusVals =
+  [{ text: "Not Finished", value: false, },
+  { text: "Finished", value: true, },];
 
+export const sprintStatusVals =
+  [{ text: "Complete", value: 1, },
+  { text: "Not Complete", value: 0, }
+  ];
 
-export const loginData = {
+export const loginDataError = {
   isLoading: false,
   errorMessage: "Error! Login failed"
-}
+} as ILoginData;
 
 export const initReposFilters = {
   pageSize: config.defaultFilters.size,

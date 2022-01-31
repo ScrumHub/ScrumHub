@@ -1,8 +1,7 @@
-
 import config from "../configuration/config";
-import { initError, initPeopleList, initPerson, initPBItem, initProductBacklogList, initRepository, initRepositoryList, initSprint, initSprintList, initTaskList, initTask, initKeys, initLoadingKeys } from "./stateInitValues";
-import { ILoginState, IProductBacklogList, IRepositoryList, ISprintList, IState, ITaskList } from "./stateInterfaces";
-import { validateUri } from "./stateUtilities";
+import { validateUri } from "./reducerUtilities";
+import { initError, initPeopleList, initPerson, initBI, initBacklogItemList, initRepository, initRepositoryList, initSprint, initSprintList, initTaskList, initTask, initKeys, initLoadingKeys } from "./stateInitValues";
+import { ILoginState, IBacklogItemList, IRepositoryList, ISprintList, IState, ITaskList } from "./stateInterfaces";
 
 export const testLoginState: ILoginState = {
   isLoggedIn: false,
@@ -16,7 +15,7 @@ export const testLoginState: ILoginState = {
 export const initTestState: IState = {
   loading: false,
   error: initError,
-  pbiPage: initProductBacklogList,
+  pbiPage: initBacklogItemList,
   sprintPage: initSprintList,
   taskPage: initTaskList,
   repositories: initRepositoryList,
@@ -41,7 +40,9 @@ export const initTestState: IState = {
   changedRepo: ""
 };
 
-export const testRepositoryList: IRepositoryList  = {
+
+
+export const testRepositoryList: IRepositoryList = {
   pageNumber: 1,
   pageCount: 1,
   pageSize: 10,
@@ -49,12 +50,12 @@ export const testRepositoryList: IRepositoryList  = {
   list: [initRepository],
 }
 
-export const testPBIList: IProductBacklogList = {
+export const testBItemList: IBacklogItemList = {
   pageNumber: 1,
   pageCount: 1,
   pageSize: 10,
   realSize: 0,
-  list: [initPBItem],
+  list: [initBI],
 }
 
 export const testSprintList: ISprintList = {
@@ -74,35 +75,71 @@ export const testTaskList: ITaskList = {
 }
 
 export const tstConf = {
-  ownerName:"ownerName",
+  ownerName: "ownerName",
   url: `${config.backend.ip}:${config.backend.port}/api`,
-  pbiId:0,
-  sprintNr:0,
-  hours:2,
-  editedPBI:{
-    "name": initPBItem.name,
-    "priority": initPBItem.priority,
-    "acceptanceCriteria": initPBItem.acceptanceCriteria
+  pbiId: 0,
+  sprintNr: 0,
+  hours: 2,
+  editedPBI: {
+    "name": initBI.name,
+    "priority": initBI.priority,
+    "acceptanceCriteria": initBI.acceptanceCriteria
   },
-  name:"taskName",
-  taskId:0,
-  login:"userLogin",
-  isAssign:true,
-  hotfix:true
+  name: "taskName",
+  taskId: 0,
+  login: "userLogin",
+  isAssign: true,
+  hotfix: true
 }
 
 export const testConnectionError = {
   "code": 0,
   "response": {
     "data": null,
-    "message": "Connection error",
+    "Message": "Connection error",
     "metadata": null,
     "successful": false,
   },
 }
 export const testFilters = { pageSize: config.defaultFilters.page, pageNumber: config.defaultFilters.size }
 
-export const testFetchReposVals={
+export const testFetchReposVals = {
   filters: testFilters,
   token: config.token,
 }
+
+export const initTestUseState = {
+  "action": "POP",
+  "location": { "hash": "", "key": "default", "pathname": "/", "search": "", "state": null }
+}
+
+export const updatedTestState: IState = {
+  loading: false,
+  error: initError,
+  pbiPage: testBItemList,
+  sprintPage: testSprintList,
+  taskPage: testTaskList,
+  repositories: testRepositoryList,
+  openSprint: initSprint,
+  reposLastPage: false,
+  reposRequireRefresh: false,
+  productLastPage: false,
+  productRequireRefresh: false,
+  sprintLastPage: false,
+  sprintRequireRefresh: false,
+  taskLastPage: false,
+  taskRequireRefresh: false,
+  tasks: [initTask],
+  namedPBI: [],
+  repoId: -1,
+  people: initPeopleList,
+  currentUser: initPerson,
+  activeSprintNumber: -1,
+  keys: {
+    sprintKeys: [0,1],
+    pbiKeys: [0,1]
+  },
+  loadingKeys: initLoadingKeys,
+  loginState: testLoginState,
+  changedRepo: ""
+};

@@ -1,0 +1,181 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PBITable component in container is the same as snapshot 1`] = `
+<ContextProvider
+  value={
+    Object {
+      "store": Object {
+        "@@observable": [Function],
+        "dispatch": [Function],
+        "getState": [Function],
+        "replaceReducer": [Function],
+        "subscribe": [Function],
+      },
+      "subscription": Object {
+        "addNestedSub": [Function],
+        "getListeners": [Function],
+        "handleChangeWrapper": [Function],
+        "isSubscribed": [Function],
+        "notifyNestedSubs": [Function],
+        "onStateChange": [Function],
+        "trySubscribe": [Function],
+        "tryUnsubscribe": [Function],
+      },
+    }
+  }
+>
+  <Memo(DndProvider)
+    backend={[Function]}
+    key="dnd_sprint"
+  >
+    <Memo()
+      TaskTableforPBI={Array []}
+      filteredInfo={
+        Object {
+          "complete": Array [],
+          "pbiPriority": Array [],
+        }
+      }
+      item={
+        Object {
+          "backlogItems": Array [
+            Object {
+              "acceptanceCriteria": Array [
+                "criteria",
+                "criteria2",
+              ],
+              "estimated": true,
+              "expectedTimeInHours": 2,
+              "finished": false,
+              "id": 0,
+              "isInSprint": false,
+              "name": "Item",
+              "priority": 0,
+              "sprintNumber": 0,
+              "tasks": Array [
+                Object {
+                  "assigness": Array [],
+                  "finished": false,
+                  "id": 0,
+                  "isAssignedToPBI": false,
+                  "link": "",
+                  "name": "",
+                  "pbiId": 0,
+                  "status": "",
+                },
+              ],
+              "timeSpentInHours": 0,
+            },
+          ],
+          "finishDate": "",
+          "goal": "",
+          "isCompleted": false,
+          "isCurrent": false,
+          "sprintNumber": 1,
+          "status": "NotFinished",
+          "title": "",
+        }
+      }
+      itemSelected={[Function]}
+      nameFilter={Array []}
+      nestedcomponents={
+        Object {
+          "body": Object {
+            "row": [Function],
+          },
+        }
+      }
+      pbiColumns={
+        Array [
+          Object {
+            "align": "left",
+            "ellipsis": true,
+            "filterIcon": <React.Fragment />,
+            "filteredValue": Array [],
+            "filters": Array [],
+            "key": "name",
+            "onFilter": [Function],
+            "render": [Function],
+            "sortOrder": false,
+            "sorter": [Function],
+            "title": "Name",
+            "width": "33%",
+          },
+          Object {
+            "align": "center",
+            "key": "progressBar",
+            "render": [Function],
+            "title": "Progress",
+            "width": "20%",
+          },
+          Object {
+            "align": "center",
+            "key": "tasks",
+            "render": [Function],
+            "title": "Tasks To Do",
+            "width": "12%",
+          },
+          Object {
+            "align": "center",
+            "filteredValue": Array [],
+            "filters": Array [
+              Object {
+                "text": "Could",
+                "value": 0,
+              },
+              Object {
+                "text": "Should",
+                "value": 1,
+              },
+              Object {
+                "text": "Must",
+                "value": 2,
+              },
+            ],
+            "key": "pbiPriority",
+            "onFilter": [Function],
+            "render": [Function],
+            "sortOrder": false,
+            "sorter": [Function],
+            "title": "Priority",
+            "width": "15%",
+          },
+          Object {
+            "align": "center",
+            "key": "storyPoints",
+            "render": [Function],
+            "sortOrder": false,
+            "sorter": [Function],
+            "title": "Story Points",
+            "width": "12%",
+          },
+          Object {
+            "align": "center",
+            "key": "status",
+            "render": [Function],
+            "sortOrder": false,
+            "sorter": [Function],
+            "title": "Status",
+            "width": "8%",
+          },
+          Object {
+            "align": "right",
+            "key": "actions",
+            "render": [Function],
+            "title": "",
+            "width": "10%",
+          },
+        ]
+      }
+      peopleFilter={Array []}
+      sortSelected={[Function]}
+      sortedInfo={
+        Object {
+          "columnKey": "",
+          "order": "",
+        }
+      }
+    />
+  </Memo(DndProvider)>
+</ContextProvider>
+`;

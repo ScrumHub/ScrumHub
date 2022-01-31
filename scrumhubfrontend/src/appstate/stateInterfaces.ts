@@ -41,7 +41,7 @@ export interface ITaskList extends IFetchedList {
   list: ITask[];
 }
 
-export interface IProductBacklogItem {
+export interface IBacklogItem {
   id: number;
   name: string;
   finished: boolean;
@@ -55,7 +55,7 @@ export interface IProductBacklogItem {
   tasks: ITask[]
 }
 
-export interface ICheckedProductBacklogItem {
+export interface ICheckedBacklogItem {
   checked: boolean;
   id: number;
   name: string;
@@ -69,17 +69,17 @@ export interface ICheckedProductBacklogItem {
   acceptanceCriteria: string[];
   tasks: ITask[]
 }
-export interface IAddPBI {
+export interface IAddBI {
   name: string;
   priority: number;
   acceptanceCriteria: string[];
 }
-export interface IAssignPBI {
+export interface IAssignBI {
   name: string;
   id: number;
   isInSprint:boolean;
 }
-export interface IPBIFilter {
+export interface IBIFilter {
   pageNumber: number;
   pageSize: number;
   nameFilter?: string;
@@ -95,15 +95,15 @@ export interface IFetchedList {
   realSize: number;
 }
 
-export interface IProductBacklogList extends IFetchedList{
-  list: IProductBacklogItem[];
+export interface IBacklogItemList extends IFetchedList{
+  list: IBacklogItem[];
 }
 
 export interface ISprint {
   sprintNumber: number;
   title:string;
   goal: string;
-  backlogItems: IProductBacklogItem[];
+  backlogItems: IBacklogItem[];
   finishDate: string|Date;
   isCurrent: boolean;
   status: string;
@@ -122,7 +122,7 @@ export interface IRepository {
   gitHubId: number;
   hasAdminRights: boolean;
   alreadyInScrumHub: boolean;
-  backlogItems: IProductBacklogItem[] | any;
+  backlogItems: IBacklogItem[] | any;
   sprints: ISprint[] | any;
 }
 
@@ -138,7 +138,7 @@ export interface IPeopleList extends IFetchedList{
   list: IPerson[];
 }
 
-export type BodyRowTypes = ISprint | IProductBacklogItem | ITask;
+export type BodyRowTypes = ISprint | IBacklogItem | ITask;
 export interface IRepositoryList extends IFetchedList{
   list: IRepository[];
 }
@@ -154,7 +154,7 @@ export interface IState {
   loginState:ILoginState;
   loading: boolean;
   error: Error;
-  pbiPage: IProductBacklogList;
+  pbiPage: IBacklogItemList;
   repositories: IRepositoryList | any;
   reposLastPage: boolean;
   reposRequireRefresh: boolean;
@@ -169,7 +169,7 @@ export interface IState {
   tasks: ITask[];
   openSprint: ISprint | null;
   repoId: number;
-  namedPBI: IAssignPBI[];
+  namedPBI: IAssignBI[];
   people: IPeopleList;
   activeSprintNumber:number;
   currentUser: IPerson;

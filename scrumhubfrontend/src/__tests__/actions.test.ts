@@ -4,22 +4,24 @@
 import expect from "expect"; // You can use any testing library
 import { configureStore } from '@reduxjs/toolkit';
 import axios from 'axios';
+//import { store } from '../appstate/store';
 import { reducerFunction } from "../appstate/reducer";
 import { initTestState, testFetchReposVals, testFilters, testRepositoryList, tstConf } from "../appstate/stateTestValues";
 import * as Actions from "../appstate/actions";
-import { fetchStateRepos, filterUrlString } from "../appstate/stateUtilities";
+import { updateStateRepos } from "../appstate/reducerUtilities";
 import MockAdapter from "axios-mock-adapter";
+import { filterUrlString } from "../appstate/stateUtitlities";
 
 describe('fetching Repos', () => {
   test('should pass', async () => {
     const mock = new MockAdapter(axios);
-  mock.onGet(`${tstConf.url}/Repositories?${filterUrlString(testFilters)}`).reply(200, testRepositoryList);
+    mock.onGet(`${tstConf.url}/Repositories?${filterUrlString(testFilters)}`).reply(200, testRepositoryList);
     const store = configureStore({
       reducer: reducerFunction(initTestState),
     });
     await store.dispatch(Actions.fetchReposThunk(testFetchReposVals));
     const state = store.getState();
-    expect(state).toEqual(fetchStateRepos(initTestState,testRepositoryList,1,10,1));
+    expect(state).toEqual(updateStateRepos(initTestState,testRepositoryList,1,10,1));
   });
 });
 /*

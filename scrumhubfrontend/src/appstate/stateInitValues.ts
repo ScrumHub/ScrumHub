@@ -1,7 +1,7 @@
 import { tableKeys } from "../components/utility/commonInterfaces";
 import config from "../configuration/config"
-import { IAddPBI, IAssignPBI, IFilters, ILoginState, IPBIFilter, IPeopleList, IPerson, IProductBacklogItem, IProductBacklogList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, IState } from "./stateInterfaces";
-import { validateUri } from "./stateUtilities";
+import { validateUri } from "./reducerUtilities";
+import { IAddBI, IAssignBI, IFilters, ILoginState, IBIFilter, IPeopleList, IPerson, IBacklogItem, IBacklogItemList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, IState } from "./stateInterfaces";
 const path = require("path");
 require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
 
@@ -9,7 +9,7 @@ export const errorObject = {
   code: 0,
   response: {
     data: null,
-    message: "Connection error",
+    Message: "Connection error",
     successful: false,
     metadata: null,
   },
@@ -32,7 +32,7 @@ export const initTaskList: ITaskList = {
   realSize: 5,
   list: [],
 };
-export const initPBItem: IProductBacklogItem = {
+export const initBI: IBacklogItem = {
   id: 0,
   name: "Item",
   finished: false,
@@ -45,7 +45,7 @@ export const initPBItem: IProductBacklogItem = {
   acceptanceCriteria: ["criteria", "criteria2"],
   tasks: [initTask],
 };
-export const init2ProductBacklogItem: IProductBacklogItem = {
+export const initBI2: IBacklogItem = {
   id: 1,
   name: "Second",
   finished: false,
@@ -58,7 +58,7 @@ export const init2ProductBacklogItem: IProductBacklogItem = {
   acceptanceCriteria: ["criteria", "criteria2"],
   tasks: [],
 };
-export const unassignedPBI: IProductBacklogItem = {
+export const unassignedBI: IBacklogItem = {
   id: 0,
   name: "Tasks To Assign",
   finished: false,
@@ -71,17 +71,17 @@ export const unassignedPBI: IProductBacklogItem = {
   acceptanceCriteria: [""],
   tasks: [],
 };
-export const initAddPBI: IAddPBI = {
+export const initAddPBI: IAddBI = {
   name: "Item",
   priority: 0,
   acceptanceCriteria: ["criteria", "criteria2"],
 };
-export const initAssignPBI: IAssignPBI = {
+export const initAssignPBI: IAssignBI = {
   name: "",
   id: 0,
   isInSprint: false
 };
-export const initPBIFilter: IPBIFilter = {
+export const initPBIFilter: IBIFilter = {
   pageNumber: config.defaultFilters.page,
   pageSize: config.defaultFilters.pbiSize,
   nameFilter: "",
@@ -91,7 +91,7 @@ export const initSprintFilter: IFilters = {
   pageSize: config.defaultFilters.sprintSize,
   nameFilter: "",
 };
-export const initProductBacklogList: IProductBacklogList = {
+export const initBacklogItemList: IBacklogItemList = {
   pageNumber: 1,
   pageCount: 1,
   pageSize: 10,
@@ -102,10 +102,20 @@ export const initSprint: ISprint = {
   sprintNumber: 1,
   title: "",
   goal: "",
-  backlogItems: [initPBItem],
+  backlogItems: [initBI],
   finishDate: "",
   isCurrent: false,
-  status: "New",
+  status: "NotFinished",
+  isCompleted: false,
+}
+export const initProductBacklog: ISprint = {
+  sprintNumber: 0,
+  title: "Product Backlog",
+  goal: "",
+  backlogItems: [],
+  finishDate: "",
+  isCurrent: false,
+  status: "NotFinished",
   isCompleted: false,
 }
 export const initSprint2: ISprint = {
@@ -114,7 +124,7 @@ export const initSprint2: ISprint = {
   backlogItems: [],
   finishDate: "",
   isCurrent: false,
-  status: "New",
+  status: "NotFinished",
   isCompleted: false,
   title: ""
 };
@@ -130,7 +140,7 @@ export const initRepository: IRepository = {
   gitHubId: 0,
   hasAdminRights: true,
   alreadyInScrumHub: true,
-  backlogItems: [initPBItem],
+  backlogItems: [initBI],
   sprints: [initSprint],
   description: "",
   dateOfLastActivity: null,
@@ -202,7 +212,7 @@ export const initState: IState = {
   loginState: initLoginState,
   loading: false,
   error: initError,
-  pbiPage: initProductBacklogList,
+  pbiPage: initBacklogItemList,
   sprintPage: initSprintList,
   taskPage: initTaskList,
   repositories: [],

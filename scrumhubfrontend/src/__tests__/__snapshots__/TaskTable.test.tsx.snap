@@ -1,0 +1,139 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TaskTable component in container is the same as snapshot 1`] = `
+<ContextProvider
+  value={
+    Object {
+      "store": Object {
+        "@@observable": [Function],
+        "dispatch": [Function],
+        "getState": [Function],
+        "replaceReducer": [Function],
+        "subscribe": [Function],
+      },
+      "subscription": Object {
+        "addNestedSub": [Function],
+        "getListeners": [Function],
+        "handleChangeWrapper": [Function],
+        "isSubscribed": [Function],
+        "notifyNestedSubs": [Function],
+        "onStateChange": [Function],
+        "trySubscribe": [Function],
+        "tryUnsubscribe": [Function],
+      },
+    }
+  }
+>
+  <Memo(DndProvider)
+    backend={[Function]}
+    key="dnd_sprint"
+  >
+    <Memo()
+      item={
+        Object {
+          "acceptanceCriteria": Array [
+            "criteria",
+            "criteria2",
+          ],
+          "estimated": true,
+          "expectedTimeInHours": 2,
+          "finished": false,
+          "id": 0,
+          "isInSprint": false,
+          "name": "Item",
+          "priority": 0,
+          "sprintNumber": 0,
+          "tasks": Array [
+            Object {
+              "assigness": Array [],
+              "finished": false,
+              "id": 0,
+              "isAssignedToPBI": false,
+              "link": "",
+              "name": "",
+              "pbiId": 0,
+              "status": "",
+            },
+          ],
+          "timeSpentInHours": 0,
+        }
+      }
+      peopleFilter={Array []}
+      showHeader={true}
+      taskColumns={
+        Array [
+          Object {
+            "align": "left",
+            "dataIndex": "name",
+            "key": "name",
+            "sorter": [Function],
+            "title": "Name",
+            "width": "32%",
+          },
+          Object {
+            "align": "center",
+            "filterSearch": true,
+            "filters": Array [
+              Object {
+                "text": "In Progress",
+                "value": "inprogress",
+              },
+              Object {
+                "text": "New",
+                "value": "new",
+              },
+              Object {
+                "text": "Finished",
+                "value": "finished",
+              },
+              Object {
+                "text": "In Review",
+                "value": "inreview",
+              },
+            ],
+            "key": "finished",
+            "onFilter": [Function],
+            "render": [Function],
+            "sorter": [Function],
+            "title": "Status",
+            "width": "22%",
+          },
+          Object {
+            "align": "center",
+            "filterIcon": <ForwardRef(SearchOutlined) />,
+            "filteredValue": Array [],
+            "filters": Array [],
+            "key": "isAssignedToPBI",
+            "onFilter": [Function],
+            "render": [Function],
+            "title": "Assignees",
+            "width": "22%",
+          },
+          Object {
+            "align": "center",
+            "key": "branch",
+            "render": [Function],
+            "title": "Branch",
+            "width": "12%",
+          },
+          Object {
+            "align": "right",
+            "dataIndex": "link",
+            "key": "link",
+            "render": [Function],
+            "title": "",
+            "width": "12%",
+          },
+        ]
+      }
+      taskComponents={
+        Object {
+          "body": Object {
+            "row": [Function],
+          },
+        }
+      }
+    />
+  </Memo(DndProvider)>
+</ContextProvider>
+`;

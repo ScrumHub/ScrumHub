@@ -14,9 +14,11 @@ import { clearReposList } from '../appstate/actions';
 import SkeletonList, { CantAddToShButton, InShButton } from './utility/LoadAnimations';
 import { dateFormat, isArrayValid } from './utility/commonFunctions';
 import { initReposFilters } from './utility/commonInitValues';
-import { response } from 'express';
 const { Meta } = Card;
 
+/**
+ * @return {Element} Home Component with an infinite list of repositories
+ */
 export function Home() {
   const isLoggedIn = useSelector((appState: IState) => appState.loginState.isLoggedIn);
   const token = useSelector((appState: IState) => appState.loginState.token);
@@ -95,7 +97,7 @@ export function Home() {
 
   function redirectToProject(props: IRepository) {
     localStorage.setItem("ownerName", props.name);
-    navigate(`/${props.name.split("/")[0]}/${props.name.split("/")[1]}`, { replace: true });
+    navigate(`/${props.name.split("/")[0]}/${props.name.split("/")[1]}` );
   };
 
   return (
