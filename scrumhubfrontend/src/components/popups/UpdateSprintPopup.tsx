@@ -1,11 +1,9 @@
-import React from 'react';
 import { Modal, Form, DatePicker, Input } from 'antd';
 import { ISprint } from '../../appstate/stateInterfaces';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import TextArea from 'antd/lib/input/TextArea';
 import moment from 'moment';
 import { IUpdateSprintCollectionCreateFormProps, IUpdateSprintValues } from './popupInterfaces';
-import { renderDateSprint } from '../utility/LoadAnimations';
 /**
  * Returns Popup with a form for updating the given {@linkcode ISprint} sprint 
  */

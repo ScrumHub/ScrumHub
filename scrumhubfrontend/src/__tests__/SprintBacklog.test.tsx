@@ -84,8 +84,7 @@ describe('Project component in container', () => {
   });
 
   it("Submitting a name via the input field changes the name state value", () => {
-    let createdComp;
-    actTest(() => {createdComp = create(<Provider store={store}>
+    actTest(() => { create(<Provider store={store}>
       <Router>
         <Routes>
         <Route path={`/:owner/:name/Sprints/:number`} element={<SprintBacklog />} />
@@ -94,14 +93,12 @@ describe('Project component in container', () => {
         </Routes>
       </Router>
     </Provider>)});
-   // expect(createdComp.fin)
   });
   it("No Expanded rows", () => {
-    let createdComp;
     store = configureStore({
       reducer: reducerFunction(initTestState),
     });
-    actTest(() => {createdComp = create(<Provider store={store}>
+    actTest(() => {create(<Provider store={store}>
       <Router>
         <Routes>
           <Route path={`/:owner/:name`} element={<Project />} />

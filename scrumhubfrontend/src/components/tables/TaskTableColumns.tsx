@@ -3,7 +3,7 @@ import { IPeopleList, ITask, IPerson, IBacklogItem } from "../../appstate/stateI
 import "../Home.css";
 import "../Main.css";
 import { BranchesOutlined, DownOutlined, LoadingOutlined, SearchOutlined } from "@ant-design/icons";
-import { isArrayValid, isBranchNotCreated, isInReviewOrFinished, renderNameFilters, renderPeopleFilters } from "../utility/commonFunctions";
+import { isArrayValid, isBranchNotCreated, isInReviewOrFinished, renderPeopleFilters } from "../utility/commonFunctions";
 import React from "react";
 import { assignPerson, startTask } from "../utility/BacklogHandlers";
 import { PBIMenuWithPeople } from "../utility/LoadAnimations";

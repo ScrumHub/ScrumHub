@@ -56,7 +56,7 @@ export function Main(props: any) {
       //store.dispatch(clearReposList());
     }
   }
-  const [selectedSiderKey, setSelectedSiderKey] = useState('2');
+  const [selectedSiderKey, setSelectedSiderKey] = useState(location.pathname.includes("active")?"ActiveSprint":"ProductBacklog");
   const handlePBacklog = () => {
     if (ownerName && ownerName !== "") {
       const newPath = `/${ownerName.split("/")[0]}/${ownerName.split("/")[1]}`;

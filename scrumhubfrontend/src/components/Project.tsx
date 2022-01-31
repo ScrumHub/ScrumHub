@@ -20,7 +20,7 @@ import { initSprint } from '../appstate/stateInitValues';
 import { initFilterMenu, initFilterSortInfo, initSortedInfo } from './utility/commonInitValues';
 import { isArrayValid } from './utility/commonFunctions';
 import { ISortedInfo } from './utility/commonInterfaces';
-import { addPBIToRepo, addSprintToRepo, unassignPBIsFromSprint } from './utility/BacklogHandlers';
+import { addPBIToRepo, unassignPBIsFromSprint } from './utility/BacklogHandlers';
 const { Search } = Input;
 
 /** Renders Product Backlog View*/

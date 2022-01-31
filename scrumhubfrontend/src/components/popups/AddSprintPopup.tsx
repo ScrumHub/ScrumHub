@@ -19,7 +19,6 @@ export function AddSprintPopup({
   const [loading, setLoading] = React.useState(false);
   const filteredData = (isArrayValid(sprintData) ? sprintData.flatMap((sprintData) => sprintData.backlogItems):[] as IBacklogItem[])
   .concat(isArrayValid(pbiData)?pbiData:[]).filter((item:IBacklogItem) => item.estimated !== false && item.id !== 0).map((b:IBacklogItem)=>{return({...b,isInSprint:false});});
-
   const [temp, setTemp] = useState(filteredData);
   return (
     <Modal

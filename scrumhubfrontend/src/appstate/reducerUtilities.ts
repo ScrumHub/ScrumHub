@@ -230,7 +230,7 @@ export function updateAllTasksSWR(state: IState, temp: ITask[]) {
       return {...item,tasks:filtered.sort((a,b)=>a.id-b.id) };
     });
   }
-  else if (newState.sprintPage && isArrayValid(newState.sprintPage.list)) {
+  if (newState.sprintPage && isArrayValid(newState.sprintPage.list)) {
     newState.sprintPage.list = newState.sprintPage.list.map((sprint: ISprint) => {
       sprint.backlogItems = sprint.backlogItems.map((item: IBacklogItem) => {
         return {...item, tasks:tasks.filter((t:ITask)=>t.pbiId===item.id)};
@@ -241,7 +241,7 @@ export function updateAllTasksSWR(state: IState, temp: ITask[]) {
       return sprint;
     });
   }
-  else if (!isNull(newState.openSprint) && isArrayValid(newState.openSprint.backlogItems)){
+  if (!isNull(newState.openSprint) && isArrayValid(newState.openSprint.backlogItems)){
     newState.openSprint.backlogItems = newState.openSprint.backlogItems.map((item: IBacklogItem) => {
       return {...item, tasks:tasks.filter((t:ITask)=>t.pbiId===item.id)};
     });

@@ -56,8 +56,8 @@ export function SprintBacklog() {
       if(!isArrayValid(sprints.list) || !isArrayValid(pbiPage.list)|| !isArrayValid(tasks.current)){
         fetchBacklog(true,ownerName, token);
       }
-      store.dispatch(Actions.fetchRepoTasksThunk({ token: token, ownerName: ownerName }));
-      setInitialRefresh(false);
+      store.dispatch(Actions.fetchRepoTasksThunk({ token: token, ownerName: ownerName }))
+      .then((response:any)=>{setInitialRefresh(false);});
     }// eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialRefresh, location]);
   let ratio = 0;

@@ -59,35 +59,14 @@ exports[`App component in container main component rendered is the same as snaps
                   className="loginContainer"
                 >
                   <a
-                    className="ant-btn ant-btn-primary"
+                    className="ant-btn ant-btn-primary ant-btn-lg loginButton"
                     href="https://github.com/login/oauth/authorize?scope=repo&client_id=84eb53f61589bdc7f7f0&redirect_uri=http://localhost:3000/login"
                     onClick={[Function]}
-                    style={
-                      Object {
-                        "backgroundColor": "black",
-                        "borderColor": "black",
-                        "overflow": "clip",
-                        "textOverflow": "ellipsis",
-                        "whiteSpace": "nowrap",
-                        "width": "100%",
-                      }
-                    }
                   >
                     <span
-                      style={
-                        Object {
-                          "color": "white",
-                          "fontFamily": "Montserrat",
-                          "overflow": "clip",
-                          "textOverflow": "ellipsis",
-                          "textTransform": "uppercase",
-                          "whiteSpace": "nowrap",
-                          "width": "100%",
-                        }
-                      }
+                      className="loginButtonSpan"
                     >
                       Login  
-                          
                       <span
                         aria-label="github"
                         className="anticon anticon-github"

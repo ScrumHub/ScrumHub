@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { message } from 'antd';
 import { useDrag, useDrop } from 'react-dnd';
 import * as Actions from '../appstate/actions';
-import { IAddBI, IFilters, IPeopleList, IBacklogItem, IBacklogItemList, ISprint, ISprintList, ITask, IState } from '../appstate/stateInterfaces';
+import { IFilters, IPeopleList, IBacklogItem, IBacklogItemList, ISprint, ISprintList, ITask, IState } from '../appstate/stateInterfaces';
 import 'antd/dist/antd.css';
 import moment from 'moment';
 import './ProductBacklog.css';
@@ -24,8 +24,8 @@ import { EditPBIPopup } from './popups/EditPBIPopup';
 import { EstimatePBIPopup } from './popups/EstimatePBIPopup';
 import { UpdateSprintPopup } from './popups/UpdateSprintPopup';
 import { TaskTableComponent } from './tables/TaskTable';
-import _, { values } from 'lodash';
-import { deletePBI, requestFetchAllRepoTasks, requestFetchRateLimit } from '../appstate/fetching';
+import _ from 'lodash';
+import { requestFetchAllRepoTasks, requestFetchRateLimit } from '../appstate/fetching';
 export const type = 'DraggableBodyRow';
 
 /**
@@ -52,13 +52,15 @@ export const ProductBacklog: React.FC<IProductBacklogProps> = React.memo((props:
   message.config({ maxCount: 1 });
   useEffect(() => {
     if (initialRefresh) {
-      if (!localStorage.getItem("sprintID")) {// ||!isArrayValid(sprintPage.list) || !isArrayValid(pbiPage.list)) {
+      if (!localStorage.getItem("sprintID")) {
         store.dispatch(Actions.clearPBIsList());
         store.dispatch(Actions.clearSprintList());
+        store.dispatch(Actions.fetchRepoTasksThunk({ token: token, ownerName: ownerName }))
+      .then((response:any)=>{setInitialRefresh(false);});
+      }else{
+        localStorage.removeItem("sprintID");
+        setInitialRefresh(false);
       }
-      store.dispatch(Actions.fetchRepoTasksThunk({ token: token, ownerName: ownerName }));
-      localStorage.removeItem("sprintID");
-      setInitialRefresh(false);
     }
   }, [initialRefresh]);
   useEffect(() => { fetchPBIsAndUnassigned(refreshRequired, ownerName, token); }, [refreshRequired]);

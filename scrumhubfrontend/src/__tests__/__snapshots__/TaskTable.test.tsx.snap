@@ -59,25 +59,48 @@ exports[`TaskTable component in container is the same as snapshot 1`] = `
         }
       }
       peopleFilter={Array []}
+      showHeader={true}
       taskColumns={
         Array [
           Object {
             "align": "left",
             "dataIndex": "name",
             "key": "name",
+            "sorter": [Function],
             "title": "Name",
             "width": "32%",
           },
           Object {
             "align": "center",
+            "filterSearch": true,
+            "filters": Array [
+              Object {
+                "text": "In Progress",
+                "value": "inprogress",
+              },
+              Object {
+                "text": "New",
+                "value": "new",
+              },
+              Object {
+                "text": "Finished",
+                "value": "finished",
+              },
+              Object {
+                "text": "In Review",
+                "value": "inreview",
+              },
+            ],
             "key": "finished",
+            "onFilter": [Function],
             "render": [Function],
+            "sorter": [Function],
             "title": "Status",
             "width": "22%",
           },
           Object {
             "align": "center",
-            "filterIcon": <React.Fragment />,
+            "filterIcon": <ForwardRef(SearchOutlined) />,
             "filteredValue": Array [],
             "filters": Array [],
             "key": "isAssignedToPBI",
@@ -90,7 +113,7 @@ exports[`TaskTable component in container is the same as snapshot 1`] = `
             "align": "center",
             "key": "branch",
             "render": [Function],
-            "title": "Start Branch",
+            "title": "Branch",
             "width": "12%",
           },
           Object {
@@ -98,7 +121,7 @@ exports[`TaskTable component in container is the same as snapshot 1`] = `
             "dataIndex": "link",
             "key": "link",
             "render": [Function],
-            "title": "Related Link",
+            "title": "",
             "width": "12%",
           },
         ]

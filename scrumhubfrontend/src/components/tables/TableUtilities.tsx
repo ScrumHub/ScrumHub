@@ -1,12 +1,12 @@
 import { EditOutlined, HomeOutlined, SearchOutlined } from '@ant-design/icons';
-import { Tag, Button } from 'antd';
+import { Tag } from 'antd';
 import Search from 'antd/lib/input/Search';
 import { NavigateFunction } from 'react-router';
-import { IPeopleList, IBacklogItem, ISprint, ITask } from '../../appstate/stateInterfaces';
+import { IPeopleList, IBacklogItem, ISprint } from '../../appstate/stateInterfaces';
 import "../Home.css";
 import "../Main.css";
 import { isArrayValid } from '../utility/commonFunctions';
-import { backlogPriorities, backlogColors, pbiFilterVals } from '../utility/commonInitValues';
+import { backlogColors, pbiFilterVals } from '../utility/commonInitValues';
 import { IModals, ISortedInfo, IFilteredInfo } from '../utility/commonInterfaces';
 import { pbiNameCol, pbiProgressCol, pbiToDoCol, pbiPriorityCol, pbiStoryPointsCol, pbiStatusCol, pbiActionCol, PriorityDropdown } from './PBITableColumns';
 import { sprintNrCol, sprintTitleCol, sprintDateCol, sprintStoryPtsCol, sprintStatusCol, sprintActCol } from './SprintTableColumns';

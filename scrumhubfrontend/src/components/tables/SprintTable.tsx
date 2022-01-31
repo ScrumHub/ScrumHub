@@ -36,10 +36,10 @@ export const SprintTableComponent = React.memo((props: any) => {
         store.dispatch(Actions.updateSprintKeys(tempSKeys.filter((item: number) => !keys.includes(item))));
         if(props.filteredInfo && !isArrayValid(props.filteredInfo.complete)){store.dispatch(Actions.updatePBIKeys(tempPKeys.filter((item: number) => !pbiKeys.includes(item))))};
       }
-      //else {
-      //  store.dispatch(Actions.updateSprintKeys(tempSKeys.filter((item: number) => keys.includes(item))));
-      //  store.dispatch(Actions.updatePBIKeys(tempPKeys.filter((item: number) => pbiKeys.includes(item))));
-      //}
+      else {
+        store.dispatch(Actions.updateSprintKeys(tempSKeys.filter((item: number) => keys.includes(item))));
+        store.dispatch(Actions.updatePBIKeys(tempPKeys.filter((item: number) => pbiKeys.includes(item))));
+      }
       setWait(false);
     }// eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.peopleFilter, props.nameFilter,props.filteredInfo, wait]);
