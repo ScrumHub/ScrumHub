@@ -22,7 +22,6 @@ export const isMessageValid = (message: string | undefined): boolean => {
   return (!isNull(message) && typeof (message) !== "undefined" && message !== "" && message.length > 0);
 }
 
-
 export const isInReviewOrFinished = (message: string): boolean => {
   return message === ("InReview") || message === ("Finished");
 }
@@ -31,7 +30,6 @@ export const isBranchNotCreated = (message: string): boolean => {
   return (!isNull(message) && !message.includes("WBranch") && !isInReviewOrFinished(message));
 }
 
-
 export const isArrayValid = (objectArray: any[]) => {
   return !isNull(objectArray) && typeof (objectArray) !== "undefined" && objectArray.length > 0;
 }
@@ -39,9 +37,13 @@ export const isArrayValid = (objectArray: any[]) => {
 export const isItemDefined = (item: any | undefined) => {
   return typeof (item) !== "undefined" && !isNull(item);
 }
-
+/** Checks if string exists and is not empty */
 export const validateString = (val: string) => {
   return val && val !== "" ? val : "";
+}
+/** Checks if string is exists, is not empty and adds ellipsis if {@linkcode String} value is longer than 30 characters*/
+export const ellipsisForString = (val: string) => {
+  return val && val !== "" ? (val.length>30?(val.substring(0,30)+"..."):val) : "";
 }
 
 export function disabledDate(current: any) {
@@ -123,6 +125,19 @@ export function getFetchBodyData(url: string) {
   const newUrl = url.split("?code=");
   window.history.pushState({}, "", newUrl[0]);
   return ({ code: newUrl[1] });
+}
+
+export function getOwnerNameLocation(url: string) {
+  if(!url.includes("login") && url.split("/").length>=3){
+return(url.split("/")[1]+"/"+url.split("/")[2]);
+  }
+  else{
+    return("");
+  }
+}
+
+export function getSprintLocation(url: string): number {
+  return(url && !url.includes("login") && url.split("/").length===5 ?Number(url.split("/")[4]):-1);
 }
 
 export function hasGithubResponseCode(url: string) {

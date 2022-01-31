@@ -21,7 +21,7 @@ export function handleLogin( token: string, navigate: NavigateFunction, setData:
         if (response.payload && response.payload.code !== 0) {
             store.dispatch(Actions.login({ token: token, isLoggedIn: true }));
             setLoginStateLocalStorage(token);
-            navigate("/", { replace: true });
+            navigate("/" );
         } else {
             setData(loginDataError);
         }

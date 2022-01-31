@@ -9,7 +9,7 @@ import { CalendarOutlined } from '@ant-design/icons';
 import { store } from '../appstate/store';
 import { PBITableComponent } from './tables/PBITable';
 import { TaskTableComponent } from './tables/TaskTable';
-import { canDropTask, dateFormat, isArrayValid, isItemDefined, isSprintLoaded, useStateAndRefLoading, useTasksRef } from './utility/commonFunctions';
+import { canDropTask, dateFormat, getOwnerNameLocation, getSprintLocation, isArrayValid, isItemDefined, isSprintLoaded, useStateAndRefLoading, useTasksRef } from './utility/commonFunctions';
 import SkeletonList from './utility/LoadAnimations';
 import { addPBIToRepo, addTaskToPBI, deletePBItemInRepo, editPBItemInRepo, estimatePBItemInRepo, fetchBacklog, finishPBItemInRepo, updateTask } from './utility/BacklogHandlers';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
@@ -41,14 +41,14 @@ export function SprintBacklog() {
   const [filterPBI, setFiltersPBI] = useState<IFilters>({ nameFilter: [] as string[], peopleFilter: [], taskNameFilter:[] as string[] });
   const people = useSelector((appState: IState) => appState.people as IPeopleList);
   const [isModal, setIsModal] = useState<IModals>(initModalVals);
-  const navigate = useNavigate();
-  const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : "";
-  const sprintID = localStorage.getItem("sprintID") ? Number(localStorage.getItem("sprintID")) : -1;
+  const location = useLocation();
+  getSprintLocation(location.pathname);
+  const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : getOwnerNameLocation(location.pathname);
+  const sprintID = localStorage.getItem("sprintID") ? Number(localStorage.getItem("sprintID")) : getSprintLocation(location.pathname);
   const [initialRefresh, setInitialRefresh] = useState(true);
   const sprintPage = useSelector((appState: IState) => appState.openSprint as ISprint);
   const pbiPage = useSelector((appState: IState) => appState.pbiPage);
   const sprints = useSelector((appState: IState) => appState.pbiPage);
-  const location = useLocation();
   useEffect(() => {
     if (initialRefresh) {
       store.dispatch(Actions.fetchOneSprintThunk({ token: token, ownerName: ownerName, sprintNumber: sprintID }));
@@ -76,10 +76,8 @@ export function SprintBacklog() {
     return () => clearInterval(timer);// eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const updateSprint = (sprint: ISprint) => {
-    setIsModal({ ...isModal, updateSprint: false });
     const sprintNr = sprintPage.sprintNumber;
     const ids = sprint.backlogItems.map((value: IBacklogItem) => { return ((value.sprintNumber === sprintNr ? value.id.toString() : "")) }).filter((x) => x !== "");
-    try {
       store.dispatch(Actions.updateOneSprintThunk({
         token: token as string,
         ownerName: ownerName,
@@ -88,20 +86,21 @@ export function SprintBacklog() {
           "title": sprint.title,
           "finishDate": moment((sprint.finishDate as any)._d).format("YYYY-MM-DDTHH:mm:ss") + "Z", "goal": sprint.goal, "pbIs": ids
         }
-      }));
-    } catch (err) {
-      console.error("Failed to update the pbis: ", err);
-    }
+      })).then((response:any)=>{
+        if(response.payload && response.payload.code ===200){
+          setIsModal({ ...isModal, updateSprint: false });
+        }
+      })
   };
   const completeSprint = (value: boolean) => {
-    setIsModal({ ...isModal, completeSprint: false });
-    const sprintNr = sprintPage.sprintNumber;
     store.dispatch(Actions.completeOneSprintThunk({
       token: token,
       ownerName: ownerName,
-      sprintNumber: sprintNr,
+      sprintNumber: sprintPage?sprintPage.sprintNumber:0,
       isFailure: value
-    }));
+    })).then((response:any)=>{if(response.payload && response.payload.code === 200){
+      setIsModal({ ...isModal, completeSprint: false });
+    }});
   };
   const [selectedPBI, setSelectedPBI] = useState({} as IBacklogItem);
   const DraggableBodyRow = ({ index: index_row, bodyType, record, className, style, ...restProps }: BodyRowProps) => {

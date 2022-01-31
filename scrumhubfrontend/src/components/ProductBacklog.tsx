@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useRef, useEffect } from 'react';
 import { message } from 'antd';
@@ -9,10 +10,10 @@ import moment from 'moment';
 import './ProductBacklog.css';
 import { store } from '../appstate/store';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { initModalVals } from './utility/commonInitValues';
 import { BodyRowProps, IModals, IProductBacklogProps, IRowIds } from './utility/commonInterfaces';
-import { canDropPBI, canDropTask, isItemDefined, useStateAndRefLoading, useTasksRef, } from './utility/commonFunctions';
+import { canDropPBI, canDropTask, getOwnerNameLocation, isItemDefined, useStateAndRefLoading, useTasksRef, } from './utility/commonFunctions';
 import { taskColumns, dragCmpnts, pbiColumns, sprintColumns } from './tables/TableUtilities';
 import { PBITableComponent } from './tables/PBITable';
 import { SprintTableComponent } from './tables/SprintTable';
@@ -35,7 +36,8 @@ export const type = 'DraggableBodyRow';
  */
 export const ProductBacklog: React.FC<IProductBacklogProps> = React.memo((props: IProductBacklogProps) => {
   const token = useSelector((appState: IState) => appState.loginState.token);
-  const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : "";
+  const location = useLocation();
+  const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : getOwnerNameLocation(location.pathname);
   const sprintPage = useSelector((state: IState) => state.sprintPage as ISprintList);
   const { loading, loadingRef } = useStateAndRefLoading(useSelector((appState: IState) => appState.loading as boolean));
   const pbiPage = useSelector((appState: IState) => appState.pbiPage as IBacklogItemList);
@@ -87,27 +89,27 @@ export const ProductBacklog: React.FC<IProductBacklogProps> = React.memo((props:
 
   
   const updateSprint = (sprint: ISprint) => {
-    setIsModal({ ...isModal, updateSprint: false });
     const sprintID = selectedSprint.sprintNumber;
     const ids = sprint.backlogItems.map((value: IBacklogItem) => { return ((value.sprintNumber === Number(sprintID) ? value.id.toString() : "")) }).filter((x) => x !== "");
-    try {
       store.dispatch(Actions.updateOneSprintThunk({
         token: token as string, ownerName: ownerName, sprintNumber: Number(sprintID),
         sprint: {
           "title": sprint.title, "finishDate": moment((sprint.finishDate as any)._d).format("YYYY-MM-DDTHH:mm:ss") + "Z",
           "goal": sprint.goal, "pbIs": ids
         }
-      }));
-    } catch (err) { console.error("Failed to update the pbis: ", err); }
-    finally {
-      setSelectedSprint({} as ISprint);
-    }
+      })).then((response:any)=>{
+        if(response.payload && response.payload.code ===200){
+          setIsModal({ ...isModal, updateSprint: false });
+          setSelectedSprint({} as ISprint);
+        }
+      })
   };
   const completeSprint = (value: boolean) => {
-    setIsModal({ ...isModal, completeSprint: false });
-    const sprintID = selectedSprint.sprintNumber;
-    store.dispatch(Actions.completeOneSprintThunk({ token: token, ownerName: ownerName, sprintNumber: Number(sprintID), isFailure: value }))
-      .then((response: any) => { setSelectedSprint({} as ISprint); });
+    store.dispatch(Actions.completeOneSprintThunk({ token: token, ownerName: ownerName, sprintNumber: Number(selectedSprint.sprintNumber), isFailure: value }))
+      .then((response: any) => { if(response.payload && response.payload.code === 200){
+        setIsModal({ ...isModal, completeSprint: false });
+        setSelectedSprint({} as ISprint);
+      } });
   };
   const DraggableBodyRow = ({ index: index_row, bodyType, record, className, style, ...restProps }: BodyRowProps) => {
     const ref = useRef();
@@ -179,10 +181,10 @@ export const ProductBacklog: React.FC<IProductBacklogProps> = React.memo((props:
     <AddTaskPopup data={{ name: "" } as IFilters} visible={isModal.addTask}
       onCreate={function (values: any): void { addTaskToPBI(values, token, ownerName, selectedPBI.id, setIsModal, isModal, setSelectedPBI); }}
       onCancel={() => { setIsModal({ ...isModal, addTask: false }); }} />
-    {isModal.updateSprint && <UpdateSprintPopup data={selectedSprint} visible={isModal.updateSprint && !loading}
+    {isModal.updateSprint && <UpdateSprintPopup data={selectedSprint} visible={isModal.updateSprint}
       onCreate={function (values: any): void { updateSprint(values) }}
       onCancel={() => { setIsModal({ ...isModal, updateSprint: false }); setSelectedSprint({} as ISprint); }} />}
-    {isModal.completeSprint && <CompleteSprintPopup data={selectedSprint} visible={isModal.completeSprint && !loading}
+    {isModal.completeSprint && <CompleteSprintPopup data={selectedSprint} visible={isModal.completeSprint}
       onComplete={function (value: boolean): void { completeSprint(value) }}
       onCancel={() => { setIsModal({ ...isModal, completeSprint: false }); setSelectedSprint({} as ISprint); }} />}
   </div>

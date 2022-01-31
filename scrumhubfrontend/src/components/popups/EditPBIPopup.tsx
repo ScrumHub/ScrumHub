@@ -4,7 +4,6 @@ import { MinusCircleOutlined, PlusCircleOutlined, QuestionCircleOutlined } from 
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import { backlogColors, backlogPriorities, formItemLayoutWithOutLabel } from '../utility/commonInitValues';
 import { IEditPBICollectionCreateFormProps } from './popupInterfaces';
-import { IAddBI } from '../../appstate/stateInterfaces';
 import { onOkEditPBIPopup } from './popupUtilities';
 /**
  * Returns Popup with a form for editing the given {@linkcode IBacklogItem} backlogitem

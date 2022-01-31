@@ -97,7 +97,7 @@ export function Home() {
 
   function redirectToProject(props: IRepository) {
     localStorage.setItem("ownerName", props.name);
-    navigate(`/${props.name.split("/")[0]}/${props.name.split("/")[1]}`, { replace: true });
+    navigate(`/${props.name.split("/")[0]}/${props.name.split("/")[1]}` );
   };
 
   return (

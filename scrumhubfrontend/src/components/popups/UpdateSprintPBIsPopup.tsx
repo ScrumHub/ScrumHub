@@ -4,7 +4,6 @@ import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import TextArea from 'antd/lib/input/TextArea';
 import _ from 'lodash';
 import { IUpdateSprintPBIsCollectionCreateFormProps, IUpdateSprintPBIsValues } from './popupInterfaces';
-import { renderDateSprint } from '../utility/LoadAnimations';
 /**
  * Returns Popup with a form for updating the given {@linkcode ISprint} sprint and assigning new {@linkcode IBacklogItem} items
  */

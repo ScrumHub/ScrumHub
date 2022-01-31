@@ -37,7 +37,7 @@ export const SprintTableComponent = React.memo((props: any) => {
         if(props.filteredInfo && !isArrayValid(props.filteredInfo.complete)){store.dispatch(Actions.updatePBIKeys(tempPKeys.filter((item: number) => !pbiKeys.includes(item))))};
       }
       else {
-        store.dispatch(Actions.updateSprintKeys(tempSKeys.filter((item: number) => keys.includes(item))));
+        store.dispatch(Actions.updateSprintKeys(tempSKeys.filter((item: number) => keys.includes(item) && item!==0)));
         store.dispatch(Actions.updatePBIKeys(tempPKeys.filter((item: number) => pbiKeys.includes(item))));
       }
       setWait(false);

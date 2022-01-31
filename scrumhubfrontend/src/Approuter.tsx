@@ -14,7 +14,7 @@ export function AppRouter() {
             <Route path="/" element={<Home />} />
             <Route path={`/:owner/:name`} element={<Project />} />
             <Route path={`/:owner/:name/Sprints/:number`} element={<SprintBacklog />} />
-            <Route path={`/:owner/:name/active-sprint`} element={<SprintBacklog />} />
+            <Route path={`/:owner/:name/active-sprint/:number`} element={<SprintBacklog />} />
         </Routes>
     );
 }

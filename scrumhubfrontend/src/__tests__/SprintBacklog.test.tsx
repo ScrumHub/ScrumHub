@@ -59,7 +59,7 @@ describe('Project component in container', () => {
           <Router>
             <Routes>
             <Route path={`/:owner/:name/Sprints/:number`} element={<SprintBacklog />} />
-            <Route path={`/:owner/:name/active-sprint`} element={<SprintBacklog />} />
+            <Route path={`/:owner/:name/active-sprint/:number`} element={<SprintBacklog />} />
               <Route path={`/`} element={<></>} />
             </Routes>
           </Router>
@@ -88,7 +88,7 @@ describe('Project component in container', () => {
       <Router>
         <Routes>
         <Route path={`/:owner/:name/Sprints/:number`} element={<SprintBacklog />} />
-            <Route path={`/:owner/:name/active-sprint`} element={<SprintBacklog />} />
+            <Route path={`/:owner/:name//:number`} element={<SprintBacklog />} />
               <Route path={`/`} element={<></>} />
         </Routes>
       </Router>

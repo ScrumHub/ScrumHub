@@ -11,7 +11,7 @@ import './ProductBacklog.css';
 import { useSelector } from 'react-redux';
 import { ISprint, IState } from '../appstate/stateInterfaces';
 import { routes } from './tables/TableUtilities';
-import { clearLocalStorage, clearProjectLocalStorage, isMessageValid } from './utility/commonFunctions';
+import { clearLocalStorage, clearProjectLocalStorage, getOwnerNameLocation, getSprintLocation, isMessageValid } from './utility/commonFunctions';
 import { ItemRender } from './utility/LoginAndMainHandlers';
 import { isNull } from 'lodash';
 const { Header, Footer, Content, Sider } = Layout;
@@ -29,21 +29,21 @@ export function Main(props: any) {
   const currentUser = useSelector((appState: IState) => appState.currentUser);
   const activeSprintNumber = useSelector((appState: IState) => appState.activeSprintNumber);
   const sprintPage = useSelector((appState: IState) => appState.openSprint as ISprint);
-  const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") : "";
-  const sprintID = localStorage.getItem("sprintID") ? localStorage.getItem("sprintID") as string : "";
+  const location = useLocation();
+  const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : getOwnerNameLocation(location.pathname);
+  const sprintID = localStorage.getItem("sprintID") ? Number(localStorage.getItem("sprintID")) : getSprintLocation(location.pathname);
   const [load, setLoad] = useState(false);
   const [hasError, setHasError] = useState(true);
   const [logout, setLogout] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(true);
   const navigate = useNavigate();
-  const location = useLocation();
   message.config({ maxCount: 1 });
   useEffect(() => {
     if (logout || (!isLoggedIn)) {
       setLogout(false);
       store.dispatch(Actions.logout());
       clearLocalStorage();
-      if (!isLoggedIn) { navigate("/login", { replace: true }); }
+      if (!isLoggedIn) { navigate("/login" ); }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [logout, isLoggedIn]);
@@ -52,8 +52,7 @@ export function Main(props: any) {
     if (location.pathname !== "/") {
       store.dispatch(Actions.clearProject());
       clearProjectLocalStorage();
-      navigate("/", { replace: true });
-      //store.dispatch(clearReposList());
+      navigate("/" );
     }
   }
   const [selectedSiderKey, setSelectedSiderKey] = useState(location.pathname.includes("active")?"ActiveSprint":"ProductBacklog");
@@ -62,19 +61,18 @@ export function Main(props: any) {
       const newPath = `/${ownerName.split("/")[0]}/${ownerName.split("/")[1]}`;
       if (location.pathname !== newPath) {
         setSelectedSiderKey('ProductBacklog');
-        navigate(newPath, { replace: true });
+        navigate(newPath );
       }
     }
   }
   const handleActiveSprint = () => {
     if (ownerName && ownerName !== "" && activeSprintNumber !== -1) {
-      const newPath = `/${ownerName.split("/")[0]}/${ownerName.split("/")[1]}/active-sprint`;
+      const newPath = `/${ownerName.split("/")[0]}/${ownerName.split("/")[1]}/active-sprint/${activeSprintNumber}`;
       if (location.pathname !== newPath) {
         localStorage.setItem("sprintID", JSON.stringify(activeSprintNumber));
         setSelectedSiderKey('ActiveSprint');
-        store.dispatch(Actions.fetchOneSprintThunk({ token: token, ownerName: ownerName, sprintNumber: Number(localStorage.getItem("sprintID") as string) }));
-        //store.dispatch(Actions.fetchPeopleThunk({ ownerName, token }));
-        navigate(newPath, { replace: true });
+        store.dispatch(Actions.fetchOneSprintThunk({ token: token, ownerName: ownerName, sprintNumber: Number(localStorage.getItem("sprintID")?localStorage.getItem("sprintID"):getSprintLocation(location.pathname)) }));
+        navigate(newPath );
       }
     }
   }
@@ -210,10 +208,10 @@ export function Main(props: any) {
               <div style={{ minHeight: "90vh", margin: 0 }}>
                 {ownerName !== "" && <PageHeader className="pageHeader"
                   title={<div className='contentTitle' >
-                    {sprintID && sprintID !== "0" && sprintPage && sprintPage.title && Number(sprintID) === sprintPage.sprintNumber ?
+                    {sprintID && sprintID !== -1 && sprintPage && sprintPage.title && Number(sprintID) === sprintPage.sprintNumber ?
                       sprintPage.title : location.pathname.includes("sprint") ? "" : "Product Backlog"}
                   </div>}
-                  breadcrumb={<Breadcrumb className='contentBreadcrumb' itemRender={ItemRender} routes={routes(ownerName, sprintID, location)} />}
+                  breadcrumb={<Breadcrumb className='contentBreadcrumb' itemRender={ItemRender} routes={routes(ownerName, sprintID.toString(), location)} />}
                 >
                 </PageHeader>}
                 <AppRouter />

@@ -1,5 +1,6 @@
 import { FormInstance, message } from "antd";
 import { IAddBI, IBacklogItem, ISprint } from "../../appstate/stateInterfaces";
+import { IUpdateSprintValues } from "./popupInterfaces";
 
 export function onOkAddPBIPopup(form: FormInstance<any>, onCreate: (values: IAddBI) => void) {
   form
@@ -53,4 +54,15 @@ export function onOkEditPBIPopup(form: FormInstance<any>, onCreate:(values: IAdd
       console.error('Validate Failed:', info);
     });
 };
+
+export function onOkUpdateSprintPopup(data: ISprint, form: FormInstance<any>, onCreate:(values: ISprint | IUpdateSprintValues) => void) {
+  form
+    .validateFields()
+    .then((values: ISprint | IUpdateSprintValues) => {
+      onCreate({ ...values, backlogItems: data.backlogItems, });
+    })
+    .catch((info: any) => {
+      console.error('Validate Failed:', info);
+    });
+}
 

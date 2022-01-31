@@ -1,7 +1,6 @@
 import { Table } from "antd";
 import { useSelector } from "react-redux";
 import { ITask, IState } from "../../appstate/stateInterfaces";
-import { initRowIds } from "../utility/commonInitValues";
 import { IRowIds } from "../utility/commonInterfaces";
 import React from "react";
 

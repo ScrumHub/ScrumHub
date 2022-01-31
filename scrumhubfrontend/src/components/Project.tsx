@@ -18,9 +18,10 @@ import { AddPBIPopup } from './popups/AddPBIPopup';
 import { AddSprintPopup } from './popups/AddSprintPopup';
 import { initSprint } from '../appstate/stateInitValues';
 import { initFilterMenu, initFilterSortInfo, initSortedInfo } from './utility/commonInitValues';
-import { isArrayValid } from './utility/commonFunctions';
+import { getOwnerNameLocation, isArrayValid } from './utility/commonFunctions';
 import { ISortedInfo } from './utility/commonInterfaces';
 import { addPBIToRepo, unassignPBIsFromSprint } from './utility/BacklogHandlers';
+import { useLocation } from 'react-router';
 const { Search } = Input;
 
 /** Renders Product Backlog View*/
@@ -35,14 +36,15 @@ export const Project = React.memo((props: any) => {
   const [filterMenu, setFilterMenu] = useState(initFilterMenu);
   const [filterPBI, setFiltersPBI] = useState<IFilters>({ nameFilter: [] as string[], peopleFilter: [] as string[] });
   const [inputPplFilter, setInputPplFilter] = useState("");
-  const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : "";
+  const location = useLocation();
+  const ownerName = localStorage.getItem("ownerName") ? localStorage.getItem("ownerName") as string : getOwnerNameLocation(location.pathname);
   const currentUser = useSelector((appState: IState) => appState.currentUser);
   const people = useSelector((appState: IState) => appState.people as IPeopleList);
   const [isAddPBI, setIsAddPBI] = useState(false);
   const [isAddSprint, setIsAddSprint] = useState(false);
   const [finishLoad, setFinishLoad] = useState(false);
   const error = useSelector((appState: IState) => appState.error);
-
+  
   const updatePplFilter = (items: string[]) => { setFiltersPBI({ ...filterPBI, peopleFilter: items }); };
   const updateInputPplFilter = (e: { target: { value: string; }; }) => { setInputPplFilter(e.target.value); };
   const onSearch = (value: string) => { setFiltersPBI({ ...filterPBI, nameFilter: value !== "" ? [value.toLowerCase()] : [] }); };

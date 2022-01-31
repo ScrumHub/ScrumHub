@@ -55,7 +55,6 @@ describe('Main component in container', () => {
         container
       );
     });
-    //console.log(container);
     expect(
       container?.getElementsByClassName("container").length
     ).toBeGreaterThanOrEqual(0);
@@ -95,7 +94,6 @@ describe('Main component when user is logged in', () => {
     });
     
     await store.dispatch(Actions.login({token:"token", isLoggedIn:true}));
-    //console.log(container);
     expect(
       secondContainer?.getElementsByClassName("container").length
     ).toBeGreaterThanOrEqual(0);

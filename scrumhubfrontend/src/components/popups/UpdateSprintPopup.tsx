@@ -1,9 +1,10 @@
-import { Modal, Form, DatePicker, Input } from 'antd';
-import { ISprint } from '../../appstate/stateInterfaces';
+import { Modal, Form, DatePicker, Input, Button } from 'antd';
 import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import TextArea from 'antd/lib/input/TextArea';
 import moment from 'moment';
-import { IUpdateSprintCollectionCreateFormProps, IUpdateSprintValues } from './popupInterfaces';
+import { IUpdateSprintCollectionCreateFormProps } from './popupInterfaces';
+import { onOkUpdateSprintPopup } from './popupUtilities';
+import React from 'react';
 /**
  * Returns Popup with a form for updating the given {@linkcode ISprint} sprint 
  */
@@ -11,26 +12,23 @@ export function UpdateSprintPopup({
   data, visible, onCreate, onCancel,
 }:IUpdateSprintCollectionCreateFormProps): JSX.Element {
   const [form] = Form.useForm();
+  const [loading, setLoading] = React.useState(false);
   return (
     <Modal
       centered={true}
       visible={visible}
       closable={false}
+      destroyOnClose={true}
       title="Update Sprint"
-      okText="Save"
-      cancelText="Cancel"
-      onCancel={onCancel}
-      onOk={() => {
-        form
-          .validateFields()
-          .then((values: ISprint | IUpdateSprintValues) => {
-            form.resetFields();
-            onCreate({ ...values, backlogItems: data.backlogItems, });
-          })
-          .catch((info: any) => {
-            console.error('Validate Failed:', info);
-          });
-      } }
+      footer={[
+        <Button key="CancelInUpdateSprintPopup" id="CancelInUpdateSprintPopup" onClick={onCancel}>
+          Cancel
+        </Button>,
+        <Button loading={loading} type="primary" id="SaveInUpdateSprintPopup" key="SaveInUpdateSprintPopup"
+          onClick={() => { setLoading(true); onOkUpdateSprintPopup(data,form, onCreate); }}>
+          Save
+        </Button>
+      ]}
     >
       <Form
         form={form}

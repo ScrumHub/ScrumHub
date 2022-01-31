@@ -14,8 +14,6 @@ import React from "react";
  */
 export const PBITableComponent = React.memo((props: any) =>{
   let keys = useSelector((appState: IState) => appState.keys.pbiKeys as number[]);
-  //const loadPbiKeys = useSelector((appState: IState) => appState.loadingKeys.pbiKeys as number[]);
-  //const loadSprintKeys = useSelector((appState: IState) => appState.loadingKeys.sprintKeys as number[]);
   const updateExpandedRowKeys = (record: IBacklogItem) => {
     store.dispatch(Actions.updatePBIKeys([record.id]));
   };

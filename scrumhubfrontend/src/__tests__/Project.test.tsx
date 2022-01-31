@@ -17,11 +17,11 @@ import { Home } from "../components/Home";
 import TestRenderer from "react-test-renderer";
 const { act: actTest } = TestRenderer;
 
-
 describe('Project component in container', () => {
   let container: any;
   let store: any;
   beforeEach(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
       value: jest.fn().mockImplementation(query => ({

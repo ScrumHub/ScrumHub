@@ -61,8 +61,8 @@ export const routes = (ownerName: string | null, sprintID: string, location: any
     {
       path: location.pathname,
       key: "location",
-      breadcrumbName: "Projects / " + (location.pathname as string).slice(1).replaceAll("/", " / ")
-        .replace("active-sprint", "Active Sprint").replace("sprints", "Sprints"),
+      breadcrumbName: ("Projects / " + (location.pathname as string).slice(1).replaceAll("/", " / ").replace("sprints", "Sprints").split("active-sprint")[0]).concat
+      (location.pathname.includes("active")?"Active Sprint":""),
       icon: <HomeOutlined />,
     }];
 
