@@ -1715,7 +1715,7 @@ exports[`Project component in container project component rendered is the same a
                                                         <table
                                                           style={
                                                             Object {
-                                                              "tableLayout": "auto",
+                                                              "tableLayout": "fixed",
                                                             }
                                                           }
                                                         >
@@ -1770,7 +1770,7 @@ exports[`Project component in container project component rendered is the same a
                                                               }
                                                             >
                                                               <td
-                                                                className="ant-table-cell"
+                                                                className="ant-table-cell ant-table-cell-ellipsis"
                                                                 colSpan={null}
                                                                 onMouseEnter={[Function]}
                                                                 onMouseLeave={[Function]}
@@ -1780,6 +1780,7 @@ exports[`Project component in container project component rendered is the same a
                                                                     "textAlign": "left",
                                                                   }
                                                                 }
+                                                                title=""
                                                               >
                                                                 
                                                               </td>
@@ -3372,7 +3373,7 @@ exports[`Project component in container project component rendered is the same a
                                                         <table
                                                           style={
                                                             Object {
-                                                              "tableLayout": "auto",
+                                                              "tableLayout": "fixed",
                                                             }
                                                           }
                                                         >
@@ -3427,7 +3428,7 @@ exports[`Project component in container project component rendered is the same a
                                                               }
                                                             >
                                                               <td
-                                                                className="ant-table-cell"
+                                                                className="ant-table-cell ant-table-cell-ellipsis"
                                                                 colSpan={null}
                                                                 onMouseEnter={[Function]}
                                                                 onMouseLeave={[Function]}
@@ -3437,6 +3438,7 @@ exports[`Project component in container project component rendered is the same a
                                                                     "textAlign": "left",
                                                                   }
                                                                 }
+                                                                title=""
                                                               >
                                                                 
                                                               </td>

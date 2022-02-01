@@ -21,11 +21,6 @@ export interface IError {
   title?:string;
 }
 
-export interface IMessCodeError {
-  Message: string;
-  code:number;
-}
-
 export interface ITask {
   assigness: IPerson[]|any[];
   id: number;
@@ -55,20 +50,6 @@ export interface IBacklogItem {
   tasks: ITask[]
 }
 
-export interface ICheckedBacklogItem {
-  checked: boolean;
-  id: number;
-  name: string;
-  finished: boolean;
-  expectedTimeInHours: number;
-  estimated: boolean;
-  sprintNumber: number | null;
-  isInSprint: boolean;
-  timeSpentInHours: number;
-  priority: number;
-  acceptanceCriteria: string[];
-  tasks: ITask[]
-}
 export interface IAddBI {
   name: string;
   priority: number;

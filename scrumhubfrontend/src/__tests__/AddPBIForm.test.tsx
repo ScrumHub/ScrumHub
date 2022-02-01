@@ -6,6 +6,7 @@ import { configure, shallow } from 'enzyme';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import React from "react";
 import { AddPBIForm } from "../components/popups/AddPBIForm";
+import { testMediaMatchObject } from "../appstate/stateUtitlities";
 jest.mock('react', () => ({
   ...jest.requireActual('react'),
   useState: jest.fn(),
@@ -20,19 +21,7 @@ describe('AddPBIForm component in container', () => {
     useStateMock = (initState: any) => [initState, setState];
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     useStateSpy = jest.spyOn(React, 'useState').mockImplementation(useStateMock);
-    Object.defineProperty(window, 'matchMedia', {
-      writable: true,
-      value: jest.fn().mockImplementation(query => ({
-        matches: false,
-        media: query,
-        onchange: null,
-        addListener: jest.fn(), // Deprecated
-        removeListener: jest.fn(), // Deprecated
-        addEventListener: jest.fn(),
-        removeEventListener: jest.fn(),
-        dispatchEvent: jest.fn(),
-      })),
-    });
+    testMediaMatchObject();
   });
 
 it('renders without crashing', async () => {

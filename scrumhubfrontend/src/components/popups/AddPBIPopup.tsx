@@ -25,7 +25,7 @@ export function AddPBIPopup({
           Cancel
         </Button>,
         <Button loading={loading} type="primary" id="SaveInAddPBIPopup" key="SaveInAddPBIPopup"
-          onClick={() => { setLoading(true); onOkAddPBIPopup(form, onCreate); }}>
+          onClick={() => { onOkAddPBIPopup(setLoading,form, onCreate); }}>
           Save
         </Button>
       ]}

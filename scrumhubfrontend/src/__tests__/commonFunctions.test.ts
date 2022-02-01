@@ -2,8 +2,8 @@
  * @jest-environment jsdom
  */
  import moment from "moment"
- import { canDropPBI, canDropTask, disabledDate, getIndex, isArrayValid, isBranchNotCreated, isMessageValid, isNameFilterValid, updateRowKeys, validateString } from "../components/utility/commonFunctions"
-import { initTask, initSprint } from "../appstate/stateInitValues";
+ import { canDropPBI, canDropTask, disabledDate, isArrayValid, isBranchNotCreated, isMessageValid, isNameFilterValid, validateString } from "../components/utility/commonFunctions"
+import { initTask } from "../appstate/stateInitValues";
  
  test('can drop pbi', () => {
      expect(canDropPBI(11,12,13)).toBe(true);
@@ -68,18 +68,6 @@ import { initTask, initSprint } from "../appstate/stateInitValues";
  test('date is invalid', () => {
  expect(disabledDate(new Date())).toBe(false)
  })
-
- test('index exists', () => {
-  expect(getIndex(initSprint)).toBe(1)
-  })
-
-  test('row keys successfully removed', () => {
-    expect(updateRowKeys(initSprint, [initSprint.sprintNumber])).toStrictEqual([])
-    })
-    
-  test('row keys successfully added', () => {
-    expect(updateRowKeys(initSprint, [])).toStrictEqual([1])
-  })
  
  
  

@@ -5,10 +5,10 @@ import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import TextArea from 'antd/lib/input/TextArea';
 import _, { isNull } from 'lodash';
 import { IAddSprintCollectionCreateFormProps } from './popupInterfaces';
-import { onOkAddSprintPopup } from './popupUtilities';
 import { renderDateSprint } from '../utility/LoadAnimations';
 import { IBacklogItem } from '../../appstate/stateInterfaces';
 import { isArrayValid } from '../utility/commonFunctions';
+import { onOkAddSprintPopup } from './popupUtilities';
 /**
  * Returns Popup with a form for adding new {@linkcode ISprint} sprint
  */
@@ -32,7 +32,7 @@ export function AddSprintPopup({
           Cancel
         </Button>,
         <Button loading={loading} type="primary" id="SaveInAddSprintPopup" key="SaveInAddSprintPopup"
-        onClick={() => {setLoading(true);onOkAddSprintPopup(form, onCreate,temp); }}>
+        onClick={() => {onOkAddSprintPopup(setLoading,form, onCreate,temp); }}>
           Save
         </Button>
       ]}
@@ -58,7 +58,7 @@ export function AddSprintPopup({
           name="title"
           rules={[{ required: true, message: 'Please input the title of this sprint!', whitespace: true }]}
         >
-          <Input required={true} autoComplete="on" maxLength={60} />
+          <Input minLength={1} required={true} autoComplete="on" />
         </Form.Item>
         <FormItemLabel prefixCls="goal" label="Goal" required={true} />
         <Form.Item

@@ -35,7 +35,6 @@ export const PBITableComponent = React.memo((props: any) =>{
     <Table
       size="small"
       showHeader={true}
-      //loading={(props.item && isArrayValid(props.item.backlogItems) && pbiKeys.filter((nr:number)=>props.item.backlogItems.map((pbi:IProductBacklogItem)=>{return(pbi.id)}).includes(nr)).length>0)}
       columns={props.pbiColumns}
       rowKey={(record: IBacklogItem) => record.id}
       expandable={{

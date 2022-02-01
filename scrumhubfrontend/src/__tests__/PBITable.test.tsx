@@ -17,10 +17,9 @@ import { reducerFunction } from '../appstate/reducer';
 import { updatedTestState } from '../appstate/stateTestValues';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
-import TestRenderer from "react-test-renderer";
 import { PBITableComponent } from '../components/tables/PBITable';
 import config from '../configuration/config';
-const {act:actTester} = TestRenderer;
+import { testMediaMatchObject } from '../appstate/stateUtitlities';
 jest.mock('react', () => ({
   ...jest.requireActual('react'),
   useState: jest.fn(),
@@ -44,19 +43,7 @@ describe('PBITable component in container', () => {
     jest.spyOn(console, 'error').mockImplementation(() => { });
     setState = jest.fn();
     useStateMock = (initState: any) => [initState, setState];
-    Object.defineProperty(window, 'matchMedia', {
-      writable: true,
-      value: jest.fn().mockImplementation(query => ({
-        matches: false,
-        media: query,
-        onchange: null,
-        addListener: jest.fn(), // Deprecated
-        removeListener: jest.fn(), // Deprecated
-        addEventListener: jest.fn(),
-        removeEventListener: jest.fn(),
-        dispatchEvent: jest.fn(),
-      })),
-    });
+    testMediaMatchObject();
   });
 
   afterEach(() => {

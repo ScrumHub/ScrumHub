@@ -30,9 +30,7 @@ export const sprintNrCol = (ownerName: string, navigate: NavigateFunction) => {
   })
 };
 
-/**
- * Render sprint name for the given Sprint
- */
+/** Render sprint name for the given {@linkcode ISprint} sprint*/
 export const sprintTitleCol = {
   title: 'Title', width: "27%", align: "center" as const, dataIndex: 'title',
   key: 'sprintTitle', ellipsis: true
@@ -85,7 +83,7 @@ export const sprintDateCol = {
   title: 'Deadline', width: "15%", align: "center" as const, dataIndex: 'finishDate', key: 'finishDate',
   render: (date: string) =>
     <span hidden={!date}>
-      <CalendarOutlined />{" " + (date ? dateFormat(date as unknown as Date) : "")}
+      <CalendarOutlined />{" " + (date ? dateFormat(date as string) : "")}
     </span>
 };
 

@@ -18,6 +18,7 @@ export const taskNameCol = {
   dataIndex: "name",
   width: "32%",
   key: "name",
+  ellipsis: true,
   sorter: (a:ITask, b:ITask) => a.name.localeCompare(b.name),
 };
 
@@ -28,6 +29,7 @@ export const taskNameSprintCol =(item:IBacklogItem)=> {return({
   dataIndex: "name",
   width: "32%",
   key: "name",
+  ellipsis: true,
   sorter: (a:ITask, b:ITask) => a.name.localeCompare(b.name),
 })
 };

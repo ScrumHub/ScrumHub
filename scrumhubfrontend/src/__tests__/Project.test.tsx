@@ -15,6 +15,7 @@ import renderer, {create} from 'react-test-renderer';
 import { Project } from "../components/Project";
 import { Home } from "../components/Home";
 import TestRenderer from "react-test-renderer";
+import { testMediaMatchObject } from "../appstate/stateUtitlities";
 const { act: actTest } = TestRenderer;
 
 describe('Project component in container', () => {
@@ -22,19 +23,7 @@ describe('Project component in container', () => {
   let store: any;
   beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {});
-    Object.defineProperty(window, 'matchMedia', {
-      writable: true,
-      value: jest.fn().mockImplementation(query => ({
-        matches: false,
-        media: query,
-        onchange: null,
-        addListener: jest.fn(), // Deprecated
-        removeListener: jest.fn(), // Deprecated
-        addEventListener: jest.fn(),
-        removeEventListener: jest.fn(),
-        dispatchEvent: jest.fn(),
-      })),
-    });
+    testMediaMatchObject();
     container = document.createElement('div');
     document.body.appendChild(container);
     store = configureStore({

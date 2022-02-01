@@ -34,7 +34,7 @@ export function EditPBIPopup({
           okText="Yes"
           cancelText="No"
           icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-        ><Button key="DeleteInEditPopup" type="link">
+        ><Button key="DeleteInEditPopup" id="DeleteInEditPopup" type="link">
             {"Delete"}</Button>
         </Popconfirm>,
         <Button key="CancelInEditPopup" onClick={onCancel}>Cancel</Button>,
@@ -47,11 +47,11 @@ export function EditPBIPopup({
           okText="Yes"
           cancelText="No"
           icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-        ><Button loading={loading.finish} hidden={data.finished} type="primary" key="FinishInEditPopup">
+        ><Button loading={loading.finish} hidden={data.finished} type="primary" id="FinishInEditPopup" key="FinishInEditPopup">
             {"Finish"}</Button>
         </Popconfirm>,
-        <Button loading={loading.save} key="SaveInEditPopup" type="primary" onClick={()=>
-        {setLoading({...loading, save:true});onOkEditPBIPopup(form, onCreate);}}>
+        <Button loading={loading.save} id="SaveInEditPopup" key="SaveInEditPopup" type="primary" onClick={()=>
+        {onOkEditPBIPopup(loading,setLoading,form, onCreate);}}>
           Save
         </Button>
       ]}

@@ -43,7 +43,7 @@ export function EstimatePBIPopup({
           Cancel
         </Button>,
         <Button  id="SaveInEstimatePBIPopup" key="SaveInEstimatePBIPopup"
-        type="primary" loading={loading} onClick={() => { setLoading(true); onOkEstimatePBIPopup(form, onCreate, value); }}>
+        type="primary" loading={loading} onClick={() => { onOkEstimatePBIPopup(setLoading,form, onCreate, value); }}>
           Save
         </Button>
       ]}

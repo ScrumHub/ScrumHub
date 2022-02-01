@@ -70,7 +70,7 @@ export const routes = (ownerName: string | null, sprintID: string, location: any
  * Renders Name, Progress, toDo, Story Points, Status, addTask columns
  * @returns columns for Backlog Item Table in Sprint Backlog View
  */
-   export  const pbiSprintColumns = (onSearch,sortedInfo,nameFilter, pbiKeys:number[],token: string, ownerName: string,setSelectedPBI: React.Dispatch<React.SetStateAction<IBacklogItem>>, isModal: IModals,
+   export  const pbiSprintColumns = (onSearch:(value: string) => void,sortedInfo:ISortedInfo,nameFilter:string[], pbiKeys:number[],token: string, ownerName: string,setSelectedPBI: React.Dispatch<React.SetStateAction<IBacklogItem>>, isModal: IModals,
       setIsModal: React.Dispatch<React.SetStateAction<IModals>>) => {
       return ([
       {
@@ -78,7 +78,7 @@ export const routes = (ownerName: string | null, sprintID: string, location: any
         filterIcon: <SearchOutlined/>, filterDropdown:()=>
         <Search autoComplete='on' placeholder="Input Backlog Item name" onSearch={onSearch} enterButton />,
         filters: [], filteredValue: nameFilter || null,
-        onFilter: (value: any, record: IBacklogItem) => isArrayValid(nameFilter) ? record.name.toLowerCase().includes(nameFilter.at(0).toLowerCase()) : '',
+        onFilter: (value: any, record: IBacklogItem) => isArrayValid(nameFilter) ? record.name.toLowerCase().includes((nameFilter.at(0) as string).toLowerCase()) : '',
         sorter: {
           compare: (a: IBacklogItem, b: IBacklogItem) => a.name > b.name,
           multiple: 1,
