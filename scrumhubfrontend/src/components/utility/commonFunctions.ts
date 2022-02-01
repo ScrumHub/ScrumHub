@@ -52,7 +52,6 @@ export function disabledDate(current: any) {
 }
 
 export function dateFormat(date: Date|string) {
-  console.log(date);
   return new Date(typeof(date)==="string"?date.replace(" UTC", ""):date.toString()).toLocaleString(['en-US'], { year: 'numeric', month: 'short', day: 'numeric' });
 }
 

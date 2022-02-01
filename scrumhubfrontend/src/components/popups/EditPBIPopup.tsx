@@ -51,7 +51,7 @@ export function EditPBIPopup({
             {"Finish"}</Button>
         </Popconfirm>,
         <Button loading={loading.save} key="SaveInEditPopup" type="primary" onClick={()=>
-        {setLoading({...loading, save:true});onOkEditPBIPopup(form, onCreate);}}>
+        {onOkEditPBIPopup(loading,setLoading,form, onCreate);}}>
           Save
         </Button>
       ]}

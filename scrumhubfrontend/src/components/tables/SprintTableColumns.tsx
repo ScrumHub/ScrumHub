@@ -30,9 +30,7 @@ export const sprintNrCol = (ownerName: string, navigate: NavigateFunction) => {
   })
 };
 
-/**
- * Render sprint name for the given Sprint
- */
+/** Render sprint name for the given {@linkcode ISprint} sprint*/
 export const sprintTitleCol = {
   title: 'Title', width: "27%", align: "center" as const, dataIndex: 'title',
   key: 'sprintTitle', ellipsis: true

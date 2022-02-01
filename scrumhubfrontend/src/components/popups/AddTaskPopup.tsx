@@ -28,7 +28,7 @@ export function AddTaskPopup({
           Cancel
         </Button>,
         <Button loading={loading} type="primary" id="SaveInAddTaskPopup" key="SaveInAddTaskPopup"
-        onClick={() => {setLoading(true);onOkAddTaskPopup(form, onCreate); }}>
+        onClick={() => {onOkAddTaskPopup(setLoading,form, onCreate); }}>
           Save
         </Button>
       ]}
@@ -46,7 +46,7 @@ export function AddTaskPopup({
         >
           <Input id="InputInAddTaskPopup" minLength={1} autoComplete='on' onKeyPress={event => {
             if (event.key === 'Enter') {
-              setLoading(true);onOkAddTaskPopup(form, onCreate); 
+              onOkAddTaskPopup(setLoading,form, onCreate); 
             }
           } } />
         </Form.Item>

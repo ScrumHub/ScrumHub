@@ -3,8 +3,8 @@ import FormItemLabel from 'antd/lib/form/FormItemLabel';
 import TextArea from 'antd/lib/input/TextArea';
 import moment from 'moment';
 import { IUpdateSprintCollectionCreateFormProps } from './popupInterfaces';
-import { onOkUpdateSprintPopup } from './popupUtilities';
 import React from 'react';
+import { onOkUpdateSprintPopup } from './popupUtilities';
 /**
  * Returns Popup with a form for updating the given {@linkcode ISprint} sprint 
  */
@@ -25,7 +25,7 @@ export function UpdateSprintPopup({
           Cancel
         </Button>,
         <Button loading={loading} type="primary" id="SaveInUpdateSprintPopup" key="SaveInUpdateSprintPopup"
-          onClick={() => { setLoading(true); onOkUpdateSprintPopup(data,form, onCreate); }}>
+          onClick={() => { onOkUpdateSprintPopup(setLoading,data,form, onCreate); }}>
           Save
         </Button>
       ]}
@@ -49,7 +49,7 @@ export function UpdateSprintPopup({
           name="title"
           rules={[{ required: true, message: 'Please input the title of this sprint!', whitespace: true }]}
         >
-          <Input required={true} autoComplete="on" maxLength={60}/>
+          <Input minLength={1} required={true} autoComplete="on" maxLength={60}/>
         </Form.Item>
         <FormItemLabel prefixCls="name" label="Goal" required={true} />
         <Form.Item

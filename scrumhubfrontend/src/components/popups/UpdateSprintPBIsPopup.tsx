@@ -56,7 +56,7 @@ export function UpdateSprintPBIsPopup({
           name="title"
           rules={[{ required: true, message: 'Please input the title of this sprint!', whitespace: true }]}
         >
-          <Input required={true} autoComplete="on" maxLength={60} />
+          <Input minLength={1} required={true} autoComplete="on" />
         </Form.Item>
         <FormItemLabel prefixCls="goal" label="Goal" required={true} />
         <Form.Item
