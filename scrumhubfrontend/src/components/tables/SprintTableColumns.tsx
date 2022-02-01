@@ -85,7 +85,7 @@ export const sprintDateCol = {
   title: 'Deadline', width: "15%", align: "center" as const, dataIndex: 'finishDate', key: 'finishDate',
   render: (date: string) =>
     <span hidden={!date}>
-      <CalendarOutlined />{" " + (date ? dateFormat(date as unknown as Date) : "")}
+      <CalendarOutlined />{" " + (date ? dateFormat(date as string) : "")}
     </span>
 };
 

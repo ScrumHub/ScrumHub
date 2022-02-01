@@ -170,7 +170,7 @@ export function SprintBacklog() {
             (moment(sprintPage.finishDate).diff(moment().endOf('day'), 'day') < 4 ? "red" : "darkorange") : "green"
         }}>
         </CalendarOutlined>
-          {" " + dateFormat(sprintPage.finishDate as unknown as Date)}
+          {" " + dateFormat(sprintPage.finishDate as string)}
         </span>}
         <Button key="updateSprint" type="link" onClick={() => { setIsModal({ ...isModal, updateSprint: true }); }}>
           {isSprintLoaded(sprintID, sprintPage, true) ? "Update Sprint" : ""}
