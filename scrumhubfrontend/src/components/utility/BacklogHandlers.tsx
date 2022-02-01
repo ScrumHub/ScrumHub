@@ -298,7 +298,7 @@ export function removeItemsFromOldSprint(sprintPage: ISprintList, oldSprintId: n
     });
   }
 }
-
+/** Dispatches an action that unassigns {@linkcode IBacklogItem} backlogItems from {@linkcode IRepository} sprints */
 export function unassignPBIsFromSprint(sprint: ISprint, setIsAddSprint, sprintPage: ISprintList, token: string, ownerName: string,setFinishLoad) {
   setIsAddSprint(false);
   setFinishLoad(true);
@@ -329,6 +329,4 @@ export function unassignPBIsFromSprint(sprint: ISprint, setIsAddSprint, sprintPa
     store.dispatch(Actions.updateSprintLoadingKeys(isBacklog?[0]:[]));
     addSprintToRepo(ids, sprint, ownerName, token, setFinishLoad);
   }
-
-
 }

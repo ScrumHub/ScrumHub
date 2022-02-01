@@ -161,21 +161,6 @@ test("addSprintIsSuccessful", async () => {
   expect(response).toEqual({ code: 200, response: initSprint });
 });
 
-test("fetchPBITasksIsSuccessful", async () => {
-  const mock = new MockAdapter(axios);
-  mock.onGet(`${tstConf.url}/Tasks/${tstConf.ownerName}/PBI/${tstConf.pbiId}`).reply(200, testTaskList);
-  const response: RequestResponse<ITaskList, number> =
-    await Fetching.fetchPBITasks(config.token,tstConf.ownerName, tstConf.pbiId);
-  expect(response).toEqual({ code: 200, response: testTaskList });
-});
-test("fetchNullPBITasksIsSuccessful", async () => {
-  const mock = new MockAdapter(axios);
-  mock.onGet(`${tstConf.url}/Tasks/${tstConf.ownerName}/PBI/0`).reply(200, testTaskList);
-  const response: RequestResponse<ITaskList, number> =
-    await Fetching.fetchPBITasks(config.token,tstConf.ownerName, null);
-  expect(response).toEqual({ code: 200, response: testTaskList });
-});
-
 test("addUnassignedTasksIsSuccessful", async () => {
   const mock = new MockAdapter(axios);
   mock.onGet(`${tstConf.url}/Tasks/${tstConf.ownerName}/PBI/${tstConf.pbiId}`).reply(200, testTaskList);
@@ -191,15 +176,6 @@ test("addTaskIsSuccessful", async () => {
     await Fetching.addTask(config.token,tstConf.ownerName, tstConf.pbiId, tstConf.name);
   expect(response).toEqual({ code: 200, response: testTaskList });
 });
-
-test("getPBINamesIsSuccessful", async () => {
-  const mock = new MockAdapter(axios);
-  mock.onGet(`${tstConf.url}/BacklogItem/${tstConf.ownerName}?${filterUrlString(testFilters)}`).reply(200, testBItemList);
-  const response: RequestResponse<IBacklogItemList, number> =
-    await Fetching.getPBINames(tstConf.ownerName, config.token,testFilters);
-  expect(response).toEqual({ code: 200, response: testBItemList });
-});
-
 
 test("assignTaskToPBItemIsSuccessful", async () => {
   const mock = new MockAdapter(axios);

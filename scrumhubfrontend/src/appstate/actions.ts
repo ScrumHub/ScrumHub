@@ -178,16 +178,6 @@ export const addSprintThunk = createAsyncThunk<
 });
 
 //TASKS
-/** Thunk that waits for response from function {@linkcode fetchPBITasks} that sends a request that fetches {@linkcode ITaskList} taskList for the given {@linkcode IBacklogItem} backlogItem */
-export const fetchPBITasksThunk = createAsyncThunk<
-  RequestResponse<ITaskList, number>,
-  { token: string, ownerName: string; pbiId: number; },
-  { rejectValue: RequestResponse<ITaskList, number> }
->("fetchPBITasks", async (item: { token: string; ownerName: string; pbiId: number; }, { rejectWithValue }) => {
-  const response: RequestResponse<ITaskList, number> = await Fetching.fetchPBITasks(item.token, item.ownerName, item.pbiId);
-  if (response.code !== 200) { return rejectWithValue(response as RequestResponse<ITaskList, number>); }
-  return response as RequestResponse<ITaskList, number>;
-});
 /** Thunk that waits for response from function {@linkcode addUnassignedTasksToPBI} that sends a request that fetches {@linkcode ITaskList} taskList of unassiggned {@linkcode ITask} tasks */
 export const addUnassignedTasksToPBI = createAsyncThunk<
   RequestResponse<ITaskList, number>,
@@ -224,16 +214,6 @@ export const addTaskThunk = createAsyncThunk<
   return response as RequestResponse<ITask, number>;
 });
 
-export const getPBINamesThunk = createAsyncThunk<
-  RequestResponse<string[], number>,
-  { ownerName: string; token: string; filters: IFilters; },
-  { rejectValue: RequestResponse<IBacklogItemList, number> }
->("getPBINames", async (item: { ownerName: string; token: string; filters: IFilters; }, { rejectWithValue }
-) => {
-  const response: RequestResponse<IBacklogItemList, number> = await Fetching.getPBINames(item.ownerName, item.token, item.filters);
-  if (response.code !== 200) { return rejectWithValue(response as RequestResponse<IBacklogItemList, number>); }
-  return response as RequestResponse<IBacklogItemList, number>;
-});
 /** Thunk that waits for response from function {@linkcode assignTaskToPBI} that sends a request that assigns {@linkcode ITask} task to the given {@linkcode IBacklogItem} */
 export const assignTaskToPBIThunk = createAsyncThunk<
   RequestResponse<ITask, number>,
@@ -270,8 +250,6 @@ export const login = createAction<any>("login");
 export const logout = createAction("logout");
 /** Action for updating the error value in the {@linkcode store} */
 export const clearError = createAction<string>("clearError");
-/** Action for restoring the {@linkcode store} to its initial state*/
-export const clearState = createAction("clearState");
 /** Action for restoring the state of the project in the {@linkcode store} to its initial state*/
 export const clearProject = createAction("clearProject");
 /** Action for restoring the {@linkcode ISprintList} sprintsList in the {@linkcode store} to its initial state*/
@@ -290,7 +268,5 @@ export const updatePBIKeys = createAction<number[]>("updatePBIKeys");
 export const updateSprintLoadingKeys = createAction<number[]>("updateSprintLoadingKeys");
 /** Action for updating {@linkcode store} with keys of {@linkcode IBacklogItem} backlogItems that are loading*/
 export const updatePBILoadingKeys = createAction<number[]>("updatePBILoadingKeys");
-/** Action for updating {@linkcode store} with {@linkcode ITask} tasks for given {@linkcode IBacklogItem} backlogItem*/
-export const updateTasks = createAction<IBacklogItem>("updateTasks");
 /** Action for updating {@linkcode store} with {@linkcode ITask} tasks for given {@linkcode IRepository} respository*/
 export const updateAllTasks = createAction<ITask[]>("updateAllTasks");

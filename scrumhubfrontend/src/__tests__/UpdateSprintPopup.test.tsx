@@ -5,6 +5,7 @@ import { mount } from 'enzyme';
 import { render } from "@testing-library/react";
 import { initAddPBI, initSprint } from "../appstate/stateInitValues";
 import { UpdateSprintPopup } from "../components/popups/UpdateSprintPopup";
+import { testMediaMatchObject } from "../appstate/stateUtitlities";
 
 describe('UpdateSprintPopup component in container', () => {
   let tempContainer: any;
@@ -13,19 +14,7 @@ describe('UpdateSprintPopup component in container', () => {
     document.body.appendChild(tempContainer);
     jest.spyOn(console, 'warn').mockImplementation(() => {});
     jest.spyOn(console, 'error').mockImplementation(() => {});
-    Object.defineProperty(window, 'matchMedia', {
-      writable: true,
-      value: jest.fn().mockImplementation(query => ({
-        matches: false,
-        media: query,
-        onchange: null,
-        addListener: jest.fn(), // Deprecated
-        removeListener: jest.fn(), // Deprecated
-        addEventListener: jest.fn(),
-        removeEventListener: jest.fn(),
-        dispatchEvent: jest.fn(),
-      })),
-    });
+    testMediaMatchObject();
   });
   afterEach(() => {
     // cleanup on exiting

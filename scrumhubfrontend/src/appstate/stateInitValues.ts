@@ -1,7 +1,7 @@
 import { tableKeys } from "../components/utility/commonInterfaces";
 import config from "../configuration/config"
 import { validateUri } from "./reducerUtilities";
-import { IAddBI, IAssignBI, IFilters, ILoginState, IBIFilter, IPeopleList, IPerson, IBacklogItem, IBacklogItemList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, IState } from "./stateInterfaces";
+import { IAddBI, ILoginState, IBIFilter, IPeopleList, IPerson, IBacklogItem, IBacklogItemList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, IState } from "./stateInterfaces";
 const path = require("path");
 require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
 
@@ -45,19 +45,7 @@ export const initBI: IBacklogItem = {
   acceptanceCriteria: ["criteria", "criteria2"],
   tasks: [initTask],
 };
-export const initBI2: IBacklogItem = {
-  id: 1,
-  name: "Second",
-  finished: false,
-  expectedTimeInHours: 2,
-  estimated: true,
-  sprintNumber: 0,
-  isInSprint: false,
-  timeSpentInHours: 0,
-  priority: 0,
-  acceptanceCriteria: ["criteria", "criteria2"],
-  tasks: [],
-};
+
 export const unassignedBI: IBacklogItem = {
   id: 0,
   name: "Tasks To Assign",
@@ -76,21 +64,13 @@ export const initAddPBI: IAddBI = {
   priority: 0,
   acceptanceCriteria: ["criteria", "criteria2"],
 };
-export const initAssignPBI: IAssignBI = {
-  name: "",
-  id: 0,
-  isInSprint: false
-};
+
 export const initPBIFilter: IBIFilter = {
   pageNumber: config.defaultFilters.page,
   pageSize: config.defaultFilters.pbiSize,
   nameFilter: "",
 };
-export const initSprintFilter: IFilters = {
-  pageNumber: config.defaultFilters.page,
-  pageSize: config.defaultFilters.sprintSize,
-  nameFilter: "",
-};
+
 export const initBacklogItemList: IBacklogItemList = {
   pageNumber: 1,
   pageCount: 1,
@@ -118,16 +98,6 @@ export const initProductBacklog: ISprint = {
   status: "NotFinished",
   isCompleted: false,
 }
-export const initSprint2: ISprint = {
-  sprintNumber: 2,
-  goal: "",
-  backlogItems: [],
-  finishDate: "",
-  isCurrent: false,
-  status: "NotFinished",
-  isCompleted: false,
-  title: ""
-};
 export const initSprintList: ISprintList = {
   pageNumber: 1,
   pageCount: 1,

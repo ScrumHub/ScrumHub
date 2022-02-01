@@ -40,8 +40,6 @@ export const initTestState: IState = {
   changedRepo: ""
 };
 
-
-
 export const testRepositoryList: IRepositoryList = {
   pageNumber: 1,
   pageCount: 1,

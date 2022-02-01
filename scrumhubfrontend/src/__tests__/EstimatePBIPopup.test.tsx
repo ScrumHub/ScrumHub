@@ -5,6 +5,7 @@ import { mount } from 'enzyme';
 import { render } from "@testing-library/react";
 import { initBI } from "../appstate/stateInitValues";
 import { EstimatePBIPopup } from "../components/popups/EstimatePBIPopup";
+import { testMediaMatchObject } from "../appstate/stateUtitlities";
 
 describe('EstimatePBIPopup component in container', () => {
   let tempContainer: any;
@@ -13,19 +14,7 @@ describe('EstimatePBIPopup component in container', () => {
     document.body.appendChild(tempContainer);
     jest.spyOn(console, 'warn').mockImplementation(() => { });
     jest.spyOn(console, 'error').mockImplementation(() => { });
-    Object.defineProperty(window, 'matchMedia', {
-      writable: true,
-      value: jest.fn().mockImplementation(query => ({
-        matches: false,
-        media: query,
-        onchange: null,
-        addListener: jest.fn(), // Deprecated
-        removeListener: jest.fn(), // Deprecated
-        addEventListener: jest.fn(),
-        removeEventListener: jest.fn(),
-        dispatchEvent: jest.fn(),
-      })),
-    });
+    testMediaMatchObject();
   });
   afterEach(() => {
     // cleanup on exiting

@@ -2,6 +2,7 @@ import { FormInstance, message } from "antd";
 import { IAddBI, IBacklogItem, ISprint } from "../../appstate/stateInterfaces";
 import { IUpdateSprintValues } from "./popupInterfaces";
 
+/** Validates values in AddPBIPopup */
 export async function onOkAddPBIPopup(setLoading:React.Dispatch<React.SetStateAction<boolean>>,form: FormInstance<any>, onCreate: (values: IAddBI) => void) {
   form
     .validateFields()
@@ -13,6 +14,8 @@ export async function onOkAddPBIPopup(setLoading:React.Dispatch<React.SetStateAc
       message.error('Validate Failed',5);
     });
 }
+
+/** Validates values in EstimatePBIPopup */
 export async function onOkEstimatePBIPopup(setLoading:React.Dispatch<React.SetStateAction<boolean>>,form: FormInstance<any>, onCreate: (values: any) => void, estimate: number) {
   form.validateFields()
     .then((values: { expectedTimeInHours: number }) => {
@@ -24,6 +27,7 @@ export async function onOkEstimatePBIPopup(setLoading:React.Dispatch<React.SetSt
     });
 }
 
+/** Validates values in AddSprintPopup */
 export async function onOkAddSprintPopup(setLoading:React.Dispatch<React.SetStateAction<boolean>>,form: FormInstance<any>, onCreate: (values: ISprint) => void, temp: IBacklogItem[]) {
   form
     .validateFields()
@@ -37,6 +41,7 @@ export async function onOkAddSprintPopup(setLoading:React.Dispatch<React.SetStat
     });
 }
 
+/** Validates values in AddTaskPopup */
 export async function onOkAddTaskPopup(setLoading:React.Dispatch<React.SetStateAction<boolean>>, form: FormInstance<any>, onCreate: (values: { name: string; }) => void) {
   form
     .validateFields()
@@ -49,6 +54,7 @@ export async function onOkAddTaskPopup(setLoading:React.Dispatch<React.SetStateA
     });
 };
 
+/** Validates values in EditPBIPopup */
 export async function onOkEditPBIPopup(loading: {
   finish: boolean;
   save: boolean;
@@ -66,6 +72,7 @@ export async function onOkEditPBIPopup(loading: {
     });
 };
 
+/** Validates values in UpdateSprintPopup */
 export async function onOkUpdateSprintPopup(setLoading:React.Dispatch<React.SetStateAction<boolean>>,data: ISprint, form: FormInstance<any>, onCreate: (values: ISprint | IUpdateSprintValues) => void) {
   form
     .validateFields()

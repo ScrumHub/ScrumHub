@@ -57,6 +57,6 @@ app.post("/authenticate", (req: any, res: any) => {
 const PORT = process.env.REACT_APP_SERVER_PORT || 5000;
 app.listen(PORT, () => console.log(`Proxy server started on ${PORT}`));
 
-function isInvalid(link: any) {
+export function isInvalid(link: any): boolean {
   return typeof (link) === "undefined" || (link as string).length < 2;
 }

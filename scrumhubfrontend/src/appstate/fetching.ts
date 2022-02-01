@@ -3,7 +3,6 @@ import config from "../configuration/config";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import axios, { AxiosResponse } from "axios";
 import { IAddBI, IFilters, IPeopleList, IPerson, IBacklogItem, IBacklogItemList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList } from "./stateInterfaces";
-import { isNull } from "lodash";
 import { errorObject } from "./stateInitValues";
 import { isItemDefined } from "../components/utility/commonFunctions";
 import { filterUrlString, getHeader, getHeaderWithContent, getHeaderAcceptAll } from "./stateUtitlities";
@@ -176,14 +175,6 @@ export function addSprint(token: string, ownerName: string, sprint: any): Promis
   );
 }
 //TASKS
-/** Fetches {@linkcode ITaskList} tasksList for given {@linkcode IBacklogItem} backlogItem */
-export function fetchPBITasks(token: string, ownerName: string, pbiId: number | null,): Promise<RequestResponse<ITaskList, number>> {
-  return getResponse(
-    axios.get(`${config.backend.ip}:${config.backend.port}/api/Tasks/${ownerName}/PBI/${isNull(pbiId) ? 0 : pbiId}`,
-      { headers: getHeader(token, config) }
-    )
-  );
-}
 /** Fetches {@linkcode ITask} tasks that are unassigned for opened {@linkcode IRepository} repository */
 export function addUnassignedTasksToPBI(token: string, ownerName: string, pbiId: number,): Promise<RequestResponse<ITaskList, number>> {
   return getResponse(
@@ -215,14 +206,7 @@ export function addTask(token: string, ownerName: string, pbiId: number, name: s
     )
   );
 }
-/** Fetches {@linkcode IBacklogItemList} backlogItemsList for opened {@linkcode IRepository} repository */
-export function getPBINames(ownerName: string, token: string, filters: IFilters): Promise<RequestResponse<IBacklogItemList, number>> {
-  return getResponse(
-    axios.get(`${config.backend.ip}:${config.backend.port}/api/BacklogItem/${ownerName}?${filterUrlString(filters)}`,
-      { headers: getHeader(token, config) }
-    )
-  );
-}
+
 /** Assigns {@linkcode ITask} task to {@linkcode IBacklogItem} backlogItem */
 export function assignTaskToPBI(token: string, ownerName: string, pbiId: number | null, taskId: number): Promise<RequestResponse<ITask, number>> {
   return getResponse(

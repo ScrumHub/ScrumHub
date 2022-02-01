@@ -1,11 +1,11 @@
 import { createReducer, PayloadAction } from "@reduxjs/toolkit";
 import { RequestResponse } from "./response";
-import { IAssignBI, ILoginState, IPeopleList, IPerson, IBacklogItem, IBacklogItemList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, IState } from "./stateInterfaces";
+import { ILoginState, IPeopleList, IPerson, IBacklogItem, IBacklogItemList, IRepository, IRepositoryList, ISprint, ISprintList, ITask, ITaskList, IState } from "./stateInterfaces";
 import { initError, loggedOutLoginState, unassignedBI } from "./stateInitValues";
 import { isArrayValid, isNameFilterValid } from "../components/utility/commonFunctions";
 import { isNull } from "lodash";
 import config from "../configuration/config";
-import { updateStateKeys, updateStateRepos, getError, addStateRepo, updateStatePBI, addStatePBI, updateStateOneSprint, addStateSprint, updateTasksSWR, updateAllTasksSWR, addStateUnassignedTaskToPBI, addStateTask, updateOnDragStateTasks, updateStateTasks } from "./reducerUtilities";
+import { updateStateKeys, updateStateRepos, getError, addStateRepo, updateStatePBI, addStatePBI, updateStateOneSprint, addStateSprint, updateAllTasksSWR, addStateUnassignedTaskToPBI, addStateTask, updateOnDragStateTasks, updateStateTasks } from "./reducerUtilities";
 var _ = require('lodash');
 /** Creates reducer for given {@linkcode IState} initState*/
 export function reducerFunction(initState: IState) {
@@ -21,9 +21,6 @@ export function reducerFunction(initState: IState) {
       newState.reposRequireRefresh = true;
       newState.reposLastPage = false;
       return newState;
-    },
-    [Actions.clearState.type]: (state: IState) => {
-      return (initState);
     },
     [Actions.clearProject.type]: (state: IState) => {
       let newState = _.cloneDeep(state) as IState;
@@ -183,21 +180,6 @@ export function reducerFunction(initState: IState) {
       let newState = _.cloneDeep(state);
       return { ...newState, error: getError(payload.payload), loading: false };
     },
-    [Actions.getPBINamesThunk.pending.toString()]: (state: IState, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
-      let newState = _.cloneDeep(state);
-      return { ...newState, loading: true };
-    },
-    [Actions.getPBINamesThunk.fulfilled.toString()]: (state: IState, payload: PayloadAction<RequestResponse<IBacklogItemList, number>>) => {
-      let newState = _.cloneDeep(state);
-      newState.error = initError;
-      newState.namedPBI = (payload.payload.response as IBacklogItemList).list as IAssignBI[];
-      newState.loading = false;
-      return newState;
-    },
-    [Actions.getPBINamesThunk.rejected.toString()]: (state: IState, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
-      let newState = _.cloneDeep(state);
-      return { ...newState, error: getError(payload.payload), loading: false };
-    },
     [Actions.estimatePBIThunk.pending.toString()]: (state: IState, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
       let newState = _.cloneDeep(state);
       return { ...newState, loading: true };
@@ -293,23 +275,6 @@ export function reducerFunction(initState: IState) {
     [Actions.addSprintThunk.rejected.toString()]: (state: IState, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
       let newState = _.cloneDeep(state);
       return { ...newState, error: getError(payload.payload), loading: false };
-    },
-    [Actions.fetchPBITasksThunk.pending.toString()]: (state: IState, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
-      let newState = _.cloneDeep(state);
-      return { ...newState, loading: true };
-    },
-    [Actions.fetchPBITasksThunk.fulfilled.toString()]: (state: IState, payload: PayloadAction<RequestResponse<ITaskList, number>>) => {
-      let newState = _.cloneDeep(state);
-      return updateTasksSWR(newState, payload.payload.response as ITaskList);
-    },
-    [Actions.fetchPBITasksThunk.rejected.toString()]: (state: IState, payload: PayloadAction<RequestResponse<undefined, undefined>>) => {
-      let newState = _.cloneDeep(state);
-      return { ...newState, error: getError(payload.payload), loading: false };
-    },
-    [Actions.updateTasks.type]: (state: IState, payload: PayloadAction<any>) => {
-      let newState = _.cloneDeep(state);
-      const item = payload.payload as IBacklogItem;
-      return updateStatePBI(newState, item);
     },
     [Actions.updateAllTasks.type]: (state: IState, payload: PayloadAction<any>) => {
       let newState = _.cloneDeep(state);

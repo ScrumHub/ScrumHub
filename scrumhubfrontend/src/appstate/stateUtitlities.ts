@@ -55,4 +55,22 @@ export const getHeaderAcceptAll = (token: string, config: any) => {
       .join("&"));
 };
 
+/** Uses jest to render media object for testing 
+*/
+export function testMediaMatchObject(){
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: jest.fn().mockImplementation(query => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(), // Deprecated
+      removeListener: jest.fn(), // Deprecated
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    })),
+  });
+}
+
 
