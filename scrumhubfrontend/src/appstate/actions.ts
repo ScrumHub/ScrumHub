@@ -192,12 +192,12 @@ export const addUnassignedTasksToPBI = createAsyncThunk<
 export const fetchRepoTasksThunk = createAsyncThunk<
   RequestResponse<ITaskList, number>,
   { token: string, ownerName: string; },
-  { rejectValue: RequestResponse<ITask, number> }
+  { rejectValue: RequestResponse<ITaskList, number> }
 >("fetchRepoTasks", async (item: {
   token: string; ownerName: string; 
 }, { rejectWithValue }) => {
   const response: RequestResponse<ITaskList, number> = await Fetching.fetchAllRepoTasks(item.token, item.ownerName);
-  if (response.code !== 200) { return rejectWithValue(response as RequestResponse<ITask, number>); }
+  if (response.code !== 200) { return rejectWithValue(response as RequestResponse<ITaskList, number>); }
   return response as RequestResponse<ITaskList, number>;
 });
 /** Thunk that waits for response from function {@linkcode addTask} that sends a request that adds {@linkcode ITask} task to the given {@linkcode IBacklogItem} */

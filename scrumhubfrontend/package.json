@@ -60,7 +60,7 @@
       "/node_modules/(?!antd|@ant-design|rc-.+?|@babel/runtime).+(js|jsx)$"
     ],
     "coveragePathIgnorePatterns": [
-      "/src/components/utility/commonInterfaces.ts","/src/components/popups/popupInterfaces.ts","/src/appstate/stateInterfaces.ts"
+      "/src/components/utility/commonInterfaces.ts","/src/components/popups/popupInterfaces.ts","/src/appstate/reducer.ts","/src/appstate/stateInterfaces.ts","/src/components/utility/LoginAndMainHandlers.tsx" ,"/src/appstate/response.ts"
     ]
   },
   "devDependencies": {

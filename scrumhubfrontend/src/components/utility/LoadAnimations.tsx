@@ -1,8 +1,6 @@
 import { CheckCircleOutlined, CheckOutlined, CloseCircleOutlined, SortAscendingOutlined, SortDescendingOutlined } from "@ant-design/icons";
 import 'antd/dist/antd.css';
 import { Avatar, Button, Menu, Popover, Skeleton, Space, Tag } from "antd";
-import MenuItem from "antd/lib/menu/MenuItem";
-import { useState } from "react";
 import { IFilters, IPerson } from "../../appstate/stateInterfaces";
 import "../Home.css";
 import { isArrayValid, isNameFilterValid } from "./commonFunctions";
@@ -10,6 +8,8 @@ import { useEffect } from "react";
 import SubMenu from "antd/lib/menu/SubMenu";
 import { backlogColors, backlogPriorities, initFilteredInfo, initSortedInfo } from "./commonInitValues";
 import moment from "moment";
+import React from "react";
+import MenuItem from "antd/lib/menu/MenuItem";
 
 /** Renders loading section while repositories are being fetched*/
 export default function SkeletonList(props: any) {
@@ -57,7 +57,7 @@ export const updateStringList = (items: string[], item: string) => {
 /** Renders Dropdown menu for selecting people*/
 export function MenuWithPeople(props: any) {
     const ppl = props.people && props.people.list && props.people.list.length > 0 ? props.people.list : [] as IPerson[];
-    const [nameList, setList] = useState([] as string[]);
+    const [nameList, setList] = React.useState([] as string[]);
 
     const inputFilter = isNameFilterValid(props.inputFilter) ? props.inputFilter : "";
     const handleList = (item: IPerson) => {
@@ -93,7 +93,7 @@ export function MenuWithPeople(props: any) {
 /** Renders Dropdown menu for sorting backlog*/
 export function MenuWithSorting(props: any) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [sortedInfo, setSortedInfo] = useState([] as IFilters);
+    const [sortedInfo, setSortedInfo] = React.useState({} as IFilters);
     const handleList = (item: any) => {
         if (item.columnKey === props.sortedInfo.columnKey && item.order === props.sortedInfo.order) {
             props.itemSelected(initSortedInfo)
@@ -139,7 +139,7 @@ export function MenuWithSorting(props: any) {
 
 /** Renders Dropdown menu for filtering backlog*/
 export function MenuWithFilters(props: any) {
-    const [filteredInfo, setFilteredInfo] = useState(initFilteredInfo);
+    const [filteredInfo, setFilteredInfo] = React.useState(initFilteredInfo);
     const handleList = (item: any) => {
         if (!filteredInfo) { props.itemSelected(initFilteredInfo); }
         else if (typeof (item.complete) !== "undefined" && filteredInfo) {
@@ -210,7 +210,7 @@ export function MenuWithFilters(props: any) {
 /** Renders Dropdown menu for assigning people*/
 export function PBIMenuWithPeople(props: any) {
     const ppl = props.people && props.people.list && props.people.list.length > 0 ? props.people.list : [] as IPerson[];
-    const [nameList, setList] = useState(props.taskPeople.map((item: IPerson) => { return (item.login) }));
+    const [nameList, setList] = React.useState(props.taskPeople.map((item: IPerson) => { return (item.login) }));
     const handleList = (item: IPerson) => {
         if (!nameList || nameList.length < 1) { setList([item.login]); props.itemSelected(item.login); }
         else {

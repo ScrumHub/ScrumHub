@@ -1,6 +1,6 @@
 import config from "../configuration/config";
 import { validateUri } from "./reducerUtilities";
-import { initError, initPeopleList, initPerson, initBI, initBacklogItemList, initRepository, initRepositoryList, initSprint, initSprintList, initTaskList, initTask, initKeys, initLoadingKeys } from "./stateInitValues";
+import { initError, initPeopleList, initPerson, initBI, initBacklogItemList, initRepository, initRepositoryList, initSprint, initSprintsList, initTaskList, initTask, initKeys, initLoadingKeys } from "./stateInitValues";
 import { ILoginState, IBacklogItemList, IRepositoryList, ISprintList, IState, ITaskList } from "./stateInterfaces";
 
 export const testLoginState: ILoginState = {
@@ -16,7 +16,7 @@ export const initTestState: IState = {
   loading: false,
   error: initError,
   pbiPage: initBacklogItemList,
-  sprintPage: initSprintList,
+  sprintPage: initSprintsList,
   taskPage: initTaskList,
   repositories: initRepositoryList,
   openSprint: initSprint,

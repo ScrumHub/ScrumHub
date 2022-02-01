@@ -4,13 +4,14 @@
 import expect from "expect"; // You can use any testing library
 import { configureStore } from '@reduxjs/toolkit';
 import axios from 'axios';
-//import { store } from '../appstate/store';
 import { reducerFunction } from "../appstate/reducer";
 import { initTestState, testFetchReposVals, testFilters, testRepositoryList, tstConf } from "../appstate/stateTestValues";
 import * as Actions from "../appstate/actions";
 import { updateStateRepos } from "../appstate/reducerUtilities";
 import MockAdapter from "axios-mock-adapter";
 import { filterUrlString } from "../appstate/stateUtitlities";
+import { initBacklogItemList, initBI, initPeopleList, initPerson, initSprintsList, initSprint, initState, initTask, initRepository, initAddPBI } from "../appstate/stateInitValues";
+import config from "../configuration/config";
 
 describe('fetching Repos', () => {
   test('should pass', async () => {
@@ -24,255 +25,277 @@ describe('fetching Repos', () => {
     expect(state).toEqual(updateStateRepos(initTestState,testRepositoryList,1,10,1));
   });
 });
-/*
-    // Test that our thunk is calling the API using the arguments we expect
-    it('calls the api correctly', async () => {
-      await action(dispatch, getState, undefined);
-      expect(api.register).toHaveBeenCalledWith(arg);
-    });
 
-    // Confirm that a success dispatches an action that we anticipate
-    it('triggers auth success', async () => {
-      const call = actions.authSuccess(result);
-      await action(dispatch, getState, undefined);
-      expect(dispatch).toHaveBeenCalledWith(call);
+describe('fetching People', () => {
+  test('should pass', async () => {
+    const mock = new MockAdapter(axios);
+    mock.onGet(`${tstConf.url}/api/People/${tstConf.ownerName}`).reply(200, {...initPeopleList, list:[initPerson]});
+    const store = configureStore({
+      reducer: reducerFunction(initTestState),
     });
+    await store.dispatch(Actions.fetchPeopleThunk({ownerName:tstConf.ownerName, token:config.token}));
+    const state = store.getState();
+    expect(state).not.toEqual(initState);
   });
-
-
-test("getResponseResultsInNetworkError", async () => {
-  const mock = new MockAdapter(axios);
-  mock.onGet(`${config.backend.ip}:${config.backend.port}/api/Repositories?${filterUrlString(initPBIFilter)}`).networkError();
-  const response = axios.get(
-      `${config.backend.ip}:${config.backend.port}/api/Repositories?${filterUrlString(initPBIFilter)}`,
-      { headers: getHeader(config.token, config), }
-    ).then(()=>{return{ ...errorObject, message: "Network Error" } as unknown as AxiosResponse<any>});
-  expect(((await Fetching.getResponse(response)).code).toString().substring(0,1).length).toBe(1);
 });
 
-test("getResponseResultsInOtherError", async () => {
-  const mock = new MockAdapter(axios);
-  mock.onGet(`${config.backend.ip}:${config.backend.port}/api/Repositories?${filterUrlString(initPBIFilter)}`).networkError();
-  const response = axios.get(
-      `${config.backend.ip}:${config.backend.port}/api/Repositories?${filterUrlString(initPBIFilter)}`,
-      { headers: getHeader(config.token, config), }
-    ).then(()=>{return{response: errorObject } as unknown as AxiosResponse<any>});
-  expect(((await Fetching.getResponse(response)).code).toString().substring(0,1).length).toBe(1);
-});
-
-test("getResponseResultsInSuccess", async () => {
-  const mock = new MockAdapter(axios);
-  const p = mock.onGet(`${config.backend.ip}:${config.backend.port}/api/Repositories?${filterUrlString(initPBIFilter)}`).reply(200,testRepositoryList);
-  const response = axios.get(
-      `${config.backend.ip}:${config.backend.port}/api/Repositories?${filterUrlString(initPBIFilter)}`,
-      { headers: getHeader(config.token, config), }
-    );//.then((resp)=>{return({...resp,request:resp.request})});
-  expect(await Fetching.getResponse(response)).toEqual({ code: 200, response: testRepositoryList });
-});
-test("fetchReposIsSuccessful", async () => {
-  const mock = new MockAdapter(axios);
-  mock.onGet(`${tstConf.url}/Repositories?${filterUrlString(testFilters)}`).reply(200, testRepositoryList);
-  const response: RequestResponse<IRepositoryList, number> =
-    await Fetching.fetchRepos(testFilters, config.token);
-  expect(response).toEqual({ code: 200, response: testRepositoryList });
-});
-
-test("addRepoIsSuccessful", async () => {
-  const mock = new MockAdapter(axios);
-  mock.onPost(`${tstConf.url}/Repositories`).reply(200, initRepository);
-  const response: RequestResponse<IRepository, number> =
-    await Fetching.addRepo(0, config.token);
-  expect(response).toEqual({ code: 200, response: initRepository });
-});
-
-test("fetchPeopleIsSuccessful", async () => {
-  const mock = new MockAdapter(axios);
-  mock.onGet(`${tstConf.url}/People/${tstConf.ownerName}`).reply(200, testPBIList);
-  const response: RequestResponse<IPeopleList, number> =
-    await Fetching.fetchPeople(tstConf.ownerName, config.token);
-  expect(response).toEqual({ code: 200, response: testPBIList });
-});
-
-test("getCurrentUserIsSuccessful", async () => {
-  const mock = new MockAdapter(axios);
-  mock.onGet(`${tstConf.url}/People/current`).reply(200, initPerson);
-  const response: RequestResponse<IPerson, number> =
-    await Fetching.getCurrentUser(config.token);
-  expect(response).toEqual({ code: 200, response: initPerson });
-});
-
-test("fetchPBItemsIsSuccessful", async () => {
-  const mock = new MockAdapter(axios);
-  mock.onGet(`${tstConf.url}/BacklogItem/${tstConf.ownerName}?${filterUrlString(testFilters)}`).reply(200, testPBIList);
-  const response: RequestResponse<IProductBacklogList, number> =
-    await Fetching.fetchPBIs(tstConf.ownerName, config.token,testFilters);
-  expect(response).toEqual({ code: 200, response: testPBIList });
-});
-
-test("finishPBItemIsSuccessful", async () => {
-  const mock = new MockAdapter(axios);
-  mock.onPatch(`${tstConf.url}/BacklogItem/${tstConf.ownerName}/${tstConf.pbiId}/finish`,{}).reply(200, initPBItem);
-  const response: RequestResponse<IProductBacklogItem, number> =
-    await Fetching.finishPBI(tstConf.ownerName, config.token, tstConf.pbiId);
-    expect(response).toEqual({ code: 200, response: initPBItem });
-});
-
-test("deletePBItemIsSuccessful", async () => {
-  const mock = new MockAdapter(axios);
-  mock.onDelete(`${tstConf.url}/BacklogItem/${tstConf.ownerName}/${tstConf.pbiId}`).reply(200, "Success");
-  const response: RequestResponse<any, any> =
-    await Fetching.deletePBI(tstConf.ownerName, config.token, tstConf.pbiId);
-  expect(response).toEqual({ code: 200, response: "Success" });
-});
-
-test("addPBItemIsSuccessful", async () => {
-  const mock = new MockAdapter(axios);
-  mock.onPost(`${tstConf.url}/BacklogItem/${tstConf.ownerName}`).reply(200, initPBItem);
-  const response: RequestResponse<IProductBacklogItem, number> =
-    await Fetching.addPBI(tstConf.ownerName, config.token, initPBItem);
-  expect(response).toEqual({ code: 200, response: initPBItem });
-});
-
-test("estimatePBItemIsSuccessful", async () => {
-  const mock = new MockAdapter(axios);
-  mock.onPatch(`${tstConf.url}/BacklogItem/${tstConf.ownerName}/${tstConf.pbiId}/estimate`,{ "hours": JSON.stringify(tstConf.hours) }).reply(200, initPBItem);
-  const response: RequestResponse<IProductBacklogItem, number> =
-    await Fetching.estimatePBI(tstConf.ownerName, config.token, tstConf.pbiId, tstConf.hours);
-    expect(response).toEqual({ code: 200, response: initPBItem });
-});
-
-test("editPBItemIsSuccessful", async () => {
-  const mock = new MockAdapter(axios);
-  mock.onPut(`${tstConf.url}/BacklogItem/${tstConf.ownerName}/${tstConf.pbiId}`).reply(200, initPBItem);
-  const response: RequestResponse<IProductBacklogItem, number> =
-    await Fetching.editPBI(tstConf.ownerName, config.token, initPBItem, tstConf.pbiId);
-    expect(response).toEqual({ code: 200, response: initPBItem });
-});
-
-test("fetchSprintsIsSuccessful", async () => {
-  const mock = new MockAdapter(axios);
-  mock.onGet(`${tstConf.url}/Sprints/${tstConf.ownerName}?${filterUrlString(testFilters)}`).reply(200, testSprintList);
-  const response: RequestResponse<ISprintList, number> =
-    await Fetching.fetchSprints(config.token,tstConf.ownerName, testFilters);
-  expect(response).toEqual({ code: 200, response: testSprintList });
-});
-
-test("fetchOneSprintIsSuccessful", async () => {
-  const mock = new MockAdapter(axios);
-  mock.onGet(`${tstConf.url}/Sprints/${tstConf.ownerName}/${tstConf.sprintNr}`).reply(200, initSprint);
-  const response: RequestResponse<ISprint, number> =
-    await Fetching.fetchOneSprint(config.token,tstConf.ownerName, tstConf.sprintNr);
-  expect(response).toEqual({ code: 200, response: initSprint });
-});
-
-test("updateOneSprintIsSuccessful", async () => {
-  const mock = new MockAdapter(axios);
-  mock.onPut(`${tstConf.url}/Sprints/${tstConf.ownerName}/${tstConf.sprintNr}`).reply(200, initSprint);
-  const response: RequestResponse<ISprint, number> =
-    await Fetching.updateOneSprint(config.token,tstConf.ownerName, tstConf.sprintNr,initSprint);
-    expect(response).toEqual({ code: 200, response: initSprint });
-});
-
-test("completeOneSprintIsSuccessful", async () => {
-  const mock = new MockAdapter(axios);
-  mock.onPut(`${tstConf.url}/Sprints/${tstConf.ownerName}/${tstConf.sprintNr}/finish?failed=true`).reply(200, {...initSprint, isCompleted:true, status:"Failed"});
-  const response: RequestResponse<ISprint, number> =
-    await Fetching.completeOneSprint(config.token,tstConf.ownerName, tstConf.sprintNr,true);
-    expect(response).toEqual({ code: 200, response: {...initSprint, isCompleted:true, status:"Failed"} });
-});
-
-test("addSprintIsSuccessful", async () => {
-  const mock = new MockAdapter(axios);
-  mock.onPost(`${tstConf.url}/Sprints/${tstConf.ownerName}`).reply(200, initSprint);
-  const response: RequestResponse<ISprint, number> =
-    await Fetching.addSprint(config.token,tstConf.ownerName, initSprint);
-  expect(response).toEqual({ code: 200, response: initSprint });
-});
-
-test("fetchPBITasksIsSuccessful", async () => {
-  const mock = new MockAdapter(axios);
-  mock.onGet(`${tstConf.url}/Tasks/${tstConf.ownerName}/PBI/${tstConf.pbiId}`).reply(200, testTaskList);
-  const response: RequestResponse<ITaskList, number> =
-    await Fetching.fetchPBITasks(config.token,tstConf.ownerName, tstConf.pbiId);
-  expect(response).toEqual({ code: 200, response: testTaskList });
-});
-test("fetchNullPBITasksIsSuccessful", async () => {
-  const mock = new MockAdapter(axios);
-  mock.onGet(`${tstConf.url}/Tasks/${tstConf.ownerName}/PBI/0`).reply(200, testTaskList);
-  const response: RequestResponse<ITaskList, number> =
-    await Fetching.fetchPBITasks(config.token,tstConf.ownerName, null);
-  expect(response).toEqual({ code: 200, response: testTaskList });
-});
-
-test("addUnassignedTasksIsSuccessful", async () => {
-  const mock = new MockAdapter(axios);
-  mock.onGet(`${tstConf.url}/Tasks/${tstConf.ownerName}/PBI/${tstConf.pbiId}`).reply(200, testTaskList);
-  const response: RequestResponse<ITaskList, number> =
-    await Fetching.addUnassignedTasksToPBI(config.token,tstConf.ownerName, tstConf.pbiId);
-  expect(response).toEqual({ code: 200, response: testTaskList });
-});
-
-test("addTaskIsSuccessful", async () => {
-  const mock = new MockAdapter(axios);
-  mock.onPost(`${tstConf.url}/Tasks/${tstConf.ownerName}`,{name:tstConf.name,pbiId:tstConf.pbiId.toString()}).reply(200, testTaskList);
-  const response: RequestResponse<ITask, number> =
-    await Fetching.addTask(config.token,tstConf.ownerName, tstConf.pbiId, tstConf.name);
-  expect(response).toEqual({ code: 200, response: testTaskList });
-});
-
-test("getPBINamesIsSuccessful", async () => {
-  const mock = new MockAdapter(axios);
-  mock.onGet(`${tstConf.url}/BacklogItem/${tstConf.ownerName}?${filterUrlString(testFilters)}`).reply(200, testPBIList);
-  const response: RequestResponse<IProductBacklogList, number> =
-    await Fetching.getPBINames(tstConf.ownerName, config.token,testFilters);
-  expect(response).toEqual({ code: 200, response: testPBIList });
+describe('fetching PBIs', () => {
+  test('should pass', async () => {
+    const mock = new MockAdapter(axios);
+    mock.onGet(`${tstConf.url}/api/BacklogItem/${tstConf.ownerName}?${filterUrlString({})}`).reply(200, {...initBacklogItemList, list:[initBI]});
+    const store = configureStore({
+      reducer: reducerFunction(initTestState),
+    });
+    await store.dispatch(Actions.fetchPBIsThunk({ownerName:tstConf.ownerName, token:config.token,filters: {}}));
+    const state = store.getState();
+    expect(state).not.toEqual(initState);
+  });
 });
 
 
-test("assignTaskToPBItemIsSuccessful", async () => {
-  const mock = new MockAdapter(axios);
-  mock.onPatch(`${tstConf.url}/Tasks/${tstConf.ownerName}/${tstConf.taskId}/assignpbi`,{ "index":tstConf.pbiId}).reply(200, initTask);
-  const response: RequestResponse<ITask, number> =
-    await Fetching.assignTaskToPBI(config.token,tstConf.ownerName, tstConf.pbiId, tstConf.taskId);
-  expect(response).toEqual({ code: 200, response: initTask });
+describe('fetching sprints', () => {
+  test('should pass', async () => {
+    const mock = new MockAdapter(axios);
+    mock.onGet(`${tstConf.url}/api/Sprints/${tstConf.ownerName}?${filterUrlString({})}`).reply(200, {...initSprintsList, list:[initSprint]});
+    const store = configureStore({
+      reducer: reducerFunction(initTestState),
+    });
+    await store.dispatch(Actions.fetchSprintsThunk({ownerName:tstConf.ownerName, token:config.token,filters: {}}));
+    const state = store.getState();
+    expect(state).toEqual(state);
+  });
 });
 
-test("assignTaskToNulltemIsSuccessful", async () => {
-  const mock = new MockAdapter(axios);
-  mock.onPatch(`${tstConf.url}/Tasks/${tstConf.ownerName}/${tstConf.taskId}/assignpbi`,{ "index":0}).reply(200, initTask);
-  const response: RequestResponse<ITask, number> =
-    await Fetching.assignTaskToPBI(config.token,tstConf.ownerName, null, tstConf.taskId);
-  expect(response).toEqual({ code: 200, response: initTask });
+describe('fetching one sprint', () => {
+  test('should pass', async () => {
+    const mock = new MockAdapter(axios);
+    mock.onGet(`${tstConf.url}/api/Sprints/${tstConf.ownerName}/${0}`).reply(200, initSprint);
+    const store = configureStore({
+      reducer: reducerFunction(initTestState),
+    });
+    await store.dispatch(Actions.fetchOneSprintThunk({ownerName:tstConf.ownerName, token:config.token,sprintNumber:0}));
+    const state = store.getState();
+    expect(state).not.toEqual(initState);;
+  });
+});
+describe('fetching repos', () => {
+  test('should pass', async () => {
+    const mock = new MockAdapter(axios);
+    mock.onGet(`${tstConf.url}/api/Tasks/${tstConf.ownerName}`).reply(200, initTask);
+    const store = configureStore({
+      reducer: reducerFunction(initTestState),
+    });
+    await store.dispatch(Actions.fetchRepoTasksThunk({ownerName:tstConf.ownerName, token:config.token}));
+    const state = store.getState();
+    expect(state).not.toEqual(initState);;
+  });
+});
+describe('fetching current user', () => {
+  test('should pass', async () => {
+    const mock = new MockAdapter(axios);
+    mock.onGet(`${tstConf.url}/api/People/current`).reply(200, initPerson);
+    const store = configureStore({
+      reducer: reducerFunction(initTestState),
+    });
+    await store.dispatch(Actions.getCurrentUserThunk({token:config.token}));
+    const state = store.getState();
+    expect(state).not.toEqual(initState);;
+  });
 });
 
-test("assignPersonInTaskIsSuccessful", async () => {
-  const mock = new MockAdapter(axios);
-  mock.onPatch(`${tstConf.url}/Tasks/${tstConf.ownerName}/${tstConf.taskId}/${tstConf.isAssign ? "" : "un"}assignperson`,{ "login":tstConf.login}).reply(200, initTask);
-  const response: RequestResponse<ITask, number> =
-    await Fetching.updatePersonInTask(config.token,tstConf.ownerName, tstConf.login, tstConf.taskId, tstConf.isAssign);
-  expect(response).toEqual({ code: 200, response: initTask });
+describe('add repo', () => {
+  test('should pass', async () => {
+    const mock = new MockAdapter(axios);
+    mock.onPost(`${tstConf.url}/api/Repositories`).reply(200, initRepository);
+    const store = configureStore({
+      reducer: reducerFunction(initTestState),
+    });
+    await store.dispatch(Actions.addRepositoryThunk({id:1,token:config.token}));
+    const state = store.getState();
+    expect(state).not.toEqual(initState);;
+  });
 });
 
-test("unassignPersonInTaskIsSuccessful", async () => {
-  const mock = new MockAdapter(axios);
-  mock.onPatch(`${tstConf.url}/Tasks/${tstConf.ownerName}/${tstConf.taskId}/${!tstConf.isAssign ? "" : "un"}assignperson`,{ "login":tstConf.login}).reply(200, initTask);
-  const response: RequestResponse<ITask, number> =
-    await Fetching.updatePersonInTask(config.token,tstConf.ownerName, tstConf.login, tstConf.taskId, !tstConf.isAssign);
-  expect(response).toEqual({ code: 200, response: initTask });
+describe('finishPBI', () => {
+  test('should pass', async () => {
+    const mock = new MockAdapter(axios);
+    mock.onPatch(`${tstConf.url}/api/BacklogItem/${tstConf.ownerName}/${1}/finish`).reply(200, initBI);
+    const store = configureStore({
+      reducer: reducerFunction(initTestState),
+    });
+    await store.dispatch(Actions.finishPBIThunk({ownerName:tstConf.ownerName,token:config.token, pbiId:1}));
+    const state = store.getState();
+    expect(state).not.toEqual(initState);;
+  });
 });
 
-test("startHotfixBranchForTaskIsSuccessful", async () => {
-  const mock = new MockAdapter(axios);
-  mock.onPatch(`${tstConf.url}/Tasks/${tstConf.ownerName}/${tstConf.taskId}/start?hotFix=${tstConf.hotfix}`,{}).reply(200, initTask);
-  const response: RequestResponse<ITask, number> =
-    await Fetching.startBranchForTask(config.token,tstConf.ownerName, tstConf.hotfix,tstConf.taskId, );
-  expect(response).toEqual({ code: 200, response: initTask });
+describe('deletePBI', () => {
+  test('should pass', async () => {
+    const mock = new MockAdapter(axios);
+    mock.onDelete(`${tstConf.url}/api/BacklogItem/${tstConf.ownerName}/${1}`).reply(204);
+    const store = configureStore({
+      reducer: reducerFunction(initTestState),
+    });
+    await store.dispatch(Actions.deletePBIThunk({ownerName:tstConf.ownerName,token:config.token, pbiId:1}));
+    const state = store.getState();
+    expect(state).not.toEqual(initState);;
+  });
 });
 
-test("startFeatureBranchForTaskIsSuccessful", async () => {
-  const mock = new MockAdapter(axios);
-  mock.onPatch(`${tstConf.url}/Tasks/${tstConf.ownerName}/${tstConf.taskId}/start?hotFix=${!tstConf.hotfix}`,{}).reply(200, initTask);
-  const response: RequestResponse<ITask, number> =
-    await Fetching.startBranchForTask(config.token,tstConf.ownerName, !tstConf.hotfix,tstConf.taskId, );
-  expect(response).toEqual({ code: 200, response: initTask });
-});*/
+describe('add pbi', () => {
+  test('should pass', async () => {
+    const mock = new MockAdapter(axios);
+    mock.onPost(`${tstConf.url}/api/BacklogItem/${tstConf.ownerName}`).reply(200, initBI);
+    const store = configureStore({
+      reducer: reducerFunction(initTestState),
+    });
+    await store.dispatch(Actions.addPBIThunk({ownerName:tstConf.ownerName,token:config.token, pbi:initAddPBI}));
+    const state = store.getState();
+    expect(state).not.toEqual(initState);;
+  });
+});
+
+describe('estimatePBI', () => {
+  test('should pass', async () => {
+    const mock = new MockAdapter(axios);
+    mock.onPatch(`${tstConf.url}/api/BacklogItem/${tstConf.ownerName}/${1}/estimate`).reply(200, initBI);
+    const store = configureStore({
+      reducer: reducerFunction(initTestState),
+    });
+    await store.dispatch(Actions.estimatePBIThunk({ownerName:tstConf.ownerName,token:config.token, pbiId:1, hours:1}));
+    const state = store.getState();
+    expect(state).not.toEqual(initState);;
+  });
+});
+describe('editPBI', () => {
+  test('should pass', async () => {
+    const mock = new MockAdapter(axios);
+    mock.onPost(`${tstConf.url}/api/BacklogItem/${tstConf.ownerName}/${1}/estimate`).reply(200, initBI);
+    const store = configureStore({
+      reducer: reducerFunction(initTestState),
+    });
+    await store.dispatch(Actions.editPBIThunk({ownerName:tstConf.ownerName,token:config.token,pbi:initBI, pbiId:1}));
+    const state = store.getState();
+    expect(state).not.toEqual(initState);;
+  });
+});
+describe('updateOneSprint', () => {
+  test('should pass', async () => {
+    const mock = new MockAdapter(axios);
+    mock.onPut(`${tstConf.url}/api/Sprints/${tstConf.ownerName}/${1}`).reply(200, initSprint);
+    const store = configureStore({
+      reducer: reducerFunction(initTestState),
+    });
+    await store.dispatch(Actions.updateOneSprintThunk({ownerName:tstConf.ownerName,token:config.token,sprintNumber:1,sprint:initSprint}));
+    const state = store.getState();
+    expect(state).not.toEqual(initState);;
+  });
+});
+describe('completeOneSprint', () => {
+  test('should pass and mark as success', async () => {
+    const mock = new MockAdapter(axios);
+    mock.onPut(`${tstConf.url}/api/Sprints/${tstConf.ownerName}/${1}/finish?failed=${true}`).reply(200, initSprint);
+    const store = configureStore({
+      reducer: reducerFunction(initTestState),
+    });
+    await store.dispatch(Actions.completeOneSprintThunk({ownerName:tstConf.ownerName,token:config.token,sprintNumber:1,isFailure:true}));
+    const state = store.getState();
+    expect(state).not.toEqual(initState);;
+  });
+  test('should pass  and mark as fail', async () => {
+    const mock = new MockAdapter(axios);
+    mock.onPut(`${tstConf.url}/api/Sprints/${tstConf.ownerName}/${1}/finish?failed=${false}`).reply(200, initSprint);
+    const store = configureStore({
+      reducer: reducerFunction(initTestState),
+    });
+    await store.dispatch(Actions.completeOneSprintThunk({ownerName:tstConf.ownerName,token:config.token,sprintNumber:1,isFailure:false}));
+    const state = store.getState();
+    expect(state).not.toEqual(initState);;
+  });
+});
+describe('addSprint', () => {
+  test('should pass', async () => {
+    const mock = new MockAdapter(axios);
+    mock.onPost(`${tstConf.url}/api/Sprints/${tstConf.ownerName}`).reply(200, initSprint);
+    const store = configureStore({
+      reducer: reducerFunction(initTestState),
+    });
+    await store.dispatch(Actions.addSprintThunk({ownerName:tstConf.ownerName,token:config.token,sprint:initSprint}));
+    const state = store.getState();
+    expect(state).not.toEqual(initState);;
+  });
+});
+
+describe('addUnassignedTasksToPBI', () => {
+  test('should pass', async () => {
+    const mock = new MockAdapter(axios);
+    mock.onGet(`${tstConf.url}/api/Tasks/${tstConf.ownerName}/PBI/${1}`).reply(200, initSprint);
+    const store = configureStore({
+      reducer: reducerFunction(initTestState),
+    });
+    await store.dispatch(Actions.addUnassignedTasksToPBI({ownerName:tstConf.ownerName,token:config.token,pbiId:1}));
+    const state = store.getState();
+    expect(state).not.toEqual(initState);;
+  });
+});
+
+describe('addTaskThunk', () => {
+  test('should pass', async () => {
+    const mock = new MockAdapter(axios);
+    mock.onPost(`${tstConf.url}/api/Tasks/${tstConf.ownerName}`).reply(200, initTask);
+    const store = configureStore({
+      reducer: reducerFunction(initTestState),
+    });
+    await store.dispatch(Actions.addTaskThunk({token:config.token,ownerName:tstConf.ownerName,pbiId:1,name:"name"}));
+    const state = store.getState();
+    expect(state).not.toEqual(initState);;
+  });
+});
+describe('assignTask To PBI success', () => {
+  test('should pass', async () => {
+    const mock = new MockAdapter(axios);
+    mock.onPatch(`${tstConf.url}/api/Tasks/${tstConf.ownerName}/${1}/${true ? "" : "un"}assignperson`).reply(200, initTask);
+    const store = configureStore({
+      reducer: reducerFunction(initTestState),
+    });
+    await store.dispatch(Actions.updatePersonInTaskThunk({token:config.token,ownerName:tstConf.ownerName,login:"login",taskId:1,isAssign:true}));
+    const state = store.getState();
+    expect(state).not.toEqual(initState);;
+  });
+});
+describe('unassignTask To PBI success', () => {
+  test('should pass', async () => {
+    const mock = new MockAdapter(axios);
+    mock.onPatch(`${tstConf.url}/api/Tasks/${tstConf.ownerName}/${1}/${false ? "" : "un"}assignperson`).reply(200, initTask);
+    const store = configureStore({
+      reducer: reducerFunction(initTestState),
+    });
+    await store.dispatch(Actions.updatePersonInTaskThunk({token:config.token,ownerName:tstConf.ownerName,login:"login",taskId:1,isAssign:false}));
+    const state = store.getState();
+    expect(state).not.toEqual(initState);;
+  });
+});
+describe('start hotfix branch for Task success', () => {
+  test('should pass', async () => {
+    const mock = new MockAdapter(axios);
+    mock.onPatch(`${tstConf.url}/api/Tasks/${tstConf.ownerName}/${1}/start?hotFix=${true}`).reply(200, initTask);
+    const store = configureStore({
+      reducer: reducerFunction(initTestState),
+    });
+    await store.dispatch(Actions.startTaskThunk({token:config.token,ownerName:tstConf.ownerName,isHotfix:true,taskId:1}));
+    const state = store.getState();
+    expect(state).not.toEqual(initState);;
+  });
+});
+describe('start feature branch for Task success', () => {
+  test('should pass', async () => {
+    const mock = new MockAdapter(axios);
+    mock.onPatch(`${tstConf.url}/api/Tasks/${tstConf.ownerName}/${1}/start?hotFix=${false}`).reply(200, initTask);
+    const store = configureStore({
+      reducer: reducerFunction(initTestState),
+    });
+    await store.dispatch(Actions.startTaskThunk({token:config.token,ownerName:tstConf.ownerName,isHotfix:false,taskId:1}));
+    const state = store.getState();
+    expect(state).not.toEqual(initState);;
+  });
+});

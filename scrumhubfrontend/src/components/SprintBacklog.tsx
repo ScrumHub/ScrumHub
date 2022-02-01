@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button, message, Space, Typography, } from 'antd';
 import * as Actions from '../appstate/actions';
 import 'antd/dist/antd.css';
-import { IAddBI, IFilters, IPeopleList, IBacklogItem, ISprint, ITask, IState } from '../appstate/stateInterfaces';
+import { IFilters, IPeopleList, IBacklogItem, ISprint, ITask, IState } from '../appstate/stateInterfaces';
 import { useSelector } from 'react-redux';
 import { CalendarOutlined } from '@ant-design/icons';
 import { store } from '../appstate/store';
@@ -11,13 +11,13 @@ import { PBITableComponent } from './tables/PBITable';
 import { TaskTableComponent } from './tables/TaskTable';
 import { canDropTask, dateFormat, getOwnerNameLocation, getSprintLocation, isArrayValid, isItemDefined, isSprintLoaded, useStateAndRefLoading, useTasksRef } from './utility/commonFunctions';
 import SkeletonList from './utility/LoadAnimations';
-import { addPBIToRepo, addTaskToPBI, deletePBItemInRepo, editPBItemInRepo, estimatePBItemInRepo, fetchBacklog, finishPBItemInRepo, updateTask } from './utility/BacklogHandlers';
+import { addTaskToPBI, deletePBItemInRepo, editPBItemInRepo, estimatePBItemInRepo, fetchBacklog, finishPBItemInRepo, updateTask } from './utility/BacklogHandlers';
 import { BodyRowProps, IModals, IRowIds } from './utility/commonInterfaces';
 import { useDrop, useDrag, DndProvider } from 'react-dnd';
 import { initFilterSortInfo, initModalVals } from './utility/commonInitValues';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import moment from 'moment';
-import { useLocation, useNavigate } from 'react-router';
+import { useLocation } from 'react-router';
 import { AddTaskPopup } from './popups/AddTaskPopup';
 import { CompleteSprintPopup } from './popups/CompleteSprintPopup';
 import { EditPBIPopup } from './popups/EditPBIPopup';
@@ -26,8 +26,7 @@ import { UpdateSprintPopup } from './popups/UpdateSprintPopup';
 import _ from 'lodash';
 import { requestFetchRateLimit, requestFetchAllRepoTasks } from '../appstate/fetching';
 import { type } from './ProductBacklog';
-import { pbiColumns, pbiSprintColumns, taskColumns, taskSprintColumns } from './tables/TableUtilities';
-import { AddPBIPopup } from './popups/AddPBIPopup';
+import { pbiSprintColumns, taskSprintColumns } from './tables/TableUtilities';
 
 /**
  * @returns Sprint Backlog View

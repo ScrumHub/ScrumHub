@@ -98,7 +98,7 @@ export const initProductBacklog: ISprint = {
   status: "NotFinished",
   isCompleted: false,
 }
-export const initSprintList: ISprintList = {
+export const initSprintsList: ISprintList = {
   pageNumber: 1,
   pageCount: 1,
   pageSize: 10,
@@ -183,7 +183,7 @@ export const initState: IState = {
   loading: false,
   error: initError,
   pbiPage: initBacklogItemList,
-  sprintPage: initSprintList,
+  sprintPage: initSprintsList,
   taskPage: initTaskList,
   repositories: [],
   openSprint: null,
